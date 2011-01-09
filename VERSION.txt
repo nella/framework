@@ -1,0 +1,1 @@
+Nella Framework 2.0-dev (revision $WCREV$ released on $WCDATE$)
