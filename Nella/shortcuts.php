@@ -7,14 +7,11 @@
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nellacms.com
  */
 
-require_once __DIR__ . "/hacks.php";
-require_once __DIR__ . "/shortcuts.php";
-
 /**
- * Load and configure Nella Framework
+ * @param mixed
+ * @param string
  */
-define('NELLA', TRUE);
-define('NELLA_DIR', __DIR__);
-define('NELLA_VERSION_ID', 20000); // v2.0.0
-
-Nette\Debug::$strictMode = TRUE;
+function barDump($var, $title = NULL)
+{
+	Nette\Debug::barDump($var, $title);
+}
