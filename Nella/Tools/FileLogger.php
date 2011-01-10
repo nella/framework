@@ -10,7 +10,7 @@
 namespace Nella\Tools;
 
 /**
- * 
+ * File logger
  *
  * @author	Patrik Votoček
  */

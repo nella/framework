@@ -10,7 +10,7 @@
 namespace Nella;
 
 /**
- * The Nella Framework;
+ * The Nella Framework
  *
  * @author	Patrik Votoček
  */
