@@ -1,0 +1,22 @@
+common:
+	foo:
+		test = "Europe/Prague"
+		test2 = "%test%/Foo"
+		test3 = 1
+		test4 = foo
+		test5 = [foo, bar]
+		test6 = TRUE
+
+	Foo\Bar:
+		test = "Europe/Prague"
+		test2 = "%test%/Foo"
+		test3 = 128
+		test4 = foo
+		test5 = {foo: bar}
+		test6 = FALSE
+
+test < common:
+	bar:
+		test = foo
+	foo:
+		test4 = bar
