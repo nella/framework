@@ -1,0 +1,118 @@
+<?php
+/**
+ * This file is part of the Nella Framework.
+ *
+ * Copyright (c) 2006, 2011 Patrik Votoček (http://patrik.votocek.cz)
+ *
+ * This source file is subject to the GNU Lesser General Public License. For more information please see http://nellacms.com
+ */
+
+namespace Nella\Panels;
+?>
+<style>#nella-version-panel h2{font:11pt/1.5 sans-serif;margin:0;padding:2px 8px;background:#3484d2;color:white}#nella-version-panel table{width:100%}#nella-version-panel a{color:#333;background:transparent}</style>
+
+
+<h1>Libraries Versions</h1>
+
+<div class="nette-inner" id="nella-version-panel">
+	<table>
+	<tr>
+		<th>PHP</th>
+		<td><?php echo PHP_VERSION ?></td>
+		<td><?php echo PHP_OS." ".(defined('PHP_SAPI') ? (PHP_SAPI." ") : NULL ).php_uname('m'); if (extension_loaded('xdebug')): ?> (Xdebug <?php echo phpversion('xdebug') ?>)<?php endif ?></td>
+	</tr>
+	<?php if (isset($_SERVER['SERVER_SOFTWARE'])): ?>
+	<tr>
+		<th>Server</th>
+		<td colspan="2"><?php echo $_SERVER['SERVER_SOFTWARE'] ?></td>
+	</tr>
+	<?php endif ?>
+	<tr>
+		<th><?php echo \Nette\Framework::NAME ?></th>
+		<td><?php echo \Nette\Framework::VERSION ?></td>
+		<td><?php echo \Nette\Framework::REVISION ?></td>
+	</tr>
+	<?php if (class_exists('Nella\Framework')): ?>
+	<tr>
+		<th><?php echo \Nella\Framework::NAME ?></th>
+		<td><?php echo \Nella\Framework::VERSION ?></td>
+		<td><?php echo \Nella\Framework::REVISION ?></td>
+	</tr>
+	<?php endif ?>
+	<?php if (class_exists('dibi')): ?>
+	<tr>
+		<th>dibi</th>
+		<td><?php echo \dibi::VERSION ?></td>
+		<td><?php echo \dibi::REVISION ?></td>
+	</tr>
+	<?php endif ?>
+	<?php if (class_exists('Doctrine\Common\Version')): ?>
+	<tr>
+		<th>Doctrine Common</th>
+		<td><?php echo \Doctrine\Common\Version::VERSION ?></td>
+		<td>&nbsp;</td>
+	</tr>
+	<?php endif ?>
+	<?php if (class_exists('Doctrine\DBAL\Version')): ?>
+	<tr>
+		<th>Doctrine DBAL</th>
+		<td><?php echo \Doctrine\DBAL\Version::VERSION ?></td>
+		<td>&nbsp;</td>
+	</tr>
+	<?php endif ?>
+	<?php if (class_exists('Doctrine\ORM\Version')): ?>
+	<tr>
+		<th>Doctrine ORM</th>
+		<td><?php echo \Doctrine\ORM\Version::VERSION ?></td>
+		<td>&nbsp;</td>
+	</tr>
+	<?php endif ?>
+	<?php if (class_exists('Doctrine\MongoDB\Version')): ?>
+	<tr>
+		<th>Doctrine MongoDB</th>
+		<td><?php echo \Doctrine\MongoDB\Version::VERSION ?></td>
+		<td>&nbsp;</td>
+	</tr>
+	<?php endif ?>
+	<?php if (class_exists('Doctrine\ODM\MongoDB\Version')): ?>
+	<tr>
+		<th>Doctrine MongoDB ODM</th>
+		<td><?php echo \Doctrine\ODM\MongoDB\Version::VERSION ?></td>
+		<td>&nbsp;</td>
+	</tr>
+	<?php endif ?>
+	<?php if (class_exists('Doctrine_Core')): ?>
+	<tr>
+		<th>Doctrine</th>
+		<td><?php echo \Doctrine_Core::VERSION ?></td>
+		<td>&nbsp;</td>
+	</tr>
+	<?php endif ?>
+	<?php if (class_exists('Texy')): ?>
+	<tr>
+		<th>Texy!</th>
+		<td><?php echo \Texy::VERSION ?></td>
+		<td><?php echo \Texy::REVISION ?></td>
+	</tr>
+	<?php endif ?>
+	</table>
+	<?php if (isset($updates) && count($updates) > 0): ?>
+	<h2>Updates avaiable</h2>
+	<table>
+	<?php foreach($updates as $name => $update): ?>
+	<tr>
+		<th><?php echo $name ?></th>
+		<td><?php echo $update['version'] ?></td>
+		<td><?php echo $update['revision'] ?></td>
+		<td>
+			<?php if (isset($update['url'])): ?>
+			<a href="<?php echo $update['url'] ?>" target="_blank">Download</a>
+			<?php else: ?>
+			&nbsp;
+			<?php endif ?>
+		</td>
+	</tr>
+	<?php endforeach ?>
+	</table>
+	<?php endif ?>
+</div>

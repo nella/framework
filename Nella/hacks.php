@@ -24,3 +24,5 @@ Nette\Environment::setConfigurator(new Nella\Configurator);
 // Load panels
 require_once __DIR__ . "/Panels/Callback.php";
 Nella\Panels\Callback::register();
+require_once __DIR__ . "/Panels/Version.php";
+Nella\Panels\Version::register();
