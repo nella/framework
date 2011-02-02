@@ -10,9 +10,16 @@
 // Load Nette Framework
 require_once __DIR__ . "/../../Nette/loader.php";
 
+Nette\Debug::enable(Nette\Debug::PRODUCTION);
+Nette\Debug::$logDirectory = __DIR__;
+
+Nette\Debug::$maxDepth = 10;
+Nette\Debug::$maxLen = 4096;
+
 // Init Nette Framework robot loader
 $loader = new Nette\Loaders\RobotLoader;
 $loader->setCacheStorage(new Nette\Caching\MemoryStorage);
+$loader->addDirectory(__DIR__ . "/../../Doctrine");
 $loader->addDirectory(__DIR__ . "/../Nella");
 $loader->addDirectory(__DIR__);
 $loader->register();
