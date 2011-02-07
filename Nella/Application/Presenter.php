@@ -18,12 +18,10 @@ namespace Nella\Application;
  */
 abstract class Presenter extends \Nette\Application\Presenter
 {
-	/** #@+ Base presenter flash messages class */
-	const FLASH_SUCCESS = "success";
-	const FLASH_ERROR = "error";
-	const FLASH_INFO = "info";
-	const FLASH_WARNING = "warning";
-	/** #@- */
+	public static $templateDirs = array(
+		APP_DIR, 
+		NELLA_FRAMEWORK_DIR, 
+	);
 
 	/**
 	 * Formats layout template file names.
@@ -34,39 +32,37 @@ abstract class Presenter extends \Nette\Application\Presenter
 	 */
 	public function formatLayoutTemplateFiles($presenter, $layout)
 	{
-		$files = array();
-
 		$path = str_replace(":", "/", substr($presenter, 0, strrpos($presenter, ":")));
 		$subPath = substr($presenter, strrpos($presenter, ":") !== FALSE ? strrpos($presenter, ":") + 1 : 0);
 		if ($path) {
 			$path .= "/";
 		}
 
-		// App modules
-		if (strpos($presenter, ':') !== FALSE) {
-			$files[] = APP_DIR . "/" .$path . "Templates/$subPath/@$layout.latte";
-			$files[] = APP_DIR . "/" .$path . "Templates/$subPath.@$layout.latte";
-			$files[] = APP_DIR . "/" .$path . "Templates/@$layout.latte";
+		$generator = function ($dir) use ($presenter, $path, $subPath, $layout) {
+			$files = array();
+			// clasic modules templates
+			if (strpos($presenter, ':') !== FALSE) {
+				$files[] = $dir . "/" .$path . "Templates/$subPath/@$layout.latte";
+				$files[] = $dir . "/" .$path . "Templates/$subPath.@$layout.latte";
+				$files[] = $dir . "/" .$path . "Templates/@$layout.latte";
+			}
+			// clasic templates
+			$files[] = $dir . "/Templates/" .$path . "$subPath/@$layout.latte";
+			$files[] = $dir . "/Templates/" .$path . "$subPath.@$layout.latte";
+			$files[] = $dir . "/Templates/" .$path . "@$layout.latte";
+			
+			$file = $dir . "/Templates/@$layout.latte";
+			if (!in_array($file, $files)) {
+				$files[] = $file;
+			}
+			
+			return $files;
+		};
+		
+		$files = array();
+		foreach (static::$templateDirs as $dir) {
+			$files = array_merge($files, $generator($dir));
 		}
-		// App templates
-		$files[] = APP_DIR . "/templates/" .$path . "$subPath/@$layout.latte";
-		$files[] = APP_DIR . "/templates/" .$path . "$subPath.@$layout.latte";
-		$files[] = APP_DIR . "/templates/" .$path . "@$layout.latte";
-		if (strpos($presenter, ':') !== FALSE) {
-			$files[] = APP_DIR . "/templates/@$layout.latte";
-		}
-		// Nella modules
-		if (strpos($presenter, ':') !== FALSE) {
-			$files[] = NELLA_DIR . $path . "Templates/$subPath/@$layout.latte";
-			$files[] = NELLA_DIR . $path . "Templates/$subPath.@$layout.latte";
-			$files[] = NELLA_DIR . $path . "Templates/@$layout.latte";
-		}
-		// Nella core
-		$files[] = NELLA_DIR . "Templates/$path$subPath/@$layout.latte";
-		$files[] = NELLA_DIR . "Templates/$path$subPath.@$layout.latte";
-		$files[] = NELLA_DIR . "Templates/$path@$layout.latte";
-		// Nella templates
-		$files[] = NELLA_DIR . "/Templates/@$layout.latte";
 
 		return $files;
 	}
@@ -80,46 +76,40 @@ abstract class Presenter extends \Nette\Application\Presenter
 	 */
 	public function formatTemplateFiles($presenter, $view)
 	{
-		$files = array();
-
 		$path = str_replace(":", "/", substr($presenter, 0, strrpos($presenter, ":")));
 		$subPath = substr($presenter, strrpos($presenter, ":") !== FALSE ? strrpos($presenter, ":") + 1 : 0);
 		if ($path) {
 			$path .= "/";
 		}
 
-		// App modules
-		if (strpos($presenter, ':') !== FALSE) {
-			$files[] = APP_DIR . "/" .$path . "Templates/$subPath/$view.latte";
-			$files[] = APP_DIR . "/" .$path . "Templates/$subPath.$view.latte";
-			$files[] = APP_DIR . "/" .$path . "Templates/$subPath/@global.latte";
-			$files[] = APP_DIR . "/" .$path . "Templates/@global.latte";
+		$generator = function ($dir) use ($presenter, $path, $subPath, $view) {
+			$files = array();
+			// clasic modules templates
+			if (strpos($presenter, ':') !== FALSE) {
+				$files[] = $dir . "/" .$path . "Templates/$subPath/$view.latte";
+				$files[] = $dir . "/" .$path . "Templates/$subPath.$view.latte";
+				$files[] = $dir . "/" .$path . "Templates/$subPath/@global.latte";
+				$files[] = $dir . "/" .$path . "Templates/@global.latte";
 
+			}
+			// clasic templates
+			$files[] = $dir . "/Templates/" .$path . "$subPath/$view.latte";
+			$files[] = $dir . "/Templates/" .$path . "$subPath.$view.latte";
+			$files[] = $dir . "/Templates/" .$path . "$subPath/@global.latte";
+			$files[] = $dir . "/Templates/" .$path . "@global.latte";
+			
+			$file = $dir . "/Templates/@global.latte";
+			if (!in_array($file, $files)) {
+				$files[] = $file;
+			}
+			
+			return $files;
+		};
+		
+		$files = array();
+		foreach (static::$templateDirs as $dir) {
+			$files = array_merge($files, $generator($dir));
 		}
-		// App templates
-		$files[] = APP_DIR . "/templates/" .$path . "$subPath/$view.latte";
-		$files[] = APP_DIR . "/templates/" .$path . "$subPath.$view.latte";
-		$files[] = APP_DIR . "/templates/" .$path . "$subPath/@global.latte";
-		$files[] = APP_DIR . "/templates/" .$path . "@global.latte";
-		if (strpos($presenter, ':') !== FALSE) {
-			$files[] = APP_DIR . "/templates/@global.latte";
-		}
-		// Nella modules
-		if (strpos($presenter, ':') !== FALSE) {
-			$files[] = NELLA_DIR . $path . "Templates/$subPath/$view.latte";
-			$files[] = NELLA_DIR . $path . "Templates/$subPath.$view.latte";
-			$files[] = NELLA_DIR . $path . "Templates/$subPath/@global.latte";
-			$files[] = NELLA_DIR . $path . "Templates/@global.latte";
-		}
-		// Nella templates
-		$files[] = NELLA_DIR . "/Templates/$path$subPath/$view.latte";
-		$files[] = NELLA_DIR . "/Templates/$path$subPath.$view.latte";
-		$files[] = NELLA_DIR . "/Templates/$path$subPath/@global.latte";
-		if (strpos($presenter, ':') !== FALSE) {
-			$files[] = NELLA_DIR . "/Templates/$path@global.latte";
-		}
-		// Nella templates
-		$files[] = NELLA_DIR . "/Templates/@global.latte";
 
 		return $files;
 	}

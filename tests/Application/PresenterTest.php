@@ -26,37 +26,32 @@ class PresenterTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testFormmatLayoutTemplatesFiles()
 	{
-		$mapper = function ($path) {
-			return @realpath($path);
-		};
-		
-		$this->assertEquals(array_map($mapper, array(
-			APP_DIR . "/templates/Foo/@bar.latte",
-			APP_DIR . "/templates/Foo.@bar.latte",
-			APP_DIR . "/templates/@bar.latte",
-			NELLA_DIR . "/Templates/Foo/@bar.latte",
-			NELLA_DIR . "/Templates/Foo.@bar.latte",
-			NELLA_DIR . "/Templates/@bar.latte",
-			NELLA_DIR . "/Templates/@bar.latte",
-		)), array_map($mapper, $this->presenter->formatLayoutTemplateFiles('Foo', 'bar')), 
+		$this->assertEquals(array(
+			APP_DIR . "/Templates/Foo/@bar.latte",
+			APP_DIR . "/Templates/Foo.@bar.latte",
+			APP_DIR . "/Templates/@bar.latte",
+			NELLA_FRAMEWORK_DIR . "/Templates/Foo/@bar.latte",
+			NELLA_FRAMEWORK_DIR . "/Templates/Foo.@bar.latte",
+			NELLA_FRAMEWORK_DIR . "/Templates/@bar.latte",
+		), $this->presenter->formatLayoutTemplateFiles('Foo', 'bar'), 
 		"->formatLayoutTemplateFiles('Foo', 'bar')");
 		
-		$this->assertEquals(array_map($mapper, array(
+		$this->assertEquals(array(
 			APP_DIR . "/Foo/Templates/Bar/@layout.latte",
 			APP_DIR . "/Foo/Templates/Bar.@layout.latte",
 			APP_DIR . "/Foo/Templates/@layout.latte",
-			APP_DIR . "/templates/Foo/Bar/@layout.latte",
-			APP_DIR . "/templates/Foo/Bar.@layout.latte",
-			APP_DIR . "/templates/Foo/@layout.latte",
-			APP_DIR . "/templates/@layout.latte",
-			NELLA_DIR . "/Foo/Templates/Bar/@layout.latte",
-			NELLA_DIR . "/Foo/Templates/Bar.@layout.latte",
-			NELLA_DIR . "/Foo/Templates/@layout.latte",
-			NELLA_DIR . "/Templates/Foo/Bar/@layout.latte", 
-			NELLA_DIR . "/Templates/Foo/Bar.@layout.latte", 
-			NELLA_DIR . "/Templates/Foo/@layout.latte", 
-			NELLA_DIR . "/Templates/@layout.latte",
-		)), array_map($mapper, $this->presenter->formatLayoutTemplateFiles('Foo:Bar', 'layout')), 
+			APP_DIR . "/Templates/Foo/Bar/@layout.latte",
+			APP_DIR . "/Templates/Foo/Bar.@layout.latte",
+			APP_DIR . "/Templates/Foo/@layout.latte",
+			APP_DIR . "/Templates/@layout.latte",
+			NELLA_FRAMEWORK_DIR . "/Foo/Templates/Bar/@layout.latte",
+			NELLA_FRAMEWORK_DIR . "/Foo/Templates/Bar.@layout.latte",
+			NELLA_FRAMEWORK_DIR . "/Foo/Templates/@layout.latte",
+			NELLA_FRAMEWORK_DIR . "/Templates/Foo/Bar/@layout.latte", 
+			NELLA_FRAMEWORK_DIR . "/Templates/Foo/Bar.@layout.latte", 
+			NELLA_FRAMEWORK_DIR . "/Templates/Foo/@layout.latte", 
+			NELLA_FRAMEWORK_DIR . "/Templates/@layout.latte",
+		), $this->presenter->formatLayoutTemplateFiles('Foo:Bar', 'layout'), 
 		"->formatLayoutTemplateFiles('Foo:Bar', 'layout')");
 	}
 
@@ -69,38 +64,38 @@ class PresenterTest extends \PHPUnit_Framework_TestCase
 			return @realpath($path);
 		};
 		
-		$this->assertEquals(array_map($mapper, array(
-			APP_DIR . "/templates/Foo/bar.latte",
-			APP_DIR . "/templates/Foo.bar.latte",
-			APP_DIR . "/templates/Foo/@global.latte",
-			APP_DIR . "/templates/@global.latte",
-			NELLA_DIR . "/Templates/Foo/bar.latte",
-			NELLA_DIR . "/Templates/Foo.bar.latte",
-			NELLA_DIR . "/Templates/Foo/@global.latte",
-			NELLA_DIR . "/Templates/@global.latte",
-		)), array_map($mapper, $this->presenter->formatTemplateFiles('Foo', 'bar')), 
+		$this->assertEquals(array(
+			APP_DIR . "/Templates/Foo/bar.latte",
+			APP_DIR . "/Templates/Foo.bar.latte",
+			APP_DIR . "/Templates/Foo/@global.latte",
+			APP_DIR . "/Templates/@global.latte",
+			NELLA_FRAMEWORK_DIR . "/Templates/Foo/bar.latte",
+			NELLA_FRAMEWORK_DIR . "/Templates/Foo.bar.latte",
+			NELLA_FRAMEWORK_DIR . "/Templates/Foo/@global.latte",
+			NELLA_FRAMEWORK_DIR . "/Templates/@global.latte",
+		), $this->presenter->formatTemplateFiles('Foo', 'bar'), 
 		"->formatTemplateFiles('Foo', 'bar')");
 		
-		$this->assertEquals(array_map($mapper, array(
+		$this->assertEquals(array(
 			APP_DIR . "/Foo/Templates/Bar/baz.latte",
 			APP_DIR . "/Foo/Templates/Bar.baz.latte",
 			APP_DIR . "/Foo/Templates/Bar/@global.latte",
 			APP_DIR . "/Foo/Templates/@global.latte",
-			APP_DIR . "/templates/Foo/Bar/baz.latte",
-			APP_DIR . "/templates/Foo/Bar.baz.latte",
-			APP_DIR . "/templates/Foo/Bar/@global.latte",
-			APP_DIR . "/templates/Foo/@global.latte",
-			APP_DIR . "/templates/@global.latte",
-			NELLA_DIR . "/Foo/Templates/Bar/baz.latte",
-			NELLA_DIR . "/Foo/Templates/Bar.baz.latte",
-			NELLA_DIR . "/Foo/Templates/Bar/@global.latte",
-			NELLA_DIR . "/Foo/Templates/@global.latte",
-			NELLA_DIR . "/Templates/Foo/Bar/baz.latte",
-			NELLA_DIR . "/Templates/Foo/Bar.baz.latte",
-			NELLA_DIR . "/Templates/Foo/Bar/@global.latte",
-			NELLA_DIR . "/Templates/Foo/@global.latte",
-			NELLA_DIR . "/Templates/@global.latte",
-		)), array_map($mapper, $this->presenter->formatTemplateFiles('Foo:Bar', 'baz')), 
+			APP_DIR . "/Templates/Foo/Bar/baz.latte",
+			APP_DIR . "/Templates/Foo/Bar.baz.latte",
+			APP_DIR . "/Templates/Foo/Bar/@global.latte",
+			APP_DIR . "/Templates/Foo/@global.latte",
+			APP_DIR . "/Templates/@global.latte",
+			NELLA_FRAMEWORK_DIR . "/Foo/Templates/Bar/baz.latte",
+			NELLA_FRAMEWORK_DIR . "/Foo/Templates/Bar.baz.latte",
+			NELLA_FRAMEWORK_DIR . "/Foo/Templates/Bar/@global.latte",
+			NELLA_FRAMEWORK_DIR . "/Foo/Templates/@global.latte",
+			NELLA_FRAMEWORK_DIR . "/Templates/Foo/Bar/baz.latte",
+			NELLA_FRAMEWORK_DIR . "/Templates/Foo/Bar.baz.latte",
+			NELLA_FRAMEWORK_DIR . "/Templates/Foo/Bar/@global.latte",
+			NELLA_FRAMEWORK_DIR . "/Templates/Foo/@global.latte",
+			NELLA_FRAMEWORK_DIR . "/Templates/@global.latte",
+		), $this->presenter->formatTemplateFiles('Foo:Bar', 'baz'), 
 		"->formatTemplateFiles('Foo:Bar', 'baz')");
 	}
 
