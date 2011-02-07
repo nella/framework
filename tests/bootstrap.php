@@ -25,4 +25,4 @@ $loader->addDirectory(__DIR__);
 $loader->register();
 
 define('APP_DIR', __DIR__);
-define('NELLA_DIR', __DIR__ . "/../Nella");
+define('NELLA_FRAMEWORK_DIR', __DIR__ . "/../Nella");
