@@ -19,9 +19,9 @@ class Form extends \Nette\Application\AppForm
 	/*const DATE = 'Nella\Forms\Date::validate';
 	const DATETIME = 'Nella\Forms\DateTime::validate';
 	const TIME = 'Nella\Forms\Time::validate';*/
-	
+
 	/**
-	 * Adds email input control to the form.
+	 * Adds an email input control to the form.
 	 * 
 	 * @param string	control name
 	 * @param string	label
@@ -35,9 +35,9 @@ class Form extends \Nette\Application\AppForm
 		$item->setAttribute('type', "email")->addCondition(self::FILLED)->addRule(self::EMAIL);
 		return $item;
 	}
-	
+
 	/**
-	 * Adds url input control to the form.
+	 * Adds an url input control to the form.
 	 * 
 	 * @param string	control name
 	 * @param string	label
@@ -51,9 +51,9 @@ class Form extends \Nette\Application\AppForm
 		$item->setAttribute('type', "url")->addCondition(self::FILLED)->addRule(self::URL);
 		return $item;
 	}
-	
+
 	/**
-	 * Adds number input control to the form.
+	 * Adds a number input control to the form.
 	 * 
 	 * @param string	control name
 	 * @param string	label
@@ -82,9 +82,9 @@ class Form extends \Nette\Application\AppForm
 		
 		return $item;
 	}
-	
+
 	/**
-	 * Adds range input control to the form.
+	 * Adds a range input control to the form.
 	 * 
 	 * @param string	control name
 	 * @param string	label
@@ -98,7 +98,7 @@ class Form extends \Nette\Application\AppForm
 		$item = $this->addNumber($name, $label, $step, $min, $max);
 		return $item->setAttribute('type', "range");
 	}
-	
+
 	/**
 	 * Adds date input control to the form.
 	 * 
@@ -111,9 +111,9 @@ class Form extends \Nette\Application\AppForm
 	{
 		return $this[$name] = new Date($label, $cols, NULL);
 	}
-	
+
 	/**
-	 * Adds datetime input control to the form.
+	 * Adds a datetime input control to the form.
 	 * 
 	 * @param string	control name
 	 * @param string	label
@@ -124,9 +124,9 @@ class Form extends \Nette\Application\AppForm
 	{
 		return $this[$name] = new DateTime($label, $cols, NULL);
 	}
-	
+
 	/**
-	 * Adds time input control to the form.
+	 * Adds a time input control to the form.
 	 * 
 	 * @param string	control name
 	 * @param string	label
@@ -137,7 +137,7 @@ class Form extends \Nette\Application\AppForm
 	{
 		return $this[$name] = new Time($label, $cols, NULL);
 	}
-	
+
 	/**
 	 * Adds search input control to the form.
 	 * 
@@ -152,9 +152,9 @@ class Form extends \Nette\Application\AppForm
 		$item = $this->addText($name, $label, $cols, $maxLength);
 		return $item->setAttribute('type', "search");
 	}
-	
+
 	/**
-	 * Adds editor input control to the form.
+	 * Adds an editor input control to the form.
 	 * 
 	 * @param string	control name
 	 * @param string	label

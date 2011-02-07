@@ -58,7 +58,7 @@ abstract class Service extends \Nette\Object
 	{
 		$documentName = $documentName ?: $this->getDocumentName();
 		if (empty($documentName)) {
-			throw new \InvalidArgumentException("Default document name not set you must use document name as param");
+			throw new \InvalidArgumentException("Default document name is not set, you must set document name in param");
 		}
 		
 		return $this->getDocumentManager()->getRepository($documentName);
@@ -73,7 +73,7 @@ abstract class Service extends \Nette\Object
 	{
 		$documentName = $documentName ?: $this->getDocumentName();
 		if (empty($documentName)) {
-			throw new \InvalidArgumentException("Default document name not set you must use document name as param");
+			throw new \InvalidArgumentException("Default document name is not set, you must set document name in param");
 		}
 		
 		return $this->getDocumentManager()->getClassMetadata($documentName);

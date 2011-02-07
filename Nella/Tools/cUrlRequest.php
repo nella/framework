@@ -110,7 +110,7 @@ class cUrlRequest extends \Nette\Object
 	{
 		$key = strtoupper($key);
 		if (!defined('CURLOPT_' . str_replace('CURLOPT_', '', $key))) {
-			throw new \InvalidArgumentException("cUrl option '$key' not exist");
+			throw new \InvalidArgumentException("cUrl option '$key' does not exist");
 		}
 		
 		return isset($this->options[$key]) ? $this->options[$key] : NULL;
@@ -126,7 +126,7 @@ class cUrlRequest extends \Nette\Object
 	{
 		$key = strtoupper($key);
 		if (!defined('CURLOPT_' . str_replace('CURLOPT_', '', $key))) {
-			throw new \InvalidArgumentException("cUrl option '$key' not exist");
+			throw new \InvalidArgumentException("cUrl option '$key' does not exist");
 		}
 		
 		$value = trim($value);
@@ -164,7 +164,10 @@ class cUrlRequest extends \Nette\Object
 		$this->headers[$key] = $value == "" ? NULL : $value;
 		return $this;
 	}
-	
+
+	/**
+	 * @return array
+	 */
 	public function getProxies()
 	{
 		return $this->proxies;
@@ -221,7 +224,7 @@ class cUrlRequest extends \Nette\Object
 		$userAgent = trim($userAgent);
 		$this->setOption('useragent', $userAgent == "" ? NULL : $userAgent);
 		if (!$this->getOption('useragent')) {
-			throw new \InvalidArgumentException("User agent string must be non-empty string");
+			throw new \InvalidArgumentException("User agent string must be a non-empty string");
 		}
 		return $this;
 	}
@@ -347,7 +350,6 @@ class cUrlRequest extends \Nette\Object
 	}
 	
 	/**
-	 * @param string
 	 * @return resource
 	 */
 	private function open()
@@ -377,6 +379,7 @@ class cUrlRequest extends \Nette\Object
 	 * @param int
 	 * @return cUrlResponse
 	 * @throws InvalidStateException
+	 * @throws cUrlBadRequestException
 	 */
 	protected function run($method = self::GET, $url = NULL, $post = array(), $cycles = 1)
 	{

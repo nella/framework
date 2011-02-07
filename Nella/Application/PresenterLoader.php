@@ -23,7 +23,7 @@ class PresenterLoader extends \Nette\Application\PresenterLoader
 	);
 	
 	/**
-	 * Format presenter class with prefixies
+	 * Format presenter class with prefixes
 	 * 
 	 * @param string
 	 * @return string
@@ -57,7 +57,7 @@ class PresenterLoader extends \Nette\Application\PresenterLoader
 	public function getPresenterClass(& $name)
 	{
 		if (!is_string($name) || !preg_match("#^[a-zA-Z\x7f-\xff][a-zA-Z0-9\x7f-\xff:]*$#", $name)) {
-			throw new \Nette\Application\InvalidPresenterException("Presenter name must be alphanumeric string, '$name' is invalid.");
+			throw new \Nette\Application\InvalidPresenterException("Presenter name must be an alphanumeric string, '$name' is invalid.");
 		}
 
 		$class = $this->formatPresenterClasses($name);

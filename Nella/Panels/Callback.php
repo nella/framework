@@ -12,7 +12,7 @@ namespace Nella\Panels;
 use Nette\Environment;
 
 /**
- * Callback panel for nette debugbar
+ * Callback panel for nette debug bar
  *
  * @author	Patrik Votoček
  */

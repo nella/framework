@@ -18,6 +18,7 @@ namespace Nella\Application;
  */
 abstract class Presenter extends \Nette\Application\Presenter
 {
+	/** @var array */
 	public static $templateDirs = array(
 		APP_DIR, 
 		NELLA_FRAMEWORK_DIR, 

@@ -12,7 +12,7 @@ namespace Nella\Panels;
 use Nette\Reflection\ClassReflection;
 
 /**
- * Version panel for nette debugbar
+ * Version panel for nette debug bar
  *
  * @author		Patrik Votoček
  */

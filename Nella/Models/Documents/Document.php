@@ -15,6 +15,8 @@ namespace Nella\Models;
  * @mappedSuperclass
  *
  * @author	Patrik Votoček
+ *
+ * @property-read string $id
  */
 abstract class Document extends BaseDocument
 {

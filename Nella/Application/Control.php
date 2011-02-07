@@ -22,13 +22,13 @@ abstract class Control extends \Nette\Application\Control
 		NELLA_FRAMEWORK_DIR, 
 	);	
 	/** @var array */
-	public static $namespacePrefixies = array(
+	public static $namespacePrefixes = array(
 		'App\\', 
 		'Nella\\', 
 	);
 	
 	/**
-	 * Format component template files
+	 * Formats component template files
 	 *
 	 * @param string
 	 * @return array
@@ -41,7 +41,7 @@ abstract class Control extends \Nette\Application\Control
 		if (!isset($class)) {
 			$class = get_called_class();
 		}
-		foreach (static::$namespacePrefixies as $prefix) {
+		foreach (static::$namespacePrefixes as $prefix) {
 			if (\Nette\String::startsWith($class, $prefix)) {
 				$class = substr($class, strlen($prefix));
 				break;

@@ -23,19 +23,15 @@ use Nette\ObjectMixin;
 class Repository extends \Doctrine\ODM\MongoDB\DocumentRepository
 {
 	/**
-	 * Is document key equals value
+	 * Does exist a document with key equal to value?
 	 * 
 	 * @param string
 	 * @param mixed
 	 */
-	public function isExistByColumn($key, $value)
+	public function doesExistByColumn($key, $value)
 	{
 		$res = $this->findOneBy(array($key => $value));
-		if (empty($res)) {
-			return FALSE;
-		} else {
-			return TRUE;
-		}
+		return !empty($res);
 	}
 	
 	/**
@@ -71,7 +67,7 @@ class Repository extends \Doctrine\ODM\MongoDB\DocumentRepository
 	}
 	
 	/**
-	 * Fetches all records and returns associative array
+	 * Fetches all records and returns an associative array
 	 * 
 	 * @param string
 	 * @return array

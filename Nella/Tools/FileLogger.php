@@ -50,7 +50,7 @@ class FileLogger extends \Nette\Object implements ILogger
 		);
 		
 		if (!@file_put_contents($this->file, "[" . date("Y-m-d H:i:s P") . "] {$levels[$level]}: $message" . PHP_EOL, FILE_APPEND)) {
-			throw new \IOException("File '{$this->file}' does not writable");
+			throw new \IOException("File '{$this->file}' is not writable");
 		}
 	}
 }

@@ -52,9 +52,8 @@ class Context extends \Nette\FreezableObject implements \Nette\IContext, \ArrayA
 			throw new \Nette\AmbiguousServiceException("Service named '$name' has already been registered.");
 		}
 		if (isset($this->aliases[$lower])) { 
-			throw new \Nette\AmbiguousServiceException("Service named '$name' has already used as service alias.");
+			throw new \Nette\AmbiguousServiceException("Service named '$name' is already used as a service alias.");
 		}
-		
 
 		if ($service instanceof self) {
 			$this->registry[$lower] = & $service->registry[$lower];
@@ -108,7 +107,7 @@ class Context extends \Nette\FreezableObject implements \Nette\IContext, \ArrayA
 			throw new \Nette\AmbiguousServiceException("Service alias named '$alias' has already been registered.");
 		}
 		if (isset($this->registry[$lowerA]) || isset($this->factories[$lowerA])) {
-			throw new \Nette\AmbiguousServiceException("Service alias named '$alias' has already used as service.");
+			throw new \Nette\AmbiguousServiceException("Service alias named '$alias' is already used as a service.");
 		}
 		
 		$this->aliases[$lowerA] = $lower;

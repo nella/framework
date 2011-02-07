@@ -39,6 +39,7 @@ class FileActionLogger extends \Nette\Object implements IActionLogger
 	 * @param string
 	 * @param string
 	 * @param Nette\Security\IIdentity
+	 * @throws IOException
 	 */
 	public function logAction($module, $action = self::OTHER, $message = "", \Nette\Security\IIdentity $user = NULL)
 	{
@@ -47,7 +48,7 @@ class FileActionLogger extends \Nette\Object implements IActionLogger
 		}
 		
 		if (!@file_put_contents($this->file, "[" . date("Y-m-d H:i:s P") . "] $module:$action: $message #{$user->getId()}" . PHP_EOL, FILE_APPEND)) {
-			throw new \IOException("File '{$this->file}' does not writable");
+			throw new \IOException("File '{$this->file}' is not writable");
 		}
 	}
 }
