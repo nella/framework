@@ -19,9 +19,6 @@ use Nette\Environment,
  */
 class Configurator extends \Nette\Configurator
 {
-	/** @var string */
-	public $defaultConfigFile = '%appDir%/config.neon';
-	
 	/**
 	 * Loads global configuration from file and process it.
 	 * @param  string|Nette\Config\Config  file name or Config object
