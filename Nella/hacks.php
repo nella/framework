@@ -17,9 +17,6 @@ if (!defined('NETTE')) {
 
 // Set config.neon as config file
 require_once __DIR__ . "/Configurator.php";
-require_once __DIR__ . "/Config/ConfigAdapterNeon.php";
-Nette\Config\Config::registerExtension('neon', 'Nella\Config\ConfigAdapterNeon');
-Nette\Environment::setConfigurator(new Nella\Configurator);
 
 // Load panels
 require_once __DIR__ . "/Panels/Callback.php";

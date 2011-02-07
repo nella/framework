@@ -19,6 +19,21 @@ use Nette\Environment,
  */
 class Configurator extends \Nette\Configurator
 {
+	/** @var array */
+	public $defaultServices = array(
+		'Nette\\Application\\Application' => array(__CLASS__, 'createApplication'),
+		'Nette\\Web\\HttpContext' => 'Nette\Web\HttpContext',
+		'Nette\\Web\\IHttpRequest' => array(__CLASS__, 'createHttpRequest'),
+		'Nette\\Web\\IHttpResponse' => 'Nette\Web\HttpResponse',
+		'Nette\\Web\\IUser' => 'Nette\Web\User',
+		'Nette\\Caching\\ICacheStorage' => array(__CLASS__, 'createCacheStorage'),
+		'Nette\\Caching\\ICacheJournal' => array(__CLASS__, 'createCacheJournal'),
+		'Nette\\Mail\\IMailer' => array(__CLASS__, 'createMailer'),
+		'Nette\\Web\\Session' => 'Nette\Web\Session',
+		'Nette\\Loaders\\RobotLoader' => array(__CLASS__, 'createRobotLoader'),
+		'Nette\\Application\\IPresenterLoader' => array('Nella\Application\PresenterLoader', 'createPresenterLoader'), 
+	);
+	
 	/**
 	 * Loads global configuration from file and process it.
 	 * @param  string|Nette\Config\Config  file name or Config object

@@ -16,6 +16,37 @@ namespace Nella\Application;
  */
 class PresenterLoader extends \Nette\Application\PresenterLoader
 {
+	/** @var array */
+	public $prefixies = array(
+		'app' => "App\\", 
+		'framework' => "Nella\\", 
+	);
+	
+	/**
+	 * Format presenter class with prefixies
+	 * 
+	 * @param string
+	 * @return string
+	 * @throws \Nette\Application\InvalidPresenterException
+	 */
+	private function formatPresenterClasses($name)
+	{
+		$class = NULL;
+		foreach (array_keys($this->prefixies) as $key) {
+			$class = $this->formatPresenterClass($name, $key);
+			if (class_exists($class)) {
+				break;
+			}
+		}
+		
+		if (!class_exists($class)) {
+			$class = $this->formatPresenterClass($name);
+			throw new \Nette\Application\InvalidPresenterException("Cannot load presenter '$name', class '$class' was not found.");
+		}
+		
+		return $class;
+	}
+	
 	/**
 	 * Get presenter class name
 	 *
@@ -26,43 +57,25 @@ class PresenterLoader extends \Nette\Application\PresenterLoader
 	public function getPresenterClass(& $name)
 	{
 		if (!is_string($name) || !preg_match("#^[a-zA-Z\x7f-\xff][a-zA-Z0-9\x7f-\xff:]*$#", $name)) {
-			throw new \Nette\Application\InvalidPresenterException(
-				"Presenter name must be alphanumeric string, '$name' is invalid."
-			);
+			throw new \Nette\Application\InvalidPresenterException("Presenter name must be alphanumeric string, '$name' is invalid.");
 		}
 
-		$appClass = $class = $this->formatPresenterClass($name);
-
-		if (!class_exists($class)) {
-			$class = $this->formatPresenterClass($name, "lib");
-			if (!class_exists($class)) {
-				throw new \Nette\Application\InvalidPresenterException(
-					"Cannot load presenter '$name', class '$appClass' was not found."
-				);
-			}
-		}
-
+		$class = $this->formatPresenterClasses($name);
 		$reflection = \Nette\Reflection\ClassReflection::from($class);
 		$class = $reflection->getName();
 
 		if (!$reflection->implementsInterface('Nette\Application\IPresenter')) {
-			throw new \Nette\Application\InvalidPresenterException(
-				"Cannot load presenter '$name', class '$class' is not Nette\\Application\\IPresenter implementor."
-			);
+			throw new \Nette\Application\InvalidPresenterException("Cannot load presenter '$name', class '$class' is not Nette\\Application\\IPresenter implementor.");
 		}
 		if ($reflection->isAbstract()) {
-			throw new \Nette\Application\InvalidPresenterException(
-				"Cannot load presenter '$name', class '$class' is abstract."
-			);
+			throw new \Nette\Application\InvalidPresenterException("Cannot load presenter '$name', class '$class' is abstract.");
 		}
 
 		// canonicalize presenter name
 		$realName = $this->unformatPresenterClass($class);
 		if ($name !== $realName) {
 			if ($this->caseSensitive) {
-				throw new \Nette\Application\InvalidPresenterException(
-					"Cannot load presenter '$name', case mismatch. Real name is '$realName'."
-				);
+				throw new \Nette\Application\InvalidPresenterException("Cannot load presenter '$name', case mismatch. Real name is '$realName'.");
 			}
 		}
 
@@ -77,12 +90,12 @@ class PresenterLoader extends \Nette\Application\PresenterLoader
 	 * @param string
 	 * @return string
 	 */
-	public function formatPresenterClass($presenter, $type = NULL)
+	public function formatPresenterClass($presenter, $type = 'app')
 	{
-		if ($type == "lib") {
-			return 'Nella\\'.str_replace(':', "\\", $presenter.'Presenter');
+		if (isset($this->prefixies[$type])) {
+			return $this->prefixies[$type].str_replace(':', "\\", $presenter.'Presenter');
 		} else {
-			return 'App\\' . str_replace(':', '\\', $presenter).'Presenter';
+			return str_replace(':', '\\', $presenter).'Presenter';
 		}
 	}
 
@@ -94,10 +107,16 @@ class PresenterLoader extends \Nette\Application\PresenterLoader
 	 */
 	public function unformatPresenterClass($class)
 	{
-		if (strpos($class, 'Nella') !== FALSE) {
-			return str_replace("\\", ':', substr($class, $class[0] == "\\" ? 7 : 6, -9));
+		$mapper = function ($prefix) use ($class) {
+			if (\Nette\String::startsWith($class, $prefix)) {
+				return $prefix;
+			}
+		};
+		if (count($prefixies = array_filter($this->prefixies, $mapper))) {
+			$prefix = current($prefixies);
+			return str_replace("\\", ':', substr($class, $class[0] == "\\" ? (strlen($prefix) + 1) : strlen($prefix), -9));
 		} else {
-			return str_replace("\\", ':', substr($class, $class[0] == "\\" ? 5 : 4, -9));
+			return str_replace("\\", ':', substr($class, $class[0] == "\\" ? 1 : 0, -9));
 		}
 	}
 

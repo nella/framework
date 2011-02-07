@@ -41,9 +41,9 @@ class PresenterLoaderTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals('App\FooPresenter', $this->loader->formatPresenterClass('Foo'), "->formatPresenterClass('Foo')");
 		$this->assertEquals('App\Foo\BarPresenter', $this->loader->formatPresenterClass('Foo:Bar'), "->formatPresenterClass('Foo:Bar')");
 		$this->assertEquals('App\Foo\Bar\BazPresenter', $this->loader->formatPresenterClass('Foo:Bar:Baz'), "->formatPresenterClass('Foo:Bar:Baz')");
-		$this->assertEquals('Nella\FooPresenter', $this->loader->formatPresenterClass('Foo', 'lib'), "->formatPresenterClass('Foo', 'lib')");
-		$this->assertEquals('Nella\Foo\BarPresenter', $this->loader->formatPresenterClass('Foo:Bar', 'lib'), "->formatPresenterClass('Foo:Bar', 'lib')");
-		$this->assertEquals('Nella\Foo\Bar\BazPresenter', $this->loader->formatPresenterClass('Foo:Bar:Baz', 'lib'), "->formatPresenterClass('Foo:Bar:Baz', 'lib')");
+		$this->assertEquals('Nella\FooPresenter', $this->loader->formatPresenterClass('Foo', 'framework'), "->formatPresenterClass('Foo', 'lib')");
+		$this->assertEquals('Nella\Foo\BarPresenter', $this->loader->formatPresenterClass('Foo:Bar', 'framework'), "->formatPresenterClass('Foo:Bar', 'lib')");
+		$this->assertEquals('Nella\Foo\Bar\BazPresenter', $this->loader->formatPresenterClass('Foo:Bar:Baz', 'framework'), "->formatPresenterClass('Foo:Bar:Baz', 'lib')");
 	}
 
 	/**
