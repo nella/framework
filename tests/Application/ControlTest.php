@@ -16,7 +16,7 @@ class ControlTest extends \PHPUnit_Framework_TestCase
 	
 	public function setUp()
 	{
-		\NellaTests\Application\ControlMock::$namespacePrefixies[] = 'NellaTests\\Application\\';
+		\NellaTests\Application\ControlMock::$namespacePrefixes[] = 'NellaTests\\Application\\';
 		$this->control = new ControlMock(new PresenterMock, 'test');
 	}
 	
