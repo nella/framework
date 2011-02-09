@@ -128,7 +128,7 @@ class Version implements \Nette\IDebugPanel
 		if (class_exists('Doctrine\Common\Version')) {
 			$libs['doctrine:common'] = array(
 				'name' => "Doctrine Common", 
-				'version' => \Doctine\Common\Version::VERSION, 
+				'version' => \Doctrine\Common\Version::VERSION,
 				'revision' => NULL, 
 				'url' => "http://github.com/%user%/%repo%/zipball/%tag%", 
 				'url-dev' => NULL, 
@@ -140,11 +140,11 @@ class Version implements \Nette\IDebugPanel
 		if (class_exists('Doctrine\DBAL\Version')) {
 			$libs['doctrine:dbal'] = array(
 				'name' => "Doctrine DBAL", 
-				'version' => \Doctine\DBAL\Version::VERSION, 
+				'version' => \Doctrine\DBAL\Version::VERSION,
 				'revision' => NULL, 
 				'url' => "http://github.com/%user%/%repo%/zipball/%tag%", 
 				'url-dev' => NULL, 
-				'file' => ClassReflection::from('Doctine\DBAL\Version')->getFileName(), 
+				'file' => ClassReflection::from('Doctrine\DBAL\Version')->getFileName(),
 			);
 		}
 		
@@ -152,11 +152,11 @@ class Version implements \Nette\IDebugPanel
 		if (class_exists('Doctrine\ORM\Version')) {
 			$libs['doctrine:doctrine2'] = array(
 				'name' => "Doctrine ORM", 
-				'version' => \Doctine\ORM\Version::VERSION, 
+				'version' => \Doctrine\ORM\Version::VERSION,
 				'revision' => NULL, 
 				'url' => "http://github.com/%user%/%repo%/zipball/%tag%", 
 				'url-dev' => NULL, 
-				'file' => ClassReflection::from('Doctine\ORM\Version')->getFileName(), 
+				'file' => ClassReflection::from('Doctrine\ORM\Version')->getFileName(),
 			);
 		}
 		
@@ -164,11 +164,11 @@ class Version implements \Nette\IDebugPanel
 		if (class_exists('Doctrine\MongoDB\Version')) {
 			$libs['doctrine:mongodb'] = array(
 				'name' => "Doctrine MongoDB", 
-				'version' => \Doctine\MongoDB\Version::VERSION, 
+				'version' => \Doctrine\MongoDB\Version::VERSION,
 				'revision' => NULL, 
 				'url' => "http://github.com/%user%/%repo%/zipball/%tag%", 
 				'url-dev' => NULL, 
-				'file' => ClassReflection::from('Doctine\MongoDB\Version')->getFileName(), 
+				'file' => ClassReflection::from('Doctrine\MongoDB\Version')->getFileName(),
 			);
 		}
 		
@@ -176,11 +176,11 @@ class Version implements \Nette\IDebugPanel
 		if (class_exists('Doctrine\ODM\MongoDB\Version')) {
 			$libs['doctrine:mongodb-odm'] = array(
 				'name' => "Doctrine MongoDB ODM", 
-				'version' => \Doctine\ODM\MongoDB\Version::VERSION, 
+				'version' => \Doctrine\ODM\MongoDB\Version::VERSION,
 				'revision' => NULL, 
 				'url' => "http://github.com/%user%/%repo%/zipball/%tag%", 
 				'url-dev' => NULL, 
-				'file' => ClassReflection::from('Doctine\ODM\MongoDB\Version')->getFileName(), 
+				'file' => ClassReflection::from('Doctrine\ODM\MongoDB\Version')->getFileName(),
 			);
 		}
 		
