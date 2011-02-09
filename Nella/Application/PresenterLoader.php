@@ -17,7 +17,7 @@ namespace Nella\Application;
 class PresenterLoader extends \Nette\Application\PresenterLoader
 {
 	/** @var array */
-	public $prefixies = array(
+	public $prefixes = array(
 		'app' => "App\\", 
 		'framework' => "Nella\\", 
 	);
@@ -32,7 +32,7 @@ class PresenterLoader extends \Nette\Application\PresenterLoader
 	private function formatPresenterClasses($name)
 	{
 		$class = NULL;
-		foreach (array_keys($this->prefixies) as $key) {
+		foreach (array_keys($this->prefixes) as $key) {
 			$class = $this->formatPresenterClass($name, $key);
 			if (class_exists($class)) {
 				break;
@@ -92,8 +92,8 @@ class PresenterLoader extends \Nette\Application\PresenterLoader
 	 */
 	public function formatPresenterClass($presenter, $type = 'app')
 	{
-		if (isset($this->prefixies[$type])) {
-			return $this->prefixies[$type].str_replace(':', "\\", $presenter.'Presenter');
+		if (isset($this->prefixes[$type])) {
+			return $this->prefixes[$type].str_replace(':', "\\", $presenter.'Presenter');
 		} else {
 			return str_replace(':', '\\', $presenter).'Presenter';
 		}
@@ -112,8 +112,8 @@ class PresenterLoader extends \Nette\Application\PresenterLoader
 				return $prefix;
 			}
 		};
-		if (count($prefixies = array_filter($this->prefixies, $mapper))) {
-			$prefix = current($prefixies);
+		if (count($prefixes = array_filter($this->prefixes, $mapper))) {
+			$prefix = current($prefixes);
 			return str_replace("\\", ':', substr($class, $class[0] == "\\" ? (strlen($prefix) + 1) : strlen($prefix), -9));
 		} else {
 			return str_replace("\\", ':', substr($class, $class[0] == "\\" ? 1 : 0, -9));
