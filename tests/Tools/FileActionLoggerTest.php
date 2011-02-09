@@ -9,6 +9,8 @@
 
 namespace NellaTests\Tools;
 
+require_once __DIR__ . "/../bootstrap.php";
+
 use Nella\Tools\FileActionLogger;
 
 class FileActionLoggerTest extends \PHPUnit_Framework_TestCase

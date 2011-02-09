@@ -9,6 +9,8 @@
 
 namespace NellaTests\Models;
 
+require_once __DIR__ . "/../bootstrap.php";
+
 class ServiceTest extends \PHPUnit_Framework_TestCase
 {
 	/** @var \Nella\Modles\Service */

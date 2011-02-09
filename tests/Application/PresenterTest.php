@@ -104,7 +104,7 @@ class PresenterTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testGetContext()
 	{
-		$this->assertInstanceOf('Nette\Context', $this->presenter->getContext());
-		$this->assertInstanceOf('Nette\Context', $this->presenter->context);
+		$this->assertInstanceOf('Nette\IContext', $this->presenter->getContext());
+		$this->assertInstanceOf('Nette\IContext', $this->presenter->context);
 	}
 }

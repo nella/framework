@@ -9,6 +9,8 @@
 
 namespace NellaTests\Application;
 
+require_once __DIR__ . "/../bootstrap.php";
+
 class ControlTest extends \PHPUnit_Framework_TestCase
 {
 	/** @var \Nella\Application\Control */

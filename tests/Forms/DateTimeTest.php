@@ -9,6 +9,8 @@
 
 namespace NellaTests\Forms;
 
+require_once __DIR__ . "/../bootstrap.php";
+
 class DateTimeTest extends \PHPUnit_Framework_TestCase
 {
 	/** @var Nella\Forms\DateTime */

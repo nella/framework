@@ -9,6 +9,8 @@
 
 namespace NellaTests\Models;
 
+require_once __DIR__ . "/../../bootstrap.php";
+
 class TimestampableListenerTest extends \PHPUnit_Framework_TestCase
 {
 	/** @var Nella\Models\TimestampableListener */

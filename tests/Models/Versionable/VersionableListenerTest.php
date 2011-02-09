@@ -9,6 +9,8 @@
 
 namespace NellaTests\Models;
 
+require_once __DIR__ . "/../../bootstrap.php";
+
 class VersionableListenerTest extends \PHPUnit_Framework_TestCase
 {
 	/** @var Nella\Models\VersionableListener */

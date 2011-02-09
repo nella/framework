@@ -9,6 +9,8 @@
 
 namespace NellaTests\DependencyInjection;
 
+require_once __DIR__ . "/../bootstrap.php";
+
 class ContextTest extends \PHPUnit_Framework_TestCase
 {
 	/** @var \Nella\DependencyInjection\Context */

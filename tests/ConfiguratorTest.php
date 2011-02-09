@@ -9,6 +9,8 @@
 
 namespace NellaTests;
 
+require_once __DIR__ . "/bootstrap.php";
+
 use Nette\Environment;
 
 class ConfiguratorTest extends \PHPUnit_Framework_TestCase
