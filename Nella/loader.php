@@ -11,6 +11,7 @@ namespace Nella;
  
 require_once __DIR__ . "/hacks.php";
 require_once __DIR__ . "/shortcuts.php";
+require_once __DIR__ . "/Localization.php";
 
 /**
  * Load and configure Nella Framework
