@@ -15,8 +15,15 @@ if (!defined('NETTE')) {
 // Nella X-Powered
 @header("X-Powered-By: Nette Framework with Nella"); // @ - headers may be sent
 
-// Set config.neon as config file
+// Set debug options
+Nette\Debug::$strictMode = TRUE;
+Nette\Debug::$maxDepth = 32;
+Nette\Debug::$maxLen = 4096;
+
+// Set nella default services
+require_once __DIR__ . "/DependencyInjection/Context.php";
 require_once __DIR__ . "/Configurator.php";
+Nette\Environment::setConfigurator(new Nella\Configurator);
 
 // Load panels
 require_once __DIR__ . "/Panels/Callback.php";

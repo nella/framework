@@ -11,7 +11,7 @@ namespace Nella;
  
 require_once __DIR__ . "/hacks.php";
 require_once __DIR__ . "/shortcuts.php";
-require_once __DIR__ . "/Localization.php";
+require_once __DIR__ . "/Localization/shortcuts.php";
 
 /**
  * Load and configure Nella Framework
@@ -27,6 +27,3 @@ const FLASH_INFO = "info";
 const FLASH_WARNING = "warning";
 /** #@- */
 
-\Nette\Debug::$strictMode = TRUE;
-\Nette\Debug::$maxDepth = 32;
-\Nette\Debug::$maxLen = 4096;
