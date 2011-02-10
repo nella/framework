@@ -35,6 +35,19 @@ class Repository extends \Doctrine\ODM\MongoDB\DocumentRepository
 	}
 	
 	/**
+	 * Does exist a document with key equal to value and does not same document?
+	 * 
+	 * @param string
+	 * @param string
+	 * @param mixed
+	 */
+	public function isColumnUnique($id, $key, $value)
+	{
+		$res = $this->findOneBy(array($key => $value));
+		return empty($res) ?: $res->id == $id;
+	}
+	
+	/**
 	 * Fetches all records equals array of ids
 	 * 
 	 * @param array
