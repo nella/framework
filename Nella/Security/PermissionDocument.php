@@ -16,7 +16,7 @@ namespace Nella\Security;
  * 
  * @embeddedDocument
  */
-class PersmissionDocument extends \Nella\Object
+class PersmissionDocument extends \Nette\Object
 {
 	/**
 	 * @string
