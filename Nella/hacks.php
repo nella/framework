@@ -24,9 +24,3 @@ Nette\Debug::$maxLen = 4096;
 require_once __DIR__ . "/DependencyInjection/Context.php";
 require_once __DIR__ . "/Configurator.php";
 Nette\Environment::setConfigurator(new Nella\Configurator);
-
-// Load panels
-require_once __DIR__ . "/Panels/Callback.php";
-Nella\Panels\Callback::register();
-require_once __DIR__ . "/Panels/Version.php";
-Nella\Panels\Version::register();
