@@ -248,14 +248,18 @@ class Context extends \Nette\FreezableObject implements \Nette\IContext, \ArrayA
 		$args = $args === NULL ? array() : $args;
 		$output = array();
 		foreach ($args as $arg) {
-			if (\Nette\String::startsWith($arg, '@') && $this->hasService(substr($arg, 1))) {
-				$output[] = $this->getService(substr($arg, 1));
-			} elseif (\Nette\String::startsWith($arg, '%') && \Nette\String::endsWith($arg, '%')) { // @todo: better (DI) implementation
-				$output[] = Environment::getVariable(substr($arg, 1, -1));
-			} elseif (\Nette\String::startsWith($arg, '$')) {  // @todo: better (DI) implementation
-				$output[] = Environment::getConfig(substr($arg, 1, -1));
+			if (is_string($arg)) {
+				if (\Nette\String::startsWith($arg, '@') && $this->hasService(substr($arg, 1))) {
+					$output[] = $this->getService(substr($arg, 1));
+				} elseif (\Nette\String::startsWith($arg, '%') && \Nette\String::endsWith($arg, '%')) { // @todo: better (DI) implementation
+					$output[] = Environment::getVariable(substr($arg, 1, -1));
+				} elseif (\Nette\String::startsWith($arg, '$')) {  // @todo: better (DI) implementation
+					$output[] = Environment::getConfig(substr($arg, 1, -1));
+				} else {
+					$output[] = $arg;
+				}
 			} else {
-				$output[] = $arg;
+				$output[] = (array) $arg;
 			}
 		}
 		
