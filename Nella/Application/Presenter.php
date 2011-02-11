@@ -116,7 +116,7 @@ abstract class Presenter extends \Nette\Application\Presenter
 	}
 
 	/**
-	 * @return Nella\IContext
+	 * @return \Nette\IContext
 	 */
 	public function getContext()
 	{
