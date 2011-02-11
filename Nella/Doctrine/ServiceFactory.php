@@ -57,8 +57,8 @@ class ServiceFactory extends \Nette\Object
 		$config = new \Doctrine\ODM\MongoDB\Configuration;
 
 		// Proxies
-		$config->setProxyDir($options['proxyDir'] ? $options['proxyDir'] : APP_DIR . "/proxies");
-		$config->setProxyNamespace($options['proxyNamespace'] ? $options['proxyNamespace'] : 'App\Proxies');
+		$config->setProxyDir(isset($options['proxyDir']) ? $options['proxyDir'] : APP_DIR . "/proxies");
+		$config->setProxyNamespace(isset($options['proxyNamespace']) ? $options['proxyNamespace'] : 'App\Proxies');
 		if (\Nette\Environment::isProduction()) {
 			$config->setAutoGenerateProxyClasses(FALSE);
 		} else {
