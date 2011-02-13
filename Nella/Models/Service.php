@@ -16,7 +16,7 @@ namespace Nella\Models;
  * 
  * @property-read \Doctrine\ODM\MongoDB\DocumentManager $documentManager
  */
-abstract class Service extends \Nette\Object
+class Service extends \Nette\Object
 {
 	/** @var \Doctrine\ODM\MongoDB\DocumentManager */
 	private $documentManager;
