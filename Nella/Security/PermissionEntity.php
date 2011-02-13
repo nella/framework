@@ -19,7 +19,7 @@ namespace Nella\Security;
  * @property string $resource
  * @property string $privilege
  */
-class PermissionEntity extends \Nette\Object
+class PermissionEntity extends \Nella\Models\Entity
 {
 	/**
 	 * @manyToOne(targetEntity="RoleEntity", inversedBy="permissions")

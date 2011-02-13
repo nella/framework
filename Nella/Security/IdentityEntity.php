@@ -29,8 +29,8 @@ class IdentityEntity extends \Nella\Models\Entity
 	const PASSWORD_DELIMITER = "$";
 	
 	/**
-	 * @column(length=128)
-	 * @index(unique=true, order="asc")
+	 * @id
+	 * @column(length=128, unique=true)
 	 * @var string
 	 */
 	private $username;
