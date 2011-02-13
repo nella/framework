@@ -12,18 +12,17 @@ namespace Nella\Models;
 use Nette\ObjectMixin;
 
 /**
- * Base document repository
+ * Base entity repository
  *
  * @author	Patrik Votoček
  * 
- * @property-read string $documentName
- * @property-read \Doctrine\ODM\MongoDB\DocumentManager $documentManager
- * @property-read \Doctrine\ODM\MongoDB\Mapping\ClassMetadata $classMetadata
+ * @property-read \Doctrine\ORM\EntityManager $entityManager
+ * @property-read \Doctrine\ORM\Mapping\ClassMetadata $classMetadata
  */
-class Repository extends \Doctrine\ODM\MongoDB\DocumentRepository
+class Repository extends \Doctrine\ORM\EntityRepository
 {
 	/**
-	 * Does exist a document with key equal to value?
+	 * Does exist a entity with key equal to value?
 	 * 
 	 * @param string
 	 * @param mixed
@@ -35,7 +34,7 @@ class Repository extends \Doctrine\ODM\MongoDB\DocumentRepository
 	}
 	
 	/**
-	 * Does exist a document with key equal to value and does not same document?
+	 * Does exist a entity with key equal to value and does not same entity?
 	 * 
 	 * @param string
 	 * @param string
@@ -55,9 +54,12 @@ class Repository extends \Doctrine\ODM\MongoDB\DocumentRepository
 	 */
 	public function findByIds(array $ids)
 	{
-		return $this->createQueryBuilder('uni')
-			->field('uni.' . $this->getClassMetadata()->identifier)
-			->in($ids)->execute();
+		$arr = array();
+		foreach ($this->createQueryBuilder('uni')->where($qb->expr()->in('i.id', $ids))->getQuery()->getResult() as $res) {
+			$arr[$res->id] = $res;
+		}
+		
+		return $arr;
 	}
 	
 	/**
@@ -69,7 +71,7 @@ class Repository extends \Doctrine\ODM\MongoDB\DocumentRepository
 	 */
 	public function fetchPairs($key = NULL, $value = NULL)
 	{
-		$res = $this->createQueryBuilder('uni')->select("uni.$key, uni.$value")->execute();
+		$res = $this->createQueryBuilder('uni')->select("uni.$key, uni.$value")->getQuery()->getResult();
 		
 		$arr = array();
 		foreach ($res as $row) {

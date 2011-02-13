@@ -10,24 +10,15 @@
 namespace Nella\Models;
 
 /**
- * Basic document with ID
+ * Basic entity
  * 
  * @mappedSuperclass
  *
  * @author	Patrik Votoček
- *
- * @property-read string $id
  */
-abstract class Document extends BaseDocument
+abstract class BaseEntity extends \Nette\Object
 {
-	/** @id */
-	private $id;
+	public function __construct() { }
 	
-	/**
-	 * @return string
-	 */
-	public function getId()
-	{
-		return $this->id;
-	}
+	public function check() { }
 }

@@ -10,7 +10,7 @@
 namespace Nella\Models;
 
 /**
- * Versionable Document/Entity interface
+ * Versionable entity interface
  *
  * @author	Patrik Votoček
  */

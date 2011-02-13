@@ -10,7 +10,7 @@
 namespace Nella\Models;
 
 /**
- * Timestampable Document/Entity interface
+ * Timestampable entity interface
  *
  * @author	Patrik Votoček
  */

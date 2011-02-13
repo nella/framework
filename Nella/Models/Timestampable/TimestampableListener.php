@@ -23,26 +23,26 @@ class TimestampableListener extends \Nette\Object implements \Doctrine\Common\Ev
 	 */
 	public function getSubscribedEvents()
     {
-        return array(\Doctrine\ODM\MongoDB\Events::preUpdate);
+        return array(\Doctrine\ORM\Events::preUpdate);
     }
     
     /**
-     * @param Doctrine\ODM\MongoDB\Event\PreUpdateEventArgs
+     * @param Doctrine\ORM\Event\PreUpdateEventArgs
      */
-    public function preUpdate(\Doctrine\ODM\MongoDB\Event\PreUpdateEventArgs $args)
+    public function preUpdate(\Doctrine\ORM\Event\PreUpdateEventArgs $args)
     {
-    	$dm = $args->getDocumentManager();
-        $uow = $dm->getUnitOfWork();
+    	$em = $args->getEntityManager();
+        $uow = $em->getUnitOfWork();
 
-        foreach ($uow->getScheduledDocumentInsertions() AS $document) {
-            if ($document instanceof ITimestampable) {
-                $document->updateTimestamps();
+        foreach ($uow->getScheduledEntityInsertions() AS $entity) {
+            if ($entity instanceof ITimestampable) {
+                $entity->updateTimestamps();
             }
         }
         
-        foreach ($uow->getScheduledDocumentUpdates() AS $document) {
-            if ($document instanceof ITimestampable) {
-                $document->updateTimestamps();
+        foreach ($uow->getScheduledEntityUpdates() AS $entity) {
+            if ($entity instanceof ITimestampable) {
+                $entity->updateTimestamps();
             }
         }
     }

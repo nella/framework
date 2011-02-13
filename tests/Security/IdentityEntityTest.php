@@ -11,14 +11,14 @@ namespace NellaTests\Security;
 
 require_once __DIR__ . "/../bootstrap.php";
 
-class IdentityDocumentTest extends \PHPUnit_Framework_TestCase
+class IdentityEntityTest extends \PHPUnit_Framework_TestCase
 {
-	/** @var \Nella\Security\IdentityDocument */
+	/** @var \Nella\Security\IdentityEntity */
 	private $identity;
 	
 	public function setUp()
 	{
-		$this->identity = new \Nella\Security\IdentityDocument;	
+		$this->identity = new \Nella\Security\IdentityEntity;	
 	}
 	
 	public function testPassword()

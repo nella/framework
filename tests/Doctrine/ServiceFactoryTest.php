@@ -15,48 +15,18 @@ use Nella\Doctrine\ServiceFactory;
 
 class ServiceFactoryTest extends \PHPUnit_Framework_TestCase
 {
-	public function testAnnotationDriver()
-	{
-		$this->assertInstanceOf('Doctrine\ODM\MongoDB\Mapping\Driver\AnnotationDriver', ServiceFactory::annotationDriver(), "::annotationDriver instance od doctrine annotation driver");
-	}
-
-	/**
-	 * @expectedException \MongoConnectionException
-	 */
-	public function testConnection()
-	{
-		$this->assertInstanceOf(
-			'Doctrine\MongoDB\Connection', 
-			ServiceFactory::connection(array(
-				'host' => "localhost",
-				'username' => "test", 
-				'password' => "test", 
-				'dbname' => "test", 
-			)), 
-			"::connection instance of Doctrine MongoDB connection"
-		);
-	}
-
 	public function testConfiguration()
 	{
-		$this->assertInstanceOf(
-			'Doctrine\ODM\MongoDB\Configuration', 
-			ServiceFactory::configuration(
-				ServiceFactory::annotationDriver(), 
-				new \Nella\Doctrine\Cache(new \Nette\Caching\Cache(new \Nette\Caching\MemoryStorage))), 
-			"::config instance of Doctrine configuration"
-		);
+		$this->assertInstanceOf('Doctrine\ORM\Configuration', ServiceFactory::configuration(), "::configuration instance of Doctrine configuration");
 	}
 
-	public function testDocumentManager()
+	public function testEntityManager()
 	{
-		$connection = new \Doctrine\MongoDB\Connection();
-		$config = ServiceFactory::configuration(
-			ServiceFactory::annotationDriver(), 
-			new \Nella\Doctrine\Cache(new \Nette\Caching\Cache(new \Nette\Caching\MemoryStorage))
+		$conf = array(
+			'driver' => "pdo_sqlite", 
+			'path' => __DIR__ . "/db.sqlite",
 		);
 		
-
-		$this->assertInstanceOf('Doctrine\ODM\MongoDB\DocumentManager', ServiceFactory::documentManager($connection, $config), "::documentManager instance of Doctrine document manager");
+		$this->assertInstanceOf('Doctrine\ORM\EntityManager', ServiceFactory::entityManager($conf), "::entityManager instance of Doctrine entity manager");
 	}
 }

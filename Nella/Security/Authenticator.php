@@ -16,15 +16,15 @@ namespace Nella\Security;
  */
 class Authenticator extends \Nette\Object implements \Nette\Security\IAuthenticator
 {
-	/** @var \Doctrine\ODM\MongoDB\DocumentManager */
-	private $documentManager;
+	/** @var \Doctrine\ORM\EntityManager */
+	private $entityManager;
 	
 	/**
-	 * @param \Doctrine\ODM\MongoDB\DocumentManager
+	 * @param \Doctrine\ORM\EntityManager
 	 */
-	public function __construct(\Doctrine\ODM\MongoDB\DocumentManager $documentManager)
+	public function __construct(\Doctrine\ORM\EntityManager $entityManager)
 	{
-		$this->documentManager = $documentManager;
+		$this->entityManager = $entityManager;
 	}
 	
 	/**
@@ -36,7 +36,7 @@ class Authenticator extends \Nette\Object implements \Nette\Security\IAuthentica
 	public function authenticate(array $credentials)
 	{
 		list($username, $password) = $credentials;
-		$service = new AuthenticatorService($this->documentManager, 'Nella\Security\Identity');
+		$service = new \Nella\Models\Service($this->entityManager, 'Nella\Security\Identity');
 		
 		if (strpos($username, '@') !== FALSE) {
 			$entity = $service->repository->findOneByEmail($username);	

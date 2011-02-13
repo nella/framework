@@ -11,57 +11,62 @@ namespace NellaTests\Models;
 
 require_once __DIR__ . "/../bootstrap.php";
 
+use Nella\Models\Service;
+
 class ServiceTest extends \PHPUnit_Framework_TestCase
 {
+	/** @var \Doctrine\ORM\EntityManager */
+	private $em;
 	/** @var \Nella\Modles\Service */
 	private $service;
 	
 	public function setUp()
 	{
-		$this->service = new ServiceMock(\Doctrine\ODM\MongoDB\Tests\Mocks\DocumentManagerMock::create());
+		$this->em = \Doctrine\Tests\Mocks\EntityManagerMock::create(new \Doctrine\DBAL\Connection(array(), new \Doctrine\DBAL\Driver\PDOSqlite\Driver));
+		$this->service = new Service($this->em);
 	}
 	
-	public function testGetDocumentManager()
+	public function testGetEntityManager()
 	{
-		$this->assertInstanceOf('Doctrine\ODM\MongoDB\DocumentManager', $this->service->getDocumentManager(), "->getDocumentManager() instance Doctrine DocumentManger");
-		$this->assertInstanceOf('Doctrine\ODM\MongoDB\DocumentManager', $this->service->documentManager, "->documentManager instance Doctrine DocumentManger");
+		$this->assertInstanceOf('Doctrine\ORM\EntityManager', $this->service->getEntityManager(), "->getEntityManager() instance Doctrine EntityManger");
+		$this->assertInstanceOf('Doctrine\ORM\EntityManager', $this->service->entityManager, "->entityManager instance Doctrine EntityManger");
 	}
 	
-	public function testGetDocumentName()
+	public function testGetEntityClass()
 	{
 		
-		$this->assertNull($this->service->getDocumentName(), "->getDocumentName() default is NULL");
-		$this->assertNull($this->service->documentName, "->documentName default is NULL");
+		$this->assertNull($this->service->getEntityClass(), "->getEntityClass() default is NULL");
+		$this->assertNull($this->service->entityClass, "->entityClass default is NULL");
 		
-		$this->service = new ServiceMock(\Doctrine\ODM\MongoDB\Tests\Mocks\DocumentManagerMock::create(), 'Test');
-		$this->assertEquals("Test", $this->service->getDocumentName(), "->getDocumentName() is 'Test'");
-		$this->assertEquals("Test", $this->service->documentName, "->documentName is 'Test'");
+		$this->service = new Service($this->em, 'Test');
+		$this->assertEquals("Test", $this->service->getEntityClass(), "->getEntityName() is 'Test'");
+		$this->assertEquals("Test", $this->service->entityClass, "->entityClass is 'Test'");
 	}
 	
-	public function testGetDocumentRepository()
+	public function testGetEntityRepository()
 	{
-		$this->assertInstanceOf('Doctrine\ODM\MongoDB\DocumentRepository', $this->service->getDocumentRepository('NellaTests\Models\DocumentMock'), "->getDocumentRepository() is instaceof Doctrine DocumentRepository");
+		$this->assertInstanceOf('Doctrine\ORM\EntityRepository', $this->service->getEntityRepository('NellaTests\Models\EntityMock'), "->getEntityRepository() is instaceof Doctrine EntityRepository");
 		
-		$this->service = new ServiceMock(\Doctrine\ODM\MongoDB\Tests\Mocks\DocumentManagerMock::create(), 'NellaTests\Models\DocumentMock');
-		$this->assertInstanceOf('Doctrine\ODM\MongoDB\DocumentRepository', $this->service->getDocumentRepository(), "->getDocumentRepository() is instaceof Doctrine DocumentRepository");
-		$this->assertInstanceOf('Doctrine\ODM\MongoDB\DocumentRepository', $this->service->documentRepository, "->documentRepository is instaceof Doctrine DocumentRepository");
+		$this->service = new Service($this->em, 'NellaTests\Models\EntityMock');
+		$this->assertInstanceOf('Doctrine\ORM\EntityRepository', $this->service->getEntityRepository(), "->getEntityRepository() is instaceof Doctrine EntityRepository");
+		$this->assertInstanceOf('Doctrine\ORM\EntityRepository', $this->service->entityRepository, "->entityRepository is instaceof Doctrine EntityRepository");
 	}
 	
 	/**
 	 * @expectedException \InvalidArgumentException
 	 */
-	public function testGetDocumentRepositoryException()
+	public function testGetEntityRepositoryException()
 	{
-		$this->service->documentRepository;
+		$this->service->entityRepository;
 	}
 	
 	public function testGetClassMetadata()
 	{
-		$this->assertInstanceOf('Doctrine\ODM\MongoDB\Mapping\ClassMetadata', $this->service->getClassMetadata('NellaTests\Models\DocumentMock'), "->getClassMetadata() is instaceof Doctrine ClassMetadata");
+		$this->assertInstanceOf('Doctrine\ORM\Mapping\ClassMetadata', $this->service->getClassMetadata('NellaTests\Models\EntityMock'), "->getClassMetadata() is instaceof Doctrine ClassMetadata");
 		
-		$this->service = new ServiceMock(\Doctrine\ODM\MongoDB\Tests\Mocks\DocumentManagerMock::create(), 'NellaTests\Models\DocumentMock');
-		$this->assertInstanceOf('Doctrine\ODM\MongoDB\Mapping\ClassMetadata', $this->service->getClassMetadata(), "->getClassMetadata() is instaceof Doctrine ClassMetadata");
-		$this->assertInstanceOf('Doctrine\ODM\MongoDB\Mapping\ClassMetadata', $this->service->classMetadata, "->classMetadata is instaceof Doctrine ClassMetadata");
+		$this->service = new Service($this->em, 'NellaTests\Models\EntityMock');
+		$this->assertInstanceOf('Doctrine\ORM\Mapping\ClassMetadata', $this->service->getClassMetadata(), "->getClassMetadata() is instaceof Doctrine ClassMetadata");
+		$this->assertInstanceOf('Doctrine\ORM\Mapping\ClassMetadata', $this->service->classMetadata, "->classMetadata is instaceof Doctrine ClassMetadata");
 	}
 	
 	/**
@@ -72,5 +77,3 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
 		$this->service->classMetadata;
 	}
 }
-
-class ServiceMock extends \Nella\Models\Service { }

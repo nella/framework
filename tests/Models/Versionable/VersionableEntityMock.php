@@ -10,11 +10,11 @@
 namespace NellaTests\Models;
 
 /**
- * @document
+ * @entity
  */
-class VersionableDocumentMock extends \Nella\Models\Document implements \Nella\Models\IVersionable
+class VersionableEntityMock extends \Nella\Models\Entity implements \Nella\Models\IVersionable
 {
-	/** @string */
+	/** @column(type="string") */
 	private $data;
 	
 	/**
@@ -27,7 +27,7 @@ class VersionableDocumentMock extends \Nella\Models\Document implements \Nella\M
 	
 	/**
 	 * @param string
-	 * @return VersionableDocumentMock
+	 * @return VersionableEntityMock
 	 */
 	public function setData($data)
 	{

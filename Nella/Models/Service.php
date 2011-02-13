@@ -14,93 +14,96 @@ namespace Nella\Models;
  *
  * @author	Patrik Votoček
  * 
- * @property-read \Doctrine\ODM\MongoDB\DocumentManager $documentManager
+ * @property-read \Doctrine\ORM\EntityManager $entityManager
+ * @property-read string $entityClass
+ * @property-read \Doctrine\ORM\EntityRepository $repository
+ * @property-read \Doctrine\ORM\Mapping\ClassMetadata $classMetadata
  */
 class Service extends \Nette\Object
 {
-	/** @var \Doctrine\ODM\MongoDB\DocumentManager */
-	private $documentManager;
+	/** @var \Doctrine\ORM\EntityManager */
+	private $entityManager;
 	/** @var string */
-	private $documentName;
+	private $entityClass;
 	
 	/**
-	 * @param \Doctrine\ODM\MongoDB\DocumentManager
+	 * @param \Doctrine\ORM\EntityManager
 	 * @param string
 	 */
-	public function __construct(\Doctrine\ODM\MongoDB\DocumentManager $documentManager, $documentName = NULL)
+	public function __construct(\Doctrine\ORM\EntityManager $entityManager, $entityClass = NULL)
 	{
-		$this->documentManager = $documentManager;
-		$this->documentName = $documentName;
+		$this->entityManager = $entityManager;
+		$this->entityClass = $entityClass;
 	}
 	
 	/**
-	 * @return \Doctrine\ODM\MongoDB\DocumentManager
+	 * @return \Doctrine\ORM\EntityManager
 	 */
-	public function getDocumentManager()
+	public function getEntityManager()
 	{
-		return $this->documentManager;
+		return $this->entityManager;
 	}
 	
 	/**
 	 * @return string
 	 */
-	public function getDocumentName()
+	public function getEntityClass()
 	{
-		return $this->documentName;
+		return $this->entityClass;
 	}
 	
 	/**
 	 * @param string
-	 * @return \Doctrine\ODM\MongoDB\DocumentRepository
+	 * @return \Doctrine\ORM\EntityRepository
 	 * @throws \InvalidArgumentException
 	 */
-	public function getDocumentRepository($documentName = NULL)
+	public function getEntityRepository($entityClass = NULL)
 	{
-		$documentName = $documentName ?: $this->getDocumentName();
-		if (empty($documentName)) {
-			throw new \InvalidArgumentException("Default document name is not set, you must set document name in param");
+		$entityClass = $entityClass ?: $this->getEntityClass();
+		if (empty($entityClass)) {
+			throw new \InvalidArgumentException("Default entity name is not set, you must set entity name in param");
 		}
 		
-		return $this->getDocumentManager()->getRepository($documentName);
+		return $this->getEntityManager()->getRepository($entityClass);
 	}
 	
 	/**
 	 * @param string
-	 * @return \Doctrine\ODM\MongoDB\Mapping\ClassMetadata
+	 * @return \Doctrine\ORM\ClassMetadata
 	 * @throws \InvalidArgumentException
 	 */
-	public function getClassMetadata($documentName = NULL)
+	public function getClassMetadata($entityClass = NULL)
 	{
-		$documentName = $documentName ?: $this->getDocumentName();
-		if (empty($documentName)) {
-			throw new \InvalidArgumentException("Default document name is not set, you must set document name in param");
+		$entityClass = $entityClass ?: $this->getEntityClass();
+		if (empty($entityClass)) {
+			throw new \InvalidArgumentException("Default entity name is not set, you must set entity name in param");
 		}
 		
-		return $this->getDocumentManager()->getClassMetadata($documentName);
+		return $this->getEntityManager()->getClassMetadata($entityClass);
 	}
 	
 	/**
-	 * @param BaseDocument
-	 * @return BaseDocument
+	 * @param BaseEntity
+	 * @return BaseEntity
 	 */
-	public function persist(BaseDocument $document)
+	public function persist(BaseEntity $entity)
 	{
-		$this->getDocumentManager()->persist($document);
-		return $document;
+		$this->getEntityManager()->persist($entity);
+		return $entity;
 	}
 	
 	/**
-	 * @param BaseDocument
-	 * @return BaseDocument
+	 * @param BaseEntity
+	 * @return BaseEntity
 	 */
-	public function remove(BaseDocument $document)
+	public function remove(BaseEntity $entity)
 	{
-		$this->getDocumentManager()->remove($document);
-		return $document;
+		$this->getEntityManager()->remove($entity);
+		return $entity;
 	}
 	
 	public function flush()
 	{
-		return $this->getDocumentManager()->flush();
+		return $this->getEntityManager()->flush();
 	}
 }

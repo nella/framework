@@ -10,52 +10,53 @@
 namespace Nella\Security;
 
 /**
- * Identity document
+ * Identity entity
  *
  * @author	Patrik Votoček
  * 
- * @document(repositoryClass="Nella\Models\Repository")
+ * @entity(repositoryClass="Nella\Models\Repository")
  * @hasLifecycleCallbacks
  * 
  * @property string $username
  * @property string $email
  * @property string $password
- * @property RoleDocument $role
+ * @property RoleEntity $role
  * @property string $lang
  * @property string $realname
  */
-class IdentityDocument extends \Nella\Models\Document
+class IdentityEntity extends \Nella\Models\Entity
 {
 	const PASSWORD_DELIMITER = "$";
 	
 	/**
-	 * @string
+	 * @column(length=128)
 	 * @index(unique=true, order="asc")
 	 * @var string
 	 */
 	private $username;
 	/**
-	 * @string
+	 * @column(length=256)
 	 * @var string
 	 */
 	private $email;
 	/**
-	 * @string
+	 * @column(length=256)
 	 * @var string
 	 */
 	private $password;
 	/**
-	 * @referenceOne(targetDocument="RoleDocument")
-	 * @var RoleDocument
+	 * @manyToOne(targetEntity="RoleEntity")
+     * @joinColumn(name="role_id", referencedColumnName="id")
+	 * @var RoleEntity
 	 */
 	private $role;
 	/**
-	 * @string
+	 * @column(length=5)
 	 * @var string
 	 */
 	private $lang;
 	/**
-	 * @string
+	 * @column(length=256)
 	 * @var string
 	 */
 	private $realname;
@@ -70,7 +71,7 @@ class IdentityDocument extends \Nella\Models\Document
 
 	/**
 	 * @param string
-	 * @return IdentityDocument
+	 * @return IdentityEntity
 	 */
 	public function setUsername($username)
 	{
@@ -89,7 +90,7 @@ class IdentityDocument extends \Nella\Models\Document
 
 	/**
 	 * @param string
-	 * @return IdentityDocument
+	 * @return IdentityEntity
 	 */
 	public function setEmail($email)
 	{
@@ -115,7 +116,7 @@ class IdentityDocument extends \Nella\Models\Document
 	/**
 	 * @param string
 	 * @param string
-	 * @return IdentityDocument
+	 * @return IdentityEntity
 	 */
 	public function setPassword($password, $algo = "sha256")
 	{
@@ -139,7 +140,7 @@ class IdentityDocument extends \Nella\Models\Document
 	}
 
 	/**
-	 * @return RoleDocument
+	 * @return RoleEntity
 	 */
 	public function getRole()
 	{
@@ -147,10 +148,10 @@ class IdentityDocument extends \Nella\Models\Document
 	}
 
 	/**
-	 * @param RoleDocument
-	 * @return IdentityDocument
+	 * @param RoleEntity
+	 * @return IdentityEntity
 	 */
-	public function setRole(RoleDocument $role)
+	public function setRole(RoleEntity $role)
 	{
 		$this->role = $role;
 		return $this;
@@ -166,7 +167,7 @@ class IdentityDocument extends \Nella\Models\Document
 
 	/**
 	 * @param string
-	 * @return IdentityDocument
+	 * @return IdentityEntity
 	 */
 	public function setLang($lang)
 	{
@@ -185,7 +186,7 @@ class IdentityDocument extends \Nella\Models\Document
 
 	/**
 	 * @param string
-	 * @return IdentityDocument
+	 * @return IdentityEntity
 	 */
 	public function setRealname($realname)
 	{

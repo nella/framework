@@ -16,22 +16,22 @@ namespace Nella\Security;
  * 
  * @property-read int $id
  * @property-read array $roles
- * @property-read IdentityDocument $document
+ * @property-read IdentityEntity $entity
  */
 class Identity extends \Nette\Object implements \Nette\Security\IIdentity, \Serializable
 {
 	/** @var string */
 	private $id;
-	/** @var IdentityDocument */
-	private $document;
+	/** @var IdentityEntity */
+	private $entity;
 
 	/**
-	 * @param IdentityDocument
+	 * @param IdentityEntity
 	 */
-	public function __construct(IdentityDocument $document)
+	public function __construct(IdentityEntity $entity)
 	{
-		$this->document = $document;
-		$this->id = $this->document->id;
+		$this->entity = $entity;
+		$this->id = $this->entity->id;
 	}
 
 	/**
@@ -41,7 +41,7 @@ class Identity extends \Nette\Object implements \Nette\Security\IIdentity, \Seri
 	  */
 	public function getId()
 	{
-		return $this->document->id;
+		return $this->id;
 	}
 
 	/**
@@ -50,15 +50,15 @@ class Identity extends \Nette\Object implements \Nette\Security\IIdentity, \Seri
 	 */
 	public function getRoles()
 	{
-		return array($this->document->role);
+		return array($this->entity->role);
 	}
 
 	/**
-	 * @return IdentityDocument
+	 * @return IdentityEntity
 	 */
-	public function getDocumet()
+	public function getEntity()
 	{
-		return $this->document;
+		return $this->entity;
 	}
 
 	/**
@@ -77,11 +77,11 @@ class Identity extends \Nette\Object implements \Nette\Security\IIdentity, \Seri
 	{
 		$this->id = unserialize($serialized);
 
-		$documentManager = \Nette\Environment::getApplication()->context->getService('Doctrine\ODM\MongoDB\DocumentManager'); // @todo how to better DI?
-		$service = new \Nella\Models\Service($documentManager);
-		$this->document = $service->repository->find($this->id);
+		$entityManager = \Nette\Environment::getApplication()->context->getService('Doctrine\ORM\EntityManager'); // @todo how to better DI?
+		$service = new \Nella\Models\Service($entityManager);
+		$this->entity = $service->repository->find($this->id);
 
-		if (!$this->document) {
+		if (!$this->entity) {
 			throw new \InvalidStateException("User with id {$this->id} not found");
 		}
 	}

@@ -23,31 +23,31 @@ class VersionableListenerTest extends \PHPUnit_Framework_TestCase
 	
 	public function testGetSubscribedEvents()
 	{
-		$this->assertEquals(array(\Doctrine\ODM\MongoDB\Events::onFlush), $this->listener->getSubscribedEvents(), "is Doctrine\\ODM\\MongoDB\\Events::onFlush");
-		$this->assertEquals(array(\Doctrine\ODM\MongoDB\Events::onFlush), $this->listener->subscribedEvents, "is Doctrine\\ODM\\MongoDB\\Events::onFlush");
+		$this->assertEquals(array(\Doctrine\ORM\Events::onFlush), $this->listener->getSubscribedEvents(), "is Doctrine\\ORM\\Events::onFlush");
+		$this->assertEquals(array(\Doctrine\ORM\Events::onFlush), $this->listener->subscribedEvents, "is Doctrine\\ORM\\Events::onFlush");
 	}
 	
 	public function testOnFlushInsert()
 	{
 		$this->assertInstanceOf('Doctrine\Common\EventSubscriber', $this->listener, "instance of Doctrine\\Common\\EventSubscriber");
-		$dm = \Doctrine\ODM\MongoDB\Tests\Mocks\DocumentManagerMock::create();
-		$args = new \Doctrine\ODM\MongoDB\Event\OnFlushEventArgs($dm);
-		$doc = new VersionableDocumentMock;
-		$doc->setData("foo");
-		$dm->persist($doc);
+		$em = \Doctrine\Tests\Mocks\EntityManagerMock::create(new \Doctrine\DBAL\Connection(array(), new \Doctrine\DBAL\Driver\PDOSqlite\Driver));
+		$args = new \Doctrine\ORM\Event\OnFlushEventArgs($em);
+		$entity = new VersionableEntityMock;
+		$entity->setData("foo");
+		$em->persist($entity);
 		
 		$this->listener->onFlush($args);
 		
-		$uow = $dm->getUnitOfWork();
-		$vd = NULL;
-		foreach ($uow->getScheduledDocumentInsertions() as $document) {
-			if ($document instanceof \Nella\Models\VersionDocument) {
-				$vd = $document;
+		$uow = $em->getUnitOfWork();
+		$ve = NULL;
+		foreach ($uow->getScheduledEntityInsertions() as $ventity) {
+			if ($ventity instanceof \Nella\Models\VersionEntity) {
+				$ve = $ventity;
 			}
 		}
 		
-		$this->assertNotNull($vd, "is existing snapshot");
-		$this->assertEquals(get_class($doc), $vd->getDocumentClass(), "validate snapshot class");
-		$this->assertEquals($doc->takeSnapshot(), $vd->getDocumentData(), "validate snapshot data");
+		$this->assertNotNull($ve, "is existing snapshot");
+		$this->assertEquals(get_class($entity), $ve->getEntityClass(), "validate snapshot class");
+		$this->assertEquals($entity->takeSnapshot(), $ve->getEntityData(), "validate snapshot data");
 	}
 }

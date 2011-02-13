@@ -10,12 +10,12 @@
 namespace NellaTests\Models;
 
 /**
- * @document
+ * @entity
  */
-class TimestampableDocumentMock extends \Nella\Models\Document implements \Nella\Models\ITimestampable
+class TimestampableEntityMock extends \Nella\Models\Entity implements \Nella\Models\ITimestampable
 {
 	/**
-	 * @datetime
+	 * @column(type="datetime")
 	 * @var DateTime
 	 */
 	private $datetime = NULL;

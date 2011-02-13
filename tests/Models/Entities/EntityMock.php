@@ -10,16 +10,16 @@
 namespace NellaTests\Models;
 
 /**
- * @document
+ * @entity
  */
-class DocumentMock extends \Nella\Models\Document
+class EntityMock extends \Nella\Models\Entity
 {
 	/**
 	 * @param int
 	 */
 	public function __construct($id = NULL)
 	{
-		$ref = new \Nette\Reflection\PropertyReflection('Nella\Models\Document', 'id');
+		$ref = new \Nette\Reflection\PropertyReflection('Nella\Models\Entity', 'id');
 		$ref->setAccessible(TRUE);
 		$ref->setValue($this, $id);
 		$ref->setAccessible(FALSE);

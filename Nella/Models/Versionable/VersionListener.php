@@ -9,9 +9,6 @@
 
 namespace Nella\Models;
 
-use Doctrine\ORM\Event\OnFlushEventArgs,
-    Doctrine\ORM\EntityManager;
-
 /**
  * Versionable listener
  * 
@@ -26,40 +23,40 @@ class VersionListener extends \Nette\Object implements \Doctrine\Common\EventSub
 	 */
 	public function getSubscribedEvents()
     {
-        return array(\Doctrine\ODM\MongoDB\Events::onFlush);
+        return array(\Doctrine\ORM\Events::onFlush);
     }
 
     /**
-     * @param Doctrine\ODM\MongoDB\Event\OnFlushEventArgs
+     * @param Doctrine\ORM\ORM\Event\OnFlushEventArgs
      */
-    public function onFlush(\Doctrine\ODM\MongoDB\Event\OnFlushEventArgs $args)
+    public function onFlush(\Doctrine\ORM\Event\OnFlushEventArgs $args)
     {
-        $dm = $args->getDocumentManager();
-        $uow = $dm->getUnitOfWork();
+        $em = $args->getEntityManager();
+        $uow = $em->getUnitOfWork();
 
-        foreach ($uow->getScheduledDocumentInsertions() AS $document) {
-            if ($document instanceof IVersionable) {
-                $this->takeSnapshot($dm, $document);
+        foreach ($uow->getScheduledEntityInsertions() AS $entity) {
+            if ($entity instanceof IVersionable) {
+                $this->takeSnapshot($em, $entity);
             }
         }
 
-        foreach ($uow->getScheduledDocumentUpdates() AS $document) {
-            if ($document instanceof IVersionable) {
-                $this->takeSnapshot($dm, $document);
+        foreach ($uow->getScheduledEntityUpdates() AS $entity) {
+            if ($entity instanceof IVersionable) {
+                $this->takeSnapshot($em, $entity);
             }
         }
     }
 
     /**
-     * @param Doctrine\ODM\MongoDB\DocumentManager
+     * @param \Doctrine\ORM\EntityManager
      * @param IVersionable
      */
-    private function takeSnapshot(\Doctrine\ODM\MongoDB\DocumentManager $dm, IVersionable $document)
+    private function takeSnapshot(\Doctrine\ORM\EntityManager $em, IVersionable $entity)
     {
-        $version = new VersionDocument($document);
-        $class = $dm->getClassMetadata(get_class($document));
+        $version = new VersionEntity($entity);
+        $class = $em->getClassMetadata(get_class($version));
 
-        $dm->persist($version);
-        $dm->getUnitOfWork()->computeChangeSet($class, $version);
+        $em->persist($version);
+        $em->getUnitOfWork()->computeChangeSet($class, $version);
     }
 }

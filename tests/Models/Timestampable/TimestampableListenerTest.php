@@ -23,26 +23,26 @@ class TimestampableListenerTest extends \PHPUnit_Framework_TestCase
 	
 	public function testGetSubscribedEvents()
 	{
-		$this->assertEquals(array(\Doctrine\ODM\MongoDB\Events::preUpdate), $this->listener->getSubscribedEvents(), "is Doctrine\\ODM\\MongoDB\\Events::preUpdate");
-		$this->assertEquals(array(\Doctrine\ODM\MongoDB\Events::preUpdate), $this->listener->subscribedEvents, "is Doctrine\\ODM\\MongoDB\\Events::preUpdate");
+		$this->assertEquals(array(\Doctrine\ORM\Events::preUpdate), $this->listener->getSubscribedEvents(), "is Doctrine\\ORM\\Events::preUpdate");
+		$this->assertEquals(array(\Doctrine\ORM\Events::preUpdate), $this->listener->subscribedEvents, "is Doctrine\\ORM\\Events::preUpdate");
 	}
 	
 	public function testPreUpdate()
 	{
 		$this->assertInstanceOf('Doctrine\Common\EventSubscriber', $this->listener, "instance of Doctrine\\Common\\EventSubscriber");
 		
-		$dm = \Doctrine\ODM\MongoDB\Tests\Mocks\DocumentManagerMock::create();
-		$doc = new \NellaTests\Models\TimestampableDocumentMock;
-		$dm->persist($doc);
+		$em = \Doctrine\Tests\Mocks\EntityManagerMock::create(new \Doctrine\DBAL\Connection(array(), new \Doctrine\DBAL\Driver\PDOSqlite\Driver));
+		$entity = new \NellaTests\Models\TimestampableEntityMock;
+		$em->persist($entity);
 		
 		$changeSet = array('datetime' => new \DateTime("1970-1-1"));
-		$args = new \Doctrine\ODM\MongoDB\Event\PreUpdateEventArgs($doc, $dm, $changeSet);
+		$args = new \Doctrine\ORM\Event\PreUpdateEventArgs($entity, $em, $changeSet);
 		
-		$this->assertNull($doc->getDatetime(), "is default value NULL");
+		$this->assertNull($entity->getDatetime(), "is default value NULL");
 		
 		$this->listener->preUpdate($args);
 		
-		$this->assertInstanceOf('DateTime', $doc->getDateTime(), "is datetime updated");
+		$this->assertInstanceOf('DateTime', $entity->getDateTime(), "is datetime updated");
 		//$this->assertNotEquals(new \DateTime("1970-1-1"), $doc->getDatetime(), "does not 1970-1-1");
 	}
 }

@@ -10,21 +10,30 @@
 namespace Nella\Security;
 
 /**
- * Persmission document
+ * Persmission entity
+ * 
+ * @entity(repositoryClass="Nella\Models\Repository")
  *
  * @author	Patrik Votoček
  * 
- * @embeddedDocument
+ * @property string $resource
+ * @property string $privilege
  */
-class PersmissionDocument extends \Nette\Object
+class PersmissionEntity extends \Nette\Object
 {
 	/**
-	 * @string
+	 * @manyToOne(targetEntity="RoleEntity", inversedBy="permissions")
+     * @joinColumn(name="role_id", referencedColumnName="id")
+	 * @var mixed
+	 */
+	private $role;
+	/**
+	 * @column(length=128)
 	 * @var string
 	 */
 	private $resource;
 	/**
-	 * @string
+	 * @column(length=128)
 	 * @var string
 	 */
 	private $privilege;
@@ -39,7 +48,7 @@ class PersmissionDocument extends \Nette\Object
 
 	/**
 	 * @param string
-	 * @return PersmissionDocument
+	 * @return PersmissionEntity
 	 */
 	public function setResource($resource)
 	{
@@ -58,7 +67,7 @@ class PersmissionDocument extends \Nette\Object
 
 	/**
 	 * @param string
-	 * @return PersmissionDocument
+	 * @return PersmissionEntity
 	 */
 	public function setPrivilege($privilege)
 	{

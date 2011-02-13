@@ -10,26 +10,26 @@
 namespace Nella\Security;
 
 /**
- * Role document
+ * Role entity
  *
  * @author	Patrik Votoček
  * 
- * @document(repositoryClass="Nella\Models\Repository")
+ * @entity(repositoryClass="Nella\Models\Repository")
  * @hasLifecycleCallbacks
  * 
  * @property string $name
  * @property-read array $permissions
  */
-class RoleDocument extends \Nella\Models\Document
+class RoleEntity extends \Nella\Models\Entity
 {
 	/** 
-	 * @string
+	 * @column(length=128)
 	 * @index(unique=true, order="asc")
 	 * @var string
 	 */
 	private $name;
 	/**
-	 * @embedMany(targetDocument="PermissionDocument")
+	 * @oneToMany(targetEntity="PermissionEntity", mappedBy="role")
 	 * @var array
 	 */
 	private $permissions;
@@ -50,7 +50,7 @@ class RoleDocument extends \Nella\Models\Document
 
 	/**
 	 * @param string
-	 * @return RoleDocument
+	 * @return RoleEntity
 	 */
 	public function setName($name)
 	{
@@ -77,7 +77,7 @@ class RoleDocument extends \Nella\Models\Document
 	 */
 	public function check()
 	{
-		$service = $this->getModelService('Nella\Security\Models\RoleService');
+		$service = $this->getModelService('Nella\Models\Service', 'Nella\Security\RoleEntity');
 		parent::check();
 		if ($this->name === NULL) {
 			throw new \Nella\Models\EmptyValuesException('name', "Name value must be non empty string");	

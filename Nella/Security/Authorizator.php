@@ -21,11 +21,11 @@ class Authorizator extends \Nette\Security\Permission
 	const PRIVILEGE = 'privilege';
 	
 	/**
-	 * @param \Doctrine\ODM\MongoDB\DocumentManager
+	 * @param \Doctrine\ORM\EntityManager
 	 */
-	public function __construct(\Doctrine\ODM\MongoDB\DocumentManager $documentManager)
+	public function __construct(\Doctrine\ORM\EntityManager $entityManager)
 	{
-		$service = new \Nella\Models\Service($documentManager, 'Nella\Security\RoleDocument');
+		$service = new \Nella\Models\Service($entityManager, 'Nella\Security\RoleEntity');
 		$roles = $service->repository->findAll();
 		
 		foreach ($roles as $role) {
