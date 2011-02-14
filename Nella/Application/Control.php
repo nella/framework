@@ -101,4 +101,12 @@ abstract class Control extends \Nette\Application\Control
 		$this->template->setFile($this->formatTemplateFile($method));
 		$this->template->render();
 	}
+	
+	/**
+	 * @return \Doctrine\ORM\EntityManager
+	 */
+	public function getEntityManager()
+	{
+		return $this->getPresenter()->context->getService('Doctrine\ORM\EntityManager');
+	}
 }
