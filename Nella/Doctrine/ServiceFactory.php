@@ -31,7 +31,7 @@ class ServiceFactory extends \Nette\Object
 	 * @param string
 	 * @return \Doctrine\ORM\Configuration
 	 */
-	public static function configuration(\Doctrine\Common\Cache\Cache $cache = NULL, array $dirs = NULL, $proxyDir = NULL, $proxyNamespace = 'App\Models\Proxies')
+	public static function configuration(\Doctrine\Common\Cache\Cache $cache = NULL, array $dirs = NULL, \Doctrine\DBAL\Logging\SQLLogger $logger = NULL, $proxyDir = NULL, $proxyNamespace = 'App\Models\Proxies')
 	{
 		$config = new \Doctrine\ORM\Configuration;
 
@@ -52,6 +52,11 @@ class ServiceFactory extends \Nette\Object
 			$config->setAutoGenerateProxyClasses(FALSE);
 		} else {
 			$config->setAutoGenerateProxyClasses(TRUE);
+		}
+		
+		// Logger
+		if (isset($logger)) {
+			$config->setSQLLogger($logger);
 		}
 
 		return $config;
