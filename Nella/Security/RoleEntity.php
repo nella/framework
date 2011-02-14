@@ -23,7 +23,6 @@ namespace Nella\Security;
 class RoleEntity extends \Nella\Models\Entity
 {
 	/**
-	 * @id
 	 * @column(length=128, unique=true)
 	 * @var string
 	 */
