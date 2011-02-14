@@ -28,6 +28,11 @@ class UtilsPresenter extends \Nella\Application\Presenter
   			echo str_repeat('=', strlen($title)) . PHP_EOL . PHP_EOL;
 		}
   	}
+  	
+  	public function actionHelp()
+  	{
+  		throw new \Nette\Application\BadRequestException;
+  	}
 	
 	/**
 	 * Temporary solution for create schema
