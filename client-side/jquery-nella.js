@@ -47,6 +47,10 @@ jQuery.ajaxSetup({
 //-------------------------------------------------------------------------------------
 
 jQuery.fn.nellaForm = function() {
+	if (this.length < 1) {
+		return;
+	}
+	
 	var form = this[0];
 	form.noValidate = true; // disable browser HTML5 validation
 	
@@ -87,7 +91,7 @@ jQuery.fn.nellaForm = function() {
 };*/
 
 jQuery.fn.nellaAjaxSnippet = function() {
-	this.live('click', function(event) {
+	$(this).live('click', function(event) {
 		event.preventDefault();
 		$.getJSON(a.href, function(data) {
 			Nella.processPayload(data);
@@ -99,7 +103,7 @@ jQuery.fn.nellaAjaxSnippet = function() {
 };
 
 jQuery.fn.nellaAjaxSnippetForm = function() {
-	this.live('submit', function(event) {
+	$(this).live('submit', function(event) {
 		event.preventDefault();
 		this.find('input[type=submit]').attr('disbled', true).addClass('loading');
 		$.post(this.attr('action'), this.serialize(), function(data) {
