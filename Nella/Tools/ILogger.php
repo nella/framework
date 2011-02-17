@@ -16,13 +16,12 @@ namespace Nella\Tools;
  */
 interface ILogger
 {
-	/**#@+ Message levels */
-	const INFO = 1;
-	const WARNING = 2;
-	const ERROR = 3;
-	const FATAL = 4;
-	const DEBUG = 9;
-	/**#@-*/
+	/** Message levels */
+	const INFO = 1, 
+		WARNING = 2, 
+		ERROR = 3, 
+		FATAL = 4, 
+		DEBUG = 9;
 	
 	/**
 	 * @param string

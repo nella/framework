@@ -25,14 +25,13 @@ use Nette\Web\Uri,
  */
 class cUrlRequest extends \Nette\Object
 {
-	/**#@+ Available HTTP methods of requests */
-	const GET = 'GET';
-	const POST = 'POST';
-	const PUT = 'PUT';
-	const DELETE = 'DELETE';
-	const HEAD = 'HEAD';
-	//const DOWNLOAD = 'DOWNLOAD'; // Not implemented yet
-	/**#@- */
+	/** Available HTTP methods of requests */
+	const GET = 'GET', 
+		POST = 'POST', 
+		PUT = 'PUT', 
+		DELETE = 'DELETE', 
+		HEAD = 'HEAD';
+		//DOWNLOAD = 'DOWNLOAD'; // Not implemented yet
 	
 	/**
 	 * @var array

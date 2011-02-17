@@ -16,13 +16,10 @@ namespace Nella;
  */
 final class Framework
 {
-	/**#@+ Nella Framework version identification */
-	const NAME = 'Nella Framework';
-
-	const VERSION = '2.0-dev';
-
-	const REVISION = '$WCREV$ released on $WCDATE$';
-	/**#@-*/
+	/**Nella Framework version identification */
+	const NAME = 'Nella Framework', 
+		VERSION = '2.0-dev', 
+		REVISION = '$WCREV$ released on $WCDATE$';
 	
 	/**
 	 * Static class - cannot be instantiated.

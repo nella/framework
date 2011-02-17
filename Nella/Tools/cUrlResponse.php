@@ -22,11 +22,10 @@ use Nette\String;
  */
 class cUrlResponse extends \Nette\Object
 {
-	/**#@+ regexp's for parsing */
-	const HEADER_REGEXP = '~(?P<header>.*?)\:\s(?P<value>.*)~';
-	const VERSION_AND_STATUS = '~HTTP/(?P<version>\d\.\d)\s(?P<code>\d\d\d)\s(?P<status>.*)~';
-	const CONTENT_TYPE = '~^(?P<type>[^;]+);[\t ]*charset=(?P<charset>.+)$~i';
-	/**#@- */
+	/** regexp's for parsing */
+	const HEADER_REGEXP = '~(?P<header>.*?)\:\s(?P<value>.*)~', 
+		VERSION_AND_STATUS = '~HTTP/(?P<version>\d\.\d)\s(?P<code>\d\d\d)\s(?P<status>.*)~', 
+		CONTENT_TYPE = '~^(?P<type>[^;]+);[\t ]*charset=(?P<charset>.+)$~i';
 	
 	/** @var Nella\Tools\cUrlRequest */
 	private $request;

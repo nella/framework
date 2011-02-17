@@ -16,13 +16,12 @@ namespace Nella\Media;
  */
 interface IFormat
 {
-	/**#@+ watermark positions */
-	const POSITION_CENTER = 1;
-	const POSITION_TOP_LEFT = 2;
-	const POSITION_TOP_RIGHT = 3;
-	const POSITION_BOTTOM_LEFT = 4;
-	const POSITION_BOTTOM_RIGHT = 5;
-	/**#@-*/
+	/** watermark positions */
+	const POSITION_CENTER = 1, 
+		POSITION_TOP_LEFT = 2, 
+		POSITION_TOP_RIGHT = 3, 
+		POSITION_BOTTOM_LEFT = 4, 
+		POSITION_BOTTOM_RIGHT = 5;
 	
 	/**
 	 * @return int	pixels

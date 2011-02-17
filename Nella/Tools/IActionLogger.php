@@ -16,13 +16,12 @@ namespace Nella\Tools;
  */
 interface IActionLogger
 {
-	/**#@+ Message action */
-	const CREATE = "create";
-	const READ = "read";
-	const UPDATE = "update";
-	const DELETE = "delete";
-	const OTHER = "other";
-	/**#@-*/
+	/** Message action */
+	const CREATE = "create", 
+		READ = "read", 
+		UPDATE = "update", 
+		DELETE = "delete", 
+		OTHER = "other";
 	
 	/**
 	 * @param string	module name
