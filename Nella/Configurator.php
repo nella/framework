@@ -31,7 +31,7 @@ class Configurator extends \Nette\Configurator
 		'Nette\\Mail\\IMailer' => array(__CLASS__, 'createMailer'),
 		'Nette\\Web\\Session' => 'Nette\Web\Session',
 		'Nette\\Loaders\\RobotLoader' => array(__CLASS__, 'createRobotLoader'),
-		'Nette\\Application\\IPresenterLoader' => array('Nella\Application\PresenterLoader', 'createPresenterLoader'), 
+		'Nette\\Application\\IPresenterFactory' => array('Nella\Application\PresenterFactory', 'createPresenterFactory'), 
 	);
 	
 	/**

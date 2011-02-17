@@ -13,14 +13,14 @@ use Nella\Application\PresenterLoader;
 
 require_once __DIR__ . "/../bootstrap.php";
 
-class PresenterLoaderTest extends \PHPUnit_Framework_TestCase
+class PresenterFactoryTest extends \PHPUnit_Framework_TestCase
 {
 	/** @var Nella\Application\PresenterLoader */
 	private $loader;
 	
 	public function setUp()
 	{
-		$this->loader = new \Nella\Application\PresenterLoader(__DIR__);
+		$this->loader = new \Nella\Application\PresenterFactory(__DIR__);
 	}
 	
 	/**
@@ -29,8 +29,9 @@ class PresenterLoaderTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testInstance()
 	{
-		$this->assertInstanceOf('Nella\Application\PresenterLoader', $this->loader);
-		$this->assertInstanceOf('Nella\Application\PresenterLoader', \Nella\Application\PresenterLoader::createPresenterLoader());
+		$this->assertInstanceOf('Nella\Application\PresenterFactory', $this->loader);
+		$this->assertInstanceOf('Nella\Application\PresenterFactory', \Nella\Application\PresenterFactory::createPresenterFactory());
+		$this->assertInstanceOf('Nette\Application\IPresenterFactory', $this->loader);
 	}
 
 	/**

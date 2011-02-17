@@ -10,11 +10,11 @@
 namespace Nella\Application;
 
 /**
- * Nella presenter loader
+ * Nella presenter factory
  *
  * @author	Patrik Votoček
  */
-class PresenterLoader extends \Nette\Application\PresenterLoader
+class PresenterFactory extends \Nette\Application\PresenterFactory
 {
 	/** @var array */
 	public static $prefixes = array(
@@ -125,7 +125,7 @@ class PresenterLoader extends \Nette\Application\PresenterLoader
 	 *
 	 * @return PresenterLoader
 	 */
-	public static function createPresenterLoader()
+	public static function createPresenterFactory()
 	{
 		return new static(APP_DIR);
 	}
