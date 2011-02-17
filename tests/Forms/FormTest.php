@@ -51,9 +51,6 @@ class FormTest extends \PHPUnit_Framework_TestCase
 		}));
 	}
 	
-	/**
-	 * @covers Nella\Forms\Form::addEmail
-	 */
 	public function testEmail()
 	{
 		$item = $this->form->addEmail('email', "E-mail");
@@ -63,9 +60,6 @@ class FormTest extends \PHPUnit_Framework_TestCase
 		$this->assertTrue($this->isRuleExist($item, Form::EMAIL), "Form::EMAIL after Form::FILLED");
 	}
 	
-	/**
-	 * @covers Nella\Forms\Form::addUrl
-	 */
 	public function testUrl()
 	{
 		$item = $this->form->addUrl('url', "URL");
@@ -75,9 +69,6 @@ class FormTest extends \PHPUnit_Framework_TestCase
 		$this->assertTrue($this->isRuleExist($item, Form::URL), "Form::URL after Form::FILLED");
 	}
 	
-	/**
-	 * @covers Nella\Forms\Form::addNumber
-	 */
 	public function testNumber()
 	{
 		$item = $this->form->addNumber('number', "Number", 2, 0, 20);
@@ -91,9 +82,6 @@ class FormTest extends \PHPUnit_Framework_TestCase
 		$this->assertTrue($this->isRuleExist($item, Form::RANGE), "Form::RANGE after Form::FILLED");
 	}
 	
-	/**
-	 * @covers Nella\Forms\Form::addRange
-	 */
 	public function testRange()
 	{
 		$item = $this->form->addRange('range', "Range", 2, 0, 20);
@@ -107,9 +95,6 @@ class FormTest extends \PHPUnit_Framework_TestCase
 		$this->assertTrue($this->isRuleExist($item, Form::RANGE), "Form::RANGE after Form::FILLED");
 	}
 	
-	/**
-	 * @covers Nella\Forms\Form::addDate
-	 */
 	public function testDate()
 	{
 		$item = $this->form->addDate('date', "Date");
@@ -119,9 +104,6 @@ class FormTest extends \PHPUnit_Framework_TestCase
 		//$this->assertTrue($this->isRuleExist($item, Form::DATE), "Form::DATE after Form::FILLED");
 	}
 	
-	/**
-	 * @covers Nella\Forms\Form::addDateTime
-	 */
 	public function testDateTime()
 	{
 		$item = $this->form->addDateTime('datetime', "Datetime");
@@ -131,9 +113,6 @@ class FormTest extends \PHPUnit_Framework_TestCase
 		//$this->assertTrue($this->isRuleExist($item, Form::DATETIME), "Form::DATETIME after Form::FILLED");
 	}
 	
-	/**
-	 * @covers Nella\Forms\Form::addTime
-	 */
 	public function testTime()
 	{
 		$item = $this->form->addTime('time', "Time");
@@ -143,9 +122,6 @@ class FormTest extends \PHPUnit_Framework_TestCase
 		//$this->assertTrue($this->isRuleExist($item, Form::TIME), "Form::TIME after Form::FILLED");
 	}
 	
-	/**
-	 * @covers Nella\Forms\Form::addSearch
-	 */
 	public function testSearch()
 	{
 		$item = $this->form->addSearch('search', "Search");
@@ -154,9 +130,6 @@ class FormTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals("search", $item->control->type, "search type");
 	}
 	
-	/**
-	 * @covers Nella\Forms\Form::addEditor
-	 */
 	public function testEditor()
 	{
 		$item = $this->form->addEditor('editor', "Editor");

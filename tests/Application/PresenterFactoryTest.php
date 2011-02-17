@@ -23,10 +23,6 @@ class PresenterFactoryTest extends \PHPUnit_Framework_TestCase
 		$this->loader = new \Nella\Application\PresenterFactory(__DIR__);
 	}
 	
-	/**
-	 * @covers Nella\Application\PresenterLoader::__construct
-	 * @covers Nella\Application\PresenterLoader::createPresenterLoader
-	 */
 	public function testInstance()
 	{
 		$this->assertInstanceOf('Nella\Application\PresenterFactory', $this->loader);
@@ -34,9 +30,6 @@ class PresenterFactoryTest extends \PHPUnit_Framework_TestCase
 		$this->assertInstanceOf('Nette\Application\IPresenterFactory', $this->loader);
 	}
 
-	/**
-	 * @covers Nella\Application\PresenterLoader::formatPresenterClass
-	 */
 	public function testFormatPresenterClass()
 	{
 		$this->assertEquals('App\FooPresenter', $this->loader->formatPresenterClass('Foo'), "->formatPresenterClass('Foo')");
@@ -47,9 +40,6 @@ class PresenterFactoryTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals('Nella\Foo\Bar\BazPresenter', $this->loader->formatPresenterClass('Foo:Bar:Baz', 'framework'), "->formatPresenterClass('Foo:Bar:Baz', 'lib')");
 	}
 
-	/**
-	 * @covers Nella\Application\PresenterLoader::unformatPresenterClass
-	 */
 	public function testUnformatPresenterClass()
 	{
 		$this->assertEquals('Foo', $this->loader->unformatPresenterClass('App\FooPresenter'), "->unformatPresenterClass('App\\FooPresenter')");
@@ -60,9 +50,6 @@ class PresenterFactoryTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals('Foo:Bar:Baz', $this->loader->unformatPresenterClass('Nella\Foo\Bar\BazPresenter'), "->unformatPresenterClass('Nella\\Foo\\Bar\\BazPresenter')");
 	}
 	
-	/**
-	 * @covers Nella\Application\PresenterLoader::getPresenterClass
-	 */
 	public function testGetPresenterClass()
 	{
 		$name = 'Foo';
@@ -76,7 +63,6 @@ class PresenterFactoryTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * @covers Nella\Application\PresenterLoader::getPresenterClass
 	 * @expectedException Nette\Application\InvalidPresenterException
 	 */
 	public function testGetPresenterClassException1()
@@ -86,7 +72,6 @@ class PresenterFactoryTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * @covers Nella\Application\PresenterLoader::getPresenterClass
 	 * @expectedException Nette\Application\InvalidPresenterException
 	 */
 	public function testGetPresenterClassException2()
@@ -96,7 +81,6 @@ class PresenterFactoryTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * @covers Nella\Application\PresenterLoader::getPresenterClass
 	 * @expectedException Nette\Application\InvalidPresenterException
 	 */
 	public function testGetPresenterClassException3()
@@ -106,7 +90,6 @@ class PresenterFactoryTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * @covers Nella\Application\PresenterLoader::getPresenterClass
 	 * @expectedException Nette\Application\InvalidPresenterException
 	 */
 	public function testGetPresenterClassException4()
@@ -116,7 +99,6 @@ class PresenterFactoryTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * @covers Nella\Application\PresenterLoader::getPresenterClass
 	 * @expectedException Nette\Application\InvalidPresenterException
 	 */
 	public function testGetPresenterClassException5()

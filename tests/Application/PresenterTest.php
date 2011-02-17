@@ -21,9 +21,6 @@ class PresenterTest extends \PHPUnit_Framework_TestCase
 		$this->presenter = new PresenterMock;
 	}
 
-	/**
-	 * @covers Nella\Application\Presenter::formatLayoutTemplateFiles
-	 */
 	public function testFormmatLayoutTemplatesFiles()
 	{
 		$this->assertEquals(array(
@@ -55,9 +52,6 @@ class PresenterTest extends \PHPUnit_Framework_TestCase
 		"->formatLayoutTemplateFiles('Foo:Bar', 'layout')");
 	}
 
-	/**
-	 * @covers Nella\Application\Presenter::formatTemplateFiles
-	 */
 	public function testFormatTemplatesFiles()
 	{
 		$mapper = function ($path) {
@@ -99,9 +93,6 @@ class PresenterTest extends \PHPUnit_Framework_TestCase
 		"->formatTemplateFiles('Foo:Bar', 'baz')");
 	}
 
-	/**
-	 * @covers Nella\Application\Presenter::getContext
-	 */
 	public function testGetContext()
 	{
 		$this->assertInstanceOf('Nette\IContext', $this->presenter->getContext());

@@ -28,10 +28,6 @@ class cUrlTest extends \PHPUnit_Framework_TestCase
 		$this->wrapper = new \Nella\Tools\cUrlRequest;
 	}
 	
-	/**
-	 * @covers Nella\Tools\cUrlRequest::__construct
-	 * @covers Nella\Tools\cUrlRequest::getUrl
-	 */
 	public function testInstace()
 	{
 		$this->assertInstanceOf('Nella\Tools\cUrlRequest', $this->wrapper, "is Nella\\Tools\\cUrl instance");
@@ -40,11 +36,6 @@ class cUrlTest extends \PHPUnit_Framework_TestCase
 		$this->assertTrue(is_string($wrapper->url), "->url");
 	}
 	
-	/**
-	 * @covers Nella\Tools\cUrlRequest::getOption
-	 * @covers Nella\Tools\cUrlRequest::setOption
-	 * @covers Nella\Tools\cUrlRequest::getOptions
-	 */
 	public function testOptions()
 	{
 		// Option
@@ -73,11 +64,6 @@ class cUrlTest extends \PHPUnit_Framework_TestCase
 		$this->wrapper->setOption('foo', NULL);
 	}
 	
-	/**
-	 * @covers Nella\Tools\cUrlRequest::getHeader
-	 * @covers Nella\Tools\cUrlRequest::setHeader
-	 * @covers Nella\Tools\cUrlRequest::getHeaders
-	 */
 	public function testHeaders()
 	{
 		// Header
@@ -89,10 +75,6 @@ class cUrlTest extends \PHPUnit_Framework_TestCase
 		$this->assertTrue(is_array($this->wrapper->headers), "->headers");
 	}
 	
-	/**
-	 * @covers Nella\Tools\cUrlRequest::getProxies
-	 * @covers Nella\Tools\cUrlRequest::addProxy
-	 */
 	public function testProxies()
 	{
 		$ip = "127.0.0.1";
@@ -104,10 +86,6 @@ class cUrlTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($ip, $proxy->ip, "->proxies[0] + ->addProxy");
 	}
 	
-	/**
-	 * @covers Nella\Tools\cUrlRequest::getUserAgent
-	 * @covers Nella\Tools\cUrlRequest::setUserAgent
-	 */
 	public function testUserAgent()
 	{
 		$this->assertEquals('Nella\Tools\cUrl ' . Framework::VERSION . " (http://nellacms.com)", $this->wrapper->userAgent, "->getUserAgent()");
@@ -125,27 +103,12 @@ class cUrlTest extends \PHPUnit_Framework_TestCase
 		$this->wrapper->userAgent = NULL;
 	}
 	
-	/**
-	 * @covers Nella\Tools\cUrlRequest::getInfo
-	 */
 	public function testInfo()
 	{
 		$this->assertTrue(is_array($this->wrapper->getInfo()), "->getInfo()");
 		$this->assertTrue(is_array($this->wrapper->info), "->info");
 	}
 	
-	/**
-	 * @covers Nella\Tools\cUrlRequest::getResponse
-	 * 
-	 * @covers Nella\Tools\cUrlRequest::run
-	 * @covers Nella\Tools\cUrlRequest::open
-	 * @covers Nella\Tools\cUrlRequest::close
-	 * @covers Nella\Tools\cUrlRequest::execute
-	 * @covers Nella\Tools\cUrlRequest::tryProxy
-	 * @covers Nella\Tools\cUrlRequest::setupOptions
-	 * @covers Nella\Tools\cUrlRequest::setupHeaders
-	 * @covers Nella\Tools\cUrlRequest::setupMethod
-	 */
 	public function testGetResponse()
 	{
 		$this->assertInstanceOf('Nella\Tools\cUrlResponse', $this->wrapper->getResponse(\Nella\Tools\cUrlRequest::HEAD, "http://www.google.com"));

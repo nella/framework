@@ -22,19 +22,12 @@ class cUrlResponseTest extends \PHPUnit_Framework_TestCase
 		$this->response = $req->getResponse();
 	}
 	
-	/**
-	 * @covers Nella\Tools\cUrlResponse::getRequest
-	 */
 	public function testRequest()
 	{
 		$this->assertInstanceOf('Nella\Tools\cUrlRequest', $this->response->getRequest(), "->getRequest()");
 		$this->assertInstanceOf('Nella\Tools\cUrlRequest', $this->response->request, "->request");
 	}
 	
-	/**
-	 * @covers Nella\Tools\cUrlResponse::getHeaders
-	 * @covers Nella\Tools\cUrlResponse::getHeader
-	 */
 	public function testHeaders()
 	{
 		// Headers
@@ -46,10 +39,6 @@ class cUrlResponseTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(200, $this->response->getHeader('Status-Code'), "->getHeader()");
 	}
 	
-	/**
-	 * @covers Nella\Tools\cUrlResponse::getBody
-	 * @covers Nella\Tools\cUrlResponse::__toString
-	 */
 	public function testBody()
 	{
 		$this->assertStringStartsWith("<!doctype html>", $this->response->getBody(), "->getBody()");
