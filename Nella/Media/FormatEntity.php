@@ -16,7 +16,12 @@ namespace Nella\Media;
  * 
  * @author	Patrik Votoček
  * 
- * 
+ * @property int $width
+ * @property int $height
+ * @property bool $crop
+ * @property ImageEntity $watermark
+ * @property int $watermarkOpacity
+ * @property int $watermarkPosition
  */
 class FormatEntity extends \Nella\Models\Entity implements IFormat
 {
@@ -32,13 +37,13 @@ class FormatEntity extends \Nella\Models\Entity implements IFormat
 	private $height;
 	/**
 	 * @column(type="boolean")
-	 * @var int
+	 * @var bool
 	 */
 	private $crop;
 	/**
 	 * @manyToOne(targetEntity="Nella\Media\ImageEntity")
      * @joinColumn(name="watermark_id", referencedColumnName="id")
-	 * @var \Nella\Media\ImageEntity
+	 * @var ImageEntity
 	 */
 	private $watermark;
 	/**
@@ -107,7 +112,7 @@ class FormatEntity extends \Nella\Models\Entity implements IFormat
 	}
 	
 	/**
-	 * @return IImage
+	 * @return ImageEntity
 	 */
 	public function getWatermark()
 	{
@@ -115,10 +120,10 @@ class FormatEntity extends \Nella\Models\Entity implements IFormat
 	}
 	
 	/**
-	 * @param IImage
+	 * @param ImageEntity
 	 * @return FormatEntity
 	 */
-	public function setWatermark(IImage $watermark)
+	public function setWatermark(IImage $watermark = NULL)
 	{
 		$this->watermark = $watermark;
 		return $this;
