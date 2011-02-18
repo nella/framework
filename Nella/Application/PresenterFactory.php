@@ -119,14 +119,4 @@ class PresenterFactory extends \Nette\Application\PresenterFactory
 			return str_replace("\\", ':', substr($class, $class[0] == "\\" ? 1 : 0, -9));
 		}
 	}
-
-	/**
-	 * Presenter loader factory
-	 *
-	 * @return PresenterLoader
-	 */
-	public static function createPresenterFactory()
-	{
-		return new static(APP_DIR);
-	}
 }

@@ -31,7 +31,6 @@ class Configurator extends \Nette\Configurator
 		'Nette\\Mail\\IMailer' => array(__CLASS__, 'createMailer'),
 		'Nette\\Web\\Session' => 'Nette\Web\Session',
 		'Nette\\Loaders\\RobotLoader' => array(__CLASS__, 'createRobotLoader'),
-		'Nette\\Application\\IPresenterFactory' => array('Nella\Application\PresenterFactory', 'createPresenterFactory'), 
 	);
 	
 	/**
@@ -221,5 +220,30 @@ class Configurator extends \Nette\Configurator
 			$context->addService($name, $service);
 		}
 		return $context;
+	}
+	
+	/**
+	 * @return Nette\Application\Application
+	 */
+	public static function createApplication(array $options = NULL)
+	{
+		if (Environment::getVariable('baseUri', NULL) === NULL) {
+			Environment::setVariable('baseUri', Environment::getHttpRequest()->getUri()->getBaseUri());
+		}
+
+		$context = clone Environment::getContext();
+		$context->addService('Nette\\Application\\IRouter', 'Nette\Application\MultiRouter');
+
+		if (!$context->hasService('Nette\\Application\\IPresenterFactory')) {
+			$context->addService('Nette\\Application\\IPresenterFactory', function() use ($context) {
+				return new Application\PresenterFactory(Environment::getVariable('appDir'), $context);
+			});
+		}
+
+		$class = isset($options['class']) ? $options['class'] : 'Nette\Application\Application';
+		$application = new $class;
+		$application->setContext($context);
+		$application->catchExceptions = Environment::isProduction();
+		return $application;
 	}
 }

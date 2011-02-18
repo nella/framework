@@ -20,16 +20,10 @@ class PresenterFactoryTest extends \PHPUnit_Framework_TestCase
 	
 	public function setUp()
 	{
-		$this->loader = new \Nella\Application\PresenterFactory(__DIR__);
+		$configurator = new \Nella\Configurator;
+		$this->loader = new \Nella\Application\PresenterFactory(__DIR__, $configurator->createContext());
 	}
 	
-	public function testInstance()
-	{
-		$this->assertInstanceOf('Nella\Application\PresenterFactory', $this->loader);
-		$this->assertInstanceOf('Nella\Application\PresenterFactory', \Nella\Application\PresenterFactory::createPresenterFactory());
-		$this->assertInstanceOf('Nette\Application\IPresenterFactory', $this->loader);
-	}
-
 	public function testFormatPresenterClass()
 	{
 		$this->assertEquals('App\FooPresenter', $this->loader->formatPresenterClass('Foo'), "->formatPresenterClass('Foo')");
