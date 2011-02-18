@@ -114,14 +114,6 @@ abstract class Presenter extends \Nette\Application\Presenter
 
 		return $files;
 	}
-
-	/**
-	 * @return \Nella\Context
-	 */
-	public function getContext()
-	{
-		return $this->getApplication()->getContext();
-	}
 	
 	/**
 	 * @return \Doctrine\ORM\EntityManager

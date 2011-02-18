@@ -92,10 +92,4 @@ class PresenterTest extends \PHPUnit_Framework_TestCase
 		), $this->presenter->formatTemplateFiles('Foo:Bar', 'baz'), 
 		"->formatTemplateFiles('Foo:Bar', 'baz')");
 	}
-
-	public function testGetContext()
-	{
-		$this->assertInstanceOf('Nette\IContext', $this->presenter->getContext());
-		$this->assertInstanceOf('Nette\IContext', $this->presenter->context);
-	}
 }
