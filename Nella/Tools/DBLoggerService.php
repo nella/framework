@@ -22,7 +22,7 @@ class DBLoggerService extends \Nella\Models\Service implements ILogger
 	 */
 	public function logMessage($message, $level = self::ERROR)
 	{
-		$entity = new \DBLoggerEntity;
+		$entity = new DBLoggerEntity;
 		$entity->setMessage($message)->setLevel($level);
 		
 		$this->persist($entity);

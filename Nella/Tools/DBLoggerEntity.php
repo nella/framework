@@ -7,7 +7,7 @@
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nellacms.com
  */
 
-namespace Nella;
+namespace Nella\Tools;
 
 /**
  * Database logger entity
