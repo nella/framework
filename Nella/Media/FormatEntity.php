@@ -13,7 +13,7 @@ namespace Nella\Media;
  * Media image format entity
  * 
  * @entity(repositoryClass="Nella\Models\Repository")
- * @table(name="formats")
+ * @table(name="media_formats")
  * 
  * @author	Patrik Votoček
  * 

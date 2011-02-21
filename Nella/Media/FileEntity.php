@@ -13,7 +13,7 @@ namespace Nella\Media;
  * File media entity
  * 
  * @entity(repositoryClass="Nella\Models\Repository")
- * @table(name="files")
+ * @table(name="media_files")
  * 
  * @author	Patrik Votoček
  */

@@ -15,7 +15,7 @@ namespace Nella\Security;
  * @author	Patrik Votoček
  * 
  * @entity(repositoryClass="Nella\Models\Repository")
- * @table(name="users")
+ * @table(name="acl_users")
  * @hasLifecycleCallbacks
  * 
  * @property string $username

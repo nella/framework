@@ -13,7 +13,7 @@ namespace Nella\Security;
  * Persmission entity
  * 
  * @entity(repositoryClass="Nella\Models\Repository")
- * @table(name="permissions")
+ * @table(name="acl_permissions")
  *
  * @author	Patrik Votoček
  * 

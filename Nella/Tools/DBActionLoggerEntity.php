@@ -13,7 +13,7 @@ namespace Nella\Tools;
  * Database action logger entity
  *
  * @entity(repositoryClass="Nella\Models\Repository")
- * @table(name="actionlogs")
+ * @table(name="logger_actions")
  * 
  * @author	Patrik Votoček
  */
