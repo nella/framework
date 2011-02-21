@@ -36,7 +36,7 @@ class Authenticator extends \Nette\Object implements \Nette\Security\IAuthentica
 	public function authenticate(array $credentials)
 	{
 		list($username, $password) = $credentials;
-		$service = new \Nella\Models\Service($this->entityManager, 'Nella\Security\Identity');
+		$service = new \Nella\Models\Service($this->entityManager, 'Nella\Security\IdentityEntity');
 		
 		if (strpos($username, '@') !== FALSE) {
 			$entity = $service->repository->findOneByEmail($username);	
