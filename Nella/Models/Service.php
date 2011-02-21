@@ -57,7 +57,7 @@ class Service extends \Nette\Object
 	 * @return \Doctrine\ORM\EntityRepository
 	 * @throws \InvalidArgumentException
 	 */
-	public function getEntityRepository($entityClass = NULL)
+	public function getRepository($entityClass = NULL)
 	{
 		$entityClass = $entityClass ?: $this->getEntityClass();
 		if (empty($entityClass)) {

@@ -43,21 +43,21 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals("Test", $this->service->entityClass, "->entityClass is 'Test'");
 	}
 	
-	public function testGetEntityRepository()
+	public function testGetRepository()
 	{
-		$this->assertInstanceOf('Doctrine\ORM\EntityRepository', $this->service->getEntityRepository('NellaTests\Models\EntityMock'), "->getEntityRepository() is instaceof Doctrine EntityRepository");
+		$this->assertInstanceOf('Doctrine\ORM\EntityRepository', $this->service->getRepository('NellaTests\Models\EntityMock'), "->getRepository() is instaceof Doctrine EntityRepository");
 		
 		$this->service = new Service($this->em, 'NellaTests\Models\EntityMock');
-		$this->assertInstanceOf('Doctrine\ORM\EntityRepository', $this->service->getEntityRepository(), "->getEntityRepository() is instaceof Doctrine EntityRepository");
-		$this->assertInstanceOf('Doctrine\ORM\EntityRepository', $this->service->entityRepository, "->entityRepository is instaceof Doctrine EntityRepository");
+		$this->assertInstanceOf('Doctrine\ORM\EntityRepository', $this->service->getRepository(), "->getRepository() is instaceof Doctrine EntityRepository");
+		$this->assertInstanceOf('Doctrine\ORM\EntityRepository', $this->service->repository, "->repository is instaceof Doctrine EntityRepository");
 	}
 	
 	/**
 	 * @expectedException \InvalidArgumentException
 	 */
-	public function testGetEntityRepositoryException()
+	public function testGetRepositoryException()
 	{
-		$this->service->entityRepository;
+		$this->service->repository;
 	}
 	
 	public function testGetClassMetadata()
