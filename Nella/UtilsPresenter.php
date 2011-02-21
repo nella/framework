@@ -29,6 +29,11 @@ class UtilsPresenter extends \Nella\Application\Presenter
 		}
   	}
   	
+  	protected function beforeRender()
+  	{
+		$this->terminate();
+  	}
+  	
   	public function actionHelp()
   	{
   		throw new \Nette\Application\BadRequestException;
