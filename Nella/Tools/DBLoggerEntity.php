@@ -13,6 +13,7 @@ namespace Nella\Tools;
  * Database logger entity
  * 
  * @entity(repositoryClass="Nella\Models\Repository")
+ * @table(name="logs")
  * 
  * @author	Patrik Votoček
  * @hasLifecycleCallbacks

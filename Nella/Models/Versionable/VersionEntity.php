@@ -13,6 +13,7 @@ namespace Nella\Models;
  * Versions storage object for repository
  * 
  * @entity(repositoryClass="Nella\Models\Repository")
+ * @table(name="versions")
  *
  * @author	Patrik Votoček
  * 

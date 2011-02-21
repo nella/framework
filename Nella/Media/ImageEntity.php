@@ -13,13 +13,14 @@ namespace Nella\Media;
  * Image media entity
  * 
  * @entity(repositoryClass="Nella\Models\Repository")
+ * @table(name="images")
  * 
  * @author	Patrik Votoček
  */
 class ImageEntity extends BaseFileEntity implements IImage
 {
 	/**
-	 * @return \Nella\Imgage
+	 * @return \Nella\Image
 	 */
 	public function toImage()
 	{
