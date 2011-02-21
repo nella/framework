@@ -22,7 +22,7 @@ class UtilsPresenter extends \Nella\Application\Presenter
   	{
   		parent::startup();
   		
-  		if (Environment::isConsole()) {
+  		if (\Nette\Environment::isConsole()) {
   			$title = \Nella\Framework::NAME . " CMS Console " . \Nella\Framework::VERSION;
   			echo $title . PHP_EOL;
   			echo str_repeat('=', strlen($title)) . PHP_EOL . PHP_EOL;
