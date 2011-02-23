@@ -124,7 +124,7 @@ class Repository extends \Doctrine\ORM\EntityRepository
 	public function __call($name, $args)
 	{
 		try {
-			parent::__call($name, $args);
+			return parent::__call($name, $args);
 		} catch (\BadMethodCallException $e) {
 			return ObjectMixin::call($this, $name, $args);
 		}
