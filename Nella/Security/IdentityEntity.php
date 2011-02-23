@@ -172,7 +172,7 @@ class IdentityEntity extends \Nella\Models\Entity
 	public function setLang($lang)
 	{
 		$lang = trim($lang);
-		$this->realname = $lang == "" ? NULL : $lang;
+		$this->lang = $lang == "" ? NULL : $lang;
 		return $this;
 	}
 
@@ -207,7 +207,8 @@ class IdentityEntity extends \Nella\Models\Entity
 	{
 		parent::check();
 		
-		$service = $this->getModelService('Nella\Security\Models\IdentityService');
+		$em = \Nette\Environment::getApplication()->context->getService('Doctrine\ORM\EntityManager');
+		$service = new \Nella\Models\Service($em, 'Nella\Security\IdentityEntity');
 		
 		if ($this->username === NULL) {
 			throw new \Nella\Models\EmptyValuesException('username', "Username value must be non empty string");
