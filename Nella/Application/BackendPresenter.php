@@ -16,6 +16,9 @@ namespace Nella\Application;
  */
 abstract class BackendPresenter extends Presenter
 {
+	/** @var string */
+	protected $loginLink = ":Security:Frontend:login";
+	
 	protected function startup()
 	{
 		parent::startup();
@@ -25,7 +28,7 @@ abstract class BackendPresenter extends Presenter
 				$this->flashMessage(__("You have been logged out due to inactivity. Please login again."), \Nella\FLASH_INFO);
 			}
 				
-			$this->redirect(":Security:Frontend:login", array('backlink' => $this->getApplication()->storeRequest()));
+			$this->redirect($this->loginLink, array('backlink' => $this->getApplication()->storeRequest()));
 		}
 			
 		try {
@@ -37,7 +40,7 @@ abstract class BackendPresenter extends Presenter
 			}
 
 			$this->getUser()->logout(TRUE);
-			$this->redirect(":Security:Frontend:login", array('backlink' => $this->getApplication()->storeRequest()));
+			$this->redirect($this->loginLink, array('backlink' => $this->getApplication()->storeRequest()));
 		}
 		
 		$ref = new \Nette\Reflection\ClassReflection(get_called_class());
