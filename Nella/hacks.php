@@ -17,7 +17,6 @@ if (!defined('NETTE')) {
 
 // Set debug options
 Nette\Debug::$strictMode = TRUE;
-Nette\Debug::$maxDepth = 32;
 Nette\Debug::$maxLen = 4096;
 
 // Set nella default services
