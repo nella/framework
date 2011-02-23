@@ -38,6 +38,11 @@ class PermissionEntity extends \Nella\Models\Entity
 	 * @var string
 	 */
 	private $privilege;
+	/**
+	 * @column(type="boolean")
+	 * @var bool
+	 */
+	private $allow;
 	
 	/**
 	 * @return string
@@ -74,6 +79,24 @@ class PermissionEntity extends \Nella\Models\Entity
 	{
 		$privilege = trim($privilege);
 		$this->privilege = $privilege == "" ? NULL : $privilege;
+		return $this;
+	}
+	
+	/**
+	 * @return bool
+	 */
+	public function isAllow()
+	{
+		return $this->allow;
+	}
+	
+	/**
+	 * @param bool
+	 * @return PermissionEntity
+	 */
+	public function setAllow($allow)
+	{
+		$this->allow = $allow;
 		return $this;
 	}
 }
