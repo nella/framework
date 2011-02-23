@@ -78,7 +78,7 @@ class Identity extends \Nette\Object implements \Nette\Security\IIdentity, \Seri
 		$this->id = unserialize($serialized);
 
 		$entityManager = \Nette\Environment::getApplication()->context->getService('Doctrine\ORM\EntityManager'); // @todo how to better DI?
-		$service = new \Nella\Models\Service($entityManager);
+		$service = new \Nella\Models\Service($entityManager, 'Nella\Security\IdentityEntity');
 		$this->entity = $service->repository->find($this->id);
 
 		if (!$this->entity) {
