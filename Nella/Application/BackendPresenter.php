@@ -74,6 +74,9 @@ abstract class BackendPresenter extends Presenter
 		if (isset($data['role']) && !$user->isInRole($data['role'])) {
 			return FALSE;
 		}
+		if(!$data['resource'] && !$data['privilege']) {
+			return TRUE;
+		}
 		
 		return $user->isAllowed($data['resource'], $data['privilege']);
 	}
