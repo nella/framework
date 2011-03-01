@@ -39,7 +39,7 @@
  <!-- Check some other repos -->
  <target name="git" depends="clean">
  		<exec executable="git" dir="${basedir}" failonerror="on" logerror="on">
-			<arg line=" clone git@github.com:Vrtak-CZ/nella-build.git ./tools" />
+			<arg line=" clone git@github.com:nella/build-tools.git ./tools" />
 		</exec>
 		<exec executable="git" dir="${basedir}/package" failonerror="on" logerror="on">
 			<arg line=" clone git@github.com:nella/sandbox.git ./sandbox" />
