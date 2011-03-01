@@ -26,25 +26,25 @@ class ControlTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->assertEquals(array(
 			APP_DIR . "/Foo/Bar.latte", 
-			APP_DIR . "/Templates/Foo/Bar.latte", 
+			APP_DIR . "/templates/Foo/Bar.latte", 
 			NELLA_FRAMEWORK_DIR . "/Foo/Bar.latte", 
-			NELLA_FRAMEWORK_DIR . "/Templates/Foo/Bar.latte", 
+			NELLA_FRAMEWORK_DIR . "/templates/Foo/Bar.latte", 
 		), 
 		$this->control->formatTemplateFilesMock('Nella\Foo\Bar::render'), "->formatTemplateFiles() for Foo\\Bar::render");
 		
 		$this->assertEquals(array(
 			APP_DIR . "/Foo/Bar.baz.latte", 
-			APP_DIR . "/Templates/Foo/Bar.baz.latte", 
+			APP_DIR . "/templates/Foo/Bar.baz.latte", 
 			NELLA_FRAMEWORK_DIR . "/Foo/Bar.baz.latte", 
-			NELLA_FRAMEWORK_DIR . "/Templates/Foo/Bar.baz.latte", 
+			NELLA_FRAMEWORK_DIR . "/templates/Foo/Bar.baz.latte", 
 		), 
 		$this->control->formatTemplateFilesMock('Nella\Foo\Bar::renderBaz'), "->formatTemplateFiles() for Foo\\Bar::renderBaz");
 		
 		$this->assertEquals(array(
 			APP_DIR . "/Foo.barBaz.latte", 
-			APP_DIR . "/Templates/Foo.barBaz.latte", 
+			APP_DIR . "/templates/Foo.barBaz.latte", 
 			NELLA_FRAMEWORK_DIR . "/Foo.barBaz.latte", 
-			NELLA_FRAMEWORK_DIR . "/Templates/Foo.barBaz.latte", 
+			NELLA_FRAMEWORK_DIR . "/templates/Foo.barBaz.latte", 
 		), 
 		$this->control->formatTemplateFilesMock('Nella\Foo::renderBarBaz'), "->formatTemplateFiles() for Foo::renderBarBaz");
 	}

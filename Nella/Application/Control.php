@@ -53,12 +53,12 @@ abstract class Control extends \Nette\Application\Control
 			if ($view) {
 				return array(
 					$dir . "/" . str_replace('\\', "/", $class) . ".$view.latte", 
-					$dir . "/Templates/" . str_replace('\\', "/", $class) . ".$view.latte", 
+					$dir . "/templates/" . str_replace('\\', "/", $class) . ".$view.latte", 
 				);
 			} else {
 				return array(
 					$dir . "/" . str_replace('\\', "/", $class) . ".latte", 
-					$dir . "/Templates/" . str_replace('\\', "/", $class) . ".latte", 
+					$dir . "/templates/" . str_replace('\\', "/", $class) . ".latte", 
 				);
 			}
 		};

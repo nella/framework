@@ -43,16 +43,16 @@ abstract class Presenter extends \Nette\Application\Presenter
 			$files = array();
 			// clasic modules templates
 			if (strpos($presenter, ':') !== FALSE) {
-				$files[] = $dir . "/" .$path . "Templates/$subPath/@$layout.latte";
-				$files[] = $dir . "/" .$path . "Templates/$subPath.@$layout.latte";
-				$files[] = $dir . "/" .$path . "Templates/@$layout.latte";
+				$files[] = $dir . "/" .$path . "templates/$subPath/@$layout.latte";
+				$files[] = $dir . "/" .$path . "templates/$subPath.@$layout.latte";
+				$files[] = $dir . "/" .$path . "templates/@$layout.latte";
 			}
 			// clasic templates
-			$files[] = $dir . "/Templates/" .$path . "$subPath/@$layout.latte";
-			$files[] = $dir . "/Templates/" .$path . "$subPath.@$layout.latte";
-			$files[] = $dir . "/Templates/" .$path . "@$layout.latte";
+			$files[] = $dir . "/templates/" .$path . "$subPath/@$layout.latte";
+			$files[] = $dir . "/templates/" .$path . "$subPath.@$layout.latte";
+			$files[] = $dir . "/templates/" .$path . "@$layout.latte";
 			
-			$file = $dir . "/Templates/@$layout.latte";
+			$file = $dir . "/templates/@$layout.latte";
 			if (!in_array($file, $files)) {
 				$files[] = $file;
 			}
@@ -87,19 +87,19 @@ abstract class Presenter extends \Nette\Application\Presenter
 			$files = array();
 			// clasic modules templates
 			if (strpos($presenter, ':') !== FALSE) {
-				$files[] = $dir . "/" .$path . "Templates/$subPath/$view.latte";
-				$files[] = $dir . "/" .$path . "Templates/$subPath.$view.latte";
-				$files[] = $dir . "/" .$path . "Templates/$subPath/@global.latte";
-				$files[] = $dir . "/" .$path . "Templates/@global.latte";
+				$files[] = $dir . "/" .$path . "templates/$subPath/$view.latte";
+				$files[] = $dir . "/" .$path . "templates/$subPath.$view.latte";
+				$files[] = $dir . "/" .$path . "templates/$subPath/@global.latte";
+				$files[] = $dir . "/" .$path . "templates/@global.latte";
 
 			}
 			// clasic templates
-			$files[] = $dir . "/Templates/" .$path . "$subPath/$view.latte";
-			$files[] = $dir . "/Templates/" .$path . "$subPath.$view.latte";
-			$files[] = $dir . "/Templates/" .$path . "$subPath/@global.latte";
-			$files[] = $dir . "/Templates/" .$path . "@global.latte";
+			$files[] = $dir . "/templates/" .$path . "$subPath/$view.latte";
+			$files[] = $dir . "/templates/" .$path . "$subPath.$view.latte";
+			$files[] = $dir . "/templates/" .$path . "$subPath/@global.latte";
+			$files[] = $dir . "/templates/" .$path . "@global.latte";
 			
-			$file = $dir . "/Templates/@global.latte";
+			$file = $dir . "/templates/@global.latte";
 			if (!in_array($file, $files)) {
 				$files[] = $file;
 			}
