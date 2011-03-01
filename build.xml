@@ -1,0 +1,252 @@
+<project name="name-of-project" default="build" basedir=".">
+ <property file="build.properties"/>
+
+ <target name="clean">
+  <!-- Clean up -->
+  <delete dir="${basedir}/build"/>
+  <delete dir="${basedir}/dependency"/>
+  <delete dir="${basedir}/package"/>
+  <delete dir="${basedir}/temp"/>
+  <delete dir="${basedir}/src"/>
+  <delete dir="${basedir}/tools"/>
+
+  <!-- Create build directories -->
+  <mkdir dir="${basedir}/build/api"/>
+  <mkdir dir="${basedir}/build/code-browser"/>
+  <mkdir dir="${basedir}/build/coverage"/>
+  <mkdir dir="${basedir}/build/logs"/>
+  <mkdir dir="${basedir}/build/pdepend"/>
+  <mkdir dir="${basedir}/build/dist"/>
+  
+  <!-- Cerate temp / package dirs -->
+  <mkdir dir="${basedir}/dependency"/>
+  <mkdir dir="${basedir}/package"/>
+  <mkdir dir="${basedir}/temp"/>
+  <mkdir dir="${basedir}/src"/>
+  
+  <!-- move nella -->
+  <move file="${basedir}/LICENSE.txt" tofile="${basedir}/src/LICENSE.txt"/>
+  <move file="${basedir}/README.txt" tofile="${basedir}/src/README.txt"/>
+  <move file="${basedir}/VERSION.txt" tofile="${basedir}/src/VERSION.txt"/>
+  <move todir="${basedir}/src/Nella">
+  	<fileset dir="${basedir}/Nella"/> 
+  </move>
+  <move todir="${basedir}/src/client-side">
+  	<fileset dir="${basedir}/client-side"/>
+  </move>
+ </target>
+ 
+ <!-- Check some other repos -->
+ <target name="git" depends="clean">
+ 		<exec executable="git" dir="${basedir}" failonerror="on" logerror="on">
+			<arg line=" clone git@github.com:Vrtak-CZ/nella-build.git ./tools" />
+		</exec>
+		<exec executable="git" dir="${basedir}/package" failonerror="on" logerror="on">
+			<arg line=" clone git@github.com:nella/sandbox.git ./sandbox" />
+		</exec>
+		<exec executable="git" dir="${basedir}/package" failonerror="on" logerror="on">
+			<arg line=" clone git@github.com:nella/tools.git ./tools" />
+		</exec>
+		<exec executable="php" dir="${basedir}" failonerror="on" logerror="on">
+			<arg line=" tools/gitcls.php -d package" />
+		</exec>
+	</target>
+	
+	<target name="lint">
+    <apply executable="php" dir="${basedir}/src" failonerror="true">
+      <arg line="-l"/>
+      <fileset dir="${basedir}/src">
+        <include name="**/*.php" />
+      </fileset>
+    </apply>
+  </target>
+  
+  <target name="nette">
+  	<exec executable="wget" dir="${basedir}/dependency" failonerror="on" logerror="on">
+  		<arg line=" http://files.nette.org/NetteFramework-2.0dev-PHP5.3.zip -O _Nette.zip" />
+  	</exec>
+  	
+  	<exec executable="7z" dir="${basedir}/dependency" failonerror="on" logerror="on">
+  		<arg line=" x _Nette.zip -o_Nette" />
+  	</exec>
+  	
+  	<copy todir="${basedir}/dependency/Nette">
+  		<fileset dir="${basedir}/dependency/_Nette/NetteFramework-2.0dev-PHP5.3/Nette"/>
+  	</copy>
+  	<copy file="${basedir}/dependency/_Nette/NetteFramework-2.0dev-PHP5.3/license.txt" tofile="${basedir}/dependency/Nette/license.txt"/>
+  	
+  	<delete file="${basedir}/dependency/_Nette.zip"/>
+  	<delete dir="${basedir}/dependency/_Nette"/>
+  </target>
+  
+  <target name="doctrine">
+  	<exec executable="wget" dir="${basedir}/dependency" failonerror="on" logerror="on">
+  		<arg line=" http://www.doctrine-project.org/downloads/DoctrineORM-2.0.1-full.tar.gz -O _Doctrine.tar.gz" />
+  	</exec>
+  	
+  	<mkdir dir="${basedir}/dependency/_Doctrine"/>
+  	
+  	<exec executable="tar" dir="${basedir}/dependency" failonerror="on" logerror="on">
+  		<arg line=" xvfz _Doctrine.tar.gz -C _Doctrine" />
+  	</exec>
+  	
+  	<delete dir="${basedir}/dependency/_Doctrine/doctrine-orm/Doctrine/Symfony"/>
+  	<delete dir="${basedir}/dependency/_Doctrine/doctrine-orm/Doctrine/DBAL/Tools"/>
+  	<delete dir="${basedir}/dependency/_Doctrine/doctrine-orm/Doctrine/ORM/Tools/Console"/>
+  	
+  	<copy todir="${basedir}/dependency/Doctrine">
+  		<fileset dir="${basedir}/dependency/_Doctrine/doctrine-orm/Doctrine"/>
+  	</copy>
+  	<copy file="${basedir}/dependency/_Doctrine/doctrine-orm/LICENSE" tofile="${basedir}/dependency/Doctrine/LICENSE"/>
+		
+		<delete file="${basedir}/dependency/_Doctrine.tar.gz"/>
+		<delete dir="${basedir}/dependency/_Doctrine"/>
+  </target>
+
+	<!-- Run unit tests and generate junit.xml and clover.xml -->
+	<target name="phpunit">
+		<exec executable="phpunit" failonerror="true"/>
+	</target>
+  
+  <target name="apigen" depends="phpunit,lint,nette,doctrine">
+  	<copy todir="${basedir}/temp/Doctrine">
+  		<fileset dir="${basedir}/dependency/Doctrine"/>
+  	</copy>
+  	<copy todir="${basedir}/temp/Nette">
+  		<fileset dir="${basedir}/dependency/Nette"/>
+  	</copy>
+  	<copy todir="${basedir}/temp/Nella">
+  		<fileset dir="${basedir}/src/Nella"/>
+  	</copy>
+  	
+  	<exec executable="php" dir="${basedir}" failonerror="on" logerror="on">
+			<arg line=" tools/gitver.php -d temp" />
+		</exec>
+  	
+		<exec executable="php" dir="${basedir}" failonerror="on" logerror="on">
+			<arg line=" tools/Apigen/apigen.php -s temp -d build/api" />
+		</exec>
+		
+		<copy todir="${basedir}/package/API-reference">
+  		<fileset dir="${basedir}/build/api"/>
+  	</copy>
+  </target>
+	
+	<!-- Run the pdepend, phpmd, phpcpd, phpcs, apigen and phploc tasks
+	  in parallel using a maximum of 2 threads. -->
+	<target name="parallelTasks">
+		<parallel threadCount="2">
+			<sequential>
+				<antcall target="pdepend"/>
+				<antcall target="phpmd"/>
+			</sequential>
+			<antcall target="phpcpd"/>
+			<antcall target="phpcs"/>
+			<antcall target="phploc"/>
+		</parallel>
+	</target>
+
+ <!-- Generate jdepend.xml and software metrics charts -->
+ <target name="pdepend">
+  <exec executable="pdepend">
+   <arg line="--jdepend-xml=${basedir}/build/logs/jdepend.xml
+              --jdepend-chart=${basedir}/build/pdepend/dependencies.svg
+              --overview-pyramid=${basedir}/build/pdepend/overview-pyramid.svg
+              ${basedir}/src" />
+  </exec>
+ </target>
+
+ <!-- Generate pmd.xml -->
+ <target name="phpmd">
+  <exec executable="phpmd">
+   <arg line="${basedir}/src
+              xml
+              codesize,design,naming,unusedcode
+              --reportfile ${basedir}/build/logs/pmd.xml" />
+  </exec>
+ </target>
+
+ <!-- Generate pmd-cpd.xml -->
+ <target name="phpcpd">
+  <exec executable="phpcpd">
+   <arg line="--log-pmd ${basedir}/build/logs/pmd-cpd.xml
+              ${basedir}/src" />
+  </exec>
+ </target>
+
+ <!-- Generate phploc.csv -->
+ <target name="phploc">
+  <exec executable="phploc">
+   <arg line="--log-csv ${basedir}/build/logs/phploc.csv
+              ${basedir}/src" />
+  </exec>
+ </target>
+
+ <!-- Generate checkstyle.xml -->
+ <target name="phpcs">
+  <exec executable="phpcs">
+   <arg line="--report=checkstyle
+              --report-file=${basedir}/build/logs/checkstyle.xml
+              --standard=PEAR
+              ${basedir}/src" />
+  </exec>
+ </target>
+
+ <!-- Generate API documentation -->
+ <target name="phpdoc">
+  <exec executable="phpdoc">
+   <arg line="--directory ${basedir}/src
+                 --target    ${basedir}/build/api" />
+  </exec>
+ </target>
+
+ <target name="phpcb">
+  <exec executable="phpcb">
+   <arg line="--log    ${basedir}/build/logs
+              --output ${basedir}/build/code-browser" />
+  </exec>
+ </target>
+
+	<target name="package">
+		<delete dir="${basedir}/package/sandbox/libs/Doctrine"/>
+		<delete dir="${basedir}/package/sandbox/libs/Nette"/>
+		<delete dir="${basedir}/package/sandbox/libs/Nella"/>
+	
+	  <copy todir="${basedir}/package/sandbox/libs/Doctrine">
+  		<fileset dir="${basedir}/dependency/Doctrine"/>
+  	</copy>
+	  <copy todir="${basedir}/package/sandbox/libs/Nette">
+  		<fileset dir="${basedir}/dependency/Nette"/>
+  	</copy>
+	  <copy todir="${basedir}/package/sandbox/libs/Nella">
+  		<fileset dir="${basedir}/src/Nella"/>
+  	</copy>
+	  <copy todir="${basedir}/package/Nella">
+  		<fileset dir="${basedir}/src/Nella"/>
+  	</copy>
+	  <copy todir="${basedir}/package/client-side">
+  		<fileset dir="${basedir}/src/client-side"/>
+  	</copy>
+	  <copy file="${basedir}/src/LICENSE.txt" tofile="${basedir}/package/LICENSE.txt"/>
+	  <copy file="${basedir}/src/README.txt" tofile="${basedir}/package/README.txt"/>
+	  <copy file="${basedir}/src/VERSION.txt" tofile="${basedir}/package/VERSION.txt"/>
+	  
+	  <exec executable="php" dir="${basedir}" failonerror="on" logerror="on">
+			<arg line=" tools/gitver.php -d package" />
+		</exec>
+		
+		<copy todir="${basedir}/NellaFramework-2.0dev">
+  		<fileset dir="${basedir}/package"/>
+  	</copy>
+		
+		<exec executable="7z" dir="${basedir}">
+  		<arg line=" a -mx9 NellaFramework-2.0dev.zip NellaFramework-2.0dev" />
+  	</exec>
+		
+		<delete dir="${basedir}/NellaFramework-2.0dev"/>
+		<move file="${basedir}/NellaFramework-2.0dev.zip" tofile="${basedir}/build/dist/NellaFramework-2.0dev.zip"/>
+		<delete dir="${basedir}/tools"/>
+	</target>
+
+ <target name="build" depends="git,lint,nette,doctrine,phpunit,apigen,parallelTasks,phpcb,package"/>
+</project>

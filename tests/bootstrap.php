@@ -8,7 +8,7 @@
  */
 
 // Load Nette Framework
-require_once __DIR__ . "/../src/Nette/loader.php";
+require_once __DIR__ . "/../dependency/Nette/loader.php";
 
 Nette\Debug::enable(Nette\Debug::PRODUCTION);
 Nette\Debug::$logDirectory = __DIR__;
@@ -19,10 +19,10 @@ Nette\Debug::$maxLen = 4096;
 // Init Nette Framework robot loader
 $loader = new Nette\Loaders\RobotLoader;
 $loader->setCacheStorage(new Nette\Caching\MemoryStorage);
-$loader->addDirectory(__DIR__ . "/../src");
-$loader->addDirectory(__DIR__ . "/../Nella");
+$loader->addDirectory(__DIR__ . "/../dependency");
+$loader->addDirectory(__DIR__ . "/../src/Nella");
 $loader->addDirectory(__DIR__);
 $loader->register();
 
 define('APP_DIR', __DIR__);
-define('NELLA_FRAMEWORK_DIR', __DIR__ . "/../Nella");
+define('NELLA_FRAMEWORK_DIR', __DIR__ . "/../src/Nella");
