@@ -71,7 +71,7 @@ class cUrlRequest extends \Nette\Object
 			throw new \InvalidStateException("Curl extension is not loaded!");
 		}
 		
-		$ua = 'Nella\Tools\cUrl ' . \Nella\Framework::VERSION . " (http://nellacms.com)";
+		$ua = 'Nella\Tools\cUrl ' . \Nella\Framework::VERSION . " (http://nella-project.org)";
 		$this->setOption('useragent', isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : $ua);
 		$this->setOption('returntransfer', TRUE);
 		
