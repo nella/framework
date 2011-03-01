@@ -15,7 +15,7 @@ Nella Framework prequires PHP 5.3.0 or later and Nette Framework 2.0 or later. P
 Installation
 ------------
 
-After downloading the latest distribution package from http://nellacms.com/download, extract it to a directory accessible by web server. The installation is done!
+After downloading the latest distribution package from http://nella-project.org/#framework, extract it to a directory accessible by web server. The installation is done!
 
 The source tree includes the following directories:
 
@@ -30,5 +30,5 @@ The source tree includes the following directories:
 
 -----
 
-homepage: http://nellacms.com
+homepage: http://nella-project.org
 repository: http://github.com/nella/framework

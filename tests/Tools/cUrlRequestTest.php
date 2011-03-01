@@ -4,7 +4,7 @@
  *
  * Copyright (c) 2006, 2011 Patrik Votoček (http://patrik.votocek.cz)
  *
- * This source file is subject to the GNU Lesser General Public License. For more information please see http://nellacms.com
+ * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
  
 namespace NellaTests\Tools;
@@ -88,8 +88,8 @@ class cUrlTest extends \PHPUnit_Framework_TestCase
 	
 	public function testUserAgent()
 	{
-		$this->assertEquals('Nella\Tools\cUrl ' . Framework::VERSION . " (http://nellacms.com)", $this->wrapper->userAgent, "->getUserAgent()");
-		$this->assertEquals('Nella\Tools\cUrl ' . Framework::VERSION . " (http://nellacms.com)", $this->wrapper->userAgent, "->userAgent");
+		$this->assertEquals('Nella\Tools\cUrl ' . Framework::VERSION . " (http://nella-project.org)", $this->wrapper->userAgent, "->getUserAgent()");
+		$this->assertEquals('Nella\Tools\cUrl ' . Framework::VERSION . " (http://nella-project.org)", $this->wrapper->userAgent, "->userAgent");
 		$this->assertEquals("Test 1", $this->wrapper->setUserAgent("Test 1")->userAgent, "->setUserAgent()");
 		$this->wrapper->userAgent = "Test 2";
 		$this->assertEquals("Test 2", $this->wrapper->userAgent, "->userAgent setter");
