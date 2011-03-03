@@ -36,11 +36,7 @@ class ConfiguratorTest extends \PHPUnit_Framework_TestCase
 					'class' => 'NellaTests\DependencyInjection\Foo', 
 					'argument' => array("Test"), 
 					'alias' => array("Baz")
-				), 
-				'Bar' => array(
-					'factory' => 'NellaTests\DependencyInjection\Foo::create', 
-					'autowire' => TRUE, 
-				), 
+				),
 			), 
 		));
 		
@@ -55,8 +51,5 @@ class ConfiguratorTest extends \PHPUnit_Framework_TestCase
 		$this->assertInstanceOf('NellaTests\DependencyInjection\Foo', $context->getService('NellaTests\DependencyInjection\Foo'), "get NellaTests\\DependencyInjection\\Foo service");
 		$this->assertSame($context->getService('NellaTests\DependencyInjection\Foo'), $context->getService('Baz'), "get Baz service");
 		$this->assertEquals("Test", $context->getService('Baz')->bar);
-		$this->assertInstanceOf('NellaTests\DependencyInjection\Foo', $context->getService('Bar'), "get Bar service");
-		$this->assertInstanceOf('NellaTests\DependencyInjection\Foo', $context->getService('Bar'), "service->bar instance");
-		$this->assertSame($context->getService('NellaTests\DependencyInjection\Foo'), $context->getService('Bar')->bar, "service->bar is NellaTests\\DependencyInjection\\Foo service instance");
 	}
 }

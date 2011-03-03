@@ -87,9 +87,6 @@ class Configurator extends \Nette\Configurator
 				$options = array();
 				$singleton = isset($value->singleton) ? $value->singleton : TRUE;
 				
-				if (isset($value->autowire)) {
-					$options['autowire'] = $value->autowire;
-				}
 				if (isset($value->argument)) {
 					$options['arguments'] = (array) $value->argument;
 				}

@@ -167,19 +167,6 @@ class Context extends \Nette\FreezableObject implements \Nette\IContext, \ArrayA
 					throw new \InvalidStateException("Service named '$name' does not have constructor.");
 				} elseif (isset($options['arguments']) && $reflection->hasMethod('__construct')) {
 					$service = $reflection->newInstanceArgs($this->processArgs($options['arguments']));
-				} elseif (isset($options['autowire']) && $options['autowire'] === TRUE) {
-					if (!$reflection->hasMethod('__construct')) {
-						throw new \InvalidStateException("Service named '$name' does not have constructor.");
-					}
-					
-					$args = array();
-					foreach ($reflection->getMethod('__construct')->getParameters() as $parameter) {
-						if ($parameter->getClass()) {
-							$args[] = "@" . $parameter->getClass()->getName();
- 						}
-					}
-					
-					$service = $reflection->newInstanceArgs($this->processArgs($args));
 				} else {
 					$service = new $factory;
 				}
@@ -192,16 +179,6 @@ class Context extends \Nette\FreezableObject implements \Nette\IContext, \ArrayA
 				
 				if (isset($options['arguments'])) {
 					$service = $factory->invokeArgs($this->processArgs($options['arguments']));
-				} elseif (isset($options['autowire']) && $options['autowire'] === TRUE) {
-					$reflection = $this->getFactoryReflection($factory);
-					$args = array();
-					foreach ($reflection->getParameters() as $parameter) {
- 						if ($parameter->getClass()) {
-							$args[] = "@" . $parameter->getClass()->getName();
- 						}
-					}
-					
-					$service = $factory->invokeArgs($this->processArgs($args));
 				} else {
 					$service = $factory();
 				}

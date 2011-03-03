@@ -199,20 +199,6 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 		unset($this->context['Foo']);
 		$this->assertFalse(isset($this->context['Foo']), "is not set Foo service");
 	}
-	
-	public function testAutowiring()
-	{
-		$this->context->addService('NellaTests\DependencyInjection\Foo', new Foo);
-		
-		$this->context->addService('Bar', 'NellaTests\DependencyInjection\Foo::create', TRUE, array('autowire' => TRUE));
-		
-		$this->assertTrue($this->context->hasService('Bar'), "has service Bar");
-		$this->assertSame(
-			$this->context->getService('NellaTests\DependencyInjection\Foo'), 
-			$this->context->getService('Bar')->bar, 
-			"service->bar is as Foo service"
-		);
-	}
 }
 
 class Foo extends \Nette\Object
