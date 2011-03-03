@@ -32,8 +32,9 @@ abstract class BackendPresenter extends Presenter
 		}
 			
 		try {
-			$this->getUser()->getIdentity();
-			$this->lang = $this->getUser()->identity->entity->lang;
+			if ($this->getUser()->identity instanceof \Nella\Security\Identity) {
+				$this->lang = $this->getUser()->identity->entity->lang;
+			}
 		} catch (\InvalidStateException $e) {
 			if ($this->getUser()->logoutReason === \Nette\Web\User::INACTIVITY) {
 				$this->flashMessage(__("Your login session expired. Please login again."), \Nella\FLASH_ERROR);
@@ -52,9 +53,12 @@ abstract class BackendPresenter extends Presenter
 		if ($ref->hasMethod($method) && !$this->isAllowed($method)) {
 			throw new \Nette\Application\BadRequestException("You don't have permission for this '{$this->getView()}' view", 403);
 		}
-		$method = $this->formatSignalMethod($this->getSignal());
-		if ($ref->hasMethod($method) && !$this->isAllowed($method)) {
-			throw new \Nette\Application\BadRequestException("You don't have permission for this '{$this->getSignal()}' signal", 403);
+		$signal = $this->getSignal();
+		if ($signal) {
+			$method = $this->formatSignalMethod($signal[1]);
+			if ($ref->hasMethod($method) && !$this->isAllowed($method)) {
+				throw new \Nette\Application\BadRequestException("You don't have permission for this '{$this->getSignal()}' signal", 403);
+			}
 		}
 
 		$this->setLayout('backend');
@@ -81,11 +85,11 @@ abstract class BackendPresenter extends Presenter
 		return $user->isAllowed($data['resource'], $data['privilege']);
 	}
 	
-	 /**
-	  * Component factory. Delegates the creation of components to a createComponent<Name> method.
-	  * @param  string
-	  * @return \Nette\IComponent
-	  */
+	/**
+	 * Component factory. Delegates the creation of components to a createComponent<Name> method.
+	 * @param  string
+	 * @return \Nette\IComponent
+	 */
 	protected function createComponent($name)
 	{
 		$ucname = ucfirst($name);
