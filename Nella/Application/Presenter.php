@@ -18,12 +18,6 @@ namespace Nella\Application;
  */
 abstract class Presenter extends \Nette\Application\Presenter
 {
-	/** @var array */
-	public static $templateDirs = array(
-		APP_DIR, 
-		NELLA_FRAMEWORK_DIR, 
-	);
-
 	/**
 	 * Formats layout template file names.
 	 *
@@ -61,7 +55,7 @@ abstract class Presenter extends \Nette\Application\Presenter
 		};
 		
 		$files = array();
-		foreach (static::$templateDirs as $dir) {
+		foreach ($this->getContext()->getService('Nella\Registry\TemplateDirs') as $dir) {
 			$files = array_merge($files, $generator($dir));
 		}
 
@@ -108,7 +102,7 @@ abstract class Presenter extends \Nette\Application\Presenter
 		};
 		
 		$files = array();
-		foreach (static::$templateDirs as $dir) {
+		foreach ($this->getContext()->getService('Nella\Registry\TemplateDirs') as $dir) {
 			$files = array_merge($files, $generator($dir));
 		}
 

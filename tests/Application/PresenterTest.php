@@ -18,7 +18,11 @@ class PresenterTest extends \PHPUnit_Framework_TestCase
 	
 	public function setUp()
 	{
+		$context = new \Nette\Context;
+		$context->addService('Nella\Registry\NamespacePrefixes', \Nella\Configurator::createRegistryNamespacePrefixes());
+		$context->addService('Nella\Registry\TemplateDirs', \Nella\Configurator::createRegistryTemplateDirs());
 		$this->presenter = new PresenterMock;
+		$this->presenter->setContext($context);
 	}
 
 	public function testFormmatLayoutTemplatesFiles()

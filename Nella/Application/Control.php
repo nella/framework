@@ -15,18 +15,7 @@ namespace Nella\Application;
  * @author	Patrik Votoček
  */
 abstract class Control extends \Nette\Application\Control
-{
-	/** @var array */
-	public static $templateDirs = array(
-		APP_DIR, 
-		NELLA_FRAMEWORK_DIR, 
-	);	
-	/** @var array */
-	public static $namespacePrefixes = array(
-		'App\\', 
-		'Nella\\', 
-	);
-	
+{	
 	/**
 	 * Formats component template files
 	 *
@@ -41,7 +30,7 @@ abstract class Control extends \Nette\Application\Control
 		if (!isset($class)) {
 			$class = get_called_class();
 		}
-		foreach (static::$namespacePrefixes as $prefix) {
+		foreach ($this->getPresenter()->context->getService('Nella\Registry\NamespacePrefixes') as $prefix) {
 			if (\Nette\String::startsWith($class, $prefix)) {
 				$class = substr($class, strlen($prefix));
 				break;
@@ -64,7 +53,7 @@ abstract class Control extends \Nette\Application\Control
 		};
 		
 		$files = array();
-		foreach (static::$templateDirs as $dir) {
+		foreach ($this->getPresenter()->context->getService('Nella\Registry\TemplateDirs') as $dir) {
 			$files = array_merge($files, $generator($dir));
 		}
 

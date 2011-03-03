@@ -32,6 +32,8 @@ class Configurator extends \Nette\Configurator
 		'Nette\\Web\\Session' => 'Nette\Web\Session',
 		'Nette\\Loaders\\RobotLoader' => array(__CLASS__, 'createRobotLoader'),
 		'Nella\\Registry\\GlobalComponentFactories' => array(__CLASS__, 'createRegistryGlobalComponentFactories'), 
+		'Nella\\Registry\\NamespacePrefixes' => array(__CLASS__, 'createRegistryNamespacePrefixes'), 
+		'Nella\\Registry\\TemplateDirs' => array(__CLASS__, 'createRegistryTemplateDirs'), 
 		//'Nette\\Templates\\ITemplateFactory' => 'Nette\Templates\TemplateFactory',
 	);
 	
@@ -255,5 +257,27 @@ class Configurator extends \Nette\Configurator
 	public static function createRegistryGlobalComponentFactories()
 	{
 		return new FreezableArray;
+	}
+	
+	/**
+	 * @return FreezableArray
+	 */
+	public static function createRegistryNamespacePrefixes()
+	{
+		$registry = new FreezableArray;
+		$registry['app'] = "App\\";
+		$registry['framework'] = "Nella\\";
+		return $registry;
+	}
+	
+	/**
+	 * @return FreezableArray
+	 */
+	public static function createRegistryTemplateDirs()
+	{
+		$registry = new FreezableArray;
+		$registry['app'] = APP_DIR;
+		$registry['nella'] = NELLA_FRAMEWORK_DIR;
+		return $registry;
 	}
 }

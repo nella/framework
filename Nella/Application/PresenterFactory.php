@@ -16,11 +16,18 @@ namespace Nella\Application;
  */
 class PresenterFactory extends \Nette\Application\PresenterFactory
 {
-	/** @var array */
-	public static $prefixes = array(
-		'app' => "App\\", 
-		'framework' => "Nella\\", 
-	);
+	/** @var FreezableArray */
+	private $registry;
+	
+	/**
+	 * @param string
+	 * @param \Nette\IContext
+	 */
+	public function __construct($baseDir, \Nette\IContext $context)
+	{
+		$this->registry = $context->getService('Nella\Registry\NamespacePrefixes');
+		parent::__construct($baseDir, $context);
+	}
 	
 	/**
 	 * Format presenter class with prefixes
@@ -32,7 +39,8 @@ class PresenterFactory extends \Nette\Application\PresenterFactory
 	private function formatPresenterClasses($name)
 	{
 		$class = NULL;
-		foreach (array_keys(static::$prefixes) as $key) {
+		$prefixes = (array) $this->registry->getIterator();
+		foreach (array_keys($prefixes) as $key) {
 			$class = $this->formatPresenterClass($name, $key);
 			if (class_exists($class)) {
 				break;
@@ -92,8 +100,8 @@ class PresenterFactory extends \Nette\Application\PresenterFactory
 	 */
 	public function formatPresenterClass($presenter, $type = 'app')
 	{
-		if (isset(static::$prefixes[$type])) {
-			return static::$prefixes[$type].str_replace(':', "\\", $presenter.'Presenter');
+		if (isset($this->registry[$type])) {
+			return $this->registry[$type].str_replace(':', "\\", $presenter.'Presenter');
 		} else {
 			return str_replace(':', '\\', $presenter).'Presenter';
 		}
@@ -112,7 +120,8 @@ class PresenterFactory extends \Nette\Application\PresenterFactory
 				return $prefix;
 			}
 		};
-		if (count($prefixes = array_filter(static::$prefixes, $mapper))) {
+		$reg = (array) $this->registry->getIterator();
+		if (count($prefixes = array_filter($reg, $mapper))) {
 			$prefix = current($prefixes);
 			return str_replace("\\", ':', substr($class, $class[0] == "\\" ? (strlen($prefix) + 1) : strlen($prefix), -9));
 		} else {
