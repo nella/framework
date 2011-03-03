@@ -25,18 +25,17 @@ class ServiceFactory extends \Nette\Object
 	}
 	
 	/**
-	 * @param \Doctrine\Common\Cache\Cache
 	 * @param array
 	 * @param string
 	 * @param string
 	 * @return \Doctrine\ORM\Configuration
 	 */
-	public static function configuration(\Doctrine\Common\Cache\Cache $cache = NULL, array $dirs = NULL, \Doctrine\DBAL\Logging\SQLLogger $logger = NULL, $proxyDir = NULL, $proxyNamespace = 'App\Models\Proxies')
+	public static function configuration(array $dirs = NULL)
 	{
 		$config = new \Doctrine\ORM\Configuration;
 
 		// Cache
-		$cache = $cache ?: new \Doctrine\Common\Cache\ArrayCache;
+		$cache = new \Doctrine\Common\Cache\ArrayCache;
 		$config->setMetadataCacheImpl($cache);
 		$config->setQueryCacheImpl($cache);
 
@@ -45,20 +44,14 @@ class ServiceFactory extends \Nette\Object
 		$config->setMetadataDriverImpl($config->newDefaultAnnotationDriver($dirs));
 
 		// Proxies
-		$proxyDir = $proxyDir ?: APP_DIR . "/proxies";
-		$config->setProxyDir($proxyDir);
-		$config->setProxyNamespace($proxyNamespace);
+		$config->setProxyDir(APP_DIR . "/proxies");
+		$config->setProxyNamespace('App\Models\Proxies');
 		if (\Nette\Environment::isProduction()) {
 			$config->setAutoGenerateProxyClasses(FALSE);
 		} else {
 			$config->setAutoGenerateProxyClasses(TRUE);
 		}
 		
-		// Logger
-		if (isset($logger)) {
-			$config->setSQLLogger($logger);
-		}
-
 		return $config;
 	}
 	
@@ -69,13 +62,8 @@ class ServiceFactory extends \Nette\Object
 	 * @param \Doctrine\DBAL\Event\Listeners\MysqlSessionInit
 	 * @return \Doctrine\ORM\EntityManager
 	 */
-	public static function entityManager(array $database, \Doctrine\ORM\Configuration $configuration = NULL, \Doctrine\Common\EventManager $event = NULL, \Doctrine\DBAL\Event\Listeners\MysqlSessionInit $mysqlEvent = NULL)
+	public static function entityManager(array $database, \Doctrine\ORM\Configuration $configuration = NULL, \Doctrine\Common\EventManager $event = NULL)
 	{
-		// Special event for MySQL
-		if ($event && $mysqlEvent) {
-			$event->addEventSubscriber($mysqlEvent);
-		}
-
 		// Entity manager
 		$configuration = $configuration ?: self::configuration();
 		return \Doctrine\ORM\EntityManager::create($database, $configuration, $event);

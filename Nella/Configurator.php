@@ -34,6 +34,9 @@ class Configurator extends \Nette\Configurator
 		'Nella\\Registry\\GlobalComponentFactories' => array(__CLASS__, 'createRegistryGlobalComponentFactories'), 
 		'Nella\\Registry\\NamespacePrefixes' => array(__CLASS__, 'createRegistryNamespacePrefixes'), 
 		'Nella\\Registry\\TemplateDirs' => array(__CLASS__, 'createRegistryTemplateDirs'), 
+		'Doctrine\ORM\EntityManager' => array('Nella\Doctrine\ServiceFactory', 'entityManager'), 
+		'Doctrine\ORM\Configuration' => array('Nella\Doctrine\ServiceFactory', 'configuration'), 
+		'Doctrine\Common\EventManager' => 'Doctrine\Common\EventManager', 
 		//'Nette\\Templates\\ITemplateFactory' => 'Nette\Templates\TemplateFactory',
 	);
 	
@@ -223,6 +226,27 @@ class Configurator extends \Nette\Configurator
 		foreach ($this->defaultServices as $name => $service) {
 			$context->addService($name, $service);
 		}
+		
+		// Difficulty default services
+		$context->addService('Nette\Security\IAuthenticator', 'Nella\Security\Authenticator', TRUE, array(
+			'arguments' => array('@Doctrine\ORM\EntityManager'), 
+		));
+		$context->addService('Nette\Security\IAuthorizator', 'Nella\Security\Authorizator', TRUE, array(
+			'arguments' => array('@Doctrine\ORM\EntityManager'), 
+		));
+		$context->addService('Nette\Security\IAuthorizator', 'Nella\Security\Authorizator', TRUE, array(
+			'arguments' => array('@Doctrine\ORM\EntityManager'), 
+		));
+		$context->addService('Nette\Caching\Cache', 'Nette\Caching\Cache', TRUE, array(
+			'arguments' => array('@Nette\Caching\ICacheStorage'), 
+		));
+		$context->addService('Doctrine\Common\Cache\Cache', 'Nella\Doctrine\Cache', TRUE, array(
+			'arguments' => array('@Nette\Caching\Cache'), 
+		));
+		$context->addService('Doctrine\DBAL\Logging\SQLLogger', 'Nella\Doctrine\Panel::create', TRUE, array(
+			'run' => TRUE, 
+		));
+		
 		return $context;
 	}
 	
