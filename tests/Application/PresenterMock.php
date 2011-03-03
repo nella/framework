@@ -9,7 +9,13 @@
 
 namespace NellaTests\Application;
 
-class PresenterMock extends \Nella\Application\Presenter { }
+class PresenterMock extends \Nella\Application\Presenter
+{
+	public function createComponentMock($name)
+	{
+		return $this->createComponent($name);
+	}
+}
 
 namespace Nella;
 

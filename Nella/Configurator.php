@@ -31,13 +31,14 @@ class Configurator extends \Nette\Configurator
 		'Nette\\Mail\\IMailer' => array(__CLASS__, 'createMailer'),
 		'Nette\\Web\\Session' => 'Nette\Web\Session',
 		'Nette\\Loaders\\RobotLoader' => array(__CLASS__, 'createRobotLoader'),
+		'Nella\\Registry\\GlobalComponentFactories' => array(__CLASS__, 'createRegistryGlobalComponentFactories'), 
 		//'Nette\\Templates\\ITemplateFactory' => 'Nette\Templates\TemplateFactory',
 	);
 	
 	/**
 	 * Loads global configuration from file and process it.
-	 * @param  string|Nette\Config\Config  file name or Config object
-	 * @return Nette\Config\Config
+	 * @param  string|\Nette\Config\Config  file name or Config object
+	 * @return \Nette\Config\Config
 	 * 
 	 * @author Patrik Votoček
 	 * @author David Grudl
@@ -212,7 +213,7 @@ class Configurator extends \Nette\Configurator
 	/**
 	 * Get initial instance of context
 	 * 
-	 * @return Nette\IContext
+	 * @return \Nette\IContext
 	 */
 	public function createContext()
 	{
@@ -224,7 +225,7 @@ class Configurator extends \Nette\Configurator
 	}
 	
 	/**
-	 * @return Nette\Application\Application
+	 * @return \Nette\Application\Application
 	 */
 	public static function createApplication(array $options = NULL)
 	{
@@ -246,5 +247,13 @@ class Configurator extends \Nette\Configurator
 		$application->setContext($context);
 		$application->catchExceptions = Environment::isProduction();
 		return $application;
+	}
+	
+	/**
+	 * @return FreezableArray
+	 */
+	public static function createRegistryGlobalComponentFactories()
+	{
+		return new FreezableArray;
 	}
 }

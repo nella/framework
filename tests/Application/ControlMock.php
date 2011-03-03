@@ -25,4 +25,9 @@ class ControlMock extends \Nella\Application\Control
 	{
 		$this->_render(__METHOD__);
 	}
+	
+	public function createComponentMock($name)
+	{
+		return $this->createComponent($name);
+	}
 }

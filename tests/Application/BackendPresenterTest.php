@@ -102,4 +102,21 @@ class BackendPresenterTest extends \PHPUnit_Framework_TestCase
 		$this->presenter->startupMock();
 		$this->assertEquals("es", $this->presenter->lang);
 	}
+	
+	protected function setUpContext()
+	{
+		$registry = new \Nella\FreezableArray;
+		$registry['foo'] = function($parent, $name) { return "bar"; };
+		$context = new \Nette\Context;
+		$context->addService('Nella\Registry\GlobalComponentFactories', $registry);
+		$this->presenter->setContext($context);
+	}
+	
+	public function testGlobalComponent()
+	{
+		$this->setUpContext();
+		
+		$this->assertEquals("bar", $this->presenter->createComponentMock('foo'));
+		$this->assertNull($this->presenter->createComponentMock('bar'));
+	}
 }

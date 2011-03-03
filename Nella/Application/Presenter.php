@@ -116,6 +116,21 @@ abstract class Presenter extends \Nette\Application\Presenter
 	}
 	
 	/**
+	 * Component factory. Delegates the creation of components to a createComponent<Name> method.
+	 * @param  string
+	 * @return \Nette\IComponent
+	 */
+	protected function createComponent($name)
+	{
+		$globalComponentRegistry = $this->getContext()->getService('Nella\Registry\GlobalComponentFactories');
+		if (isset($globalComponentRegistry[$name])) {
+			return callback($globalComponentRegistry[$name])->invoke($this, $name);
+		}
+		
+		return parent::createComponent($name);
+	}
+	
+	/**
 	 * @return \Doctrine\ORM\EntityManager
 	 */
 	public function getEntityManager()

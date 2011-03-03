@@ -71,4 +71,21 @@ class ControlTest extends \PHPUnit_Framework_TestCase
 		
 		$this->assertEquals("TEST", $data, "->render()");
 	}
+	
+	protected function setUpContext()
+	{
+		$registry = new \Nella\FreezableArray;
+		$registry['foo'] = function($parent, $name) { return "bar"; };
+		$context = new \Nette\Context;
+		$context->addService('Nella\Registry\GlobalComponentFactories', $registry);
+		$this->control->presenter->setContext($context);
+	}
+	
+	public function testGlobalComponent()
+	{
+		$this->setUpContext();
+		
+		$this->assertEquals("bar", $this->control->createComponentMock('foo'));
+		$this->assertNull($this->control->createComponentMock('bar'));
+	}
 }

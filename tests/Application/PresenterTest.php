@@ -13,7 +13,7 @@ require_once __DIR__ . "/../bootstrap.php";
 
 class PresenterTest extends \PHPUnit_Framework_TestCase
 {
-	/** @var Nella\Application\Presenter */
+	/** @var PresenterMock */
 	private $presenter;
 	
 	public function setUp()
@@ -91,5 +91,22 @@ class PresenterTest extends \PHPUnit_Framework_TestCase
 			NELLA_FRAMEWORK_DIR . "/templates/@global.latte",
 		), $this->presenter->formatTemplateFiles('Foo:Bar', 'baz'), 
 		"->formatTemplateFiles('Foo:Bar', 'baz')");
+	}
+	
+	protected function setUpContext()
+	{
+		$registry = new \Nella\FreezableArray;
+		$registry['foo'] = function($parent, $name) { return "bar"; };
+		$context = new \Nette\Context;
+		$context->addService('Nella\Registry\GlobalComponentFactories', $registry);
+		$this->presenter->setContext($context);
+	}
+	
+	public function testGlobalComponent()
+	{
+		$this->setUpContext();
+		
+		$this->assertEquals("bar", $this->presenter->createComponentMock('foo'));
+		$this->assertNull($this->presenter->createComponentMock('bar'));
 	}
 }
