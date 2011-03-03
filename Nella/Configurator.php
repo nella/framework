@@ -91,9 +91,9 @@ class Configurator extends \Nette\Configurator
 					$options['arguments'] = (array) $value->argument;
 				}
 				if (isset($value->callMethod)) {
-					$options['callMethod'] = array();
+					$options['callMethods'] = array();
 					foreach ((array) $value->callMethod as $method => $args) {
-						$options['callMethod'][$method] = (array) $args;
+						$options['callMethods'][$method] = (array) $args;
 					}
 				}
 				
