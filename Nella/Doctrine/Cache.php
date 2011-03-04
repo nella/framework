@@ -59,10 +59,20 @@ class Cache extends \Doctrine\Common\Cache\AbstractCache
 	*/
 	protected function _doSave($id, $data, $lifeTime = 0)
 	{
+		$files = array();
+		if ($data instanceof \Doctrine\ORM\Mapping\ClassMetadata) {
+			$ref = \Nette\Reflection\ClassReflection::from($data->name);
+			$files[] = $ref->getFileName();
+			foreach ($data->parentClasses as $class) {
+				$ref = \Nette\Reflection\ClassReflection::from($class);
+				$files[] = $ref->getFileName();
+			}
+		}
+		
 		if ($lifeTime != 0) {
-			$this->data->save($id, $data, array('expire' => time() + $lifeTime, 'tags' => array("doctrine")));
+			$this->data->save($id, $data, array('expire' => time() + $lifeTime, 'tags' => array("doctrine"), 'files' => $files));
 		} else {
-			$this->data->save($id, $data, array('tags' => array("doctrine")));
+			$this->data->save($id, $data, array('tags' => array("doctrine"), 'files' => $files));
 		}
 		return TRUE;
 	}

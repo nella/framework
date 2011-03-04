@@ -235,7 +235,7 @@ class Configurator extends \Nette\Configurator
 			'arguments' => array('@Doctrine\ORM\EntityManager'), 
 		));
 		$context->addService('Nette\Caching\Cache', 'Nette\Caching\Cache', TRUE, array(
-			'arguments' => array('@Nette\Caching\ICacheStorage'), 
+			'arguments' => array('@Nette\Caching\ICacheStorage', 'Nella.Doctrine'), 
 		));
 		$context->addService('Doctrine\Common\Cache\Cache', 'Nella\Doctrine\Cache', TRUE, array(
 			'arguments' => array('@Nette\Caching\Cache'), 
