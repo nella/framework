@@ -91,8 +91,6 @@
   	</exec>
   	
   	<delete dir="${basedir}/dependency/_Doctrine/doctrine-orm/Doctrine/Symfony"/>
-  	<delete dir="${basedir}/dependency/_Doctrine/doctrine-orm/Doctrine/DBAL/Tools"/>
-  	<delete dir="${basedir}/dependency/_Doctrine/doctrine-orm/Doctrine/ORM/Tools/Console"/>
   	
   	<copy todir="${basedir}/dependency/Doctrine">
   		<fileset dir="${basedir}/dependency/_Doctrine/doctrine-orm/Doctrine"/>
@@ -102,15 +100,41 @@
 		<delete file="${basedir}/dependency/_Doctrine.tar.gz"/>
 		<delete dir="${basedir}/dependency/_Doctrine"/>
   </target>
+  
+  <target name="symfony">
+  	<exec executable="git" dir="${basedir}/dependency" failonerror="on" logerror="on">
+  		<arg line=" clone git@github.com:nella/build-tools.git ./_Symfony" />
+  	</exec>
+  	
+  	<mkdir dir="${basedir}/dependency/Symfony"/>
+  	<mkdir dir="${basedir}/dependency/Symfony/Component"/>
+  	
+  	<move todir="${basedir}/dependency/_Symfony/src/Symfony/Component/Console">
+	  	<fileset dir="${basedir}/dependency/Symfony/Component/Console"/> 
+	  </move>
+  	<!-- <move todir="${basedir}/dependency/_Symfony/src/Symfony/Component/DependencyInjection">
+	  	<fileset dir="${basedir}/dependency/Symfony/Component/DependencyInjection"/> 
+	  </move>
+	  <move todir="${basedir}/dependency/_Symfony/src/Symfony/Component/Validator">
+	  	<fileset dir="${basedir}/dependency/Symfony/Component/Validator"/> 
+	  </move> -->
+  	
+  	<copy file="${basedir}/dependency/_Symfony/LICENSE" tofile="${basedir}/dependency/Symfony/LICENSE"/>
+  	
+  	<delete dir="${basedir}/dependency/_Symfony"/>
+  </target>
 
 	<!-- Run unit tests and generate junit.xml and clover.xml -->
 	<target name="phpunit">
 		<exec executable="phpunit" failonerror="true"/>
 	</target>
   
-  <target name="apigen" depends="phpunit,lint,nette,doctrine">
+  <target name="apigen" depends="phpunit,lint,nette,doctrine,symfony">
   	<copy todir="${basedir}/temp/Doctrine">
   		<fileset dir="${basedir}/dependency/Doctrine"/>
+  	</copy>
+  	<copy todir="${basedir}/temp/Symfony">
+  		<fileset dir="${basedir}/dependency/Symfony"/>
   	</copy>
   	<copy todir="${basedir}/temp/Nette">
   		<fileset dir="${basedir}/dependency/Nette"/>
@@ -208,12 +232,16 @@
  </target>
 
 	<target name="package">
+		<delete dir="${basedir}/package/sandbox/libs/Symfony"/>
 		<delete dir="${basedir}/package/sandbox/libs/Doctrine"/>
 		<delete dir="${basedir}/package/sandbox/libs/Nette"/>
 		<delete dir="${basedir}/package/sandbox/libs/Nella"/>
 	
 	  <copy todir="${basedir}/package/sandbox/libs/Doctrine">
   		<fileset dir="${basedir}/dependency/Doctrine"/>
+  	</copy>
+  	<copy todir="${basedir}/package/sandbox/libs/Symfony">
+  		<fileset dir="${basedir}/dependency/Symfony"/>
   	</copy>
 	  <copy todir="${basedir}/package/sandbox/libs/Nette">
   		<fileset dir="${basedir}/dependency/Nette"/>
@@ -248,5 +276,5 @@
 		<delete dir="${basedir}/tools"/>
 	</target>
 
- <target name="build" depends="git,lint,nette,doctrine,phpunit,apigen,parallelTasks,phpcb,package"/>
+ <target name="build" depends="git,lint,nette,doctrine,symfony,phpunit,apigen,parallelTasks,phpcb,package"/>
 </project>
