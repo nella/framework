@@ -42,7 +42,7 @@ class EntityManagerHelper extends \Symfony\Component\Console\Helper\Helper
      */
     public function getEntityManager()
     {
-        return $this->_em;
+        return callback($this->_em)->invoke();
     }
 
     /**
