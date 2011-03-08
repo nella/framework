@@ -265,7 +265,7 @@ class Configurator extends \Nette\Configurator
 			});
 		}
 
-		$class = isset($options['class']) ? $options['class'] : 'Nette\Application\Application';
+		$class = isset($options['class']) ? $options['class'] : 'Nella\Application\Application';
 		$application = new $class;
 		$application->setContext($context);
 		$application->catchExceptions = Environment::isProduction();
