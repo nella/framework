@@ -81,7 +81,7 @@
   
   <target name="doctrine">
   	<exec executable="wget" dir="${basedir}/dependency" failonerror="on" logerror="on">
-  		<arg line=" http://www.doctrine-project.org/downloads/DoctrineORM-2.0.1-full.tar.gz -O _Doctrine.tar.gz" />
+  		<arg line=" http://www.doctrine-project.org/downloads/DoctrineORM-2.0.2-full.tar.gz -O _Doctrine.tar.gz" />
   	</exec>
   	
   	<mkdir dir="${basedir}/dependency/_Doctrine"/>
