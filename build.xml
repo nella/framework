@@ -103,7 +103,7 @@
   
   <target name="symfony">
   	<exec executable="git" dir="${basedir}/dependency" failonerror="on" logerror="on">
-  		<arg line=" clone git@github.com:nella/build-tools.git ./_Symfony" />
+  		<arg line=" clone git@github.com:symfony/symfony.git ./_Symfony" />
   	</exec>
   	
   	<mkdir dir="${basedir}/dependency/Symfony"/>
