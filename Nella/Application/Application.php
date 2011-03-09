@@ -28,7 +28,7 @@ class Application extends \Nette\Application\Application
 			$helperSet = new \Symfony\Component\Console\Helper\HelperSet();
 			$helperSet->set(new \Nella\Doctrine\EntityManagerHelper(function() use ($context) {
 				return $context->getService('Doctrine\ORM\EntityManager');
-			}));
+			}), 'em');
 			\Doctrine\ORM\Tools\Console\ConsoleRunner::run($helperSet);
 		} else {
 			parent::run();
