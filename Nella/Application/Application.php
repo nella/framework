@@ -18,12 +18,9 @@ use Nette\Environment;
  */
 class Application extends \Nette\Application\Application
 {
-	/**
-	 * @param string
-	 */
-	public function run($mode = Environment::PRODUCTION)
+	public function run()
 	{
-		if ($mode = Environment::CONSOLE) {
+		if (PHP_SAPI == "cli") {
 			$context = $this->getContext();
 			$helperSet = new \Symfony\Component\Console\Helper\HelperSet();
 			$helperSet->set(new \Nella\Doctrine\EntityManagerHelper(function() use ($context) {
