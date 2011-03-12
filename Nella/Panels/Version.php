@@ -95,15 +95,15 @@ class Version implements \Nette\IDebugPanel
 			'name' => \Nella\Framework::NAME, 
 			'version' => \Nella\Framework::VERSION, 
 			'revision' => \Nella\Framework::REVISION, 
-			'url' => NULL, 
-			'url-dev' => NULL, 
+			'url' => "http://s3.nella-project.org/package/NellaFramework-%tag%.zip",  
+			'url-dev' => "http://s3.nella-project.org/package/NellaFramework-%version%dev.zip", 
 			'file' => ClassReflection::from('Nella\Framework')->getFileName(), 
 		);
-		
+
 		// dibi
 		if (class_exists('dibi')) {
 			$libs['nette:dibi'] = array(
-				'name' => \dibi::NAME, 
+				'name' => "dibi", 
 				'version' => \dibi::VERSION, 
 				'revision' => \dibi::REVISION, 
 				'url' => "http://files.dibiphp.com/dibi-%tag2%.zip", 
@@ -115,7 +115,7 @@ class Version implements \Nette\IDebugPanel
 		// Texy
 		if (class_exists('Texy')) {
 			$libs['dg:texy'] = array(
-				'name' => \Texy::NAME, 
+				'name' => "Texy!", 
 				'version' => \Texy::VERSION, 
 				'revision' => \Texy::REVISION, 
 				'url' => "http://files.texy.info/latest.zip", 
