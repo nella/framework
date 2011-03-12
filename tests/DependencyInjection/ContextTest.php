@@ -21,6 +21,70 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 		$this->context = new \Nella\DependencyInjection\Context;
 	}
 	
+	public function testEnvironment()
+	{
+		$this->assertNull($this->context->environment, "default environment name not set");
+		$this->context->environment = 'foo';
+		$this->assertEquals('foo', $this->context->environment, "->environment is 'foo'");
+	}
+	
+	/**
+	 * @expectedException InvalidStateException
+	 */
+	public function testEnvironmentException()
+	{
+		$this->context->freeze();
+		$this->context->environment = 'foo';
+	}
+	
+	public function testParameters()
+	{
+		$this->context->setParameter('foo', "Bar");
+		$this->assertTrue($this->context->hasParameter('foo'), "->hasParamter('foo') true after parameter set");
+		$this->assertEquals("Bar", $this->context->getParameter('foo'), "->getParameter('foo') equals 'bar'");	
+	}
+	
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testParamterException1()
+	{
+		$this->context->setParameter(NULL, "Foo");
+	}
+	
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testParamterException2()
+	{
+		$this->context->setParameter("...", "Foo");
+	}
+	
+	/**
+	 * @expectedException InvalidStateException
+	 */
+	public function testParamterFrozenException()
+	{
+		$this->context->freeze();
+		$this->context->setParameter('foo', "Bar");
+	}
+	
+	public function testParametersExpandVar()
+	{
+		$this->context->setParameter('foo', "test");
+		$this->context->setParameter('bar', "%foo%");
+		$this->assertEquals("test", $this->context->getParameter('foo'), "->getParameter('foo') equals 'test'");
+		$this->assertEquals("test", $this->context->getParameter('bar'), "->getParameter('bar') equals 'test' from foo paramter");
+	}
+	
+	public function testParametersExpandService()
+	{
+		$this->context->addService('Foo', new Foo);
+		$this->context->setParameter('foo', "@Foo");
+		$this->assertTrue($this->context->hasParameter('foo'), "->hasParamter('foo') true after parameter set");
+		$this->assertEquals(new Foo, $this->context->getParameter('foo'), "->getParameter('foo') equals Foo instance");
+	}
+	
 	public function testBasicInstance()
 	{
 		$this->context->addService('Test', new Foo);
@@ -79,8 +143,8 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 			'Test', 
 			'NellaTests\DependencyInjection\Foo', 
 			TRUE, 
-			array('callMethods' => array(
-				'setBar' => array("Test")
+			array('methods' => array(
+					array('method' => "setBar", 'arguments' => array("Test")), 
 				)
 			)
 		);
@@ -100,8 +164,8 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 				return new Foo; 
 			}, 
 			TRUE, 
-			array('callMethods' => array(
-				'setBar' => array("Test")
+			array('methods' => array(
+					array('method' => "setBar", 'arguments' => array("Test")), 
 				)
 			)
 		);
@@ -144,8 +208,8 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 			'Test', 
 			'NellaTests\DependencyInjection\Foo', 
 			TRUE, 
-			array('callMethods' => array(
-				'setBar' => array("@Foo")
+			array('methods' => array(
+					array('method' => "setBar", 'arguments' => array("@Foo")), 
 				)
 			)
 		);
@@ -166,8 +230,8 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 				return new Foo; 
 			}, 
 			TRUE, 
-			array('callMethods' => array(
-				'setBar' => array("@Foo")
+			array('methods' => array(
+					array('method' => "setBar", 'arguments' => array("@Foo")), 
 				)
 			)
 		);
@@ -199,24 +263,172 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 		unset($this->context['Foo']);
 		$this->assertFalse(isset($this->context['Foo']), "is not set Foo service");
 	}
-}
-
-class Foo extends \Nette\Object
-{
-	public $bar;
 	
-	public function __construct($bar = NULL)
+	/**
+	 * @expectedException InvalidStateException
+	 */
+	public function testAddServiceFrozenException()
 	{
-		$this->bar = $bar;
+		$this->context->freeze();
+		$this->context->addService('Test', new Foo);
 	}
 	
-	public function setBar($bar)
+	/**
+	 * @expectedException InvalidStateException
+	 */
+	public function testAddAliasFrozenException()
 	{
-		$this->bar = $bar;
+		$this->context->freeze();
+		$this->context->addAlias('Test', 'Test');
 	}
 	
-	public static function create(Foo $foo)
+	/**
+	 * @expectedException InvalidStateException
+	 */
+	public function testRemoveServiceFrozenException()
 	{
-		return new static($foo);
+		$this->context->addService('Test', new Foo);
+		$this->context->freeze();
+		$this->context->removeService('Test');
+	}
+	
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testAddServiceBadNameException()
+	{
+		$this->context->addService('', new Foo);
+	}
+	
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testAddServiceBadServiceException()
+	{
+		$this->context->addService('Test', NULL);
+	}
+	
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testAddServiceSignletonInstanceException()
+	{
+		$this->context->addService('Test', new Foo, FALSE);
+	}
+	
+	/**
+	 * @expectedException Nette\AmbiguousServiceException
+	 */
+	public function testAddServiceRegisteredException()
+	{
+		$this->context->addService('Test', new Foo);
+		$this->context->addService('Test', new Foo);
+	}
+	
+	/**
+	 * @expectedException Nette\AmbiguousServiceException
+	 */
+	public function testAddServiceRegisteredAliasException()
+	{
+		$this->context->addService('Foo', function () { return new Foo; });
+		$this->context->addAlias('Test', "Foo");
+		$this->context->addService('Test', new Foo);
+	}
+	
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testAddAliasBadNameException()
+	{
+		$this->context->addAlias('', 'Test');
+	}
+	
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testAddAliasBadServiceException()
+	{
+		$this->context->addAlias('Test', '');
+	}
+	
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testAddAliasNotExistServiceException()
+	{
+		$this->context->addAlias('Test', 'Test');
+	}
+	
+	/**
+	 * @expectedException Nette\AmbiguousServiceException
+	 */
+	public function testAddAliasNotExistingException()
+	{
+		$this->context->addService('Test', new Foo);
+		$this->context->addAlias('Foo', 'Test');
+		$this->context->addAlias('Foo', 'Test');
+	}
+	
+	/**
+	 * @expectedException Nette\AmbiguousServiceException
+	 */
+	public function testAddAliasNotExistingServiceException()
+	{
+		$this->context->addService('Test', new Foo);
+		$this->context->addAlias('Test', 'Test');
+	}
+	
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testGetServiceBadNameException()
+	{
+		$this->context->getService('');
+	}
+	
+	/**
+	 * @expectedException InvalidStateException
+	 */
+	public function testGetServiceNonExistException()
+	{
+		$this->context->getService('Test');
+	}
+	
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testGetServiceInstanceOptionsException()
+	{
+		$this->context->addService('Test', new Foo);
+		$this->context->getService('Test', array("foo"));
+	}
+	
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testHasServiceBadNameException()
+	{
+		$this->context->hasService('');
+	}
+	
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testRemoveServiceBadNameException()
+	{
+		$this->context->removeService('');
+	}
+	
+	public function testGetConstantParameter()
+	{
+		$this->assertEquals(APP_DIR, $this->context->getParameter('appDir'), '->getParameter("appDir") equals APP_DIR');
+	}
+	
+	/**
+	 * @expectedException InvalidStateException
+	 */
+	public function testGetNonExistParameter()
+	{
+		$this->context->getParameter('iLoveNetteFrameworkAndNetteFrameworkCreator!Really');
 	}
 }

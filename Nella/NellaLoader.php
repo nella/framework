@@ -21,7 +21,6 @@ class NellaLoader extends \Nette\Loaders\AutoLoader
 
 	/** @var array */
 	public $list = array(
-		'nella\configurator' => '/Configurator.php', 
 		'nella\framework' => '/Framework.php', 
 		'nella\freezablearray' => '/FreezableArray.php', 
 		'nella\image' => '/Image.php', 
@@ -29,7 +28,10 @@ class NellaLoader extends \Nette\Loaders\AutoLoader
 		'nella\application\control' => '/Application/Control.php', 
 		'nella\application\presenter' => '/Application/Presenter.php', 
 		'nella\application\presenterfactory' => '/Application/PresenterFactory.php', 
+		'nella\dependencyinjection\icontext' => '/DependencyInjection/IContext.php', 
 		'nella\dependencyinjection\context' => '/DependencyInjection/Context.php', 
+		'nella\dependencyinjection\contextbuilder' => '/DependencyInjection/ContextBuilder.php', 
+		'nella\dependencyinjection\servicefactory' => '/DependencyInjection/ServiceFactory.php',
 		'nella\doctrine\cache' => '/Doctrine/Cache.php', 
 		'nella\doctrine\entitymanagerhelper' => '/Doctrine/EntityManagerHelper.php', 
 		'nella\doctrine\panel' => '/Doctrine/Panel.php', 

@@ -9,6 +9,8 @@
 
 namespace NellaTests\Application;
 
+use Nella\DependencyInjection\ContextBuilder;
+
 require_once __DIR__ . "/../bootstrap.php";
 
 class PresenterTest extends \PHPUnit_Framework_TestCase
@@ -19,8 +21,8 @@ class PresenterTest extends \PHPUnit_Framework_TestCase
 	public function setUp()
 	{
 		$context = new \Nette\Context;
-		$context->addService('Nella\Registry\NamespacePrefixes', \Nella\Configurator::createRegistryNamespacePrefixes());
-		$context->addService('Nella\Registry\TemplateDirs', \Nella\Configurator::createRegistryTemplateDirs());
+		$context->addService('Nella\Registry\NamespacePrefixes', ContextBuilder::createRegistryNamespacePrefixes());
+		$context->addService('Nella\Registry\TemplateDirs', ContextBuilder::createRegistryTemplateDirs());
 		$this->presenter = new PresenterMock;
 		$this->presenter->setContext($context);
 	}

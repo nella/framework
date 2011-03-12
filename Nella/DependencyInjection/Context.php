@@ -13,19 +13,134 @@ use Nette\Reflection\ClassReflection,
 	Nette\Environment;
 
 /**
- * Dependency Injection container
+ * Dependency injection service container
  *
  * @author	Patrik Votoček
+ * 
+ * @property string $environment
  */
-class Context extends \Nette\FreezableObject implements \Nette\IContext, \ArrayAccess
+class Context extends \Nette\FreezableObject implements IContext, \ArrayAccess
 {
+	/** @var string */
+	private $environment;
+	/** @var array */
+	private $parameters = array();
 	/** @var array */
 	private $aliases = array();
 	/** @var array */
 	private $registry = array();
 	/** @var array */
+	private $globalRegistry = array();
+	/** @var array */
 	private $factories = array();
 	
+	/**
+	 * @return string
+	 */
+	public function getEnvironment()
+	{
+		return $this->environment;
+	}
+
+	/**
+	 * @param string
+	 * @return Context
+	 * @throws \InvalidStateException
+	 */
+	public function setEnvironment($environment)
+	{
+		if ($this->isFrozen() && $environment != $this->environment) {
+			throw new \InvalidStateException("Service container is frozen for changes");
+		}
+		
+		$this->environment = $environment;
+		return $this;
+	}
+	
+	/**
+	 * @param string
+	 * @param mixed
+	 * @return Context
+	 * @throws \InvalidStateException
+	 * @throws \InvalidArgumentException
+	 */
+	public function setParameter($key, $value)
+	{
+		if ($this->isFrozen()) {
+			throw new \InvalidStateException("Service container is frozen for changes");
+		}
+		
+		if (!is_string($key)) {
+			throw new \InvalidArgumentException("Parameter key must be integer or string, " . gettype($key) . " given.");
+		} elseif (!preg_match('#^[a-zA-Z0-9_]+$#', $key)) {
+			throw new \InvalidArgumentException("Parameter key must be non-empty alphanumeric string, '$key' given.");
+		}
+		
+		$this->parameters[$key] = $value;
+		return $this;
+	}
+	
+	/**
+	 * @param string
+	 * @return mixed
+	 */
+	public function hasParameter($key)
+	{
+		if (key_exists($key, $this->parameters)) {
+			return TRUE;
+		}
+		
+		$const = strtoupper(preg_replace('#(.)([A-Z]+)#', '$1_$2', $key));
+		$list = get_defined_constants(TRUE);
+		if (key_exists('user' , $list) && key_exists($const, $list['user'])) {
+			$this->parameters[$key] = $list['user'][$const];
+			return TRUE;
+		}
+		
+		return FALSE;
+	}
+	
+	/**
+	 * @internal
+	 * @param mixed
+	 * @return mixed
+	 */
+	public function expandParameter($data)
+	{
+		if (is_array($data) || $data instanceof \ArrayAccess) {
+			$tmp = array();
+			foreach ($data as $key => $value) {
+				$tmp[$key] = $this->expandParameter($value);
+			}
+			$data = $tmp;
+		} else {
+			if (is_string($data)) {
+				if (\Nette\String::startsWith($data, '@') && $this->hasService(substr($data, 1))) {
+					$data = $this->getService(substr($data, 1));
+				} elseif (\Nette\String::startsWith($data, '%') && \Nette\String::endsWith($data, '%')) { // @todo: better (DI) implementation
+					$data = $this->getParameter(substr($data, 1, -1));
+				}
+			}
+		}
+		
+		$data = Environment::expand($data);
+		
+		return $data;
+	}
+	
+	/**
+	 * @param string
+	 * @return mixed
+	 * @throws \InvalidStateException
+	 */
+	public function getParameter($key)
+	{
+		if (!$this->hasParameter($key)) {
+			throw new \InvalidStateException("Unknown context parameter '$key'.");
+		}
+		return $this->expandParameter($this->parameters[$key]);
+	}
+		
 	/**
 	 * Adds the specified service to the service container
 	 * 
@@ -42,7 +157,10 @@ class Context extends \Nette\FreezableObject implements \Nette\IContext, \ArrayA
 	 */
 	public function addService($name, $service, $singleton = TRUE, array $options = NULL)
 	{
-		$this->updating();
+		if ($this->isFrozen()) {
+			throw new \InvalidStateException("Service container is frozen for changes");
+		}
+		
 		if (!is_string($name) || $name === '') {
 			throw new \InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
 		}
@@ -69,8 +187,33 @@ class Context extends \Nette\FreezableObject implements \Nette\IContext, \ArrayA
 			if (!$service) {
 				throw new \InvalidArgumentException("Service named '$name' is empty.");
 			}
-			$this->factories[$lower] = array($service, $singleton, $options);
-			$this->registry[$lower] = & $this->factories[$lower][3]; // forces cloning using reference
+			
+			$factory = new ServiceFactory($this, $name);
+			$factory->singleton = $singleton;
+			
+			// BACK COPATABILITY
+			if ((is_string($service) && strpos($service, '::') !== FALSE) || $service instanceof \Closure || 
+					is_callable($service) || $service instanceof \Nette\Callback) {
+				$factory->factory = $service;
+			} elseif ($service) {
+				$factory->class = $service;
+			}
+			
+			if (isset($options['class'])) {
+				$factory->class = $options['class'];
+			}
+			if (isset($options['factory'])) {
+				$factory->factory = $options['factory'];
+			}
+			if (isset($options['arguments'])) {
+				$factory->arguments = $options['arguments'];
+			}
+			if (isset($options['methods'])) {
+				$factory->methods = $options['methods'];
+			}
+			
+			$this->factories[$lower] = $factory;
+			$this->registry[$lower] = & $this->globalRegistry[$lower]; // forces cloning using reference
 		}
 		
 		return $this;
@@ -87,7 +230,9 @@ class Context extends \Nette\FreezableObject implements \Nette\IContext, \ArrayA
 	 */
 	public function addAlias($alias, $service)
 	{
-		$this->updating();
+		if ($this->isFrozen()) {
+			throw new \InvalidStateException("Service container is frozen for changes");
+		}
 		
 		if (!is_string($alias) || $alias === '') {
 			throw new \InvalidArgumentException("Service alias name must be a non-empty string, " . gettype($alias) . " given.");
@@ -147,114 +292,24 @@ class Context extends \Nette\FreezableObject implements \Nette\IContext, \ArrayA
 			return $this->registry[$lower];
 
 		} elseif (isset($this->factories[$lower])) {
-			list($factory, $singleton, $defOptions) = $this->factories[$lower];
-
-			if ($singleton && $options) {
-				throw new \InvalidArgumentException("Service named '$name' is singleton and therefore can not have options.");
-
-			} elseif ($defOptions) {
-				$options = $options ? $options + $defOptions : $defOptions;
+			$factory = $this->factories[$lower];
+			
+			if (isset($options['arguments'])) {
+				$factory->arguments = $options['arguments'];
 			}
-
-			if (is_string($factory) && strpos($factory, ':') === FALSE) { // class name
-				if (!class_exists($factory)) {
-					throw new \Nette\AmbiguousServiceException("Cannot instantiate service '$name', class '$factory' not found.");
-				}
-				
-				$reflection = ClassReflection::from($factory);
-				
-				if (isset($options['arguments']) && !$reflection->hasMethod('__construct')) {
-					throw new \InvalidStateException("Service named '$name' does not have constructor.");
-				} elseif (isset($options['arguments']) && $reflection->hasMethod('__construct')) {
-					$service = $reflection->newInstanceArgs($this->processArgs($options['arguments']));
-				} else {
-					$service = new $factory;
-				}
-
-			} else { // factory callback
-				$factory = callback($factory);
-				if (!$factory->isCallable()) {
-					throw new \InvalidStateException("Cannot instantiate service '$name', handler '$factory' is not callable.");
-				}
-				
-				if (isset($options['arguments'])) {
-					$service = $factory->invokeArgs($this->processArgs($options['arguments']));
-				} else {
-					$service = $factory();
-				}
-				
-				if (!is_object($service)) {
-					throw new \Nette\AmbiguousServiceException("Cannot instantiate service '$name', value returned by '$factory' is not object.");
-				}
+			if (isset($options['methods'])) {
+				$factory->methods = $options['methods'];
 			}
 			
-			$reflection = ClassReflection::from(get_class($service));
-			if (isset($options['callMethods'])) {
-				foreach ($options['callMethods'] as $method => $args) {
-					if (!$reflection->hasMethod($method)) {
-						throw new \InvalidStateException("Unable to call method, method {$reflection->getName()}::$method() is missing.");
-					}
-					
-					callback($service, $method)->invokeArgs($this->processArgs($args));
-				}
-			}
-
-			if ($singleton) {
+			$service = $factory->instance;
+			
+			if ($factory->singleton) {
 				$this->registry[$lower] = $service;
 				unset($this->factories[$lower]);
 			}
 			return $service;
-
 		} else {
 			throw new \InvalidStateException("Service '$name' not found.");
-		}
-	}
-	
-	/**
-	 * Process arguments for method, factory or constructor injection
-	 * 
-	 * - Convert @Service to service object
-	 * - Convert %var% to environment variable
-	 * - Convert $var to environment config
-	 * 
-	 * @param array
-	 * @return array
-	 */
-	private function processArgs(array $args = NULL)
-	{
-		$args = $args === NULL ? array() : $args;
-		$output = array();
-		foreach ($args as $arg) {
-			if (is_string($arg)) {
-				if (\Nette\String::startsWith($arg, '@') && $this->hasService(substr($arg, 1))) {
-					$output[] = $this->getService(substr($arg, 1));
-				} elseif (\Nette\String::startsWith($arg, '%') && \Nette\String::endsWith($arg, '%')) { // @todo: better (DI) implementation
-					$output[] = Environment::getVariable(substr($arg, 1, -1));
-				} elseif (\Nette\String::startsWith($arg, '$')) {  // @todo: better (DI) implementation
-					$output[] = Environment::getConfig(substr($arg, 1, -1));
-				} else {
-					$output[] = $arg;
-				}
-			} else {
-				$output[] = (array) $arg;
-			}
-		}
-		
-		return $output;
-	}
-	
-	/**
-	 * @param Nette\Callback
-	 * @return Nette\Reflection\MethodReflection|Nette\Reflection\FunctionReflection
-	 */
-	private function getFactoryReflection(\Nette\Callback $factory)
-	{
-		$factory = $factory->getNative();
-		$factory = is_string($factory) ? explode("::", $factory) : $factory;
-		if (count($factory) > 1) {
-			return ClassReflection::from($factory[0])->getMethod($factory[1]);
-		} else {
-			return new \Nette\Reflection\FunctionReflection($factory[0]);
 		}
 	}
 	
@@ -291,7 +346,10 @@ class Context extends \Nette\FreezableObject implements \Nette\IContext, \ArrayA
 	 */
 	public function removeService($name)
 	{
-		$this->updating();
+		if ($this->isFrozen()) {
+			throw new \InvalidStateException("Service container is frozen for changes");
+		}
+		
 		if (!is_string($name) || $name === '') {
 			throw new \InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
 		}

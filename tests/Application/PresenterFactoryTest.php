@@ -9,7 +9,8 @@
 
 namespace NellaTests\Application;
 
-use Nella\Application\PresenterLoader;
+use Nella\Application\PresenterLoader, 
+	Nella\DependencyInjection\ContextBuilder;
 
 require_once __DIR__ . "/../bootstrap.php";
 
@@ -21,8 +22,8 @@ class PresenterFactoryTest extends \PHPUnit_Framework_TestCase
 	public function setUp()
 	{
 		$context = new \Nette\Context;
-		$context->addService('Nella\Registry\NamespacePrefixes', \Nella\Configurator::createRegistryNamespacePrefixes());
-		$context->addService('Nella\Registry\TemplateDirs', \Nella\Configurator::createRegistryTemplateDirs());
+		$context->addService('Nella\Registry\NamespacePrefixes', ContextBuilder::createRegistryNamespacePrefixes());
+		$context->addService('Nella\Registry\TemplateDirs', ContextBuilder::createRegistryTemplateDirs());
 		$this->loader = new \Nella\Application\PresenterFactory(__DIR__, $context);
 	}
 	

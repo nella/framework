@@ -24,7 +24,7 @@ if (file_exists(APP_DIR . "/../dependency")) {
 require_once DEPENDENCY_DIR . "/Nette/loader.php";
 
 // Setup Nette profiler
-Nette\Debug::enable(Nette\Debug::PRODUCTION);
+Nette\Debug::enable();
 Nette\Debug::$logDirectory = APP_DIR;
 Nette\Debug::$maxLen = 4096;
 
