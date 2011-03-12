@@ -66,6 +66,13 @@ class ServiceFactory extends \Nette\Object
 	{
 		// Entity manager
 		$configuration = $configuration ?: self::configuration();
+		if (key_exists('driver', $database) && $database['driver'] == "pdo_mysql" && key_exists('charset', $database)) {
+			if (!$event) {
+				$event = new \Doctrine\Common\EventManager;
+			}
+			$event->addEventSubscriber(new \Doctrine\DBAL\Event\Listeners\MysqlSessionInit($database['charset']));
+		}
+		
 		return \Doctrine\ORM\EntityManager::create($database, $configuration, $event);
 	}
 }
