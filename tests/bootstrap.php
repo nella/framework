@@ -9,11 +9,6 @@
 
 // Define dirs constants
 define('APP_DIR', __DIR__);
-if (file_exists(__DIR__ . "/../src/Nella")) {
-	define('NELLA_FRAMEWORK_DIR', APP_DIR . "/../src/Nella");
-} else {
-	define('NELLA_FRAMEWORK_DIR', APP_DIR . "/../Nella");
-}
 if (file_exists(APP_DIR . "/../dependency")) {
 	define('DEPENDENCY_DIR', APP_DIR . "/../dependency");
 } else {
@@ -22,6 +17,11 @@ if (file_exists(APP_DIR . "/../dependency")) {
 
 // Load Nette Framework
 require_once DEPENDENCY_DIR . "/Nette/loader.php";
+if (file_exists(__DIR__ . "/../src/Nella")) {
+	require_once __DIR__ . "/../src/Nella/loader.php";
+} else {
+	require_once __DIR__ . "/../Nella/loader.php";
+}
 
 // Setup Nette profiler
 Nette\Debug::enable();
@@ -41,7 +41,6 @@ function fdump($var, $file = NULL)
 $loader = new Nette\Loaders\RobotLoader;
 $loader->setCacheStorage(new Nette\Caching\MemoryStorage);
 $loader->addDirectory(DEPENDENCY_DIR);
-$loader->addDirectory(NELLA_FRAMEWORK_DIR);
 $loader->addDirectory(APP_DIR);
 $loader->register();
 
