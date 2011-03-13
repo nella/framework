@@ -22,7 +22,7 @@ namespace Nella\DependencyInjection;
  * @property bool $singleton
  * @property-read $instance
  */
-class ServiceFactory extends \Nette\Object
+class ServiceFactory extends \Nette\Object implements IServiceFactory
 {
 	/** @var IContext */
 	protected $context;
