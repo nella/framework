@@ -212,8 +212,7 @@ class Context extends \Nette\FreezableObject implements IContext, \ArrayAccess
 				$factory->methods = $options['methods'];
 			}
 			
-			$this->factories[$lower] = $factory;
-			$this->registry[$lower] = & $this->globalRegistry[$lower]; // forces cloning using reference
+			$this->addFactory($factory);
 		}
 		
 		return $this;
