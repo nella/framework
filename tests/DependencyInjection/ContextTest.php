@@ -379,14 +379,6 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * @expectedException InvalidArgumentException
-	 */
-	public function testGetServiceBadNameException()
-	{
-		$this->context->getService('');
-	}
-	
-	/**
 	 * @expectedException InvalidStateException
 	 */
 	public function testGetServiceNonExistException()
@@ -401,14 +393,6 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->context->addService('Test', new Foo);
 		$this->context->getService('Test', array("foo"));
-	}
-	
-	/**
-	 * @expectedException InvalidArgumentException
-	 */
-	public function testHasServiceBadNameException()
-	{
-		$this->context->hasService('');
 	}
 	
 	/**
@@ -430,5 +414,64 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 	public function testGetNonExistParameter()
 	{
 		$this->context->getParameter('iLoveNetteFrameworkAndNetteFrameworkCreator!Really');
+	}
+	
+	public function testGetFactory()
+	{
+		$this->context->addService('Test', 'NellaTests\DependencyInjection\Foo');
+		$factory = $this->context->getFactory('Test');
+		
+		$this->assertInstanceOf('Nella\DependencyInjection\IServiceFactory', $factory, "->getFactory('Test') instance of IServiceFactory");
+		$this->assertInstanceOf('NellaTests\DependencyInjection\Foo', $factory->getInstance(), "\$factory->getInstance() instance of defined service");
+	}
+	
+	/**
+	 * @expectedException InvalidStateException
+	 */
+	public function testGetNonExistFactoryException()
+	{
+		$this->context->getFactory('Test');
+	}
+	
+	public function testSetFactory()
+	{
+		$factory = new \Nella\DependencyInjection\ServiceFactory($this->context, 'Test');
+		$this->context->addFactory($factory);
+		
+		$this->assertSame($factory, $this->context->getFactory('Test'));
+	}
+	
+	/**
+	 * @expectedException InvalidStateException
+	 */
+	public function testSetFrozenFactoryException()
+	{
+		$this->context->freeze();
+		
+		$factory = new \Nella\DependencyInjection\ServiceFactory($this->context, 'Test');
+		$this->context->addFactory($factory);
+	}
+	
+	/**
+	 * @expectedException Nette\AmbiguousServiceException
+	 */
+	public function testSetExistingFactoryException()
+	{
+		$this->context->addService('Test', new Foo);
+		
+		$factory = new \Nella\DependencyInjection\ServiceFactory($this->context, 'Test');
+		$this->context->addFactory($factory);
+	}
+	
+	/**
+	 * @expectedException Nette\AmbiguousServiceException
+	 */
+	public function testSetExistingAliasFactoryException()
+	{
+		$this->context->addService('Foo', new Foo);
+		$this->context->addAlias('Test', 'Foo');
+		
+		$factory = new \Nella\DependencyInjection\ServiceFactory($this->context, 'Test');
+		$this->context->addFactory($factory);
 	}
 }

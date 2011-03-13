@@ -275,10 +275,6 @@ class Context extends \Nette\FreezableObject implements IContext, \ArrayAccess
 	 */
 	public function getService($name, array $options = NULL)
 	{
-		if (!is_string($name) || $name === '') {
-			throw new \InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
-		}
-
 		$lower = strtolower($name);
 		
 		if (isset($this->aliases[$lower])) {
@@ -326,12 +322,46 @@ class Context extends \Nette\FreezableObject implements IContext, \ArrayAccess
 	 */
 	public function hasService($name, $created = FALSE)
 	{
-		if (!is_string($name) || $name === '') {
-			throw new \InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
-		}
-
 		$lower = strtolower($name);
 		return isset($this->registry[$lower]) || (!$created && isset($this->factories[$lower])) || isset($this->aliases[$lower]);
+	}
+	
+	/**
+	 * @param string
+	 * @return IServiceFactory
+	 */
+	public function getFactory($name)
+	{
+		$lower = strtolower($name);
+		if (!isset($this->factories[$lower])) {
+			throw new \InvalidStateException("Service factory '$name' not found.");
+		}
+		
+		return $this->factories[$lower];
+	}
+	
+	/**
+	 * @param IServiceFactory
+	 * @return Context
+	 */
+	public function addFactory(IServiceFactory $factory)
+	{
+		if ($this->isFrozen()) {
+			throw new \InvalidStateException("Service container is frozen for changes");
+		}
+		
+		$lower = strtolower($factory->getName());
+		if (isset($this->registry[$lower])) { // only for instantiated services?
+			throw new \Nette\AmbiguousServiceException("Service named '{$factory->getName()}' has already been registered.");
+		}
+		if (isset($this->aliases[$lower])) { 
+			throw new \Nette\AmbiguousServiceException("Service named '{$factory->getName()}' is already used as a service alias.");
+		}
+		
+		$this->factories[$lower] = $factory;
+		$this->registry[$lower] = & $this->globalRegistry[$lower]; // forces cloning using reference
+		
+		return $this;
 	}
 
 	/**
