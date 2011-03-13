@@ -29,6 +29,11 @@ class ContextBuilder extends \Nette\Configurator
 	/** @var array */
 	private $autoRunServices = array();
 	
+	/** @var array */
+	public $onBeforeLoad = array();
+	/** @var array */
+	public $onAfterLoad = array();
+	
 	/**
 	 * @param string
 	 * @return ContextBuilder
@@ -202,6 +207,8 @@ class ContextBuilder extends \Nette\Configurator
 	 */
 	public function loadConfig($file)
 	{
+		$this->onBeforeLoad();
+		
 		$environment = Environment::getName(); // BACK compatability
 		$this->loadEnvironmentName($environment);
 		
@@ -235,6 +242,8 @@ class ContextBuilder extends \Nette\Configurator
 		}
 		
 		$this->autoRunServices();
+		
+		$this->onAfterLoad();
 		
 		return $config;
 	}
