@@ -8,7 +8,7 @@
  */
 
 // Nella X-Powered
-@header("X-Powered-By: Nette Framework with Nella"); // @ - headers may be sent
+@header("X-Powered-By: Nette Framework with Nella"); // @ - headers may have been sent
 
 // Set debug options
 Nette\Debug::$strictMode = TRUE;
