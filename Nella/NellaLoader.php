@@ -83,9 +83,16 @@ class NellaLoader extends \Nette\Loaders\AutoLoader
 		'nella\tools\dbloggerservice' => '/Tools/DBLoggerService.php', 
 		'nella\tools\fileactionlogger' => '/Tools/FileActionLogger.php', 
 		'nella\tools\filelogger' => '/Tools/FileLogger.php', 
-		'nella\tools\validator' => '/Tools/Validator.php', 
 		'nella\tools\iactionlogger' => '/Tools/IActionLogger.php', 
 		'nella\tools\ilogger' => '/Tools/ILogger.php', 
+		'nella\validator\ivalidator' => '/Validator/IValidator.php', 
+		'nella\validator\validator' => '/Validator/Validator.php', 
+		'nella\validator\iclassmetadatafactory' => '/Validator/IClassMetadataFactory.php', 
+		'nella\validator\classmetadatafactory' => '/Validator/ClassMetadataFactory.php', 
+		'nella\validator\classmetadata' => '/Validator/ClassMetadata.php', 
+		'nella\validator\imetadataparser' => '/Validator/IMetadataParser.php', 
+		'nella\validator\annotationparser' => '/Validator/AnnotationParser.php', 
+		//'nella\validator\doctrineannotationparser' => '/Validator/DoctrineAnnotationParser.php', 
 	);
 
 	/**
