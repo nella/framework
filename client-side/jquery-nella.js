@@ -16,7 +16,7 @@ Nella.addError = function(elem, message) {
 		$(elem).after($("<span>", {
 			class: 'error', 
 			id: elem.id + '_error', 
-			text: message
+			html: message
 		}));
 	}
 };
@@ -196,7 +196,7 @@ Nette.validateControl = function(elem, rules, onlyCheck) {
 		} else if (!rule.condition && !success) {
 			if (el.disabled) continue;
 			if (!onlyCheck) {
-				Nella.addError(el, rule.msg.replace('%value', Nette.getValue(el)));
+				Nella.addError(el, rule.msg.replace('%value', $('<span/>',{text:Nette.getValue(el)}).html()));
 			}
 			return false;
 		}
