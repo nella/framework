@@ -55,7 +55,9 @@ class Repository extends \Doctrine\ORM\EntityRepository
 	public function findByIds(array $ids)
 	{
 		$arr = array();
-		foreach ($this->createQueryBuilder('uni')->where($qb->expr()->in('i.id', $ids))->getQuery()->getResult() as $res) {
+		$qb = $this->createQueryBuilder('uni');
+		$qb = $qb->where($qb->expr()->in('uni.id', $ids));
+		foreach ($qb->getQuery()->getResult() as $res) {
 			$arr[$res->id] = $res;
 		}
 		
