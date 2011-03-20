@@ -272,7 +272,7 @@ Nette.validators = {
 	},
 
 	pattern: function(elem, arg, val) {
-		return (new RegExp('^' + arg + '$')).test(val);
+		return (new Regexp('^(?:' + arg + ')$')).test(val);
 	},
 
 	integer: function(elem, arg, val) {
