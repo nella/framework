@@ -80,9 +80,9 @@
   </target>
   
   <target name="doctrine">
-  	<delete dir="${basedir}/dependency/_DoctrineCommon"/>
-  	<delete dir="${basedir}/dependency/_DoctrineDBAL"/>
-  	<delete dir="${basedir}/dependency/_DoctrineORM"/>
+  	<delete dir="${basedir}/_DoctrineCommon"/>
+  	<delete dir="${basedir}/_DoctrineDBAL"/>
+  	<delete dir="${basedir}/_DoctrineORM"/>
   	
 	<exec executable="git" dir="${basedir}" failonerror="on" logerror="on">
 		<arg line=" clone git@github.com:doctrine/common.git ./_DoctrineCommon" />
@@ -98,19 +98,19 @@
   	<mkdir dir="${basedir}/dependency/Doctrine"/>
   	
   	<copy todir="${basedir}/dependency/Doctrine/Common">
-  		<fileset dir="${basedir}/dependency/_DoctrineCommon/lib/Doctrine/Common"/>
+  		<fileset dir="${basedir}/_DoctrineCommon/lib/Doctrine/Common"/>
   	</copy>
   	<copy todir="${basedir}/dependency/DoctrineDBAL">
-  		<fileset dir="${basedir}/dependency/_DoctrineDBAL/lib/Doctrine/DBAL"/>
+  		<fileset dir="${basedir}/_DoctrineDBAL/lib/Doctrine/DBAL"/>
   	</copy>
   	<copy todir="${basedir}/dependency/Doctrine/ORM">
-  		<fileset dir="${basedir}/dependency/_DoctrineORM/lib/Doctrine/ORM"/>
+  		<fileset dir="${basedir}/_DoctrineORM/lib/Doctrine/ORM"/>
   	</copy>
-  	<copy file="${basedir}/dependency/_DoctrineORM/LICENSE" tofile="${basedir}/dependency/Doctrine/LICENSE"/>
+  	<copy file="${basedir}/_DoctrineORM/LICENSE" tofile="${basedir}/dependency/Doctrine/LICENSE"/>
   	
-  	<delete dir="${basedir}/dependency/_DoctrineCommon"/>
-  	<delete dir="${basedir}/dependency/_DoctrineDBAL"/>
-  	<delete dir="${basedir}/dependency/_DoctrineORM"/>
+  	<delete dir="${basedir}/_DoctrineCommon"/>
+  	<delete dir="${basedir}/_DoctrineDBAL"/>
+  	<delete dir="${basedir}/_DoctrineORM"/>
   </target>
   
   <target name="symfony">
