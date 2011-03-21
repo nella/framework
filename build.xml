@@ -100,7 +100,7 @@
   	<copy todir="${basedir}/dependency/Doctrine/Common">
   		<fileset dir="${basedir}/_DoctrineCommon/lib/Doctrine/Common"/>
   	</copy>
-  	<copy todir="${basedir}/dependency/DoctrineDBAL">
+  	<copy todir="${basedir}/dependency/Doctrine/DBAL">
   		<fileset dir="${basedir}/_DoctrineDBAL/lib/Doctrine/DBAL"/>
   	</copy>
   	<copy todir="${basedir}/dependency/Doctrine/ORM">
