@@ -20,11 +20,11 @@ class Cache extends \Doctrine\Common\Cache\AbstractCache
 	private $data = array();
 
 	/**
-	 * @param Nette\Caching\Cache
+	 * @param Nette\Caching\ICacheStorage
 	 */
-	public function  __construct(\Nette\Caching\Cache $cache)
+	public function  __construct(\Nette\Caching\ICacheStorage $cache)
 	{
-		$this->data = $cache;
+		$this->data = $cache ? new \Nette\Caching\Cache($cache, "Nella.Doctrine") : $cache;
 	}
 
 	/**

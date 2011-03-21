@@ -251,21 +251,21 @@ class ContextBuilder extends \Nette\Configurator
 	/******************************************** FACTORIES **************************************************/
 	
 	public $defaultServices = array(
-		'Nette\\Application\\Application' => array('factory' => array(__CLASS__, 'createApplication')),
-		'Nette\\Web\\HttpContext' => array('class' => 'Nette\Web\HttpContext'),
-		'Nette\\Web\\IHttpRequest' => array('factory' => array(__CLASS__, 'createHttpRequest')),
-		'Nette\\Web\\IHttpResponse' => array('class' => 'Nette\Web\HttpResponse'),
-		'Nette\\Web\\IUser' => array('class' => 'Nette\Web\User'),
-		'Nette\\Caching\\ICacheStorage' => array('factory' => array(__CLASS__, 'createCacheStorage')),
-		'Nette\\Caching\\ICacheJournal' => array('factory' => array(__CLASS__, 'createCacheJournal')),
-		'Nette\\Mail\\IMailer' => array('factory' => array(__CLASS__, 'createMailer')),
-		'Nette\\Web\\Session' => array('class' => 'Nette\Web\Session'),
-		'Nette\\Loaders\\RobotLoader' => array('factory' => array(__CLASS__, 'createRobotLoader'), 'run' => TRUE),
-		'Nella\\Registry\\GlobalComponentFactories' => array(
+		'Nette\Application\Application' => array('factory' => array(__CLASS__, 'createApplication')),
+		'Nette\Web\HttpContext' => array('class' => 'Nette\Web\HttpContext'),
+		'Nette\Web\IHttpRequest' => array('factory' => array(__CLASS__, 'createHttpRequest')),
+		'Nette\Web\IHttpResponse' => array('class' => 'Nette\Web\HttpResponse'),
+		'Nette\Web\IUser' => array('class' => 'Nette\Web\User'),
+		'Nette\Caching\ICacheStorage' => array('factory' => array(__CLASS__, 'createCacheStorage')),
+		'Nette\Caching\ICacheJournal' => array('factory' => array(__CLASS__, 'createCacheJournal')),
+		'Nette\Mail\IMailer' => array('factory' => array(__CLASS__, 'createMailer')),
+		'Nette\Web\Session' => array('class' => 'Nette\Web\Session'),
+		'Nette\Loaders\RobotLoader' => array('factory' => array(__CLASS__, 'createRobotLoader'), 'run' => TRUE),
+		'Nella\Registry\GlobalComponentFactories' => array(
 			'factory' => array(__CLASS__, 'createRegistryGlobalComponentFactories')
 		), 
-		'Nella\\Registry\\NamespacePrefixes' => array('factory' => array(__CLASS__, 'createRegistryNamespacePrefixes')), 
-		'Nella\\Registry\\TemplateDirs' => array('factory' => array(__CLASS__, 'createRegistryTemplateDirs')), 
+		'Nella\Registry\NamespacePrefixes' => array('factory' => array(__CLASS__, 'createRegistryNamespacePrefixes')), 
+		'Nella\Registry\TemplateDirs' => array('factory' => array(__CLASS__, 'createRegistryTemplateDirs')), 
 		'Doctrine\ORM\EntityManager' => array('factory' => array('Nella\Doctrine\ServiceFactory', 'entityManager')), 
 		'Doctrine\ORM\Configuration' => array('factory' => array('Nella\Doctrine\ServiceFactory', 'configuration')), 
 		'Doctrine\Common\EventManager' => array('class' => 'Doctrine\Common\EventManager'), 
@@ -277,13 +277,9 @@ class ContextBuilder extends \Nette\Configurator
 			'class' => 'Nella\Security\Authorizator', 
 			'arguments' => array('@Doctrine\ORM\EntityManager'), 
 		), 
-		'Nette\Caching\Cache' => array(
-			'class' => 'Nette\Caching\Cache', 
-			'arguments' => array('@Nette\Caching\ICacheStorage', 'Nella.Doctrine'), 
-		), 
 		'Doctrine\Common\Cache\Cache' => array(
 			'class' => 'Nella\Doctrine\Cache', 
-			'arguments' => array('@Nette\Caching\Cache'), 
+			'arguments' => array('@Nette\Caching\ICacheStorage'), 
 		), 
 		'Doctrine\DBAL\Logging\SQLLogger' => array('factory' => 'Nella\Doctrine\Panel::create', 'run' => TRUE), 
 		//'Nette\\Templates\\ITemplateFactory' => array(̈́'class' => 'Nette\Templates\TemplateFactory'), 

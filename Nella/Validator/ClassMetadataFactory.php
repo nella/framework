@@ -24,11 +24,11 @@ class ClassMetadataFactory extends \Nette\Object implements IClassMetadataFactor
 	private $parsers = array();
 	
 	/**
-	 * @param \Nette\Caching\Cache
+	 * @param \Nette\Caching\ICacheStorage
 	 */
-	public function __construct(\Nette\Caching\Cache $cache = NULL)
+	public function __construct(\Nette\Caching\ICacheStorage $cache = NULL)
 	{
-		$this->cache = $cache;
+		$this->cache = $cache ? new \Nette\Caching\Cache($cache, "Nella.Validator.Metadata") : $cache;
 		$this->loadDefaultParsers();
 	}
 	
