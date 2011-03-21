@@ -80,25 +80,37 @@
   </target>
   
   <target name="doctrine">
-  	<exec executable="wget" dir="${basedir}/dependency" failonerror="on" logerror="on">
-  		<arg line=" http://www.doctrine-project.org/downloads/DoctrineORM-2.0.2-full.tar.gz -O _Doctrine.tar.gz" />
-  	</exec>
+  	<delete dir="${basedir}/dependency/_DoctrineCommon"/>
+  	<delete dir="${basedir}/dependency/_DoctrineDBAL"/>
+  	<delete dir="${basedir}/dependency/_DoctrineORM"/>
   	
-  	<mkdir dir="${basedir}/dependency/_Doctrine"/>
+	<exec executable="git" dir="${basedir}" failonerror="on" logerror="on">
+		<arg line=" clone git@github.com:doctrine/common.git ./_DoctrineCommon" />
+	</exec>
+	<exec executable="git" dir="${basedir}" failonerror="on" logerror="on">
+		<arg line=" clone git@github.com:doctrine/dbal.git ./_DoctrineDBAL" />
+	</exec>
+	<exec executable="git" dir="${basedir}" failonerror="on" logerror="on">
+		<arg line=" clone git@github.com:doctrine/doctrine2.git ./_DoctrineORM" />
+	</exec>
+	
+	<delete dir="${basedir}/dependency/Doctrine"/>
+  	<mkdir dir="${basedir}/dependency/Doctrine"/>
   	
-  	<exec executable="tar" dir="${basedir}/dependency" failonerror="on" logerror="on">
-  		<arg line=" xvfz _Doctrine.tar.gz -C _Doctrine" />
-  	</exec>
-  	
-  	<delete dir="${basedir}/dependency/_Doctrine/doctrine-orm/Doctrine/Symfony"/>
-  	
-  	<copy todir="${basedir}/dependency/Doctrine">
-  		<fileset dir="${basedir}/dependency/_Doctrine/doctrine-orm/Doctrine"/>
+  	<copy todir="${basedir}/dependency/Doctrine/Common">
+  		<fileset dir="${basedir}/dependency/_DoctrineCommon/lib/Doctrine/Common"/>
   	</copy>
-  	<copy file="${basedir}/dependency/_Doctrine/doctrine-orm/LICENSE" tofile="${basedir}/dependency/Doctrine/LICENSE"/>
-		
-		<delete file="${basedir}/dependency/_Doctrine.tar.gz"/>
-		<delete dir="${basedir}/dependency/_Doctrine"/>
+  	<copy todir="${basedir}/dependency/DoctrineDBAL">
+  		<fileset dir="${basedir}/dependency/_DoctrineDBAL/lib/Doctrine/DBAL"/>
+  	</copy>
+  	<copy todir="${basedir}/dependency/Doctrine/ORM">
+  		<fileset dir="${basedir}/dependency/_DoctrineORM/lib/Doctrine/ORM"/>
+  	</copy>
+  	<copy file="${basedir}/dependency/_DoctrineORM/LICENSE" tofile="${basedir}/dependency/Doctrine/LICENSE"/>
+  	
+  	<delete dir="${basedir}/dependency/_DoctrineCommon"/>
+  	<delete dir="${basedir}/dependency/_DoctrineDBAL"/>
+  	<delete dir="${basedir}/dependency/_DoctrineORM"/>
   </target>
   
   <target name="symfony">
