@@ -106,4 +106,51 @@ class Service extends \Nette\Object
 	{
 		return $this->getEntityManager()->flush();
 	}
+	
+	/**
+	 * @param BaseEntity
+	 * @return \Doctrine\ORM\EntityManager
+	 */
+	public function save($entity)
+	{
+		$this->persist($entity);
+		return $this->flush();
+	}
+	
+	/**
+	 * @param BaseEntity
+	 */
+	public function getEntityPrototype()
+	{
+		$class = $this->getEntityClass();
+		return new $class;
+	}
+	
+	/**
+	 * @param BaseEntity
+	 * @param array
+	 */
+	public function setEntityData($entity, $data)
+	{
+		$ref = new \Nette\Reflection\ClassReflection(get_class($entity));
+		foreach ($data as $key => $value) {
+			if (!is_array($value)) {
+				$method = "set" . \Nette\String::firstUpper($key);
+				if ($ref->hasMethod($method)) {
+					$entity->$method($value);
+				}
+			} // @todo implements collection
+		}
+	}
+	
+	/**
+	 * @param array
+	 * @return BaseEntity
+	 */
+	public function createEntity($data)
+	{
+		$entity = $this->getEntityPrototype();
+		$this->setEntityData($entity, $data);
+		return $entity;
+	}
 }
