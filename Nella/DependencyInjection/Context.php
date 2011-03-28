@@ -34,6 +34,13 @@ class Context extends \Nette\FreezableObject implements IContext, \ArrayAccess
 	/** @var array */
 	private $factories = array();
 	
+	public function __construct()
+	{
+		$lower = strtolower('Nella\DependencyInjection\IContext');
+		$this->registry[$lower] = & $this->globalRegistry[$lower];
+		$this->registry[$lower] = $this;
+	}
+	
 	/**
 	 * @return string
 	 */
