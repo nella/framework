@@ -12,9 +12,10 @@ namespace NellaTests\Models;
 /**
  * @entity
  */
-class TimestampableEntityMock extends \Nella\Models\Entity implements \Nella\Models\ITimestampable
+class TimestampableEntityMock extends \Nella\Models\Entity
 {
 	/**
+	 * @timestampable
 	 * @column(type="datetime")
 	 * @var DateTime
 	 */
@@ -29,10 +30,5 @@ class TimestampableEntityMock extends \Nella\Models\Entity implements \Nella\Mod
 	{
 		$this->datetime = $datetime;
 		return $this;
-	}
-	
-	public function updateTimestamps()
-	{
-		$this->datetime = new \DateTime;
 	}
 }

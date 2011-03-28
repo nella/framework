@@ -23,16 +23,26 @@ class TimestampableListenerTest extends \PHPUnit_Framework_TestCase
 	
 	public function testGetSubscribedEvents()
 	{
-		$this->assertEquals(array(\Doctrine\ORM\Events::preUpdate), $this->listener->getSubscribedEvents(), "is Doctrine\\ORM\\Events::preUpdate");
-		$this->assertEquals(array(\Doctrine\ORM\Events::preUpdate), $this->listener->subscribedEvents, "is Doctrine\\ORM\\Events::preUpdate");
+		$this->assertEquals(array(
+			\Doctrine\ORM\Events::preUpdate, 
+			\Doctrine\ORM\Events::loadClassMetadata
+		), $this->listener->getSubscribedEvents(), "is Doctrine\\ORM\\Events::preUpdate");
+		$this->assertEquals(array(
+			\Doctrine\ORM\Events::preUpdate, 
+			\Doctrine\ORM\Events::loadClassMetadata
+		), $this->listener->subscribedEvents, "is Doctrine\\ORM\\Events::preUpdate");
 	}
 	
-	public function testPreUpdate()
+	public function testTimestampable()
 	{
 		$this->assertInstanceOf('Doctrine\Common\EventSubscriber', $this->listener, "instance of Doctrine\\Common\\EventSubscriber");
 		
 		$em = \Doctrine\Tests\Mocks\EntityManagerMock::create(new \Doctrine\DBAL\Connection(array(), new \Doctrine\DBAL\Driver\PDOSqlite\Driver));
+		
+		$args = new \Doctrine\ORM\Event\LoadClassMetadataEventArgs($em->getClassMetadata('NellaTests\Models\TimestampableEntityMock'), $em);
+		$this->listener->loadClassMetadata($args);
 		$entity = new \NellaTests\Models\TimestampableEntityMock;
+		
 		$em->persist($entity);
 		
 		$changeSet = array('datetime' => new \DateTime("1970-1-1"));
