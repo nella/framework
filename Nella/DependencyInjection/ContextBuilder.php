@@ -268,7 +268,16 @@ class ContextBuilder extends \Nette\Configurator
 		'Nella\Registry\TemplateDirs' => array('factory' => array(__CLASS__, 'createRegistryTemplateDirs')), 
 		'Doctrine\ORM\EntityManager' => array('factory' => array('Nella\Doctrine\ServiceFactory', 'entityManager')), 
 		'Doctrine\ORM\Configuration' => array('factory' => array('Nella\Doctrine\ServiceFactory', 'configuration')), 
-		'Doctrine\Common\EventManager' => array('class' => 'Doctrine\Common\EventManager'), 
+		'Doctrine\Common\EventManager' => array(
+			'class' => 'Doctrine\Common\EventManager', 
+			'methods' => array(
+				array('method' => "addEventSubscriber", 'arguments' => array('@Nella\Models\VersionListener'), 
+				array('method' => "addEventSubscriber", 'arguments' => array('@Nella\Models\TimestampableListener')), 
+				array('method' => "addEventSubscriber", 'arguments' => array('@Nella\Models\UserableListener')), 
+				array('method' => "addEventSubscriber", 'arguments' => array('@Nella\Models\ValidatorListeren')), 
+				), 
+			), 
+		), 
 		'Nette\Security\IAuthenticator' => array(
 			'class' => 'Nella\Security\Authenticator', 
 			'arguments' => array('@Doctrine\ORM\EntityManager')
@@ -289,6 +298,16 @@ class ContextBuilder extends \Nette\Configurator
 		'Nella\Validator\IValidator' => array(
 			'class' => 'Nella\Validator\Validator', 
 			'arguments' => array('@Nella\Validator\IClassMetadataFactory'), 
+		), 
+		'Nella\Models\VersionListener' => array('class' => 'Nella\Models\VersionListener'), 
+		'Nella\Models\TimestampableListener' => array('class' => 'Nella\Models\TimestampableListener'), 
+		'Nella\Models\UserableListener' => array(
+			'factory' => 'Nella\Models\UserableListener::getInstance', 
+			'arguments' => array('@Nette\Web\IUser'), 
+		), 
+		'Nella\Models\ValidatorListener' => array(
+			'class' => 'Nella\Models\ValidatorListener', 
+			'arguments' => array('@Nella\Validator\IValidator'), 
 		), 
 		'Symfony\Component\Console\Helper\HelperSet' => array(
 			'factory' => 'Nella\ConsoleServiceFactory::createHelperSet', 

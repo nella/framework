@@ -23,15 +23,15 @@ class VersionListener extends \Nette\Object implements \Doctrine\Common\EventSub
 	 */
 	public function getSubscribedEvents()
     {
-        return array(\Doctrine\ORM\Events::onFlush);
+        return array(\Doctrine\ORM\Events::postUpdate);
     }
 
     /**
-     * @param Doctrine\ORM\ORM\Event\OnFlushEventArgs
+     * @param Doctrine\ORM\Event\OnFlushEventArgs
      */
-    public function onFlush(\Doctrine\ORM\Event\OnFlushEventArgs $args)
+    public function postUpdate(\Doctrine\Common\EventArgs $args)
     {
-        $em = $args->getEntityManager();
+    	$em = $args->getEntityManager();
         $uow = $em->getUnitOfWork();
 
         foreach ($uow->getScheduledEntityInsertions() AS $entity) {
@@ -45,6 +45,7 @@ class VersionListener extends \Nette\Object implements \Doctrine\Common\EventSub
                 $this->takeSnapshot($em, $entity);
             }
         }
+        $em->flush();
     }
 
     /**
