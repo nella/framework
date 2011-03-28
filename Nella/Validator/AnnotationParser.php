@@ -25,7 +25,7 @@ class AnnotationParser extends \Nette\Object implements IMetadataParser
 		
 		foreach ($reflection->getProperties() as $property) {
 			if ($property->hasAnnotation('validate')) {
-				$rules = $property->getAnnotation('validate');
+				$rules = (array) $property->getAnnotation('validate');
 				foreach ($rules as $key => $value) {
 					if (is_int($key)) {
 						$key = $value;

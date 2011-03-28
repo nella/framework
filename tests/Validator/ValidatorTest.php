@@ -68,6 +68,12 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(2, count($errors['foo']), "foo property 2 errors");
 	}
 	
+	public function testValidateNullables()
+	{
+		$errors = $this->validator->validate(new Baz);
+		$this->assertFalse((bool) count($errors), "all property valid");
+	}
+	
 	/***************************************************************** validators ***************************************************************/
 	
 	public function testValidateUrl()
@@ -207,4 +213,13 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
 		$this->assertTrue(ValidatorMock::validateRegexp("1", "~[0-9]~i"), "validate valid regexp");
 		$this->assertFalse(ValidatorMock::validateRegexp("Lorem ipsum dolor", "~[0-9]~i"), "validate invalid regexp");
 	}
+}
+
+class Baz
+{
+	/**
+	 * @validate(nullable,url)
+	 * @var string
+	 */
+	private $foo;
 }

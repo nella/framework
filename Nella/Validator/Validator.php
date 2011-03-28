@@ -30,8 +30,10 @@ class Validator extends \Nette\Object implements IValidator
 		MIN_LENGTH = 'minlength', 
 		MAX_LENGTH = 'maxlength', 
 		REGEXP = 'regexp';
+		
+	const NULLABLE = 'nullable';
 	
-	const CACHE_NAMESPACE = 'nella.validator.metadata';
+	const CACHE_NAMESPACE = 'Nella.Validator.Metadata';
 	
 	/** @var array */
 	private $validators = array(
@@ -151,6 +153,12 @@ class Validator extends \Nette\Object implements IValidator
 			$property = $reflection->getProperty($name);
 			
 			foreach ($rules as $rule) {
+				// allowed null
+				if (reset($rule) === NULL || reset($rule) == self::NULLABLE && $this->getValue($property, $input) === NULL) {
+					unset($errors[$name]);
+					break;
+				}
+				
 				// load value and parse aditional validator info
 				$args = array($this->getValue($property, $input), $rule[1]);
 				if ($rule[1] === NULL) {
