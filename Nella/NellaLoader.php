@@ -56,7 +56,7 @@ class NellaLoader extends \Nette\Loaders\AutoLoader
 		'nella\media\mediapresenter' => '/Media/MediaPresenter.php', 
 		'nella\models\baseentity' => '/Models/Entities/BaseEntity.php', 
 		'nella\models\entity' => '/Models/Entities/Entity.php', 
-		'nella\models\invalidformatexception' => '/Models/Exceptions/InvalidFormatException.php', 
+		'nella\models\notvalidentityException' => '/Models/NotValidEntityException.php', 
 		'nella\models\repository' => '/Models/Repository.php', 
 		'nella\models\service' => '/Models/Service.php', 
 		'nella\models\timestampablelistener' => '/Models/TimestampableListener.php', 
