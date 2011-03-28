@@ -21,12 +21,7 @@ class Application extends \Nette\Application\Application
 	public function run()
 	{
 		if (PHP_SAPI == "cli") {
-			$context = $this->getContext();
-			$helperSet = new \Symfony\Component\Console\Helper\HelperSet();
-			$helperSet->set(new \Nella\Doctrine\EntityManagerHelper(function() use ($context) {
-				return $context->getService('Doctrine\ORM\EntityManager');
-			}), 'em');
-			\Doctrine\ORM\Tools\Console\ConsoleRunner::run($helperSet);
+			$this->getContext()->getService('Symfony\Component\Console\Application')->run();
 		} else {
 			parent::run();
 		}

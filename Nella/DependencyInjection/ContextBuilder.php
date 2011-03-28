@@ -282,6 +282,15 @@ class ContextBuilder extends \Nette\Configurator
 			'arguments' => array('@Nette\Caching\ICacheStorage'), 
 		), 
 		'Doctrine\DBAL\Logging\SQLLogger' => array('factory' => 'Nella\Doctrine\Panel::create', 'run' => TRUE), 
+		'Symfony\Component\Console\Helper\HelperSet' => array(
+			'factory' => 'Nella\ConsoleServiceFactory::createHelperSet', 
+			'arguments' => array('@Nella\DependencyInjection\IContext'), 
+		
+		), 
+		'Symfony\Component\Console\Application' => array(
+			'factory' => 'Nella\ConsoleServiceFactory::createApplication', 
+			'arguments' => array('@Symfony\Component\Console\Helper\HelperSet'), 
+		), 
 		//'Nette\\Templates\\ITemplateFactory' => array(̈́'class' => 'Nette\Templates\TemplateFactory'), 
 	);
 	
