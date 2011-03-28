@@ -197,4 +197,20 @@ class Form extends \Nette\Application\AppForm
 	{
 		return $this->getContext()->getService('Doctrine\ORM\EntityManager');
 	}
+	
+	/**
+	 * @param array
+	 * @throws \InvalidStateException
+	 */
+	protected function processErrors(array $errors)
+	{
+		foreach ($errors as $name => $messages) {
+			if (!isset($this[$name])) {
+				throw new \InvalidStateException("Invalid value '$name' with messages '" . implode("', '", $messages) . "'");
+			}
+			foreach ($messages as $error) {
+				$this[$name]->addError($error);
+			}
+		}
+	}
 }
