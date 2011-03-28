@@ -16,6 +16,20 @@ namespace Nella\Forms;
  */
 class Form extends \Nette\Application\AppForm
 {
+	/**
+	 * Application form constructor.
+	 */
+	public function __construct(\Nette\IComponentContainer $parent = NULL, $name = NULL)
+	{
+		parent::__construct($parent, $name);
+		$this->setup();
+	}
+	
+	protected function setup()
+	{
+		// Setup columns
+	}
+	
 	/*const DATE = 'Nella\Forms\Date::validate';
 	const DATETIME = 'Nella\Forms\DateTime::validate';
 	const TIME = 'Nella\Forms\Time::validate';*/
@@ -166,5 +180,21 @@ class Form extends \Nette\Application\AppForm
 	{
 		$item = $this->addTextArea($name, $label, $cols, $rows);
 		return $item->setAttribute('data-nella-editor', "data-nella-editor");
+	}
+	
+	/**
+	 * @return \Nella\DependencyInjection\IContext
+	 */
+	protected function getContext()
+	{
+		return $this->getPresenter()->context;
+	}
+	
+	/**
+	 * @return \Doctrine\ORM\EntityManager
+	 */
+	protected function getEntityManager()
+	{
+		return $this->getContext()->getService('Doctrine\ORM\EntityManager');
 	}
 }
