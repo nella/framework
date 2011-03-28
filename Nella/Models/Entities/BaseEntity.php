@@ -19,6 +19,4 @@ namespace Nella\Models;
 abstract class BaseEntity extends \Nette\Object
 {
 	public function __construct() { }
-	
-	public function check() { }
 }

@@ -205,25 +205,10 @@ class IdentityEntity extends \Nella\Models\Entity
 	 */
 	public function check()
 	{
-		parent::check();
-		
 		$em = \Nette\Environment::getApplication()->context->getService('Doctrine\ORM\EntityManager');
 		$service = new \Nella\Models\Service($em, 'Nella\Security\IdentityEntity');
-		
-		if ($this->username === NULL) {
-			throw new \Nella\Models\EmptyValuesException('username', "Username value must be non empty string");
-		}
 		if (!$service->repository->isColumnUnique($this->id, 'username', $this->username)) {
 			throw new \Nella\Models\DuplicateEntryException('username', "Username value must be unique");
-		}
-		if ($this->email === NULL) {
-			throw new \Nella\Models\EmptyValuesException('email', "Email value must be non empty string");
-		}
-		if (!\Nella\Tools\Validator::email($this->email)) {
-			throw new \Nella\Models\InvalidFormatException('email', "Email value must be valid e-mail address");	
-		}
-		if ($this->lang === NULL) {
-			throw new \Nella\Models\EmptyValuesException('lang', "Lang value must be non empty string");
 		}
 	}
 }
