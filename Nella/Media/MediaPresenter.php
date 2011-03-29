@@ -32,8 +32,10 @@ class MediaPresenter extends \Nella\Application\Presenter
 	/**
 	 * @param IImage
 	 * @param IFormat
+	 * @param string
+	 * @param int	 	 
 	 */
-	public function actionImage(IImage $image, IFormat $format = NULL)
+	public function actionImage(IImage $image, IFormat $format, $path, $type = NULL)
 	{
 		if ($format) {
 			$image = $format->process($image);
@@ -41,8 +43,13 @@ class MediaPresenter extends \Nella\Application\Presenter
 			$image = $image->toImage();
 		}
 		
-		// @todo cache
-		$image->send();
+		$image->save(WWW_DIR . $path);
+		if (!$type) {
+			$image->send();
+		} else {
+			$image->send($type);
+		}
+		
 		$this->terminate();
 	}
 }
