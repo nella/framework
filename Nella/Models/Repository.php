@@ -56,7 +56,7 @@ class Repository extends \Doctrine\ORM\EntityRepository
 	{
 		$arr = array();
 		$qb = $this->createQueryBuilder('uni');
-		$qb = $qb->where($qb->expr()->in('uni.id', $ids));
+		$qb->where($qb->expr()->in('uni.id', $ids));
 		foreach ($qb->getQuery()->getResult() as $res) {
 			$arr[$res->id] = $res;
 		}
