@@ -188,7 +188,7 @@ class Version implements \Nette\IDebugPanel
 		if (class_exists('Doctrine_Core')) {
 			$libs['doctrine:doctrine'] = array(
 				'name' => "Doctrine ORM", 
-				'version' => Doctrine_Core::VERSION, 
+				'version' => \Doctrine_Core::VERSION,
 				'revision' => NULL, 
 				'url' => "http://github.com/%user%/%repo%/zipball/%tag%", 
 				'url-dev' => NULL, 
@@ -200,7 +200,7 @@ class Version implements \Nette\IDebugPanel
 		if (class_exists('Symfony\Component\HttpKernel\Kernel')) {
 			$libs['symfony:symfony'] = array(
 				'name' => "Symfony 2", 
-				'version' => Symfony\Component\HttpKernel\Kernel::VERSION, 
+				'version' => \Symfony\Component\HttpKernel\Kernel::VERSION,
 				'revision' => NULL, 
 				'url' => "http://github.com/%user%/%repo%/zipball/%tag%", 
 				'url-dev' => NULL, 
