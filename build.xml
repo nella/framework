@@ -135,7 +135,7 @@
 		<exec executable="phpunit" failonerror="true"/>
 	</target>
   
-  <target name="apigen" depends="phpunit,lint,nette,doctrine,symfony">
+  <!--<target name="apigen" depends="phpunit,lint,nette,doctrine,symfony">
   	<copy todir="${basedir}/temp/Doctrine">
   		<fileset dir="${basedir}/dependency/Doctrine"/>
   	</copy>
@@ -160,7 +160,7 @@
 		<copy todir="${basedir}/package/API-reference">
   		<fileset dir="${basedir}/build/api"/>
   	</copy>
-  </target>
+  </target>-->
 	
 	<!-- Run the pdepend, phpmd, phpcpd, phpcs, apigen and phploc tasks
 	  in parallel using a maximum of 2 threads. -->
@@ -274,5 +274,5 @@
 		<delete dir="${basedir}/tools"/>
 	</target>
 
- <target name="build" depends="git,lint,nette,doctrine,symfony,phpunit,apigen,parallelTasks,phpcb,package"/>
+ <target name="build" depends="git,lint,nette,doctrine,symfony,phpunit,parallelTasks,phpcb,package"/>
 </project>
