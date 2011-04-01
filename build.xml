@@ -124,12 +124,6 @@
   	<move todir="${basedir}/dependency/Symfony/Component/Console">
 	  	<fileset dir="${basedir}/dependency/_Symfony/src/Symfony/Component/Console"/> 
 	  </move>
-  	<!-- <move todir="${basedir}/dependency/Symfony/Component/Console">
-	  	<fileset dir="${basedir}/dependency/_Symfony/src/Symfony/Component/DependencyInjection"/> 
-	  </move>
-	  <move todir="${basedir}/dependency/Symfony/Component/Validator">
-	  	<fileset dir="${basedir}/dependency/_Symfony/src/Symfony/Component/Validator"/> 
-	  </move> -->
   	
   	<copy file="${basedir}/dependency/_Symfony/LICENSE" tofile="${basedir}/dependency/Symfony/LICENSE"/>
   	
@@ -225,14 +219,6 @@
               --report-file=${basedir}/build/logs/checkstyle.xml
               --standard=PEAR
               ${basedir}/src" />
-  </exec>
- </target>
-
- <!-- Generate API documentation -->
- <target name="phpdoc">
-  <exec executable="phpdoc">
-   <arg line="--directory ${basedir}/src
-                 --target    ${basedir}/build/api" />
   </exec>
  </target>
 
