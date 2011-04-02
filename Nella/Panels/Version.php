@@ -25,7 +25,7 @@ class Version implements \Nette\IDebugPanel
 	/** @var bool */
 	private static $registered = FALSE;
 
-	const VERSION = "3.0";
+	const VERSION = "3.1";
 
 	/**
 	 * Get panel id
@@ -313,6 +313,8 @@ class Version implements \Nette\IDebugPanel
 				'%tag2%' => substr($tag, 1), 
 				'%user%' => $userId, 
 				'%repo%' => $repo, 
+				'%version%' => $data['version'], 
+				'%revision%' => $data['revision'], 
 			);
 			
 			if (isset($this->libs[$userId.":".$repo]) && isset($this->libs[$userId.":".$repo]['url'])) {
@@ -347,6 +349,8 @@ class Version implements \Nette\IDebugPanel
 			$replace = array(
 				'%user%' => $userId, 
 				'%repo%' => $repo, 
+				'%version%' => $version, 
+				'%revision%' => $data['revision'], 
 			);
 			
 			if (isset($this->libs[$userId.":".$repo]) && isset($this->libs[$userId.":".$repo]['url-dev'])) {
