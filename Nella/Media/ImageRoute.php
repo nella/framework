@@ -33,10 +33,12 @@ class ImageRoute extends \Nette\Application\Route
 	
 	/**
 	 * @param \Doctrine\ORM\EntityManager
+	 * @return ImageRoute	 
 	 */
 	public function setEntityManager(\Doctrine\ORM\EntityManager $em)
 	{
 		$this->em = $em;
+		return $this;
 	}
 
 	/**

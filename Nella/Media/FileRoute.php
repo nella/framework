@@ -23,26 +23,28 @@ class FileRoute extends \Nette\Application\Route
 	private $em;
 
 	/** @var \Nella\Models\Service */
-	private $fileService;
+	private $service;
 
 	/**
 	 * @param \Doctrine\ORM\EntityManager
+	 * @return FileRoute	 
 	 */
 	public function setEntityManager(\Doctrine\ORM\EntityManager $em)
 	{
 		$this->em = $em;
+		return $this;
 	}
 
 	/**
 	 * @return \Nella\Models\Service
 	 */
-	protected function getFileService()
+	protected function getService()
 	{
-		if (!$this->fileService) {
-			$this->fileService = new \Nella\Models\Service($this->em, 'Nella\Media\FileEntity');
+		if (!$this->service) {
+			$this->service = new \Nella\Models\Service($this->em, 'Nella\Media\FileEntity');
 		}
 
-		return $this->fileService;
+		return $this->service;
 	}
 
 	/**
@@ -51,7 +53,7 @@ class FileRoute extends \Nette\Application\Route
 	 */
 	protected function getFile($id)
 	{
-		return $this->getFileService()->repository->find($id);
+		return $this->getService()->repository->find($id);
 	}
 
 	/**
