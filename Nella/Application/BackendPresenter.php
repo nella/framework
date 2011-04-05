@@ -65,7 +65,7 @@ abstract class BackendPresenter extends Presenter
 	}
 	
 	/**
-	 * Is method allowed for loggened user
+	 * Is method allowed for logged user
 	 *
 	 * @param string
 	 * @return bool
