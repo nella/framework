@@ -260,7 +260,16 @@ class ContextBuilder extends \Nette\Configurator
 		'Nette\Caching\ICacheJournal' => array('factory' => array(__CLASS__, 'createCacheJournal')),
 		'Nette\Mail\IMailer' => array('factory' => array(__CLASS__, 'createMailer')),
 		'Nette\Web\Session' => array('class' => 'Nette\Web\Session'),
-		'Nette\Loaders\RobotLoader' => array('factory' => array(__CLASS__, 'createRobotLoader'), 'run' => TRUE),
+		'Nette\Loaders\RobotLoader' => array('factory' => array(__CLASS__, 'createRobotLoader'), 'run' => TRUE), 
+		'Nette\Templates\LatteMacros' => array(
+			'class' => 'Nella\Templates\Macros', 
+		), 
+		'Nette\Templates\LatteFilter' => array(
+			'class' => 'Nette\Templates\LatteFilter', 
+			'methods' => array(
+				array('method' => "setHandler", 'arguments' => array('@Nette\Templates\LatteMacros')), 
+			), 
+		), 
 		'Nella\Registry\GlobalComponentFactories' => array(
 			'factory' => array(__CLASS__, 'createRegistryGlobalComponentFactories')
 		), 

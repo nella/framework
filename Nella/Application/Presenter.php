@@ -19,6 +19,16 @@ namespace Nella\Application;
 abstract class Presenter extends \Nette\Application\Presenter
 {
 	/**
+	 * Descendant can override this method to customize template compile-time filters.
+	 * @param \Nette\Templates\Template
+	 */
+	public function templatePrepareFilters($template)
+	{
+		// default filters
+		$template->registerFilter($this->getContext()->getService('Nette\Templates\LatteFilter'));
+	}
+	
+	/**
 	 * Formats layout template file names.
 	 *
 	 * @param string

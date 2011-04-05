@@ -26,4 +26,20 @@ class ImageEntity extends BaseFileEntity implements IImage
 	{
 		return \Nella\Image::fromFile($this->getPath());
 	}
+	
+	/**
+	 * @return string
+	 */
+	public function getType()
+	{
+		$types = array(
+			'image/jpg' => "jpg", 
+			'image/jpeg' => "jpg", 
+			'image/png' => "png", 
+			'image/gif' => "gif", 
+		);
+		
+		$mime = $this->getMimeType();
+		return isset($types[$mime]) ? $types[$mime] : "jpg";
+	}
 }

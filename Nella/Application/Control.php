@@ -15,7 +15,17 @@ namespace Nella\Application;
  * @author	Patrik Votoček
  */
 abstract class Control extends \Nette\Application\Control
-{	
+{
+	/**
+	 * Descendant can override this method to customize template compile-time filters.
+	 * @param \Nette\Templates\Template
+	 */
+	public function templatePrepareFilters($template)
+	{
+		// default filters
+		$template->registerFilter($this->getPresenter()->context->getService('Nette\Templates\LatteFilter'));
+	}
+	
 	/**
 	 * Formats component template files
 	 *
