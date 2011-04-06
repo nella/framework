@@ -46,13 +46,13 @@ abstract class Presenter extends \Nette\Application\Presenter
 
 		$generator = function ($dir) use ($presenter, $path, $subPath, $layout) {
 			$files = array();
-			// clasic modules templates
+			// classic modules templates
 			if (strpos($presenter, ':') !== FALSE) {
 				$files[] = $dir . "/" .$path . "templates/$subPath/@$layout.latte";
 				$files[] = $dir . "/" .$path . "templates/$subPath.@$layout.latte";
 				$files[] = $dir . "/" .$path . "templates/@$layout.latte";
 			}
-			// clasic templates
+			// classic templates
 			$files[] = $dir . "/templates/" .$path . "$subPath/@$layout.latte";
 			$files[] = $dir . "/templates/" .$path . "$subPath.@$layout.latte";
 			$files[] = $dir . "/templates/" .$path . "@$layout.latte";
@@ -90,7 +90,7 @@ abstract class Presenter extends \Nette\Application\Presenter
 
 		$generator = function ($dir) use ($presenter, $path, $subPath, $view) {
 			$files = array();
-			// clasic modules templates
+			// classic modules templates
 			if (strpos($presenter, ':') !== FALSE) {
 				$files[] = $dir . "/" .$path . "templates/$subPath/$view.latte";
 				$files[] = $dir . "/" .$path . "templates/$subPath.$view.latte";
@@ -98,7 +98,7 @@ abstract class Presenter extends \Nette\Application\Presenter
 				$files[] = $dir . "/" .$path . "templates/@global.latte";
 
 			}
-			// clasic templates
+			// classic templates
 			$files[] = $dir . "/templates/" .$path . "$subPath/$view.latte";
 			$files[] = $dir . "/templates/" .$path . "$subPath.$view.latte";
 			$files[] = $dir . "/templates/" .$path . "$subPath/@global.latte";
