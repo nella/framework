@@ -11,7 +11,7 @@ namespace Nella;
 
 /**
  * Console runner
- * 
+ *
  * @author	Patrik Votoček
  */
 class ConsoleServiceFactory extends \Nette\Object
@@ -28,7 +28,7 @@ class ConsoleServiceFactory extends \Nette\Object
 		}), 'em');
 		return $helperSet;
 	}
-	
+
 	/**
 	 * @param \Symfony\Component\Console\Helper\HelperSet
 	 * @return \Symfony\Component\Console\Application
@@ -43,7 +43,7 @@ class ConsoleServiceFactory extends \Nette\Object
 	}
 
     /**
-     * @param Application $cli
+     * @param \Symfony\Component\Console\Application $cli
      */
     static public function addCommands(\Symfony\Component\Console\Application $cli)
     {

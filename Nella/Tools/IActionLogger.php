@@ -17,17 +17,17 @@ namespace Nella\Tools;
 interface IActionLogger
 {
 	/** Message action */
-	const CREATE = "create", 
-		READ = "read", 
-		UPDATE = "update", 
-		DELETE = "delete", 
+	const CREATE = "create",
+		READ = "read",
+		UPDATE = "update",
+		DELETE = "delete",
 		OTHER = "other";
-	
+
 	/**
 	 * @param string	module name
 	 * @param string
 	 * @param string
-	 * @param user Nette\Security\IIdentity
+	 * @param \Nette\Security\IIdentity
 	 */
 	public function logAction($module, $action = self::OTHER, $message = "", \Nette\Security\IIdentity $user = NULL);
 }

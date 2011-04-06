@@ -6,17 +6,17 @@
  *
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
- 
+
 namespace Nella\Tools;
 
-use Nette\Web\Uri, 
+use Nette\Web\Uri,
 	Nette\String;
 
 /**
  * Nella cUrl wrapper request class
  *
  * @author	Patrik Votoček
- * 
+ *
  * @property-read string $url
  * @property-read array $options
  * @property-read array $headers
@@ -26,13 +26,13 @@ use Nette\Web\Uri,
 class cUrlRequest extends \Nette\Object
 {
 	/** Available HTTP methods of requests */
-	const GET = 'GET', 
-		POST = 'POST', 
-		PUT = 'PUT', 
-		DELETE = 'DELETE', 
+	const GET = 'GET',
+		POST = 'POST',
+		PUT = 'PUT',
+		DELETE = 'DELETE',
 		HEAD = 'HEAD';
 		//DOWNLOAD = 'DOWNLOAD'; // Not implemented yet
-	
+
 	/**
 	 * @var array
 	 */
@@ -57,24 +57,24 @@ class cUrlRequest extends \Nette\Object
 	 * @var cUrlResponse
 	 */
 	private $response;
-	
+
 	/**
 	 * @param string
 	 * @param array
 	 * @param array
-	 * @throws InvalidArgumentException
-	 * @throws InvalidStateException
+	 * @throws \InvalidArgumentException
+	 * @throws \InvalidStateException
 	 */
 	public function __construct($url = NULL, $options = array(), $headers = array())
 	{
-		if (!function_exists('curl_init')) {
+		if (!extension_loaded('curl')) {
 			throw new \InvalidStateException("Curl extension is not loaded!");
 		}
-		
+
 		$ua = 'Nella\Tools\cUrl ' . \Nella\Framework::VERSION . " (http://nella-project.org)";
 		$this->setOption('useragent', isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : $ua);
 		$this->setOption('returntransfer', TRUE);
-		
+
 		$this->url = $url;
 		foreach ($options as $key => $value) {
 			$this->setOption($key, $value);
@@ -83,7 +83,7 @@ class cUrlRequest extends \Nette\Object
 			$this->setHeader($key, $value);
 		}
 	}
-	
+
 	/**
 	 * @return string
 	 */
@@ -91,7 +91,7 @@ class cUrlRequest extends \Nette\Object
 	{
 		return $this->url;
 	}
-	
+
 	/**
 	 * @return array
 	 */
@@ -99,11 +99,11 @@ class cUrlRequest extends \Nette\Object
 	{
 		return $this->options;
 	}
-	
+
 	/**
 	 * @param string
 	 * @return string|NULL
-	 * @throws InvalidArgumentException
+	 * @throws \InvalidArgumentException
 	 */
 	public function getOption($key)
 	{
@@ -111,15 +111,15 @@ class cUrlRequest extends \Nette\Object
 		if (!defined('CURLOPT_' . str_replace('CURLOPT_', '', $key))) {
 			throw new \InvalidArgumentException("cUrl option '$key' does not exist");
 		}
-		
+
 		return isset($this->options[$key]) ? $this->options[$key] : NULL;
 	}
-	
+
 	/**
 	 * @param string
 	 * @param string|NULL
 	 * @return cUrlRequest
-	 * @throws InvalidArgumentException
+	 * @throws \InvalidArgumentException
 	 */
 	public function setOption($key, $value)
 	{
@@ -127,12 +127,12 @@ class cUrlRequest extends \Nette\Object
 		if (!defined('CURLOPT_' . str_replace('CURLOPT_', '', $key))) {
 			throw new \InvalidArgumentException("cUrl option '$key' does not exist");
 		}
-		
+
 		$value = trim($value);
 		$this->options[$key] = $value == "" ? NULL : $value;
 		return $this;
 	}
-	
+
 	/**
 	 * @return array
 	 */
@@ -140,7 +140,7 @@ class cUrlRequest extends \Nette\Object
 	{
 		return $this->headers;
 	}
-	
+
 	/**
 	 * @param string
 	 * @return string|NULL
@@ -150,7 +150,7 @@ class cUrlRequest extends \Nette\Object
 		$key = strtoupper($key);
 		return isset($this->headers[$key]) ? $this->headers[$key] : NULL;
 	}
-	
+
 	/**
 	 * @param string
 	 * @param string|NULL
@@ -171,7 +171,7 @@ class cUrlRequest extends \Nette\Object
 	{
 		return $this->proxies;
 	}
-	
+
 	/**
 	 * @param string
 	 * @param int
@@ -183,16 +183,16 @@ class cUrlRequest extends \Nette\Object
 	public function addProxy($ip, $port = 3128, $username = NULL, $password = NULL, $timeout = 15)
 	{
 		$this->proxies[] = (object) array(
-			'ip' => $ip, 
-			'port' => $port, 
-			'username' => $username, 
-			'password' => $password, 
-			'timeout' => $timeout, 
+			'ip' => $ip,
+			'port' => $port,
+			'username' => $username,
+			'password' => $password,
+			'timeout' => $timeout,
 		);
-		
+
 		return $this;
 	}
-	
+
 	/**
 	 * @return array
 	 */
@@ -204,7 +204,7 @@ class cUrlRequest extends \Nette\Object
 			return array();
 		}
 	}
-	
+
 	/**
 	 * @return string
 	 */
@@ -212,11 +212,11 @@ class cUrlRequest extends \Nette\Object
 	{
 		return $this->getOption('useragent');
 	}
-	
+
 	/**
 	 * @param string
 	 * @return cUrlRequest
-	 * @throws InvalidArgumentException
+	 * @throws \InvalidArgumentException
 	 */
 	public function setUserAgent($userAgent)
 	{
@@ -227,10 +227,10 @@ class cUrlRequest extends \Nette\Object
 		}
 		return $this;
 	}
-	
+
 	/**
 	 * Formats and adds custom headers to the current request
-	 * 
+	 *
 	 * @author	Filip Procházka
 	 */
 	protected function setupHeaders()
@@ -259,10 +259,10 @@ class cUrlRequest extends \Nette\Object
 			curl_setopt($this->resource, CURLOPT_HTTPHEADER, $headers);
 		}
 	}
-	
+
 	/**
 	 * Sets the CURLOPT options for the current request
-	 * 
+	 *
 	 * @author	Filip Procházka
 	 * @param array
 	 */
@@ -288,10 +288,10 @@ class cUrlRequest extends \Nette\Object
 			curl_setopt($this->resource, constant('CURLOPT_' . $key), $value);
 		}
 	}
-	
+
 	/**
 	 * Setup the associated Curl options for a request method
-	 * 
+	 *
 	 * @param string
 	 */
 	protected function setupMethod($method)
@@ -314,7 +314,7 @@ class cUrlRequest extends \Nette\Object
 				break;
 		}
 	}
-	
+
 	/**
 	 * @param int
 	 */
@@ -333,23 +333,24 @@ class cUrlRequest extends \Nette\Object
 			unset($this->options['PROXY'], $this->options['PROXYPORT'], $this->options['PROXYTYPE'], $this->options['PROXYUSERPWD']);
 		}
 	}
-	
+
 	private function close()
 	{
 		if (gettype($this->resource) == 'resource' && get_resource_type($this->resource) == 'curl') {
-			@curl_close($this->resource);	
+			@curl_close($this->resource);
 		}
-		
+
 		$this->resource = NULL;
 	}
-	
+
 	public function __destruct()
 	{
 		$this->close();
 	}
-	
+
 	/**
-	 * @return resource
+	 * @return void
+	 * @throws \InvalidStateException
 	 */
 	private function open()
 	{
@@ -357,27 +358,31 @@ class cUrlRequest extends \Nette\Object
 
 		return $this->resource = curl_init($this->url);
 	}
-	
+
+	/**
+	 * @return void
+	 * @throws \InvalidStateException
+	 */
 	private function execute()
 	{
 		$response = curl_exec($this->resource);
 		$error = curl_error($this->resource) . " (#" . curl_errno($this->resource) . ")";
 		$info = curl_getinfo($this->resource);
-		
+
 		if ($response) {
 			$this->response = new cUrlResponse($response, $this);
 		} else {
 			throw new \InvalidStateException($error, $info['http_code']);
 		}
 	}
-	
+
 	/**
 	 * @param string
 	 * @param string
 	 * @param array
 	 * @param int
 	 * @return cUrlResponse
-	 * @throws InvalidStateException
+	 * @throws \InvalidStateException
 	 * @throws cUrlBadRequestException
 	 */
 	protected function run($method = self::GET, $url = NULL, $post = array(), $cycles = 1)
@@ -406,7 +411,7 @@ class cUrlRequest extends \Nette\Object
 			$this->execute();
 		} while (curl_errno($this->resource) == 6 && count($this->proxies) < $i);
 		$this->close();
-		
+
 		$fixUrl = function ($from, $to) {
 			$from = new \Nette\Web\Uri($from);
 			$to = new \Nette\Web\Uri($to);
@@ -444,7 +449,7 @@ class cUrlRequest extends \Nette\Object
 			throw new cUrlBadRequestException($headers['Status'], $this->response->info['http_code'], $this->response);
 		}
 	}
-	
+
 	/**
 	 * @param string
 	 * @param string
@@ -456,10 +461,10 @@ class cUrlRequest extends \Nette\Object
 		if (!($this->response instanceof cUrlResponse)) {
 			$this->run($method, $url, $post);
 		}
-		
+
 		return $this->response;
 	}
-	
+
 	/**
 	 * @return cUrlRequest
 	 */
@@ -474,18 +479,18 @@ class cUrlBadRequestException extends \InvalidStateException
 {
 	/** @var cUrlResponse */
 	private $response;
-	
+
 	/**
 	 * @param string
 	 * @param mixed
 	 * @param cUrlResponse
 	 */
-	public function __costruct($message, $codde, cUrlResponse $response)
+	public function __costruct($message, $code, cUrlResponse $response)
 	{
 		parent::__construct($message, $code);
 		$this->response = $response;
 	}
-	
+
 	/**
 	 * @return cUrlResponse
 	 */

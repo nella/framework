@@ -24,24 +24,24 @@ class Form extends \Nette\Application\AppForm
 		parent::__construct($parent, $name);
 		$this->setup();
 	}
-	
+
 	protected function setup()
 	{
 		// Setup columns
 	}
-	
+
 	/*const DATE = 'Nella\Forms\Date::validate';
 	const DATETIME = 'Nella\Forms\DateTime::validate';
 	const TIME = 'Nella\Forms\Time::validate';*/
 
 	/**
 	 * Adds an email input control to the form.
-	 * 
+	 *
 	 * @param string	control name
 	 * @param string	label
 	 * @param int	width of the control
 	 * @param int	maximum number of characters the user may enter
-	 * @return Nette\Forms\TextInput
+	 * @return \Nette\Forms\TextInput
 	 */
 	public function addEmail($name, $label = NULL, $cols = NULL, $maxLength = NULL)
 	{
@@ -52,12 +52,12 @@ class Form extends \Nette\Application\AppForm
 
 	/**
 	 * Adds an url input control to the form.
-	 * 
+	 *
 	 * @param string	control name
 	 * @param string	label
 	 * @param int	width of the control
 	 * @param int	maximum number of characters the user may enter
-	 * @return Nette\Forms\TextInput
+	 * @return \Nette\Forms\TextInput
 	 */
 	public function addUrl($name, $label = NULL, $cols = NULL, $maxLength = NULL)
 	{
@@ -68,13 +68,13 @@ class Form extends \Nette\Application\AppForm
 
 	/**
 	 * Adds a number input control to the form.
-	 * 
+	 *
 	 * @param string	control name
 	 * @param string	label
 	 * @param int	incremental number
 	 * @param int	minimal value
 	 * @param int	maximal value
-	 * @return Nette\Forms\TextInput
+	 * @return \Nette\Forms\TextInput
 	 */
 	public function addNumber($name, $label = NULL, $step = 1, $min = NULL, $max = NULL)
 	{
@@ -93,19 +93,19 @@ class Form extends \Nette\Application\AppForm
 		if ($range != array(NULL, NULL)) {
 			$item->addCondition(self::FILLED)->addRule(self::RANGE, NULL, $range);
 		}
-		
+
 		return $item;
 	}
 
 	/**
 	 * Adds a range input control to the form.
-	 * 
+	 *
 	 * @param string	control name
 	 * @param string	label
 	 * @param int	incremental number
 	 * @param int	minimal value
 	 * @param int	maximal value
-	 * @return Nette\Forms\TextInput
+	 * @return \Nette\Forms\TextInput
 	 */
 	public function addRange($name, $label = NULL, $step = 1, $min = NULL, $max = NULL)
 	{
@@ -115,7 +115,7 @@ class Form extends \Nette\Application\AppForm
 
 	/**
 	 * Adds date input control to the form.
-	 * 
+	 *
 	 * @param string	control name
 	 * @param string	label
 	 * @param int	width of the control
@@ -128,7 +128,7 @@ class Form extends \Nette\Application\AppForm
 
 	/**
 	 * Adds a datetime input control to the form.
-	 * 
+	 *
 	 * @param string	control name
 	 * @param string	label
 	 * @param int	width of the control
@@ -141,7 +141,7 @@ class Form extends \Nette\Application\AppForm
 
 	/**
 	 * Adds a time input control to the form.
-	 * 
+	 *
 	 * @param string	control name
 	 * @param string	label
 	 * @param int	width of the control
@@ -154,12 +154,12 @@ class Form extends \Nette\Application\AppForm
 
 	/**
 	 * Adds search input control to the form.
-	 * 
+	 *
 	 * @param string	control name
 	 * @param string	label
 	 * @param int	width of the control
 	 * @param int	maximum number of characters the user may enter
-	 * @return Nette\Forms\TextInput
+	 * @return \Nette\Forms\TextInput
 	 */
 	public function addSearch($name, $label = NULL, $cols = NULL, $maxLength = NULL)
 	{
@@ -169,19 +169,19 @@ class Form extends \Nette\Application\AppForm
 
 	/**
 	 * Adds an editor input control to the form.
-	 * 
+	 *
 	 * @param string	control name
 	 * @param string	label
 	 * @param int	width of the control
 	 * @param int	height of the control
-	 * @return Nette\Forms\TextInput
+	 * @return \Nette\Forms\TextInput
 	 */
 	public function addEditor($name, $label = NULL, $cols = NULL, $rows = NULL)
 	{
 		$item = $this->addTextArea($name, $label, $cols, $rows);
 		return $item->setAttribute('data-nella-editor', "data-nella-editor");
 	}
-	
+
 	/**
 	 * @return \Nella\DependencyInjection\IContext
 	 */
@@ -189,7 +189,7 @@ class Form extends \Nette\Application\AppForm
 	{
 		return $this->getPresenter()->context;
 	}
-	
+
 	/**
 	 * @return \Doctrine\ORM\EntityManager
 	 */
@@ -197,7 +197,7 @@ class Form extends \Nette\Application\AppForm
 	{
 		return $this->getContext()->getService('Doctrine\ORM\EntityManager');
 	}
-	
+
 	/**
 	 * @param array
 	 * @throws \InvalidStateException

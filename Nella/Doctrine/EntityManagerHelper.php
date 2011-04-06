@@ -9,7 +9,7 @@
 
 namespace Nella\Doctrine;
 
-use Nette\Environment, 
+use Nette\Environment,
 	Nette\Config\Config;
 
 /**
@@ -21,24 +21,24 @@ class EntityManagerHelper extends \Symfony\Component\Console\Helper\Helper
 {
 	/**
      * Doctrine ORM EntityManager lazy loader
-     * @var Closuer
+     * @var \Closure
      */
     protected $_em;
 
     /**
      * Constructor
      *
-     * @param Closure
+     * @param \Closure
      */
-    public function __construct($em)
+    public function __construct(\Closure $em)
     {
         $this->_em = $em;
     }
-	
+
 	/**
      * Retrieves Doctrine ORM EntityManager
      *
-     * @return EntityManager
+     * @return \Doctrine\ORM\EntityManager
      */
     public function getEntityManager()
     {

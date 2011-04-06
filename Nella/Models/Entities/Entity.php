@@ -11,12 +11,12 @@ namespace Nella\Models;
 
 /**
  * Basic entity with ID
- * 
+ *
  * @mappedSuperclass
  *
  * @author	Patrik Votoček
  *
- * @property-read string $id
+ * @property-read int $id
  */
 abstract class Entity extends BaseEntity
 {
@@ -26,9 +26,9 @@ abstract class Entity extends BaseEntity
 	 * @column(type="integer")
 	 */
 	private $id;
-	
+
 	/**
-	 * @return string
+	 * @return int
 	 */
 	public function getId()
 	{

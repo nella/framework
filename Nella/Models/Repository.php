@@ -15,40 +15,42 @@ use Nette\ObjectMixin;
  * Base entity repository
  *
  * @author	Patrik Votoček
- * 
+ *
  * @property-read \Doctrine\ORM\EntityManager $entityManager
  * @property-read \Doctrine\ORM\Mapping\ClassMetadata $classMetadata
  */
 class Repository extends \Doctrine\ORM\EntityRepository
 {
 	/**
-	 * Does exist a entity with key equal to value?
-	 * 
+	 * Does an entity with a key equal to value exist?
+	 *
 	 * @param string
 	 * @param mixed
+	 * @return bool
 	 */
 	public function doesExistByColumn($key, $value)
 	{
 		$res = $this->findOneBy(array($key => $value));
 		return !empty($res);
 	}
-	
+
 	/**
-	 * Does exist a entity with key equal to value and does not same entity?
-	 * 
+	 * Does an entity with key equal to value exist and is not same as given entity id?
+	 *
 	 * @param string
 	 * @param string
 	 * @param mixed
+	 * @return bool
 	 */
 	public function isColumnUnique($id, $key, $value)
 	{
 		$res = $this->findOneBy(array($key => $value));
 		return empty($res) ?: $res->id == $id;
 	}
-	
+
 	/**
-	 * Fetches all records equals array of ids
-	 * 
+	 * Fetches all records that correspond to ids of a given array
+	 *
 	 * @param array
 	 * @return array
 	 */
@@ -60,13 +62,13 @@ class Repository extends \Doctrine\ORM\EntityRepository
 		foreach ($qb->getQuery()->getResult() as $res) {
 			$arr[$res->id] = $res;
 		}
-		
+
 		return $arr;
 	}
-	
+
 	/**
 	 * Fetches all records like $key => $value pairs
-	 * 
+	 *
 	 * @param string
 	 * @param string
 	 * @return array
@@ -74,38 +76,38 @@ class Repository extends \Doctrine\ORM\EntityRepository
 	public function fetchPairs($key = NULL, $value = NULL)
 	{
 		$res = $this->createQueryBuilder('uni')->select("uni.$key, uni.$value")->getQuery()->getResult();
-		
+
 		$arr = array();
 		foreach ($res as $row) {
 			$arr[$row[$key]] = $row[$value];
 		}
-		
+
 		return $arr;
 	}
-	
+
 	/**
-	 * Fetches all records and returns an associative array
-	 * 
+	 * Fetches all records and returns an associative array indexed by key
+	 *
 	 * @param string
 	 * @return array
 	 */
 	public function fetchAssoc($key)
 	{
 		$res = $this->findAll();
-		
+
 		$arr = array();
 		foreach ($res as $doc) {
 			if (array_key_exists($doc->$key, $arr)) {
-				throw new \InvalidStateException("Key value {$doc->{"get" . ucfirs($key)}} is duplicit in fetched associative array. Try to use different associative key");
+				throw new \InvalidStateException("Key value {$doc->{"get" . ucfirst($key)}} is duplicit in fetched associative array. Try to use different associative key");
 			}
-			$arr[$doc->{"get" . ucfirs($key)}()] = $doc;
+			$arr[$doc->{"get" . ucfirst($key)}()] = $doc;
 		}
-		
+
 		return $arr;
 	}
-	
+
 	/************************************************** Nette\Object implementation **************************************************/
-	
+
 	/**
 	 * Access to reflection.
 	 * @return Nette\Reflection\ClassReflection

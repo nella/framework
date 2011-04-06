@@ -26,7 +26,7 @@ class GettextParser extends \Nette\Object implements IParser
 	{
 		throw new \NotImplementedException;
 	}
-	
+
 	/**
 	 * @param string file path
 	 * @return array
@@ -35,14 +35,14 @@ class GettextParser extends \Nette\Object implements IParser
 	public function decode($filename)
 	{
 		if (!file_exists($filename)) {
-			throw new \InvalidArgumentException("File '$filename' not exist");
+			throw new \InvalidArgumentException("File '$filename' does not exist");
 		}
 		if (@filesize($filename) < 10) {
 			throw new \InvalidArgumentException("File '$filename' is not a gettext file");
 		}
-		
+
 		$handle = @fopen($filename, "rb");
-		
+
 		$endian = FALSE;
 		$read = function($bytes) use ($handle, $endian) {
 			$data = fread($handle, 4 * $bytes);
@@ -57,7 +57,7 @@ class GettextParser extends \Nette\Object implements IParser
 		} else {
 			throw new \InvalidArgumentException("File '$filename' is not a gettext file");
 		}
-		
+
 		$input = $read(1);
 
 		$input = $read(1);
@@ -75,7 +75,7 @@ class GettextParser extends \Nette\Object implements IParser
 		$translationTmp = $read(2 * $total);
 
 		$output = array('metadata' => array(), 'dictionary' => array());
-		
+
 		for ($i = 0; $i < $total; ++$i) {
 			if ($orignalTmp[$i * 2 + 1] != 0) {
 				fseek($handle, $orignalTmp[$i * 2 + 2]);
@@ -98,13 +98,13 @@ class GettextParser extends \Nette\Object implements IParser
 				$output['dictionary'][is_array($original) ? $original[0] : $original]['translation'] = $translation;
 			}
 		}
-		
+
 		return $output;
 	}
-	
+
 	/**
 	 * Header metadata parser
-	 * 
+	 *
 	 * @param string
 	 * @return array
 	 */
@@ -119,7 +119,7 @@ class GettextParser extends \Nette\Object implements IParser
 			$tmp = preg_split("($pattern)", $metadata);
 			$output[trim($tmp[0])] = count($tmp) > 2 ? ltrim(strstr($metadata, $pattern), $pattern) : (isset($tmp[1]) ? $tmp[1] : NULL);
 		}
-		
+
 		return $output;
 	}
 }

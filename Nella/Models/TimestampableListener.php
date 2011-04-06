@@ -9,12 +9,12 @@
 
 namespace Nella\Models;
 
-use Nette\Caching\Cache, 
+use Nette\Caching\Cache,
 	Nette\Reflection\PropertyReflection;
 
 /**
  * Timestampable listenere
- * 
+ *
  * updating timestamp
  *
  * @author	Patrik Votoček
@@ -23,7 +23,7 @@ class TimestampableListener extends \Nette\Object implements \Doctrine\Common\Ev
 {
 	/** @var \Nette\Caching\Cache */
 	private $cache;
-	
+
 	/**
 	 * @param \Nette\Caching\ICacheStorage
 	 */
@@ -31,22 +31,23 @@ class TimestampableListener extends \Nette\Object implements \Doctrine\Common\Ev
 	{
 		$this->cache = $storage ? new Cache($storage, "Nella.Models.Timestampable") : array();
 	}
-	
+
 	/**
 	 * @return array
 	 */
 	public function getSubscribedEvents()
     {
         return array(
-        	\Doctrine\ORM\Events::preUpdate, 
-        	\Doctrine\ORM\Events::loadClassMetadata, 
+        	\Doctrine\ORM\Events::preUpdate,
+        	\Doctrine\ORM\Events::loadClassMetadata,
         );
     }
-    
+
     /**
      * @param BaseEntity
+	 * @return void
      */
-    protected function update(&$entity)
+    protected function update(BaseEntity $entity)
     {
 		if (array_key_exists(get_class($entity), $this->cache) && is_array($this->cache[get_class($entity)])) {
             foreach ($this->cache[get_class($entity)] as $ref) {
@@ -55,9 +56,10 @@ class TimestampableListener extends \Nette\Object implements \Doctrine\Common\Ev
             }
         }
     }
-    
+
     /**
      * @param \Doctrine\ORM\Event\PreUpdateEventArgs
+	 * @return void
      */
     public function preUpdate(\Doctrine\ORM\Event\PreUpdateEventArgs $args)
     {
@@ -67,14 +69,15 @@ class TimestampableListener extends \Nette\Object implements \Doctrine\Common\Ev
         foreach ($uow->getScheduledEntityInsertions() AS $entity) {
             $this->update($entity);
         }
-        
+
         foreach ($uow->getScheduledEntityUpdates() AS $entity) {
             $this->update($entity);
         }
     }
-    
+
     /**
      * @param \Doctrine\ORM\Event\LoadClassMetadataEventArgs $args
+	 * @return void
      */
     public function loadClassMetadata(\Doctrine\ORM\Event\LoadClassMetadataEventArgs $args)
     {
@@ -89,14 +92,14 @@ class TimestampableListener extends \Nette\Object implements \Doctrine\Common\Ev
 				}
 				$files[] = $class->getFileName();
 			}
-			
+
 			if (count($data) < 1) {
 				$data = NULL;
 			}
-			
+
 			if ($this->cache instanceof Cache) {
 				$this->cache->save($metadata->name, $data, array(
-					Cache::FILES => $files, 
+					Cache::FILES => $files,
 				));
 			} else {
 				$this->cache[$metadata->name] = $data;

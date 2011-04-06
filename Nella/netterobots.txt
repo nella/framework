@@ -1,1 +1,1 @@
-Disallow: /.git
+Disallow: /

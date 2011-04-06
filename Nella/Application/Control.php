@@ -25,7 +25,7 @@ abstract class Control extends \Nette\Application\Control
 		// default filters
 		$template->registerFilter($this->getPresenter()->context->getService('Nette\Templates\LatteFilter'));
 	}
-	
+
 	/**
 	 * Formats component template files
 	 *
@@ -51,17 +51,17 @@ abstract class Control extends \Nette\Application\Control
 		$generator = function ($dir) use ($class, $view) {
 			if ($view) {
 				return array(
-					$dir . "/" . str_replace('\\', "/", $class) . ".$view.latte", 
-					$dir . "/templates/" . str_replace('\\', "/", $class) . ".$view.latte", 
+					$dir . "/" . str_replace('\\', "/", $class) . ".$view.latte",
+					$dir . "/templates/" . str_replace('\\', "/", $class) . ".$view.latte",
 				);
 			} else {
 				return array(
-					$dir . "/" . str_replace('\\', "/", $class) . ".latte", 
-					$dir . "/templates/" . str_replace('\\', "/", $class) . ".latte", 
+					$dir . "/" . str_replace('\\', "/", $class) . ".latte",
+					$dir . "/templates/" . str_replace('\\', "/", $class) . ".latte",
 				);
 			}
 		};
-		
+
 		$files = array();
 		foreach ($this->getPresenter()->context->getService('Nella\Registry\TemplateDirs') as $dir) {
 			$files = array_merge($files, $generator($dir));
@@ -86,7 +86,7 @@ abstract class Control extends \Nette\Application\Control
 			}
 		}
 
-		throw new \InvalidStateException("No templates file found for '$method' method");
+		throw new \InvalidStateException("No template files found for method '$method'");
 	}
 
 	/**
@@ -100,7 +100,7 @@ abstract class Control extends \Nette\Application\Control
 		$this->template->setFile($this->formatTemplateFile($method));
 		$this->template->render();
 	}
-	
+
 	/**
 	 * Component factory. Delegates the creation of components to a createComponent<Name> method.
 	 * @param  string
@@ -112,10 +112,10 @@ abstract class Control extends \Nette\Application\Control
 		if (isset($globalComponentRegistry[$name])) {
 			return callback($globalComponentRegistry[$name])->invoke($this, $name);
 		}
-		
+
 		return parent::createComponent($name);
 	}
-	
+
 	/**
 	 * @return \Doctrine\ORM\EntityManager
 	 */

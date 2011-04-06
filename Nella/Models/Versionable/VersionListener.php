@@ -11,8 +11,8 @@ namespace Nella\Models;
 
 /**
  * Versionable listener
- * 
- * making and saving snapshot
+ *
+ * Takes and saves a snapshot
  *
  * @author	Patrik Votoček
  */
@@ -28,6 +28,7 @@ class VersionListener extends \Nette\Object implements \Doctrine\Common\EventSub
 
     /**
      * @param Doctrine\ORM\Event\OnFlushEventArgs
+	 * @return void
      */
     public function postUpdate(\Doctrine\Common\EventArgs $args)
     {

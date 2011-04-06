@@ -13,14 +13,14 @@ namespace Nella\Forms;
  * Form date field item
  *
  * @author	Patrik Votoček
- * 
- * @property DateTime $value
+ *
+ * @property \DateTime $value
  */
 class Date extends \Nette\Forms\TextInput
 {
 	/** @var string */
 	public static $format = "Y-n-j";
-	
+
 	/**
 	 * @param  string  control name
 	 * @param  string  label
@@ -34,26 +34,26 @@ class Date extends \Nette\Forms\TextInput
 		$this->control->setAttribute('data-nella-forms-date', $this->translate(static::$format));
 		//$this->addCondition(Form::FILLED)->addRule(Form::DATE);
 	}
-	
+
 	/**
-	 * @return DateTime
+	 * @return \DateTime|NULL
 	 */
 	public function getValue()
 	{
 		$value = parent::getValue();
 		return $value ? \DateTime::createFromFormat(static::$format, $value) : NULL;
 	}
-	
+
 	/**
-	 * @param DateTime
+	 * @param \DateTime
 	 * @return Date
 	 */
 	public function setValue($value = NULL)
 	{
 		if (!($value instanceof \DateTime) && $value !== NULL) {
-			throw new \InvalidArgumentException("Value must be DateTime or NULL");
+			throw new \InvalidArgumentException("Value must be an instance of DateTime or NULL");
 		}
-		
+
 		try {
 			if ($value === NULL) {
 				return parent::setValue(NULL);
@@ -64,7 +64,7 @@ class Date extends \Nette\Forms\TextInput
 			return parent::setValue(NULL);
 		}
 	}
-	
+
 	/**
 	 * @param Date
 	 * @return bool

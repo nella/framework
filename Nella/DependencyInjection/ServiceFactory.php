@@ -13,7 +13,7 @@ namespace Nella\DependencyInjection;
  * Dependency injection service factory
  *
  * @author	Patrik Votoček
- * 
+ *
  * @property-read string $name
  * @property-write string $class
  * @property-write \Nette\Callback $factory
@@ -41,12 +41,12 @@ class ServiceFactory extends \Nette\Object implements IServiceFactory
 	/*p @var \Nette\Callback *
 	protected $configurator;
 	 */
-	
+
 	/** @var array */
 	public $onInit = array();
 	/** @var array */
 	public $onReturn = array();
-	
+
 	/**
 	 * @param IContexy
 	 * @param string
@@ -58,7 +58,7 @@ class ServiceFactory extends \Nette\Object implements IServiceFactory
 		$this->singleton = TRUE;
 		$this->arguments = $this->methods = array();
 	}
-	
+
 	/**
 	 * @return string
 	 */
@@ -66,7 +66,7 @@ class ServiceFactory extends \Nette\Object implements IServiceFactory
 	{
 		return $this->name;
 	}
-	
+
 	/**
 	 * @param string
 	 * @return ServiceFactory
@@ -79,26 +79,26 @@ class ServiceFactory extends \Nette\Object implements IServiceFactory
 		$this->class = $class;
 		return $this;
 	}
-	
+
 	/**
 	 * @param string
 	 * @return ServiceFactory
-	 * @throws InvalidArgumentException
+	 * @throws \InvalidArgumentException
 	 */
 	public function setFactory($factory)
 	{
 		if (is_string($factory) && strpos($factory, "::") !== FALSE) {
 			$factory = callback($factory);
 		}
-		
+
 		if (!is_callable($factory) && !($factory instanceof \Closure) && !($factory instanceof \Nette\Callback)) {
 			throw new \InvalidArgumentException("Factory must be valid callback");
 		}
-		
+
 		$this->factory = $factory;
 		return $this;
 	}
-	
+
 	/**
 	 * @param array
 	 * @return ServiceFactory
@@ -109,17 +109,17 @@ class ServiceFactory extends \Nette\Object implements IServiceFactory
 		$this->arguments = $arguments;
 		return $this;
 	}
-	
+
 	/**
 	 * @param mixed
-	 * @return ServiceFactory 
+	 * @return ServiceFactory
 	 */
 	public function addArgument($value)
 	{
 		$this->arguments[] = $value;
 		return $this;
 	}
-	
+
 	/**
 	 * @param array
 	 * @return ServiceFactory
@@ -130,7 +130,7 @@ class ServiceFactory extends \Nette\Object implements IServiceFactory
 		$this->methods = $methods;
 		return $this;
 	}
-	
+
 	/**
 	 * @param string
 	 * @param array
@@ -142,7 +142,7 @@ class ServiceFactory extends \Nette\Object implements IServiceFactory
 		$this->methods[] = array('method' => $name, 'arguments' => $arguments);
 		return $this;
 	}
-	
+
 	/**
 	 * @return bool
 	 */
@@ -150,7 +150,7 @@ class ServiceFactory extends \Nette\Object implements IServiceFactory
 	{
 		return $this->singleton;
 	}
-	
+
 	/**
 	 * @param bool
 	 * @return ServiceFactory
@@ -160,9 +160,10 @@ class ServiceFactory extends \Nette\Object implements IServiceFactory
 		$this->singleton = $singleton;
 		return $this;
 	}
-	
+
 	/**
 	 * @return mixed
+	 * @throws \InvalidStateException
 	 */
 	protected function createInstance()
 	{
@@ -177,7 +178,7 @@ class ServiceFactory extends \Nette\Object implements IServiceFactory
 			} else {
 				$instance = $ref->newInstanceArgs();
 			}
-			
+
 			return $instance;
 		} elseif ($this->class) { // Instance
 			if (!$this->singleton) {
@@ -190,7 +191,7 @@ class ServiceFactory extends \Nette\Object implements IServiceFactory
 			throw new \InvalidStateException("Class or factory not defined");
 		}
 	}
-	
+
 	/**
 	 * @param mixed
 	 */
@@ -200,7 +201,7 @@ class ServiceFactory extends \Nette\Object implements IServiceFactory
 			callback($instance, $value['method'])->invokeArgs($this->context->expandParameter($value['arguments']));
 		}
 	}
-	
+
 	/**
 	 * @return mixed
 	 */
@@ -208,13 +209,13 @@ class ServiceFactory extends \Nette\Object implements IServiceFactory
 	{
 		$instance = $this->createInstance();
 		$this->onInit($instance);
-		
+
 		if ($this->class && $this->factory) { // if defined class and factroy use factory as "configurator"
 			callback($this->factory)->invokeArgs(array($instance));
 		}
-		
+
 		$this->callMethods($instance);
-		
+
 		$this->onReturn($instance);
 		return $instance;
 	}

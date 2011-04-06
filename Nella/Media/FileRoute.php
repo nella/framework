@@ -27,7 +27,7 @@ class FileRoute extends \Nette\Application\Route
 
 	/**
 	 * @param \Doctrine\ORM\EntityManager
-	 * @return FileRoute	 
+	 * @return FileRoute
 	 */
 	public function setEntityManager(\Doctrine\ORM\EntityManager $em)
 	{
@@ -75,7 +75,8 @@ class FileRoute extends \Nette\Application\Route
 	/**
 	 * Maps HTTP request to a PresenterRequest object.
 	 * @param  Nette\Web\IHttpRequest
-	 * @return PresenterRequest|NULL
+	 * @return \Nette\Application\PresenterRequest|NULL
+	 * @throws \InvalidStateException
 	 */
 	public function match(\Nette\Web\IHttpRequest $httpRequest)
 	{

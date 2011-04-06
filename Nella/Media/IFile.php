@@ -10,7 +10,7 @@
 namespace Nella\Media;
 
 /**
- * File media type intergace
+ * File media type interface
  *
  * @author	Patrik Votoček
  */
@@ -20,27 +20,27 @@ interface IFile
 	 * @return \DateTime
 	 */
 	public function getUploaded();
-	
+
 	/**
 	 * @return string
 	 */
 	public function getMimeType();
-	
+
 	/**
 	 * @return mixed
 	 */
 	public function getContent();
-	
+
 	/**
 	 * @return int
 	 */
 	public function getSize();
-	
+
 	/**
 	 * @return string
 	 */
 	public function getFilename();
-	
+
 	/**
 	 * @param string
 	 */

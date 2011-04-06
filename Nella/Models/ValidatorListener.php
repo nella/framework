@@ -11,14 +11,14 @@ namespace Nella\Models;
 
 /**
  * Validator listener
- * 
+ *
  * @author	Patrik Votoček
  */
-class ValidatorListeren extends \Nette\Object implements \Doctrine\Common\EventSubscriber
+class ValidatorListener extends \Nette\Object implements \Doctrine\Common\EventSubscriber
 {
 	/** @var \Nella\Validator\IValidator */
 	private $validator;
-	
+
 	/**
 	 * @param \Nella\Validator\IValidator
 	 */
@@ -26,17 +26,17 @@ class ValidatorListeren extends \Nette\Object implements \Doctrine\Common\EventS
 	{
 		$this->validator = $validator;
 	}
-	
+
 	/**
 	 * @return array
 	 */
 	public function getSubscribedEvents()
     {
         return array(
-        	\Doctrine\ORM\Events::onFlush, 
+        	\Doctrine\ORM\Events::onFlush,
         );
     }
-    
+
     /**
      * @param BaseEntity
      * @throws NotValidEntityException
@@ -45,17 +45,17 @@ class ValidatorListeren extends \Nette\Object implements \Doctrine\Common\EventS
     {
     	$class = get_class($entity);
     	$errors = $this->validator->validate($entity);
-    	
+
     	if (count($errors)) {
-			throw new InvalidEntityStateException("Entity $class not valid", $errors);
+			throw new InvalidEntityStateException("Entity $class is not valid", $errors);
     	}
     }
-    
+
     /**
      * @param \Doctrine\ORM\Event\OnFlushEventArgs $args
      * @throws NotValidEntityException
      */
-    public function onFlus(\Doctrine\ORM\Event\OnFlushEventArgs $args)
+    public function onFlush(\Doctrine\ORM\Event\OnFlushEventArgs $args)
     {
 		$em = $args->getEntityManager();
         $uow = $em->getUnitOfWork();
@@ -63,7 +63,7 @@ class ValidatorListeren extends \Nette\Object implements \Doctrine\Common\EventS
         foreach ($uow->getScheduledEntityInsertions() AS $entity) {
             $this->validate($entity);
         }
-        
+
         foreach ($uow->getScheduledEntityUpdates() AS $entity) {
             $this->validate($entity);
         }

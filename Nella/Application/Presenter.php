@@ -14,20 +14,21 @@ namespace Nella\Application;
  *
  * @author	Patrik Votoček
  *
- * @property-read Nette\IContext $context
+ * @property-read \Nette\IContext $context
  */
 abstract class Presenter extends \Nette\Application\Presenter
 {
 	/**
 	 * Descendant can override this method to customize template compile-time filters.
 	 * @param \Nette\Templates\Template
+	 * @return void
 	 */
 	public function templatePrepareFilters($template)
 	{
 		// default filters
 		$template->registerFilter($this->getContext()->getService('Nette\Templates\LatteFilter'));
 	}
-	
+
 	/**
 	 * Formats layout template file names.
 	 *
@@ -55,15 +56,15 @@ abstract class Presenter extends \Nette\Application\Presenter
 			$files[] = $dir . "/templates/" .$path . "$subPath/@$layout.latte";
 			$files[] = $dir . "/templates/" .$path . "$subPath.@$layout.latte";
 			$files[] = $dir . "/templates/" .$path . "@$layout.latte";
-			
+
 			$file = $dir . "/templates/@$layout.latte";
 			if (!in_array($file, $files)) {
 				$files[] = $file;
 			}
-			
+
 			return $files;
 		};
-		
+
 		$files = array();
 		foreach ($this->getContext()->getService('Nella\Registry\TemplateDirs') as $dir) {
 			$files = array_merge($files, $generator($dir));
@@ -102,15 +103,15 @@ abstract class Presenter extends \Nette\Application\Presenter
 			$files[] = $dir . "/templates/" .$path . "$subPath.$view.latte";
 			$files[] = $dir . "/templates/" .$path . "$subPath/@global.latte";
 			$files[] = $dir . "/templates/" .$path . "@global.latte";
-			
+
 			$file = $dir . "/templates/@global.latte";
 			if (!in_array($file, $files)) {
 				$files[] = $file;
 			}
-			
+
 			return $files;
 		};
-		
+
 		$files = array();
 		foreach ($this->getContext()->getService('Nella\Registry\TemplateDirs') as $dir) {
 			$files = array_merge($files, $generator($dir));
@@ -118,7 +119,7 @@ abstract class Presenter extends \Nette\Application\Presenter
 
 		return $files;
 	}
-	
+
 	/**
 	 * Component factory. Delegates the creation of components to a createComponent<Name> method.
 	 * @param  string
@@ -130,10 +131,10 @@ abstract class Presenter extends \Nette\Application\Presenter
 		if (isset($globalComponentRegistry[$name])) {
 			return callback($globalComponentRegistry[$name])->invoke($this, $name);
 		}
-		
+
 		return parent::createComponent($name);
 	}
-	
+
 	/**
 	 * @return \Doctrine\ORM\EntityManager
 	 */

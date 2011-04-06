@@ -16,9 +16,9 @@ namespace Nella\Application;
  */
 class PresenterFactory extends \Nette\Application\PresenterFactory
 {
-	/** @var FreezableArray */
+	/** @var \Nella\FreezableArray */
 	private $registry;
-	
+
 	/**
 	 * @param string
 	 * @param \Nette\IContext
@@ -28,10 +28,10 @@ class PresenterFactory extends \Nette\Application\PresenterFactory
 		$this->registry = $context->getService('Nella\Registry\NamespacePrefixes');
 		parent::__construct($baseDir, $context);
 	}
-	
+
 	/**
 	 * Format presenter class with prefixes
-	 * 
+	 *
 	 * @param string
 	 * @return string
 	 * @throws \Nette\Application\InvalidPresenterException
@@ -46,21 +46,21 @@ class PresenterFactory extends \Nette\Application\PresenterFactory
 				break;
 			}
 		}
-		
+
 		if (!class_exists($class)) {
 			$class = $this->formatPresenterClass($name);
 			throw new \Nette\Application\InvalidPresenterException("Cannot load presenter '$name', class '$class' was not found.");
 		}
-		
+
 		return $class;
 	}
-	
+
 	/**
 	 * Get presenter class name
 	 *
 	 * @param string
 	 * @return string
-	 * @throws Nette\Application\InvalidPresenterException
+	 * @throws \Nette\Application\InvalidPresenterException
 	 */
 	public function getPresenterClass(& $name)
 	{

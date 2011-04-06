@@ -20,7 +20,11 @@ class FreezableArray extends \Nette\FreezableObject implements \ArrayAccess, \Co
 	private $list = array();
 	/** @var array */
 	public $onFreeze = array();
-	
+
+	/**
+	 * Freezes an array
+	 * @return void
+	 */
 	public function freeze()
 	{
 		if (!$this->isFrozen()) {
@@ -59,13 +63,13 @@ class FreezableArray extends \Nette\FreezableObject implements \ArrayAccess, \Co
 	{
 		if ($this->isFrozen()) {
 			$class = get_called_class();
-			throw new \InvalidStateException("Cannot set $key besause $class is frozen");
+			throw new \InvalidStateException("Cannot set $key, because the $class has been frozen");
 		}
-		
+
 		$this->list[$key] = $value;
 		return $this;
 	}
-	
+
 	/**
 	 * Returns a item.
 	 * @param  string
@@ -102,7 +106,7 @@ class FreezableArray extends \Nette\FreezableObject implements \ArrayAccess, \Co
 	{
 		if ($this->isFrozen()) {
 			$class = get_called_class();
-			throw new \InvalidStateException("Cannot unset $key besause $class is frozen");
+			throw new \InvalidStateException("Cannot unset $keyn because the $class has been frozen");
 		}
 		unset($this->list[$key]);
 		return $this;

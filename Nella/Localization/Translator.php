@@ -48,7 +48,7 @@ class Translator extends \Nette\FreezableObject implements \Nette\ITranslator
 	public function setLang($lang)
 	{
 		if ($this->isFrozen()) {
-			throw new \InvalidStateException("Dictionaries already loaded");
+			throw new \InvalidStateException("Dictionaries are already loaded");
 		}
 
 		$this->lang = $lang;

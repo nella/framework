@@ -13,11 +13,11 @@ namespace Nella\Security;
  * Role entity
  *
  * @author	Patrik Votoček
- * 
+ *
  * @entity(repositoryClass="Nella\Models\Repository")
  * @table(name="acl_roles")
  * @hasLifecycleCallbacks
- * 
+ *
  * @property string $name
  * @property-read array $permissions
  */
@@ -33,13 +33,13 @@ class RoleEntity extends \Nella\Models\Entity
 	 * @var array
 	 */
 	private $permissions;
-	
+
 	public function __construct()
 	{
 		parent::__construct();
 		$this->permissions = new \Doctrine\Common\Collections\ArrayCollection;
 	}
-	
+
 	/**
 	 * @return string
 	 */
@@ -66,11 +66,11 @@ class RoleEntity extends \Nella\Models\Entity
 	{
 		return $this->permissions;
 	}
-	
+
 	/**
 	 * @prePersist
 	 * @preUpdate
-	 * 
+	 *
 	 * @throws \Nella\Models\EmptyValuesException
 	 * @throws \Nella\Models\InvalidFormatException
 	 * @throws \Nella\Models\DuplicateEntryException
@@ -78,9 +78,9 @@ class RoleEntity extends \Nella\Models\Entity
 	public function check()
 	{
 		$service = $this->getModelService('Nella\Models\Service', 'Nella\Security\RoleEntity');
-		
+
 		if (!$service->repository->isColumnUnique($this->id, 'name', $this->name)) {
-			throw new \Nella\Models\DuplicateEntryException('name', "Name value must be unique");	
-		}		
+			throw new \Nella\Models\DuplicateEntryException('name', "Value of 'name' must be unique");
+		}
 	}
 }

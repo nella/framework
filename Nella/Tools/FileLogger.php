@@ -20,7 +20,7 @@ class FileLogger extends \Nette\Object implements ILogger
 	public static $defaultLogFile = "messages.log";
 	/** @var string */
 	private $file;
-	
+
 	/**
 	 * @param string
 	 */
@@ -33,22 +33,22 @@ class FileLogger extends \Nette\Object implements ILogger
 			$this->file = $logDir . "/" . static::$defaultLogFile;
 		}
 	}
-	
+
 	/**
 	 * @param string
 	 * @param int	message priority level
-	 * @throws IOException
+	 * @throws \IOException
 	 */
 	public function logMessage($message, $level = self::ERROR)
 	{
 		$levels = array(
-			static::INFO => "info", 
-			static::ERROR => "error", 
-			static::WARNING => "warning", 
-			static::FATAL => "fatal", 
+			static::INFO => "info",
+			static::ERROR => "error",
+			static::WARNING => "warning",
+			static::FATAL => "fatal",
 			static::DEBUG => "debug"
 		);
-		
+
 		if (!@file_put_contents($this->file, "[" . date("Y-m-d H:i:s P") . "] {$levels[$level]}: $message" . PHP_EOL, FILE_APPEND)) {
 			throw new \IOException("File '{$this->file}' is not writable");
 		}

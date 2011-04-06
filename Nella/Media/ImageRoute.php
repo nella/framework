@@ -30,10 +30,10 @@ class ImageRoute extends \Nette\Application\Route
 
 	/** @var \Nella\Models\Service */
 	private $imageService;
-	
+
 	/**
 	 * @param \Doctrine\ORM\EntityManager
-	 * @return ImageRoute	 
+	 * @return ImageRoute
 	 */
 	public function setEntityManager(\Doctrine\ORM\EntityManager $em)
 	{
@@ -106,8 +106,9 @@ class ImageRoute extends \Nette\Application\Route
 
 	/**
 	 * Maps HTTP request to a PresenterRequest object.
-	 * @param  Nette\Web\IHttpRequest
-	 * @return PresenterRequest|NULL
+	 * @param  \Nette\Web\IHttpRequest
+	 * @return \Nette\Application\PresenterRequest|NULL
+	 * @throws \InvalidStateException
 	 */
 	public function match(\Nette\Web\IHttpRequest $httpRequest)
 	{

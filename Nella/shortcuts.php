@@ -10,6 +10,7 @@
 /**
  * @param mixed
  * @param string
+ * @return void
  */
 function barDump($var, $title = NULL)
 {

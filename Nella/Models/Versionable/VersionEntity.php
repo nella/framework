@@ -11,12 +11,12 @@ namespace Nella\Models;
 
 /**
  * Versions storage object for repository
- * 
+ *
  * @entity(repositoryClass="Nella\Models\Repository")
  * @table(name="versions")
  *
  * @author	Patrik Votoček
- * 
+ *
  * @property-read \DateTime $created
  * @property-read int $entityId
  * @property-read string $entityData
@@ -44,7 +44,7 @@ class VersionEntity extends Entity
 	 * @var string
 	 */
 	private $entityClass;
-	
+
 	/**
 	 * @param IVersionable
 	 */
@@ -55,15 +55,15 @@ class VersionEntity extends Entity
 		$this->entityData = $entity->takeSnapshot();
 		$this->entityClass = get_class($entity);
 	}
-	
+
 	/**
-	 * @return DateTime
+	 * @return \DateTime
 	 */
 	public function getCreated()
 	{
 		return $this->created;
 	}
-	
+
 	/**
 	 * @return int
 	 */
@@ -71,7 +71,7 @@ class VersionEntity extends Entity
 	{
 		return $this->entityId;
 	}
-	
+
 	/**
 	 * @return string
 	 */
@@ -79,7 +79,7 @@ class VersionEntity extends Entity
 	{
 		return $this->entityData;
 	}
-	
+
 	/**
 	 * @return string
 	 */

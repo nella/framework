@@ -18,7 +18,7 @@ class DateTime extends \Nette\Forms\TextInput
 {
 	/** @var string */
 	public static $format = "Y-n-j G:i";
-	
+
 	/**
 	 * @param  string  control name
 	 * @param  string  label
@@ -32,16 +32,16 @@ class DateTime extends \Nette\Forms\TextInput
 		$this->control->setAttribute('data-nella-forms-datetime', $this->translate(static::$format));
 		//$this->addCondition(Form::FILLED)->addRule(Form::DATETIME);
 	}
-	
+
 	/**
-	 * @return DateTime
+	 * @return \DateTime|NULL
 	 */
 	public function getValue()
 	{
 		$value = parent::getValue();
 		return $value ? \DateTime::createFromFormat(static::$format, $value) : NULL;
 	}
-	
+
 	/**
 	 * @param DateTime
 	 * @return Date
@@ -51,7 +51,7 @@ class DateTime extends \Nette\Forms\TextInput
 		if (!($value instanceof \DateTime) && $value !== NULL) {
 			throw new \InvalidArgumentException("Value must be DateTime or NULL");
 		}
-		
+
 		try {
 			if ($value === NULL) {
 				return parent::setValue(NULL);
@@ -62,7 +62,7 @@ class DateTime extends \Nette\Forms\TextInput
 			return parent::setValue(NULL);
 		}
 	}
-	
+
 	/**
 	 * @param Date
 	 * @return bool

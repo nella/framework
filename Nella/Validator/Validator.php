@@ -15,42 +15,42 @@ use Nette\String;
  * Object property validator
  *
  * @author	Patrik Votoček
- * 
+ *
  * @property-read IClassMetadataFactory $classMetadataFactory
  */
 class Validator extends \Nette\Object implements IValidator
 {
-	const URL = 'url', 
-		EMAIL = 'email', 
-		TYPE = 'type', 
-		INSTANCE = 'instance', 
-		NOTNULL = 'notnull', 
-		MIN = 'min', 
-		MAX = 'max', 
-		MIN_LENGTH = 'minlength', 
-		MAX_LENGTH = 'maxlength', 
+	const URL = 'url',
+		EMAIL = 'email',
+		TYPE = 'type',
+		INSTANCE = 'instance',
+		NOTNULL = 'notnull',
+		MIN = 'min',
+		MAX = 'max',
+		MIN_LENGTH = 'minlength',
+		MAX_LENGTH = 'maxlength',
 		REGEXP = 'regexp';
-		
+
 	const NULLABLE = 'nullable';
-	
+
 	const CACHE_NAMESPACE = 'Nella.Validator.Metadata';
-	
+
 	/** @var array */
 	private $validators = array(
-		self::URL => array(array(__CLASS__, 'validateUrl'), "This value is not a valid URL"), 
-		self::EMAIL => array(array(__CLASS__, 'validateEmail'), "This value is not a valid e-mail"), 
-		self::TYPE => array(array(__CLASS__, 'validateType'), "This value should be type of %s"), 
-		self::INSTANCE => array(array(__CLASS__, 'validateInstance'), "This value should be instance of %s"), 
-		self::NOTNULL => array(array(__CLASS__, 'validateNotnull'), "This value should not be null"), 
-		self::MIN => array(array(__CLASS__, 'validateMin'), "This value should be %d or more"), 
-		self::MAX => array(array(__CLASS__, 'validateMax'), "This value should be %d or less"), 
-		self::MIN_LENGTH => array(array(__CLASS__, 'validateMinLength'), "This value is too short. It should have %d characters or more"), 
-		self::MAX_LENGTH => array(array(__CLASS__, 'validateMaxLength'), "This value is too long. It should have %d characters or less"), 
-		self::REGEXP => array(array(__CLASS__, 'validateRegexp'), "This value is not valid"), 
+		self::URL => array(array(__CLASS__, 'validateUrl'), "This value is not a valid URL"),
+		self::EMAIL => array(array(__CLASS__, 'validateEmail'), "This value is not a valid e-mail"),
+		self::TYPE => array(array(__CLASS__, 'validateType'), "This value should be type of %s"),
+		self::INSTANCE => array(array(__CLASS__, 'validateInstance'), "This value should be instance of %s"),
+		self::NOTNULL => array(array(__CLASS__, 'validateNotnull'), "This value should not be null"),
+		self::MIN => array(array(__CLASS__, 'validateMin'), "This value should be %d or more"),
+		self::MAX => array(array(__CLASS__, 'validateMax'), "This value should be %d or less"),
+		self::MIN_LENGTH => array(array(__CLASS__, 'validateMinLength'), "This value is too short. It should have %d characters or more"),
+		self::MAX_LENGTH => array(array(__CLASS__, 'validateMaxLength'), "This value is too long. It should have %d characters or less"),
+		self::REGEXP => array(array(__CLASS__, 'validateRegexp'), "This value is not valid"),
 	);
 	/** @var IMetadataFactory */
 	private $metadataFactory;
-	
+
 	/**
 	 * @param IClassMetadataFactory
 	 */
@@ -59,10 +59,10 @@ class Validator extends \Nette\Object implements IValidator
 		if (!$metadataFactory) {
 			$metadataFactory = new ClassMetadataFactory;
 		}
-		
+
 		$this->metadataFactory = $metadataFactory;
 	}
-	
+
 	/**
 	 * @return IClassMetadataFactory
 	 */
@@ -70,7 +70,7 @@ class Validator extends \Nette\Object implements IValidator
 	{
 		return $this->metadataFactory;
 	}
-	
+
 	/**
 	 * @param string
 	 * @param \Nette\Callback
@@ -83,15 +83,15 @@ class Validator extends \Nette\Object implements IValidator
 		} elseif (!preg_match('#^[a-zA-Z0-9_]+$#', $id)) {
 			throw new \InvalidArgumentException("Parameter key must be non-empty alphanumeric string, '$id' given.");
 		}
-		
+
 		if (!is_callable($callback) && !($callback instanceof \Closure) && !($callback instanceof \Nette\Callback)) {
 			throw new \InvalidArgumentException("Callback is not callable");
 		}
-		
+
 		$this->validators[$id] = array($callback, $message);
 		return $this;
 	}
-	
+
 	/**
 	 * @param string
 	 * @return ClassMetadata
@@ -100,7 +100,7 @@ class Validator extends \Nette\Object implements IValidator
 	{
 		return $this->getClassMetadataFactory()->getClassMetadata($class);
 	}
-	
+
 	/**
 	 * @param \Nette\Reflection\PropertyReflection
 	 * @param mixed
@@ -111,7 +111,7 @@ class Validator extends \Nette\Object implements IValidator
 		$reflection->setAccessible(TRUE);
 		return $reflection->getValue($input);
 	}
-	
+
 	/**
 	 * @param string
 	 * @param mixed
@@ -123,10 +123,10 @@ class Validator extends \Nette\Object implements IValidator
 		if ($data) {
 			return vsprintf($message, (array) $data);
 		}
-		
+
 		return $message;
 	}
-	
+
 	/**
 	 * @param mixed
 	 * @return array
@@ -139,36 +139,36 @@ class Validator extends \Nette\Object implements IValidator
 		} else {
 			$metadata = $this->getClassMetadata(get_class($input));
 		}
-		
+
 		$errors = array();
-		
+
 		// Parse parent class first
 		if ($metadata->parent) {
 			$errors = $this->validate($input, $metadata->parent);
 		}
-		
+
 		// validate object
 		$reflection = $metadata->classReflection;
 		foreach ($metadata->rules as $name => $rules) {
 			$property = $reflection->getProperty($name);
-			
+
 			foreach ($rules as $rule) {
 				// allowed null
 				if (reset($rule) === NULL || reset($rule) == self::NULLABLE && $this->getValue($property, $input) === NULL) {
 					unset($errors[$name]);
 					break;
 				}
-				
+
 				// load value and parse aditional validator info
 				$args = array($this->getValue($property, $input), $rule[1]);
 				if ($rule[1] === NULL) {
 					unset($args[1]);
 				}
-				
+
 				if (!isset($this->validators[$rule[0]])) {
 					throw new \InvalidStateException("Invalid validation rule '{$rule[0]}' not registered");
 				}
-				
+
 				// validate property
 				if (!callback($this->validators[$rule[0]][0])->invokeArgs($args)) {
 					if (!isset($errors[$name]) || !is_array($errors[$name])) {
@@ -179,15 +179,15 @@ class Validator extends \Nette\Object implements IValidator
 				}
 			}
 		}
-		
+
 		return $errors;
 	}
-	
+
 	/******************************************************** validators *************************************************************/
-	
+
 	/**
 	 * URL validator matching urls including port number and also relative urls
-	 * 
+	 *
 	 * @param string
 	 * @return bool
 	 */
@@ -203,7 +203,7 @@ class Validator extends \Nette\Object implements IValidator
 
 	/**
 	 * Email validator
-	 * 
+	 *
 	 * @author David Grudl
 	 * @param string
 	 * @return bool
@@ -216,13 +216,14 @@ class Validator extends \Nette\Object implements IValidator
 		$domain = "[$chars](?:[-$chars]{0,61}[$chars])"; // RFC 1034 one domain component
 		return (bool) String::match($email, "(^$localPart@(?:$domain?\\.)+[-$chars]{2,19}\\z)i");
 	}
-	
+
 	/**
 	 * Validate input type
-	 * 
+	 *
 	 * @param mixed
 	 * @param string
 	 * @return bool
+	 * @throws \InvalidArgumentException
 	 */
 	public static function validateType($input, $type)
 	{
@@ -261,10 +262,10 @@ class Validator extends \Nette\Object implements IValidator
 				break;
 		}
 	}
-	
+
 	/**
 	 * Validate instance
-	 * 
+	 *
 	 * @param mixed
 	 * @param string
 	 * @return bool
@@ -276,10 +277,10 @@ class Validator extends \Nette\Object implements IValidator
 		}
 		return FALSE;
 	}
-	
+
 	/**
 	 * Validate not null
-	 * 
+	 *
 	 * @param mixed
 	 * @return bool
 	 */
@@ -289,10 +290,10 @@ class Validator extends \Nette\Object implements IValidator
 			$input = trim($input);
 			$input = $input === "" ? NULL : $input;
 		}
-		
+
 		return !is_null($input);
 	}
-	
+
 	/**
 	 * @param mixed
 	 * @param int
@@ -302,10 +303,10 @@ class Validator extends \Nette\Object implements IValidator
 	{
 		return $input >= $limit;
 	}
-	
+
 	/**
 	 * Validate max
-	 * 
+	 *
 	 * @param mixed
 	 * @param int
 	 * @return bool
@@ -314,10 +315,10 @@ class Validator extends \Nette\Object implements IValidator
 	{
 		return $input <= $limit;
 	}
-	
+
 	/**
 	 * Validate min length
-	 * 
+	 *
 	 * @param mixed
 	 * @param int
 	 * @return bool
@@ -326,10 +327,10 @@ class Validator extends \Nette\Object implements IValidator
 	{
 		return strlen($input) >= $limit;
 	}
-	
+
 	/**
 	 * Validate max length
-	 * 
+	 *
 	 * @param mixed
 	 * @param int
 	 * @return bool
@@ -338,10 +339,10 @@ class Validator extends \Nette\Object implements IValidator
 	{
 		return strlen($input) <= $limit;
 	}
-	
+
 	/**
 	 * Validate regexp
-	 * 
+	 *
 	 * @param mixed
 	 * @param string
 	 * @return bool

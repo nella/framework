@@ -9,16 +9,16 @@
 
 namespace Nella\DependencyInjection;
 
-use Nette\Environment, 
-	Nette\Config\Config, 
+use Nette\Environment,
+	Nette\Config\Config,
 	Nella\FreezableArray;
 
 /**
  * Context builder
- * 
+ *
  * @author	Patrik Votoček
  * @author	David Grudl
- * 
+ *
  * @property-write string $contextClass
  * @property-read IContext $context
  */
@@ -28,12 +28,12 @@ class ContextBuilder extends \Nette\Configurator
 	private $contextClass = 'Nella\DependencyInjection\Context';
 	/** @var array */
 	private $autoRunServices = array();
-	
+
 	/** @var array */
 	public $onBeforeLoad = array();
 	/** @var array */
 	public $onAfterLoad = array();
-	
+
 	/**
 	 * @param string
 	 * @return ContextBuilder
@@ -42,17 +42,17 @@ class ContextBuilder extends \Nette\Configurator
 	public function setContextClass($class)
 	{
 		if (!class_exists($class)) {
-			throw new \InvalidArgumentException("Context class '$class' is not exist");
+			throw new \InvalidArgumentException("Context class '$class' does not exist");
 		}
 		$ref = new \Nette\Reflection\ClassReflection($class);
 		if (!$ref->implementsInterface('Nella\DependencyInjection\IContext')) {
-			throw new \InvalidArgumentException("Context class '$class' is not valid 'Nella\DependencyInjection\IContext'");
+			throw new \InvalidArgumentException("Context class '$class' is not an implementor of 'Nella\DependencyInjection\IContext' interface");
 		}
-		
+
 		$this->contextClass = $class;
 		return $this;
 	}
-	
+
 	/**
 	 * @return IContext
 	 */
@@ -60,7 +60,7 @@ class ContextBuilder extends \Nette\Configurator
 	{
 		return Environment::getContext();
 	}
-	
+
 	/**
 	 * @param string
 	 */
@@ -69,7 +69,7 @@ class ContextBuilder extends \Nette\Configurator
 		Environment::setVariable('environment', $name);
 		$this->getContext()->environment = $name;
 	}
-	
+
 	/**
 	 * @param Config
 	 * @throws \NotSupportedException
@@ -131,7 +131,7 @@ class ContextBuilder extends \Nette\Configurator
 			}
 		}
 	}
-	
+
 	/**
 	 * @param Config $config
 	 */
@@ -149,12 +149,12 @@ class ContextBuilder extends \Nette\Configurator
 			}
 		}
 	}
-	
+
 	protected function loadDefaultServices()
 	{
 		$this->loadServices($this->defaultServices);
 	}
-	
+
 	/**
 	 * @param array
 	 */
@@ -162,15 +162,15 @@ class ContextBuilder extends \Nette\Configurator
 	{
 		foreach ($config as $name => $data) {
 			$service = key_exists('class', $data) ? $data['class'] : (key_exists('factory', $data) ? $data['factory'] : NULL);
-			
+
 			$this->getContext()->addService($name, $service, key_exists('singleton', $data) ? $data['singleton'] : TRUE, $data);
-			
+
 			if (key_exists('run', $data) && $data['run']) {
 				$this->autoRunServices[] = $name;
 			}
 		}
 	}
-	
+
 	/**
 	 * @param Config
 	 */
@@ -180,7 +180,7 @@ class ContextBuilder extends \Nette\Configurator
 			define($key, $value);
 		}
 	}
-	
+
 	/**
 	 * @param Config
 	 */
@@ -190,28 +190,28 @@ class ContextBuilder extends \Nette\Configurator
 			Environment::setMode($mode, $state);
 		}
 	}
-	
+
 	protected function autoRunServices()
 	{
 		foreach ($this->autoRunServices as $service) {
 			$this->getContext()->getService($service);
 		}
 	}
-	
+
 	/**
 	 * Loads global configuration from file and process it.
 	 * @param  string|\Nette\Config\Config  file name or Config object
 	 * @return \Nette\Config\Config
-	 * 
+	 *
 	 * @author Patrik Votoček
 	 */
 	public function loadConfig($file)
 	{
 		$this->onBeforeLoad();
-		
+
 		$environment = Environment::getName(); // BACK compatability
 		$this->loadEnvironmentName($environment);
-		
+
 		if ($file instanceof Config) {
 			$config = $file;
 			$file = NULL;
@@ -222,34 +222,34 @@ class ContextBuilder extends \Nette\Configurator
 			$file = Environment::expand($file);
 			$config = Config::fromFile($file, $environment);
 		}
-		
+
 		if (isset($config->php)) {
 			$this->loadIni($config->php);
 		}
-		
+
 		$this->loadParameters($config);
 		$this->loadDefaultServices();
-		
+
 		if (isset($config->services)) {
 			$this->loadServices($config->services->toArray());
 		}
-		
+
 		if (isset($config->const)) {
 			$this->loadConstants($config->const);
 		}
 		if (isset($config->mode)) {
 			$this->loadModes($config->mode);
 		}
-		
+
 		$this->autoRunServices();
-		
+
 		$this->onAfterLoad();
-		
+
 		return $config;
 	}
-	
+
 	/******************************************** FACTORIES **************************************************/
-	
+
 	public $defaultServices = array(
 		'Nette\Application\Application' => array('factory' => array(__CLASS__, 'createApplication')),
 		'Nette\Web\HttpContext' => array('class' => 'Nette\Web\HttpContext'),
@@ -260,80 +260,80 @@ class ContextBuilder extends \Nette\Configurator
 		'Nette\Caching\ICacheJournal' => array('factory' => array(__CLASS__, 'createCacheJournal')),
 		'Nette\Mail\IMailer' => array('factory' => array(__CLASS__, 'createMailer')),
 		'Nette\Web\Session' => array('class' => 'Nette\Web\Session'),
-		'Nette\Loaders\RobotLoader' => array('factory' => array(__CLASS__, 'createRobotLoader'), 'run' => TRUE), 
+		'Nette\Loaders\RobotLoader' => array('factory' => array(__CLASS__, 'createRobotLoader'), 'run' => TRUE),
 		'Nette\Templates\LatteMacros' => array(
-			'class' => 'Nella\Templates\Macros', 
-		), 
+			'class' => 'Nella\Templates\Macros',
+		),
 		'Nette\Templates\LatteFilter' => array(
-			'class' => 'Nette\Templates\LatteFilter', 
+			'class' => 'Nette\Templates\LatteFilter',
 			'methods' => array(
-				array('method' => "setHandler", 'arguments' => array('@Nette\Templates\LatteMacros')), 
-			), 
-		), 
+				array('method' => "setHandler", 'arguments' => array('@Nette\Templates\LatteMacros')),
+			),
+		),
 		'Nella\Registry\GlobalComponentFactories' => array(
 			'factory' => array(__CLASS__, 'createRegistryGlobalComponentFactories')
-		), 
-		'Nella\Registry\NamespacePrefixes' => array('factory' => array(__CLASS__, 'createRegistryNamespacePrefixes')), 
-		'Nella\Registry\TemplateDirs' => array('factory' => array(__CLASS__, 'createRegistryTemplateDirs')), 
-		'Doctrine\ORM\EntityManager' => array('factory' => array('Nella\Doctrine\ServiceFactory', 'entityManager')), 
-		'Doctrine\ORM\Configuration' => array('factory' => array('Nella\Doctrine\ServiceFactory', 'configuration')), 
+		),
+		'Nella\Registry\NamespacePrefixes' => array('factory' => array(__CLASS__, 'createRegistryNamespacePrefixes')),
+		'Nella\Registry\TemplateDirs' => array('factory' => array(__CLASS__, 'createRegistryTemplateDirs')),
+		'Doctrine\ORM\EntityManager' => array('factory' => array('Nella\Doctrine\ServiceFactory', 'entityManager')),
+		'Doctrine\ORM\Configuration' => array('factory' => array('Nella\Doctrine\ServiceFactory', 'configuration')),
 		'Doctrine\Common\EventManager' => array(
-			'class' => 'Doctrine\Common\EventManager', 
+			'class' => 'Doctrine\Common\EventManager',
 			'methods' => array(
-				array('method' => "addEventSubscriber", 'arguments' => array('@Nella\Models\VersionListener'), 
-				array('method' => "addEventSubscriber", 'arguments' => array('@Nella\Models\TimestampableListener')), 
-				array('method' => "addEventSubscriber", 'arguments' => array('@Nella\Models\UserableListener')), 
-				array('method' => "addEventSubscriber", 'arguments' => array('@Nella\Models\ValidatorListeren')), 
-				), 
-			), 
-		), 
+				array('method' => "addEventSubscriber", 'arguments' => array('@Nella\Models\VersionListener'),
+				array('method' => "addEventSubscriber", 'arguments' => array('@Nella\Models\TimestampableListener')),
+				array('method' => "addEventSubscriber", 'arguments' => array('@Nella\Models\UserableListener')),
+				array('method' => "addEventSubscriber", 'arguments' => array('@Nella\Models\ValidatorListener')),
+				),
+			),
+		),
 		'Nette\Security\IAuthenticator' => array(
-			'class' => 'Nella\Security\Authenticator', 
+			'class' => 'Nella\Security\Authenticator',
 			'arguments' => array('@Doctrine\ORM\EntityManager')
-		), 
+		),
 		'Nette\Security\IAuthorizator' => array(
-			'class' => 'Nella\Security\Authorizator', 
-			'arguments' => array('@Doctrine\ORM\EntityManager'), 
-		), 
+			'class' => 'Nella\Security\Authorizator',
+			'arguments' => array('@Doctrine\ORM\EntityManager'),
+		),
 		'Doctrine\Common\Cache\Cache' => array(
-			'class' => 'Nella\Doctrine\Cache', 
-			'arguments' => array('@Nette\Caching\ICacheStorage'), 
-		), 
-		'Doctrine\DBAL\Logging\SQLLogger' => array('factory' => 'Nella\Doctrine\Panel::create', 'run' => TRUE), 
+			'class' => 'Nella\Doctrine\Cache',
+			'arguments' => array('@Nette\Caching\ICacheStorage'),
+		),
+		'Doctrine\DBAL\Logging\SQLLogger' => array('factory' => 'Nella\Doctrine\Panel::create', 'run' => TRUE),
 		'Nella\Validator\IClassMetadataFactory' => array(
-			'class' => 'Nella\Validator\ClassMetadataFactory', 
-			'arguments' => array('@Nette\Caching\ICacheStorage'), 
-		), 
+			'class' => 'Nella\Validator\ClassMetadataFactory',
+			'arguments' => array('@Nette\Caching\ICacheStorage'),
+		),
 		'Nella\Validator\IValidator' => array(
-			'class' => 'Nella\Validator\Validator', 
-			'arguments' => array('@Nella\Validator\IClassMetadataFactory'), 
-		), 
-		'Nella\Models\VersionListener' => array('class' => 'Nella\Models\VersionListener'), 
-		'Nella\Models\TimestampableListener' => array('class' => 'Nella\Models\TimestampableListener'), 
+			'class' => 'Nella\Validator\Validator',
+			'arguments' => array('@Nella\Validator\IClassMetadataFactory'),
+		),
+		'Nella\Models\VersionListener' => array('class' => 'Nella\Models\VersionListener'),
+		'Nella\Models\TimestampableListener' => array('class' => 'Nella\Models\TimestampableListener'),
 		'Nella\Models\UserableListener' => array(
-			'factory' => 'Nella\Models\UserableListener::getInstance', 
-			'arguments' => array('@Nette\Web\IUser'), 
-		), 
+			'factory' => 'Nella\Models\UserableListener::getInstance',
+			'arguments' => array('@Nette\Web\IUser'),
+		),
 		'Nella\Models\ValidatorListener' => array(
-			'class' => 'Nella\Models\ValidatorListener', 
-			'arguments' => array('@Nella\Validator\IValidator'), 
-		), 
+			'class' => 'Nella\Models\ValidatorListener',
+			'arguments' => array('@Nella\Validator\IValidator'),
+		),
 		'Symfony\Component\Console\Helper\HelperSet' => array(
-			'factory' => 'Nella\ConsoleServiceFactory::createHelperSet', 
-			'arguments' => array('@Nella\DependencyInjection\IContext'), 
-		
-		), 
+			'factory' => 'Nella\ConsoleServiceFactory::createHelperSet',
+			'arguments' => array('@Nella\DependencyInjection\IContext'),
+
+		),
 		'Symfony\Component\Console\Application' => array(
-			'factory' => 'Nella\ConsoleServiceFactory::createApplication', 
-			'arguments' => array('@Symfony\Component\Console\Helper\HelperSet'), 
-		), 
-		//'Nette\\Templates\\ITemplateFactory' => array(̈́'class' => 'Nette\Templates\TemplateFactory'), 
+			'factory' => 'Nella\ConsoleServiceFactory::createApplication',
+			'arguments' => array('@Symfony\Component\Console\Helper\HelperSet'),
+		),
+		//'Nette\\Templates\\ITemplateFactory' => array(̈́'class' => 'Nette\Templates\TemplateFactory'),
 	);
-	
+
 	/**
-	 * Get initial instance of context
-	 * 
-	 * @return \Nella\DependencyInjection\IContext
+	 * Get an initial instance of context
+	 *
+	 * @return IContext
 	 */
 	public function createContext()
 	{
@@ -342,10 +342,10 @@ class ContextBuilder extends \Nette\Configurator
 		foreach ($this->defaultServices as $name => $service) {
 			$context->addService($name, $service);
 		}
-		
+
 		return $context;
 	}
-	
+
 	/**
 	 * @return \Nella\Application\Application
 	 */
@@ -370,7 +370,7 @@ class ContextBuilder extends \Nette\Configurator
 		$application->catchExceptions = Environment::isProduction();
 		return $application;
 	}
-	
+
 	/**
 	 * @return FreezableArray
 	 */
@@ -378,7 +378,7 @@ class ContextBuilder extends \Nette\Configurator
 	{
 		return new FreezableArray;
 	}
-	
+
 	/**
 	 * @return FreezableArray
 	 */
@@ -389,7 +389,7 @@ class ContextBuilder extends \Nette\Configurator
 		$registry['framework'] = "Nella\\";
 		return $registry;
 	}
-	
+
 	/**
 	 * @return FreezableArray
 	 */

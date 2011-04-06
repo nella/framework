@@ -48,7 +48,7 @@ class Dictionary extends \Nette\FreezableObject
 	public function loadLang($lang)
 	{
 		if ($this->isFrozen()) {
-			throw new \InvalidStateException("Dictionary already loaded");
+			throw new \InvalidStateException("Dictionary is already loaded");
 		}
 
 		$parser = new GettextParser;
@@ -79,7 +79,7 @@ class Dictionary extends \Nette\FreezableObject
 
 		$translations = $this->dictionary[$message]['translation'];
 		$plural = $this->getPluralForm($count);
-		
+
 		return isset($translations[$plural]) ? $translations[$plural] : $translations[0];
 	}
 
@@ -92,9 +92,9 @@ class Dictionary extends \Nette\FreezableObject
 		if (!isset($this->metadata['Plural-Forms']) || $form === NULL) {
 			return 0;
 		}
-		
+
 		eval($x = preg_replace('/([a-z]+)/', '$$1', "n=$form;".$this->metadata['Plural-Forms'].";"));
-		
+
 		return $plural;
 	}
 

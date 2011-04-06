@@ -9,11 +9,9 @@
 
 namespace Nella\Application;
 
-use Nette\Environment;
-
 /**
  * Front Controller
- * 
+ *
  * @author	Patrik Votoček
  */
 class Application extends \Nette\Application\Application

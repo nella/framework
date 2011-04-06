@@ -58,6 +58,15 @@ class FormatEntity extends \Nella\Models\Entity implements IFormat
 	 */
 	private $watermarkPosition;
 	
+	public function __construct()
+	{
+		parent::__construct();
+		$this->crop = TRUE;
+		$this->watermark = NULL;
+		$this->watermarkOpacity = 100;
+		$this->watermarkPosition = 'center';
+	}
+	
 	/**
 	 * @return int	pixels
 	 */

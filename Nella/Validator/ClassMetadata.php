@@ -13,7 +13,7 @@ namespace Nella\Validator;
  * Classmetada metadata
  *
  * @author	Patrik Votoček
- * 
+ *
  * @property-read string $name
  * @property-read string $parent
  * @property-read array $rules
@@ -27,7 +27,7 @@ class ClassMetadata extends \Nette\Object
 	private $parent = NULL;
 	/** @var array */
 	private $rules = array();
-	
+
 	/**
 	 * @param string
 	 */
@@ -36,13 +36,13 @@ class ClassMetadata extends \Nette\Object
 		if (!class_exists(strtolower($class))) {
 			throw new \InvalidArgumentException("Class '$class' not exist");
 		}
-		
+
 		$this->name = $class;
-		
+
 		$parent = $this->getClassReflection()->getParentClass();
 		$this->parent = $parent ? $parent->getName() : NULL;
 	}
-	
+
 	/**
 	 * @return string
 	 */
@@ -50,7 +50,7 @@ class ClassMetadata extends \Nette\Object
 	{
 		return $this->name;
 	}
-	
+
 	/**
 	 * @return string
 	 */
@@ -58,7 +58,7 @@ class ClassMetadata extends \Nette\Object
 	{
 		return $this->parent;
 	}
-	
+
 	/**
 	 * @return array
 	 */
@@ -66,33 +66,34 @@ class ClassMetadata extends \Nette\Object
 	{
 		return $this->rules;
 	}
-	
+
 	/**
 	 * @param string
 	 * @param string
 	 * @param array
 	 * @return ClassMetadata
+	 * @throws \InvalidStateException
 	 */
 	public function addRule($name, $type, $data = NULL)
 	{
 		$lower = strtolower($name);
-		
+
 		$mapper = function ($rule) {
 			return $rule[0];
 		};
 		if (isset($this->rules[$lower]) && in_array($type, array_map($mapper, $this->rules[$lower]))) {
-			throw new \InvalidStateException("Rule type '$type' for property '{$this->name}::\$$name' is exist");
+			throw new \InvalidStateException("Rule type '$type' for property '{$this->name}::\$$name' already exists");
 		}
-		
+
 		if (!isset($this->rules[$lower]) || !is_array($this->rules[$lower])) {
 			$this->rules[$lower] = array(array($type, $data));
 		} else {
 			$this->rules[$lower][] = array($type, $data);
 		}
-		
+
 		return $this;
 	}
-	
+
 	/**
 	 * @return \Nette\Reflection\ClassReflection
 	 */

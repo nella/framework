@@ -22,7 +22,7 @@ class ClassMetadataFactory extends \Nette\Object implements IClassMetadataFactor
 	private $metas = array();
 	/** @var array */
 	private $parsers = array();
-	
+
 	/**
 	 * @param \Nette\Caching\ICacheStorage
 	 */
@@ -31,13 +31,13 @@ class ClassMetadataFactory extends \Nette\Object implements IClassMetadataFactor
 		$this->cache = $cache ? new \Nette\Caching\Cache($cache, "Nella.Validator.Metadata") : $cache;
 		$this->loadDefaultParsers();
 	}
-	
+
 	protected function loadDefaultParsers()
 	{
 		$this->addParser(new AnnotationParser);
 		//$this->addParser(new DoctrineAnnotationParser);
 	}
-	
+
 	/**
 	 * @param IMetadataParser
 	 * @return ClassMetadataFactory
@@ -47,38 +47,39 @@ class ClassMetadataFactory extends \Nette\Object implements IClassMetadataFactor
 		$this->parsers[] = $parser;
 		return $this;
 	}
-	
+
 	/**
 	 * @param string
 	 * @return ClassMetadata
+	 * @throws \InvalidStateException
 	 */
 	public function getClassMetadata($class)
 	{
 		$lower = strtolower($class);
-		
+
 		if (isset($this->metas[$lower])) {
 			return $this->metas[$lower];
 		}
-		
+
 		if ($this->cache && $this->cache[$lower]) {
 			return $this->metas[$lower] = $this->cache[$lower];
 		}
-		
+
 		if (!class_exists($lower)) {
 			throw new \InvalidArgumentException("Class '$class' not exist");
 		}
-		
+
 		$metadata = new ClassMetadata($class);
 		foreach ($this->parsers as $parser) {
 			$parser->parse($metadata);
 		}
-		
+
 		if ($this->cache) {
 			$this->cache->save($lower, $metadata, array(
 				\Nette\Caching\Cache::FILES => array($metadata->getReflection()->getFileName())
 			));
 		}
-		
+
 		return $this->metas[$lower] = $metadata;
 	}
 }
