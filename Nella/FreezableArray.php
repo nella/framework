@@ -106,7 +106,7 @@ class FreezableArray extends \Nette\FreezableObject implements \ArrayAccess, \Co
 	{
 		if ($this->isFrozen()) {
 			$class = get_called_class();
-			throw new \InvalidStateException("Cannot unset $keyn because the $class has been frozen");
+			throw new \InvalidStateException("Cannot unset $key, because the $class has been frozen");
 		}
 		unset($this->list[$key]);
 		return $this;
