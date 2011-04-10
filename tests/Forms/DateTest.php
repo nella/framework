@@ -27,7 +27,7 @@ class DateTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals("date", $this->item->control->type, "date type");
 	}
 	
-	public function testValus()
+	public function testValues()
 	{
 		$dt = new \DateTime();
 		$this->assertNull($this->item->getValue(), "is default NULL");

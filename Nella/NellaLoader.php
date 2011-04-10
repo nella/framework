@@ -39,6 +39,7 @@ class NellaLoader extends \Nette\Loaders\AutoLoader
 		'nella\doctrine\entitymanagerhelper' => '/Doctrine/EntityManagerHelper.php',
 		'nella\doctrine\panel' => '/Doctrine/Panel.php',
 		'nella\doctrine\servicefactory' => '/Doctrine/ServiceFactory.php',
+		'nella\forms\basedatetime' => '/Forms/BaseDateTime.php',
 		'nella\forms\date' => '/Forms/Date.php',
 		'nella\forms\datetime' => '/Forms/DateTime.php',
 		'nella\forms\form' => '/Forms/Form.php',

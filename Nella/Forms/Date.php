@@ -13,10 +13,8 @@ namespace Nella\Forms;
  * Form date field item
  *
  * @author	Patrik Votoček
- *
- * @property \DateTime $value
  */
-class Date extends \Nette\Forms\TextInput
+class Date extends BaseDateTime
 {
 	/** @var string */
 	public static $format = "Y-n-j";
@@ -31,47 +29,7 @@ class Date extends \Nette\Forms\TextInput
 	{
 		parent::__construct($label, $cols, $maxLength);
 		$this->control->type = "date";
-		$this->control->setAttribute('data-nella-forms-date', $this->translate(static::$format));
+		$this->control->setAttribute('data-nella-forms-date', $this->translateFormatToJs(static::$format));
 		//$this->addCondition(Form::FILLED)->addRule(Form::DATE);
-	}
-
-	/**
-	 * @return \DateTime|NULL
-	 */
-	public function getValue()
-	{
-		$value = parent::getValue();
-		return $value ? \DateTime::createFromFormat(static::$format, $value) : NULL;
-	}
-
-	/**
-	 * @param \DateTime
-	 * @return Date
-	 */
-	public function setValue($value = NULL)
-	{
-		if (!($value instanceof \DateTime) && $value !== NULL) {
-			throw new \InvalidArgumentException("Value must be an instance of DateTime or NULL");
-		}
-
-		try {
-			if ($value === NULL) {
-				return parent::setValue(NULL);
-			} else {
-				return parent::setValue($value->format(static::$format));
-			}
-		} catch (\Exception $e) {
-			return parent::setValue(NULL);
-		}
-	}
-
-	/**
-	 * @param Date
-	 * @return bool
-	 */
-	public static function validateValid(\Nette\Forms\IFormControl $control)
-	{
-		$value = $this->getValue();
-		return (is_null($value) || $value instanceof \DateTime);
 	}
 }

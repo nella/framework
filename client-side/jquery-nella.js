@@ -118,8 +118,25 @@ jQuery.fn.nellaAjaxSnippetForm = function() {
 };
 
 $(document).ready(function() {
+	// Forms
 	$('form').nellaForm();
 	$('form[data-nella-ajax-snippet]').nellaAjaxSnippetForm();
+	// Datetime (for time and datetime please use: http://trentrichardson.com/examples/timepicker/)
+	$('input[type="time"]').each(function() {
+		$this = $(this);
+		$this.timepicker({ format: $this.attr('data-nella-forms-time') });
+	});
+	$('input[type="datetime"]').each(function() {
+		$this = $(this);
+		$this.datetimepicker({ 
+			format: $this.attr('data-nella-forms-date'), 
+			timeFormat: $this.attr('data-nella-forms-time')
+		});
+	});
+	$('input[type="date"]').each(function() {
+		$this = $(this);
+		$this.datepicker({ format: $this.attr('data-nella-forms-date') });
+	});
 	
 	$('a[data-nella-ajax-snippet]').nellaAjaxSnippet();
 });
