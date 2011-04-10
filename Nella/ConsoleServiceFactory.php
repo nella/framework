@@ -23,6 +23,7 @@ class ConsoleServiceFactory extends \Nette\Object
 	public static function createHelperSet(\Nella\DependencyInjection\IContext $context)
 	{
 		$helperSet = new \Symfony\Component\Console\Helper\HelperSet();
+		$helperSet->set(new \Nella\DependencyInjection\ContextHelper($context), 'context');
 		$helperSet->set(new \Nella\Doctrine\EntityManagerHelper(function() use ($context) {
 			return $context->getService('Doctrine\ORM\EntityManager');
 		}), 'em');

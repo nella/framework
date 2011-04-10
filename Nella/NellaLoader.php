@@ -33,6 +33,7 @@ class NellaLoader extends \Nette\Loaders\AutoLoader
 		'nella\dependencyinjection\icontext' => '/DependencyInjection/IContext.php',
 		'nella\dependencyinjection\context' => '/DependencyInjection/Context.php',
 		'nella\dependencyinjection\contextbuilder' => '/DependencyInjection/ContextBuilder.php',
+		'nella\dependencyinjection\contexthelper' => '/DependencyInjection/ContextHelper.php',
 		'nella\dependencyinjection\iservicefactory' => '/DependencyInjection/IServiceFactory.php',
 		'nella\dependencyinjection\servicefactory' => '/DependencyInjection/ServiceFactory.php',
 		'nella\doctrine\cache' => '/Doctrine/Cache.php',

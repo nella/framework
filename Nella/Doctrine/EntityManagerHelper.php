@@ -9,11 +9,8 @@
 
 namespace Nella\Doctrine;
 
-use Nette\Environment,
-	Nette\Config\Config;
-
 /**
- * Nette\Environment helper.
+ * Console helper.
  *
  * @author	Patrik Votoček
  */
