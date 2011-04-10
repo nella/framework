@@ -181,6 +181,18 @@ class Form extends \Nette\Application\AppForm
 		$item = $this->addTextArea($name, $label, $cols, $rows);
 		return $item->setAttribute('data-nella-editor', "data-nella-editor");
 	}
+	
+	/**
+	 * Adds control that allows the user to upload multiple files.
+	 * 
+	 * @param string	control name
+	 * @param string	label
+	 * @return MultipleFileUpload
+	 */
+	public function addMultipleFile($name, $label = NULL)
+	{
+		return $this[$name] = new MultipleFileUpload($label);
+	}
 
 	/**
 	 * @return \Nella\DependencyInjection\IContext
