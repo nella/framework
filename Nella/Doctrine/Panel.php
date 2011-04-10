@@ -93,7 +93,7 @@ class Panel extends \Nette\Object implements \Nette\IDebugPanel, \Doctrine\DBAL\
 
 			$s .= '</td><td>';
 			foreach ($params as $param) {
-				$s .= "{$h(String::truncate($param instanceof \DateTime ? $param->format('c') : $param, self::$maxLength))}<br>";
+				$s .= Debug::dump($param, TRUE) . "<br>";
 			}
 
 			$s .= '</td><td>' . $rows . '</td></tr>';
