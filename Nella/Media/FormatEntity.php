@@ -48,12 +48,12 @@ class FormatEntity extends \Nella\Models\Entity implements IFormat
 	 */
 	private $watermark;
 	/**
-	 * @column(type="integer")
+	 * @column(type="integer", nullable=true)
 	 * @var int
 	 */
 	private $watermarkOpacity;
 	/**
-	 * @column(type="integer")
+	 * @column(type="integer", nullable=true)
 	 * @var int
 	 */
 	private $watermarkPosition;
@@ -63,8 +63,6 @@ class FormatEntity extends \Nella\Models\Entity implements IFormat
 		parent::__construct();
 		$this->crop = TRUE;
 		$this->watermark = NULL;
-		$this->watermarkOpacity = 100;
-		$this->watermarkPosition = 'center';
 	}
 	
 	/**
