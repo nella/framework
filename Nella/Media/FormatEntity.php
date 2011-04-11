@@ -179,6 +179,17 @@ class FormatEntity extends \Nella\Models\Entity implements IFormat
 	 */
 	public function process(IImage $image)
 	{
-		throw new \NotImplementedException;
+		$image = $image->toImage();
+		if ($this->crop) {
+			$image->resizeAndCrop($this->width, $this->height);
+		} else {
+			$image->resize($this->width, $this->height);
+		}
+		
+		if ($this->watermark) {
+			throw new \NotImplementedException;
+		}
+
+		return $image;
 	}
 }
