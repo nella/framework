@@ -23,10 +23,6 @@ class MultipleFileUpload extends \Nette\Forms\FormControl
 	 */
 	public function __construct($label = NULL)
 	{
-		if (!static::$registered) {
-			throw new \InvalidStateException("Multiple file upload not registered.");
-		}
-
 		parent::__construct($label);
 		$this->control->type = 'file';
 		$this->control->multiple = TRUE;
