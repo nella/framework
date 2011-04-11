@@ -24,7 +24,7 @@ class ImageEntity extends BaseFileEntity implements IImage
 	 */
 	public function toImage()
 	{
-		return \Nella\Image::fromFile($this->getPath());
+		return \Nella\Image::fromFile(STORAGE_DIR . "/" . $this->getPath());
 	}
 	
 	/**
