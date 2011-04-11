@@ -43,6 +43,11 @@ class MediaPresenter extends \Nella\Application\Presenter
 			$image = $image->toImage();
 		}
 		
+		$dir = pathinfo(WWW_DIR . $path, PATHINFO_DIRNAME);
+		if (!file_exists($dir)) {
+			mkdir($dir, 0777, TRUE);
+		}
+		
 		$image->save(WWW_DIR . $path);
 		if (!$type) {
 			$image->send();
