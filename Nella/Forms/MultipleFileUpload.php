@@ -77,6 +77,11 @@ class MultipleFileUpload extends \Nette\Forms\FormControl
 		} else {
 			throw new \NotImplementedException;
 		}
+		
+		if (count($this->value) == 1 && !reset($this->value)->temporaryFile) {
+			$this->value = array();
+		}
+		
 		return $this;
 	}
 
