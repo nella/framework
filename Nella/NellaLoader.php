@@ -45,6 +45,7 @@ class NellaLoader extends \Nette\Loaders\AutoLoader
 		'nella\forms\datetime' => '/Forms/DateTime.php',
 		'nella\forms\form' => '/Forms/Form.php',
 		'nella\forms\time' => '/Forms/Time.php',
+		'nella\forms\multiplefileupload' => '/Forms/MultipleFileUpload.php', 
 		'nella\localization\dictionary' => '/Localization/Dictionary.php',
 		'nella\localization\gettextparser' => '/Localization/GettextParser.php',
 		'nella\localization\translator' => '/Localization/Translator.php',
