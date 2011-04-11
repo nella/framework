@@ -137,6 +137,14 @@ $(document).ready(function() {
 		$this = $(this);
 		$this.datepicker({ format: $this.attr('data-nella-forms-date') });
 	});
+	$('[data-nella-confirm]').each(function() {
+		$this = $(this);
+		$this.bind('click', function() { confirm($this.attr('data-nella-confirm')) });
+	});
+	$('[data-nella-confirm]').each(function() {
+		$this = $(this);
+		$this.bind('click', function() { return confirm($this.attr('data-nella-confirm')) });
+	});
 	
 	$('a[data-nella-ajax-snippet]').nellaAjaxSnippet();
 });
