@@ -65,15 +65,11 @@ abstract class BaseDateTime extends \Nette\Forms\TextInput
 	 */
 	public function setValue($value = NULL)
 	{
-		if (!($value instanceof \DateTime) && $value !== NULL) {
-			throw new \InvalidArgumentException("Value must be an instance of DateTime or NULL");
-		}
-
 		try {
-			if ($value === NULL) {
-				return parent::setValue(NULL);
-			} else {
+			if ($value instanceof \DateTime) {
 				return parent::setValue($value->format(static::$format));
+			} else {
+				return parent::setValue($value);
 			}
 		} catch (\Exception $e) {
 			return parent::setValue(NULL);
