@@ -85,4 +85,12 @@ abstract class BaseDateTime extends \Nette\Forms\TextInput
 		$value = $this->getValue();
 		return (is_null($value) || $value instanceof \DateTime);
 	}
+
+	/**
+	 * @return bool
+	 */
+	public function isFilled()
+	{
+		return (bool) $this->getValue();
+	}
 }
