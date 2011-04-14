@@ -38,8 +38,7 @@ function fdump($var, $file = NULL)
 
 // Init Nette Framework robot loader
 $loader = new Nette\Loaders\RobotLoader;
-//$loader->setCacheStorage(new Nette\Caching\Storages\MemoryStorage);
-$loader->setCacheStorage(new Nette\Caching\Storages\FileStorage(TEMP_DIR));
+$loader->setCacheStorage(new Nette\Caching\Storages\MemoryStorage);
 $loader->addDirectory(DEPENDENCY_DIR);
 $loader->addDirectory(APP_DIR);
 $loader->register();
