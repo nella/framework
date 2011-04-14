@@ -99,6 +99,15 @@
 			<arg line=" clone git@github.com:doctrine/doctrine2.git ./_DoctrineORM" />
 		</exec>
 
+		<!-- TMP fix DDC-1104 - START -->
+		<exec executable="sed" dir="${basedir}/_DoctrineORM/lib/Doctrine/ORM/Mapping/Driver">
+			<arg line=" '/require/d' AnnotationDriver.php > AnnotationDriver2.php" />
+		</exec>
+		<delete file="${basedir}/_DoctrineORM/lib/Doctrine/ORM/Mapping/Driver/AnnotationDriver.php" />
+		<move file="${basedir}/_DoctrineORM/lib/Doctrine/ORM/Mapping/Driver/AnnotationDriver2.php"
+				tofile="${basedir}/_DoctrineORM/lib/Doctrine/ORM/Mapping/Driver/AnnotationDriver.php"/>
+		<!-- TMP fix DDC-1104 - END -->
+		
 		<delete dir="${basedir}/dependency/Doctrine"/>
 		<mkdir dir="${basedir}/dependency/Doctrine"/>
 
@@ -246,9 +255,11 @@
 		<copy todir="${basedir}/package/sandbox/libs/Nette">
 			<fileset dir="${basedir}/dependency/Nette"/>
 		</copy>
+		<echo file="${basedir}/package/sandbox/libs/Nette/netterobots.txt" append="false">Disallow: /</echo>
 		<copy todir="${basedir}/package/sandbox/libs/Nella">
 			<fileset dir="${basedir}/src/Nella"/>
 		</copy>
+		<echo file="${basedir}/package/sandbox/libs/Nella/netterobots.txt" append="false">Disallow: /</echo>
 		<copy todir="${basedir}/package/Nella">
 			<fileset dir="${basedir}/src/Nella"/>
 		</copy>
@@ -286,5 +297,5 @@
 		<delete dir="${basedir}/tools"/>
 	</target>
 
-	<target name="build" depends="git,lint,nette,doctrine,symfony,phpunit,parallelTasks,phpcb,package"/>
+	<target name="build" depends="git,lint,nette,doctrine,symfony,phpunit,apigen,parallelTasks,phpcb,package"/>
 </project>
