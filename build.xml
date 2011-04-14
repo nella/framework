@@ -100,9 +100,8 @@
 		</exec>
 
 		<!-- TMP fix DDC-1104 - START -->
-		<exec executable="sed" dir="${basedir}/_DoctrineORM/lib/Doctrine/ORM/Mapping/Driver"
-			output="${basedir}/_DoctrineORM/lib/Doctrine/ORM/Mapping/Driver/AnnotationDriver.php">
-			<arg line=" '/require/d' AnnotationDriver.php" />
+		<exec executable="sed" dir="${basedir}/_DoctrineORM/lib/Doctrine/ORM/Mapping/Driver">
+			<arg line=" -i 's/require /require_once /g' AnnotationDriver.php" />
 		</exec>
 		<!-- TMP fix DDC-1104 - END -->
 		
