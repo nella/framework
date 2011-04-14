@@ -26,7 +26,7 @@ class FileActionLogger extends \Nette\Object implements IActionLogger
 	 */
 	public function __construct($file = NULL)
 	{
-		$logDir = \Nette\Debug::$logDirectory;
+		$logDir = \Nette\Diagnostics\Debugger::$logDirectory;
 		if ($file) {
 			$this->file = $logDir . "/" . $file;
 		} else {
@@ -38,17 +38,17 @@ class FileActionLogger extends \Nette\Object implements IActionLogger
 	 * @param string
 	 * @param string
 	 * @param string
-	 * @param Nette\Security\IIdentity
-	 * @throws IOException
+	 * @param \Nette\Security\IIdentity
+	 * @throws \Nette\IOException
 	 */
 	public function logAction($module, $action = self::OTHER, $message = "", \Nette\Security\IIdentity $user = NULL)
 	{
 		if (!$user) {
-			$user = \Nette\Environment::getApplication()->context->getService('Nette\Web\IUser')->identity;
+			$user = \Nette\Environment::getApplication()->context->getService('Nette\Http\IUser')->identity;
 		}
 		
 		if (!@file_put_contents($this->file, "[" . date("Y-m-d H:i:s P") . "] $module:$action: $message #{$user->getId()}" . PHP_EOL, FILE_APPEND)) {
-			throw new \IOException("File '{$this->file}' is not writable");
+			throw new \Nette\IOException("File '{$this->file}' is not writable");
 		}
 	}
 }

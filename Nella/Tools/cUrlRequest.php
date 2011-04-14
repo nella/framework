@@ -9,8 +9,8 @@
 
 namespace Nella\Tools;
 
-use Nette\Web\Uri,
-	Nette\String;
+use Nette\Http\Url,
+	Nette\StringUtils;
 
 /**
  * Nella cUrl wrapper request class
@@ -62,13 +62,13 @@ class cUrlRequest extends \Nette\Object
 	 * @param string
 	 * @param array
 	 * @param array
-	 * @throws \InvalidArgumentException
-	 * @throws \InvalidStateException
+	 * @throws \Nette\InvalidArgumentException
+	 * @throws \Nette\InvalidStateException
 	 */
 	public function __construct($url = NULL, $options = array(), $headers = array())
 	{
 		if (!extension_loaded('curl')) {
-			throw new \InvalidStateException("Curl extension is not loaded!");
+			throw new \Nette\InvalidStateException("Curl extension is not loaded!");
 		}
 
 		$ua = 'Nella\Tools\cUrl ' . \Nella\Framework::VERSION . " (http://nella-project.org)";
@@ -103,13 +103,13 @@ class cUrlRequest extends \Nette\Object
 	/**
 	 * @param string
 	 * @return string|NULL
-	 * @throws \InvalidArgumentException
+	 * @throws \Nette\InvalidArgumentException
 	 */
 	public function getOption($key)
 	{
 		$key = strtoupper($key);
 		if (!defined('CURLOPT_' . str_replace('CURLOPT_', '', $key))) {
-			throw new \InvalidArgumentException("cUrl option '$key' does not exist");
+			throw new \Nette\InvalidArgumentException("cUrl option '$key' does not exist");
 		}
 
 		return isset($this->options[$key]) ? $this->options[$key] : NULL;
@@ -119,13 +119,13 @@ class cUrlRequest extends \Nette\Object
 	 * @param string
 	 * @param string|NULL
 	 * @return cUrlRequest
-	 * @throws \InvalidArgumentException
+	 * @throws \Nette\InvalidArgumentException
 	 */
 	public function setOption($key, $value)
 	{
 		$key = strtoupper($key);
 		if (!defined('CURLOPT_' . str_replace('CURLOPT_', '', $key))) {
-			throw new \InvalidArgumentException("cUrl option '$key' does not exist");
+			throw new \Nette\InvalidArgumentException("cUrl option '$key' does not exist");
 		}
 
 		$value = trim($value);
@@ -216,14 +216,14 @@ class cUrlRequest extends \Nette\Object
 	/**
 	 * @param string
 	 * @return cUrlRequest
-	 * @throws \InvalidArgumentException
+	 * @throws \Nette\InvalidArgumentException
 	 */
 	public function setUserAgent($userAgent)
 	{
 		$userAgent = trim($userAgent);
 		$this->setOption('useragent', $userAgent == "" ? NULL : $userAgent);
 		if (!$this->getOption('useragent')) {
-			throw new \InvalidArgumentException("User agent string must be a non-empty string");
+			throw new \Nette\InvalidArgumentException("User agent string must be a non-empty string");
 		}
 		return $this;
 	}
@@ -238,11 +238,11 @@ class cUrlRequest extends \Nette\Object
 		$headers = array();
 		foreach ($this->headers as $key => $value) {
 			//fix HTTP_ACCEPT_CHARSET to Accept-Charset
-			$key = String::replace($key, array(
+			$key = StringUtils::replace($key, array(
 				'~^HTTP_~i' => '',
 				'~_~' => '-'
 			));
-			$key = String::replace($key, array(
+			$key = StringUtils::replace($key, array(
 				'~(?P<word>[a-z]+)~i',
 			), function($match) {
 				return ucfirst(strtolower(current($match)));
@@ -350,7 +350,7 @@ class cUrlRequest extends \Nette\Object
 
 	/**
 	 * @return void
-	 * @throws \InvalidStateException
+	 * @throws \Nette\InvalidStateException
 	 */
 	private function open()
 	{
@@ -361,7 +361,7 @@ class cUrlRequest extends \Nette\Object
 
 	/**
 	 * @return void
-	 * @throws \InvalidStateException
+	 * @throws \Nette\InvalidStateException
 	 */
 	private function execute()
 	{
@@ -372,7 +372,7 @@ class cUrlRequest extends \Nette\Object
 		if ($response) {
 			$this->response = new cUrlResponse($response, $this);
 		} else {
-			throw new \InvalidStateException($error, $info['http_code']);
+			throw new \Nette\InvalidStateException($error, $info['http_code']);
 		}
 	}
 
@@ -382,18 +382,18 @@ class cUrlRequest extends \Nette\Object
 	 * @param array
 	 * @param int
 	 * @return cUrlResponse
-	 * @throws \InvalidStateException
+	 * @throws \Nette\InvalidStateException
 	 * @throws cUrlBadRequestException
 	 */
 	protected function run($method = self::GET, $url = NULL, $post = array(), $cycles = 1)
 	{
 		if ($cycles > 5) {
-			throw new \InvalidStateException("Redirect loop");
+			throw new \Nette\InvalidStateException("Redirect loop");
 		}
 
 		if (!is_string($url) && $url !== '') {
 			if (!$this->url) {
-				throw new \InvalidStateException("cUrl invalid URL '$url'");
+				throw new \Nette\InvalidStateException("cUrl invalid URL '$url'");
 			}
 		} else {
 			$this->url = $url;
@@ -413,12 +413,12 @@ class cUrlRequest extends \Nette\Object
 		$this->close();
 
 		$fixUrl = function ($from, $to) {
-			$from = new \Nette\Web\Uri($from);
-			$to = new \Nette\Web\Uri($to);
+			$from = new Url($from);
+			$to = new Url($to);
 
 			if (empty($to->scheme)) { // scheme
 				if (empty($from->scheme)) {
-					throw new \InvalidStateException("Missign URL scheme!");
+					throw new \Nette\InvalidStateException("Missign URL scheme!");
 				}
 
 				$to->scheme = $from->scheme;
@@ -426,7 +426,7 @@ class cUrlRequest extends \Nette\Object
 
 			if (empty($to->host)) { // host
 				if (empty($from->host)) {
-					throw new \InvalidStateException("Missign URL host!");
+					throw new \Nette\InvalidStateException("Missign URL host!");
 				}
 
 				$to->host = $from->host;
@@ -475,7 +475,7 @@ class cUrlRequest extends \Nette\Object
 	}
 }
 
-class cUrlBadRequestException extends \InvalidStateException
+class cUrlBadRequestException extends \Nette\InvalidStateException
 {
 	/** @var cUrlResponse */
 	private $response;

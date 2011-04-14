@@ -26,7 +26,7 @@ class FileLogger extends \Nette\Object implements ILogger
 	 */
 	public function __construct($file = NULL)
 	{
-		$logDir = \Nette\Debug::$logDirectory;
+		$logDir = \Nette\Diagnostics\Debugger::$logDirectory;
 		if ($file) {
 			$this->file = $logDir . "/" . $file;
 		} else {
@@ -37,7 +37,7 @@ class FileLogger extends \Nette\Object implements ILogger
 	/**
 	 * @param string
 	 * @param int	message priority level
-	 * @throws \IOException
+	 * @throws \Nette\IOException
 	 */
 	public function logMessage($message, $level = self::ERROR)
 	{
@@ -50,7 +50,7 @@ class FileLogger extends \Nette\Object implements ILogger
 		);
 
 		if (!@file_put_contents($this->file, "[" . date("Y-m-d H:i:s P") . "] {$levels[$level]}: $message" . PHP_EOL, FILE_APPEND)) {
-			throw new \IOException("File '{$this->file}' is not writable");
+			throw new \Nette\IOException("File '{$this->file}' is not writable");
 		}
 	}
 }

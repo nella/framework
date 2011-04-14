@@ -53,7 +53,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * @expectedException \InvalidArgumentException
+	 * @expectedException \Nette\InvalidArgumentException
 	 */
 	public function testGetRepositoryException()
 	{
@@ -70,7 +70,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * @expectedException \InvalidArgumentException
+	 * @expectedException \Nette\InvalidArgumentException
 	 */
 	public function testGetClassMetadataException()
 	{

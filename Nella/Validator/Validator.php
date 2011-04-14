@@ -9,7 +9,7 @@
 
 namespace Nella\Validator;
 
-use Nette\String;
+use Nette\StringUtils;
 
 /**
  * Object property validator
@@ -79,13 +79,13 @@ class Validator extends \Nette\Object implements IValidator
 	public function addValidator($id, $callback, $message)
 	{
 		if (!is_string($id)) {
-			throw new \InvalidArgumentException("Parameter key must be integer or string, " . gettype($id) . " given.");
+			throw new \Nette\InvalidArgumentException("Parameter key must be integer or string, " . gettype($id) . " given.");
 		} elseif (!preg_match('#^[a-zA-Z0-9_]+$#', $id)) {
-			throw new \InvalidArgumentException("Parameter key must be non-empty alphanumeric string, '$id' given.");
+			throw new \Nette\InvalidArgumentException("Parameter key must be non-empty alphanumeric string, '$id' given.");
 		}
 
 		if (!is_callable($callback) && !($callback instanceof \Closure) && !($callback instanceof \Nette\Callback)) {
-			throw new \InvalidArgumentException("Callback is not callable");
+			throw new \Nette\InvalidArgumentException("Callback is not callable");
 		}
 
 		$this->validators[$id] = array($callback, $message);
@@ -106,7 +106,7 @@ class Validator extends \Nette\Object implements IValidator
 	 * @param mixed
 	 * @return mixed
 	 */
-	private function getValue(\Nette\Reflection\PropertyReflection $reflection, $input)
+	private function getValue(\Nette\Reflection\Property $reflection, $input)
 	{
 		$reflection->setAccessible(TRUE);
 		return $reflection->getValue($input);
@@ -166,7 +166,7 @@ class Validator extends \Nette\Object implements IValidator
 				}
 
 				if (!isset($this->validators[$rule[0]])) {
-					throw new \InvalidStateException("Invalid validation rule '{$rule[0]}' not registered");
+					throw new \Nette\InvalidStateException("Invalid validation rule '{$rule[0]}' not registered");
 				}
 
 				// validate property
@@ -194,9 +194,9 @@ class Validator extends \Nette\Object implements IValidator
 	public static function validateUrl($url)
 	{
 		$chars = "a-z0-9\x80-\xFF";
-		$isAbsoluteUrl = (bool) String::match($url, "#^(?:https?://|)(?:[$chars](?:[-$chars]{0,61}[$chars])?\\.)+[-$chars]{2,19}(?::([0-9]+))?(/\S*)?$#i");
-		$isRelativeUrl = (bool) String::match($url, "#^/\S+$#i");
-		$isValidIpUrl = (bool) String::match($url, "#^(?:https?://|)(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)(?:[.](?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)){3}(/\S*)?$#");
+		$isAbsoluteUrl = (bool) StringUtils::match($url, "#^(?:https?://|)(?:[$chars](?:[-$chars]{0,61}[$chars])?\\.)+[-$chars]{2,19}(?::([0-9]+))?(/\S*)?$#i");
+		$isRelativeUrl = (bool) StringUtils::match($url, "#^/\S+$#i");
+		$isValidIpUrl = (bool) StringUtils::match($url, "#^(?:https?://|)(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)(?:[.](?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)){3}(/\S*)?$#");
 
 		return $isAbsoluteUrl || $isRelativeUrl || $isValidIpUrl;
 	}
@@ -214,7 +214,7 @@ class Validator extends \Nette\Object implements IValidator
 		$localPart = "(?:\"(?:[ !\\x23-\\x5B\\x5D-\\x7E]*|\\\\[ -~])+\"|$atom+(?:\\.$atom+)*)"; // quoted or unquoted
 		$chars = "a-z0-9\x80-\xFF"; // superset of IDN
 		$domain = "[$chars](?:[-$chars]{0,61}[$chars])"; // RFC 1034 one domain component
-		return (bool) String::match($email, "(^$localPart@(?:$domain?\\.)+[-$chars]{2,19}\\z)i");
+		return (bool) StringUtils::match($email, "(^$localPart@(?:$domain?\\.)+[-$chars]{2,19}\\z)i");
 	}
 
 	/**
@@ -223,7 +223,7 @@ class Validator extends \Nette\Object implements IValidator
 	 * @param mixed
 	 * @param string
 	 * @return bool
-	 * @throws \InvalidArgumentException
+	 * @throws \Nette\InvalidArgumentException
 	 */
 	public static function validateType($input, $type)
 	{
@@ -258,7 +258,7 @@ class Validator extends \Nette\Object implements IValidator
 				return is_null($input);
 				break;
 			default:
-				throw new \InvalidArgumentException("Unsupported validation type");
+				throw new \Nette\InvalidArgumentException("Unsupported validation type");
 				break;
 		}
 	}
@@ -349,6 +349,6 @@ class Validator extends \Nette\Object implements IValidator
 	 */
 	public static function validateRegexp($input, $pattern)
 	{
-		return (bool) String::match($input, $pattern);
+		return (bool) StringUtils::match($input, $pattern);
 	}
 }

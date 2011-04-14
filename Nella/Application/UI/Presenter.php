@@ -7,7 +7,7 @@
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
 
-namespace Nella\Application;
+namespace Nella\Application\UI;
 
 /**
  * Application base presenter
@@ -16,17 +16,17 @@ namespace Nella\Application;
  *
  * @property-read \Nette\IContext $context
  */
-abstract class Presenter extends \Nette\Application\Presenter
+abstract class Presenter extends \Nette\Application\UI\Presenter
 {
 	/**
-	 * Descendant can override this method to customize template compile-time filters.
-	 * @param \Nette\Templates\Template
-	 * @return void
+	 * Descendant can override this method to customize template compile-time filters
+	 * 
+	 * @param \Nette\Templating\Template
 	 */
 	public function templatePrepareFilters($template)
 	{
 		// default filters
-		$template->registerFilter($this->getContext()->getService('Nette\Templates\LatteFilter'));
+		$template->registerFilter($this->getContext()->getService('Nette\Latte\Engine'));
 	}
 
 	/**
@@ -123,7 +123,7 @@ abstract class Presenter extends \Nette\Application\Presenter
 	/**
 	 * Component factory. Delegates the creation of components to a createComponent<Name> method.
 	 * @param  string
-	 * @return \Nette\IComponent
+	 * @return \Nette\ComponentModel\IComponent
 	 */
 	protected function createComponent($name)
 	{

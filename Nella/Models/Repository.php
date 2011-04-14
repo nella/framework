@@ -98,7 +98,7 @@ class Repository extends \Doctrine\ORM\EntityRepository
 		$arr = array();
 		foreach ($res as $doc) {
 			if (array_key_exists($doc->$key, $arr)) {
-				throw new \InvalidStateException("Key value {$doc->{"get" . ucfirst($key)}} is duplicit in fetched associative array. Try to use different associative key");
+				throw new \Nette\InvalidStateException("Key value {$doc->{"get" . ucfirst($key)}} is duplicit in fetched associative array. Try to use different associative key");
 			}
 			$arr[$doc->{"get" . ucfirst($key)}()] = $doc;
 		}
@@ -109,21 +109,22 @@ class Repository extends \Doctrine\ORM\EntityRepository
 	/************************************************** Nette\Object implementation **************************************************/
 
 	/**
-	 * Access to reflection.
-	 * @return Nette\Reflection\ClassReflection
+	 * Access to reflection
+	 * 
+	 * @return \Nette\Reflection\ClassType
 	 */
 	public static function getReflection()
 	{
-		return new \Nette\Reflection\ClassReflection(get_called_class());
+		return new \Nette\Reflection\ClassType(get_called_class());
 	}
 
 	/**
-	 * Call to undefined method.
-	 * @param  string  method name
-	 * @param  array   arguments
+	 * Call to undefined method
+	 * 
+	 * @param string  method name
+	 * @param array   arguments
 	 * @return mixed
-	 * @throws \MemberAccessException
-	 * @throws \Doctrine\ODM\MongoDB\MongoDBException
+	 * @throws \Nette\MemberAccessException
 	 */
 	public function __call($name, $args)
 	{
@@ -135,22 +136,23 @@ class Repository extends \Doctrine\ORM\EntityRepository
 	}
 
 	/**
-	 * Call to undefined static method.
-	 * @param  string  method name (in lower case!)
-	 * @param  array   arguments
+	 * Call to undefined static method
+	 * 
+	 * @param string  method name (in lower case!)
+	 * @param array   arguments
 	 * @return mixed
-	 * @throws \MemberAccessException
+	 * @throws \Nette\MemberAccessException
 	 */
 	public static function __callStatic($name, $args)
 	{
-		$class = get_called_class();
-		throw new \MemberAccessException("Call to undefined static method $class::$name().");
+		return ObjectMixin::callStatic(get_called_class(), $name, $args);
 	}
 
 	/**
-	 * Adding method to class.
-	 * @param  string  method name
-	 * @param  mixed   callback or closure
+	 * Adding method to class
+	 * 
+	 * @param string  method name
+	 * @param mixed   callback or closure
 	 * @return mixed
 	 */
 	public static function extensionMethod($name, $callback = NULL)
@@ -160,7 +162,7 @@ class Repository extends \Doctrine\ORM\EntityRepository
 		} else {
 			list($class, $name) = explode('::', $name);
 		}
-		$class = new \Nette\Reflection\ClassReflection($class);
+		$class = new \Nette\Reflection\ClassType($class);
 		if ($callback === NULL) {
 			return $class->getExtensionMethod($name);
 		} else {
@@ -169,10 +171,11 @@ class Repository extends \Doctrine\ORM\EntityRepository
 	}
 
 	/**
-	 * Returns property value. Do not call directly.
-	 * @param  string  property name
+	 * Returns property value. Do not call directly
+	 * 
+	 * @param string  property name
 	 * @return mixed   property value
-	 * @throws \MemberAccessException if the property is not defined.
+	 * @throws \Nette\MemberAccessException if the property is not defined.
 	 */
 	public function &__get($name)
 	{
@@ -180,11 +183,12 @@ class Repository extends \Doctrine\ORM\EntityRepository
 	}
 
 	/**
-	 * Sets value of a property. Do not call directly.
-	 * @param  string  property name
-	 * @param  mixed   property value
+	 * Sets value of a property. Do not call directly
+	 * 
+	 * @param string  property name
+	 * @param mixed   property value
 	 * @return void
-	 * @throws \MemberAccessException if the property is not defined or is read-only
+	 * @throws \Nette\MemberAccessException if the property is not defined or is read-only
 	 */
 	public function __set($name, $value)
 	{
@@ -193,7 +197,8 @@ class Repository extends \Doctrine\ORM\EntityRepository
 
 	/**
 	 * Is property defined?
-	 * @param  string  property name
+	 * 
+	 * @param string  property name
 	 * @return bool
 	 */
 	public function __isset($name)
@@ -202,13 +207,14 @@ class Repository extends \Doctrine\ORM\EntityRepository
 	}
 
 	/**
-	 * Access to undeclared property.
-	 * @param  string  property name
+	 * Access to undeclared property
+	 * 
+	 * @param string  property name
 	 * @return void
-	 * @throws \MemberAccessException
+	 * @throws \Nette\MemberAccessException
 	 */
 	public function __unset($name)
 	{
-		throw new \MemberAccessException("Cannot unset the property {$this->reflection->name}::\$$name.");
+		throw new \Nette\MemberAccessException("Cannot unset the property {$this->getReflection()->name}::\$$name.");
 	}
 }

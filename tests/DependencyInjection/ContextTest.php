@@ -29,7 +29,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * @expectedException InvalidStateException
+	 * @expectedException Nette\InvalidStateException
 	 */
 	public function testEnvironmentException()
 	{
@@ -45,7 +45,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * @expectedException InvalidArgumentException
+	 * @expectedException Nette\InvalidArgumentException
 	 */
 	public function testParamterException1()
 	{
@@ -53,7 +53,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * @expectedException InvalidArgumentException
+	 * @expectedException Nette\InvalidArgumentException
 	 */
 	public function testParamterException2()
 	{
@@ -61,7 +61,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * @expectedException InvalidStateException
+	 * @expectedException Nette\InvalidStateException
 	 */
 	public function testParamterFrozenException()
 	{
@@ -265,7 +265,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * @expectedException InvalidStateException
+	 * @expectedException Nette\InvalidStateException
 	 */
 	public function testAddServiceFrozenException()
 	{
@@ -274,7 +274,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * @expectedException InvalidStateException
+	 * @expectedException Nette\InvalidStateException
 	 */
 	public function testAddAliasFrozenException()
 	{
@@ -283,7 +283,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * @expectedException InvalidStateException
+	 * @expectedException Nette\InvalidStateException
 	 */
 	public function testRemoveServiceFrozenException()
 	{
@@ -293,7 +293,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * @expectedException InvalidArgumentException
+	 * @expectedException Nette\InvalidArgumentException
 	 */
 	public function testAddServiceBadNameException()
 	{
@@ -301,7 +301,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * @expectedException InvalidArgumentException
+	 * @expectedException Nette\InvalidArgumentException
 	 */
 	public function testAddServiceBadServiceException()
 	{
@@ -309,7 +309,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * @expectedException InvalidArgumentException
+	 * @expectedException Nette\InvalidArgumentException
 	 */
 	public function testAddServiceSignletonInstanceException()
 	{
@@ -317,7 +317,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * @expectedException Nette\AmbiguousServiceException
+	 * @expectedException Nette\DI\AmbiguousServiceException
 	 */
 	public function testAddServiceRegisteredException()
 	{
@@ -326,7 +326,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * @expectedException Nette\AmbiguousServiceException
+	 * @expectedException Nette\DI\AmbiguousServiceException
 	 */
 	public function testAddServiceRegisteredAliasException()
 	{
@@ -336,7 +336,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * @expectedException InvalidArgumentException
+	 * @expectedException Nette\InvalidArgumentException
 	 */
 	public function testAddAliasBadNameException()
 	{
@@ -344,7 +344,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * @expectedException InvalidArgumentException
+	 * @expectedException Nette\InvalidArgumentException
 	 */
 	public function testAddAliasBadServiceException()
 	{
@@ -352,7 +352,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * @expectedException InvalidArgumentException
+	 * @expectedException Nette\InvalidArgumentException
 	 */
 	public function testAddAliasNotExistServiceException()
 	{
@@ -360,7 +360,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * @expectedException Nette\AmbiguousServiceException
+	 * @expectedException Nette\DI\AmbiguousServiceException
 	 */
 	public function testAddAliasNotExistingException()
 	{
@@ -370,7 +370,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * @expectedException Nette\AmbiguousServiceException
+	 * @expectedException Nette\DI\AmbiguousServiceException
 	 */
 	public function testAddAliasNotExistingServiceException()
 	{
@@ -379,7 +379,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * @expectedException InvalidStateException
+	 * @expectedException Nette\InvalidStateException
 	 */
 	public function testGetServiceNonExistException()
 	{
@@ -387,7 +387,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * @expectedException InvalidArgumentException
+	 * @expectedException Nette\InvalidArgumentException
 	 */
 	public function testGetServiceInstanceOptionsException()
 	{
@@ -396,7 +396,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * @expectedException InvalidArgumentException
+	 * @expectedException Nette\InvalidArgumentException
 	 */
 	public function testRemoveServiceBadNameException()
 	{
@@ -409,7 +409,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * @expectedException InvalidStateException
+	 * @expectedException Nette\InvalidStateException
 	 */
 	public function testGetNonExistParameter()
 	{
@@ -426,7 +426,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * @expectedException InvalidStateException
+	 * @expectedException Nette\InvalidStateException
 	 */
 	public function testGetNonExistFactoryException()
 	{
@@ -442,7 +442,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * @expectedException InvalidStateException
+	 * @expectedException Nette\InvalidStateException
 	 */
 	public function testSetFrozenFactoryException()
 	{
@@ -453,7 +453,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * @expectedException Nette\AmbiguousServiceException
+	 * @expectedException Nette\DI\AmbiguousServiceException
 	 */
 	public function testSetExistingFactoryException()
 	{
@@ -464,7 +464,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * @expectedException Nette\AmbiguousServiceException
+	 * @expectedException Nette\DI\AmbiguousServiceException
 	 */
 	public function testSetExistingAliasFactoryException()
 	{

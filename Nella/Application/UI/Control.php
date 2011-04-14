@@ -7,23 +7,23 @@
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
 
-namespace Nella\Application;
+namespace Nella\Application\UI;
 
 /**
  * Basic control implementation
  *
  * @author	Patrik Votoček
  */
-abstract class Control extends \Nette\Application\Control
+abstract class Control extends \Nette\Application\UI\Control
 {
 	/**
 	 * Descendant can override this method to customize template compile-time filters.
-	 * @param \Nette\Templates\Template
+	 * @param \Nette\Templating\Template
 	 */
 	public function templatePrepareFilters($template)
 	{
 		// default filters
-		$template->registerFilter($this->getPresenter()->context->getService('Nette\Templates\LatteFilter'));
+		$template->registerFilter($this->getPresenter()->context->getService('Nette\Latte\Engine'));
 	}
 
 	/**
@@ -41,7 +41,7 @@ abstract class Control extends \Nette\Application\Control
 			$class = get_called_class();
 		}
 		foreach ($this->getPresenter()->context->getService('Nella\Registry\NamespacePrefixes') as $prefix) {
-			if (\Nette\String::startsWith($class, $prefix)) {
+			if (\Nette\StringUtils::startsWith($class, $prefix)) {
 				$class = substr($class, strlen($prefix));
 				break;
 			}
@@ -75,7 +75,7 @@ abstract class Control extends \Nette\Application\Control
 	 *
 	 * @param string
 	 * @return string
-	 * @throws \InvalidStateException
+	 * @throws \Nette\InvalidStateException
 	 */
 	protected function formatTemplateFile($method)
 	{
@@ -86,7 +86,7 @@ abstract class Control extends \Nette\Application\Control
 			}
 		}
 
-		throw new \InvalidStateException("No template files found for method '$method'");
+		throw new \Nette\InvalidStateException("No template files found for method '$method'");
 	}
 
 	/**
@@ -104,7 +104,7 @@ abstract class Control extends \Nette\Application\Control
 	/**
 	 * Component factory. Delegates the creation of components to a createComponent<Name> method.
 	 * @param  string
-	 * @return \Nette\IComponent
+	 * @return \Nette\ComponentModel\IComponent
 	 */
 	protected function createComponent($name)
 	{

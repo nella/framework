@@ -74,7 +74,7 @@ abstract class BaseFileEntity extends \Nella\Models\Entity implements IFile
 	 */
 	public function getFileinfo()
 	{
-		return new \SplFileInfo(STORAGE_DIR . "/{$this->path}");
+		return new \SplFileInfo(STORAGE_DIR . "/" . $this->path);
 	}
 	
 	/**
@@ -82,7 +82,7 @@ abstract class BaseFileEntity extends \Nella\Models\Entity implements IFile
 	 */
 	public function getMimeType()
 	{
-		return \Nette\Tools::detectMimeType(STORAGE_DIR . "/{$this->path}");
+		return \Nette\Utils\MimeTypeDetector::fromFile(STORAGE_DIR . "/" . $this->path);
 	}
 	
 	/**
@@ -90,7 +90,7 @@ abstract class BaseFileEntity extends \Nella\Models\Entity implements IFile
 	 */
 	public function getContent()
 	{
-		return file_get_contents(STORAGE_DIR . "/{$this->path}", FILE_BINARY);
+		return file_get_contents(STORAGE_DIR . "/" . $this->path, FILE_BINARY);
 	}
 	
 	/**
@@ -98,7 +98,7 @@ abstract class BaseFileEntity extends \Nella\Models\Entity implements IFile
 	 */
 	public function getSize()
 	{
-		return filesize(STORAGE_DIR . "/{$this->path}");
+		return filesize(STORAGE_DIR . "/" . $this->path);
 	}
 	
 	/**
@@ -106,7 +106,7 @@ abstract class BaseFileEntity extends \Nella\Models\Entity implements IFile
 	 */
 	public function getFilename()
 	{
-		return pathinfo(STORAGE_DIR . "/{$this->path}", PATHINFO_BASENAME);
+		return pathinfo(STORAGE_DIR . "/" . $this->path, PATHINFO_BASENAME);
 	}
 	
 	/**
@@ -114,6 +114,6 @@ abstract class BaseFileEntity extends \Nella\Models\Entity implements IFile
 	 */
 	public function write($path)
 	{
-		return copy(STORAGE_DIR . "/{$this->path}", $path);
+		return copy(STORAGE_DIR . "/" . $this->path, $path);
 	}
 }

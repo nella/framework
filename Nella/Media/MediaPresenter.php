@@ -14,14 +14,14 @@ namespace Nella\Media;
  * 
  * @author	Patrik Votoček
  */
-class MediaPresenter extends \Nella\Application\Presenter
+class MediaPresenter extends \Nella\Application\UI\Presenter
 {
 	/**
 	 * @param IFile
 	 */
 	public function actionFile(IFile $file)
 	{
-		$this->sendResponse(new \Nette\Application\DownloadResponse(
+		$this->sendResponse(new \Nette\Application\Responses\FileResponse(
 			$file->getContent(), 
 			$file->getFilename(), 
 			$file->getMimeType()

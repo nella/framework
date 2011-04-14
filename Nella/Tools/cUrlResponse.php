@@ -9,7 +9,7 @@
 
 namespace Nella\Tools;
 
-use Nette\String;
+use Nette\StringUtils;
  
 /**
  * cUrl wrapper response object
@@ -42,7 +42,7 @@ class cUrlResponse extends \Nette\Object
 	{
 		// Extract the version and status from the first header
 		$version_and_status = array_shift($headers);
-		$matches = String::match($version_and_status, self::VERSION_AND_STATUS);
+		$matches = StringUtils::match($version_and_status, self::VERSION_AND_STATUS);
 		if (count($matches) > 0) {
 			$this->headers['Http-Version'] = $matches['version'];
 			$this->headers['Status-Code'] = $matches['code'];
@@ -51,7 +51,7 @@ class cUrlResponse extends \Nette\Object
 
 		// Convert headers into an associative array
 		foreach ($headers as $header) {
-			$matches = String::match($header, self::HEADER_REGEXP);
+			$matches = StringUtils::match($header, self::HEADER_REGEXP);
 			$this->headers[$matches['header']] = $matches['value'];
 		}
 	}
@@ -64,7 +64,7 @@ class cUrlResponse extends \Nette\Object
 	{
 		$this->request = $request;
 		
-		$headers = String::split(substr($response, 0, $this->request->info['header_size']), "~[\n\r]+~", PREG_SPLIT_NO_EMPTY);
+		$headers = StringUtils::split(substr($response, 0, $this->request->info['header_size']), "~[\n\r]+~", PREG_SPLIT_NO_EMPTY);
 		$this->parseHeaders($headers);
 		$this->body = substr($response, $this->request->info['header_size']);
 	}

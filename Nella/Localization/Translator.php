@@ -16,7 +16,7 @@ namespace Nella\Localization;
  *
  * @property string $lang
  */
-class Translator extends \Nette\FreezableObject implements \Nette\ITranslator
+class Translator extends \Nette\FreezableObject implements \Nette\Localization\ITranslator
 {
 	/** @var array */
 	protected $dictionaries = array();
@@ -48,7 +48,7 @@ class Translator extends \Nette\FreezableObject implements \Nette\ITranslator
 	public function setLang($lang)
 	{
 		if ($this->isFrozen()) {
-			throw new \InvalidStateException("Dictionaries are already loaded");
+			throw new \Nette\InvalidStateException("Dictionaries are already loaded");
 		}
 
 		$this->lang = $lang;

@@ -7,9 +7,9 @@
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
 
-namespace NellaTests\Application;
+namespace NellaTests\Application\UI;
 
-class ControlMock extends \Nella\Application\Control
+class ControlMock extends \Nella\Application\UI\Control
 {
 	public function formatTemplateFilesMock($method)
 	{

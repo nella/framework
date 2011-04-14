@@ -20,11 +20,11 @@ class Cache extends \Doctrine\Common\Cache\AbstractCache
 	private $data = array();
 
 	/**
-	 * @param Nette\Caching\ICacheStorage
+	 * @param \Nette\Caching\IStorage
 	 */
-	public function  __construct(\Nette\Caching\ICacheStorage $cache)
+	public function  __construct(\Nette\Caching\IStorage $cacheStorage)
 	{
-		$this->data = $cache ? new \Nette\Caching\Cache($cache, "Nella.Doctrine") : $cache;
+		$this->data = new \Nette\Caching\Cache($cacheStorage, "Nella.Doctrine");
 	}
 
 	/**
@@ -61,10 +61,10 @@ class Cache extends \Doctrine\Common\Cache\AbstractCache
 	{
 		$files = array();
 		if ($data instanceof \Doctrine\ORM\Mapping\ClassMetadata) {
-			$ref = \Nette\Reflection\ClassReflection::from($data->name);
+			$ref = \Nette\Reflection\ClassType::from($data->name);
 			$files[] = $ref->getFileName();
 			foreach ($data->parentClasses as $class) {
-				$ref = \Nette\Reflection\ClassReflection::from($class);
+				$ref = \Nette\Reflection\ClassType::from($class);
 				$files[] = $ref->getFileName();
 			}
 		}

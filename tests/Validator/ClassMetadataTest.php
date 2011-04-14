@@ -56,10 +56,10 @@ class ClassMetadataTest extends \PHPUnit_Framework_TestCase
 	
 	public function testGetClassReflection()
 	{
-		$this->assertInstanceOf('Nette\Reflection\ClassReflection', $this->metadata->getClassReflection(), 
-			"->getReflection() instance of Nette ClassReflection");
-		$this->assertInstanceOf('Nette\Reflection\ClassReflection', $this->metadata->classReflection, 
-			"->reflection instance of Nette ClassReflection");
+		$this->assertInstanceOf('Nette\Reflection\ClassType', $this->metadata->getClassReflection(), 
+			"->getReflection() instance of Nette class reflection object");
+		$this->assertInstanceOf('Nette\Reflection\ClassType', $this->metadata->classReflection, 
+			"->reflection instance of Nette class reflection object");
 	}
 	
 	public function testRule()
@@ -74,7 +74,7 @@ class ClassMetadataTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * @expectedException InvalidStateException
+	 * @expectedException Nette\InvalidStateException
 	 */
 	public function testRuleExistingRule()
 	{

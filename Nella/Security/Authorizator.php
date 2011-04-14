@@ -14,7 +14,7 @@ namespace Nella\Security;
  *
  * @author	Patrik Votoček
  */
-class Authorizator extends \Nette\Security\Permission
+class Authorizator extends \Nette\Security\	Permission
 {
 	const ROLE = 'role';
 	const RESOURCE = 'resource';
@@ -51,8 +51,8 @@ class Authorizator extends \Nette\Security\Permission
 			list($class, $method) = explode('::', $class);
 		}
 
-		$ref = new \Nette\Reflection\MethodReflection($class, $method);
-		$cRef = new \Nette\Reflection\ClassReflection($class);
+		$ref = new \Nette\Reflection\Method($class, $method);
+		$cRef = new \Nette\Reflection\ClassType($class);
 		$anntations = (array)$ref->getAnnotation('allowed');
 		
 		$role = isset($anntations['role']) ? $anntations['role'] : ($ref->hasAnnotation('role') ? $ref->getAnnotation('role') : NULL);

@@ -13,7 +13,7 @@ class ValidatorMock extends \Nella\Validator\Validator
 {
 	public function getValidator($id)
 	{
-		$ref = new \Nette\Reflection\PropertyReflection('Nella\Validator\Validator', 'validators');
+		$ref = new \Nette\Reflection\Property('Nella\Validator\Validator', 'validators');
 		$ref->setAccessible(TRUE);
 		$validators = $ref->getValue($this);
 		$ref->setAccessible(FALSE);

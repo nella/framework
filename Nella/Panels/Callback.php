@@ -16,7 +16,7 @@ use Nette\Environment;
  *
  * @author	Patrik Votoček
  */
-class Callback extends \Nette\Object implements \Nette\IDebugPanel
+class Callback extends \Nette\Object implements \Nette\Diagnostics\IPanel
 {
 	const VERSION = "1.5";
 	/** @var array */
@@ -29,7 +29,8 @@ class Callback extends \Nette\Object implements \Nette\IDebugPanel
 	 */
 	public function __construct(array $items = NULL)
 	{
-		$cache = \Nette\Environment::getApplication()->getContext()->getService('Nette\Caching\ICacheStorage');
+		$cache = \Nette\Environment::getApplication()
+			->context->getService('Nette\Caching\IStorage');
 		
 		$this->items = array(
 			'--cache' => array(
@@ -84,7 +85,7 @@ class Callback extends \Nette\Object implements \Nette\IDebugPanel
 	 */
 	private function processRequest()
 	{
-		$request = Environment::getApplication()->getService('Nette\Web\IHttpRequest');
+		$request = Environment::getApplication()->getService('Nette\Http\IRequest');
 		if ($request->isPost() && $request->isAjax() && $request->getHeader('X-Callback-Panel')) {
 			$data = json_decode(file_get_contents('php://input'), TRUE);
 			if (count($data) > 0) {
@@ -107,10 +108,10 @@ class Callback extends \Nette\Object implements \Nette\IDebugPanel
 	public static function register(array $items = NULL)
 	{
 		if (self::$registered) {
-			throw new \InvalidStateException("Callback panel is already registered");
+			throw new \Nette\InvalidStateException("Callback panel is already registered");
 		}
 		
-		\Nette\Debug::addPanel(new static($items));
+		\Nette\Diagnostics\Debugger::addPanel(new static($items));
 		self::$registered = TRUE;
 	}
 }

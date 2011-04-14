@@ -32,7 +32,7 @@ class DictionaryTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @expectedException \InvalidStateException
+	 * @expectedException \Nette\InvalidStateException
 	 */
 	public function testLoadLangException()
 	{
@@ -41,7 +41,7 @@ class DictionaryTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @expectedException \InvalidStateException
+	 * @expectedException \Nette\InvalidStateException
 	 */
 	public function testTranslateException()
 	{

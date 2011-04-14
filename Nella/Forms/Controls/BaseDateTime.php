@@ -7,7 +7,7 @@
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
 
-namespace Nella\Forms;
+namespace Nella\Forms\Controls;
 
 /**
  * Form date field item
@@ -16,7 +16,7 @@ namespace Nella\Forms;
  * 
  * @property \DateTime $value
  */
-abstract class BaseDateTime extends \Nette\Forms\TextInput
+abstract class BaseDateTime extends \Nette\Forms\Controls\TextInput
 {
 	/** @var string */
 	public static $format = "Y-n-j";
@@ -77,15 +77,15 @@ abstract class BaseDateTime extends \Nette\Forms\TextInput
 	}
 
 	/**
-	 * @param Date
+	 * @param BaseDateTime
 	 * @return bool
 	 */
-	public static function validateValid(\Nette\Forms\IFormControl $control)
+	public static function validateValid(\Nette\Forms\IControl $control)
 	{
 		$value = $this->getValue();
 		return (is_null($value) || $value instanceof \DateTime);
 	}
-
+	
 	/**
 	 * @return bool
 	 */

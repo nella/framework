@@ -23,7 +23,7 @@ class FileActionLoggerTest extends \PHPUnit_Framework_TestCase
 	public function setUp()
 	{
 		$file = "_file_action_logger_test_" . time() . ".log";
-		$this->file = (\Nette\Debug::$logDirectory = __DIR__ . "/..") . "/" . $file;
+		$this->file = (\Nette\Diagnostics\Debugger::$logDirectory = __DIR__ . "/..") . "/" . $file;
 		$this->logger = new FileActionLogger($file);
 	}
 	

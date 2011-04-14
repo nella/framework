@@ -14,5 +14,5 @@
  */
 function barDump($var, $title = NULL)
 {
-	Nette\Debug::barDump($var, $title);
+	Nette\Diagnostics\Debugger::barDump($var, $title);
 }

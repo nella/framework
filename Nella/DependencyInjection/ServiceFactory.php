@@ -70,11 +70,12 @@ class ServiceFactory extends \Nette\Object implements IServiceFactory
 	/**
 	 * @param string
 	 * @return ServiceFactory
+	 * @throws \Nette\InvalidArgumentException
 	 */
 	public function setClass($class)
 	{
 		if (!is_string($class) && !$this->singleton) {
-			throw new \InvalidArgumentException("Non sigleton allow only for factory or class");
+			throw new \Nette\InvalidArgumentException("Non sigleton allow only for factory or class");
 		}
 		$this->class = $class;
 		return $this;
@@ -83,7 +84,7 @@ class ServiceFactory extends \Nette\Object implements IServiceFactory
 	/**
 	 * @param string
 	 * @return ServiceFactory
-	 * @throws \InvalidArgumentException
+	 * @throws \Nette\InvalidArgumentException
 	 */
 	public function setFactory($factory)
 	{
@@ -92,7 +93,7 @@ class ServiceFactory extends \Nette\Object implements IServiceFactory
 		}
 
 		if (!is_callable($factory) && !($factory instanceof \Closure) && !($factory instanceof \Nette\Callback)) {
-			throw new \InvalidArgumentException("Factory must be valid callback");
+			throw new \Nette\InvalidArgumentException("Factory must be valid callback");
 		}
 
 		$this->factory = $factory;
@@ -163,15 +164,15 @@ class ServiceFactory extends \Nette\Object implements IServiceFactory
 
 	/**
 	 * @return mixed
-	 * @throws \InvalidStateException
+	 * @throws \Nette\InvalidStateException
 	 */
 	protected function createInstance()
 	{
 		if (is_string($this->class)) { // Class
 			if (!class_exists($this->class)) {
-				throw new \InvalidStateException("Class '{$this->class}' not exist");
+				throw new \Nette\InvalidStateException("Class '{$this->class}' not exist");
 			}
-			$ref = new \Nette\Reflection\ClassReflection($this->class);
+			$ref = new \Nette\Reflection\ClassType($this->class);
 			$args = $this->context->expandParameter($this->arguments);
 			if ($args) {
 				$instance = $ref->newInstanceArgs($args);
@@ -182,13 +183,13 @@ class ServiceFactory extends \Nette\Object implements IServiceFactory
 			return $instance;
 		} elseif ($this->class) { // Instance
 			if (!$this->singleton) {
-				throw new \InvalidStateException("Non sigleton allow only for factory or class");
+				throw new \Nette\InvalidStateException("Non sigleton allow only for factory or class");
 			}
 			return $this->class;
 		} elseif ($this->factory) { // Factory
 			return callback($this->factory)->invokeArgs($this->context->expandParameter($this->arguments));
 		} else {
-			throw new \InvalidStateException("Class or factory not defined");
+			throw new \Nette\InvalidStateException("Class or factory not defined");
 		}
 	}
 

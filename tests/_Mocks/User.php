@@ -9,11 +9,11 @@
 
 namespace NellaTests\Mocks;
 
-class User extends \Nette\Web\User
+class User extends \Nette\Http\User
 {
 	public function __construct()
 	{
-		$ref = new \Nette\Reflection\PropertyReflection('Nella\Models\Entity', 'id');
+		$ref = new \Nette\Reflection\Property('Nella\Models\Entity', 'id');
 		$ref->setAccessible(TRUE);
 		$entity = new \Nella\Security\IdentityEntity;
 		$ref->setValue($entity, 1);
@@ -21,7 +21,7 @@ class User extends \Nette\Web\User
 		$entity->setLang('es');
 		$identity = new \Nella\Security\Identity($entity);
 		
-		$ref = new \Nette\Reflection\PropertyReflection('Nette\Web\User', 'session');
+		$ref = new \Nette\Reflection\Property('Nette\Http\User', 'session');
 		$ref->setAccessible(TRUE);
 		$ref->setValue($this, (object) array('authenticated' => TRUE, 'identity' => $identity));
 		$ref->setAccessible(FALSE);
@@ -29,7 +29,7 @@ class User extends \Nette\Web\User
 	
 	/*public function logoutMock()
 	{
-		$ref = new \Nette\Reflection\PropertyReflection('Nette\Web\User', 'session');
+		$ref = new \Nette\Reflection\Property('Nette\Http\User', 'session');
 		$ref->setAccessible(TRUE);
 		$ref->setValue($this, (object) array('authenticated' => FALSE, 'reason' => NULL));
 		$ref->setAccessible(FALSE);

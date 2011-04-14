@@ -11,7 +11,7 @@ namespace NellaTests\Localization;
 
 require_once __DIR__ . "/../bootstrap.php";
 
-use Nette\Reflection\PropertyReflection;
+use Nette\Reflection\Property;
 
 class TranslatorTest extends \PHPUnit_Framework_TestCase
 {
@@ -67,7 +67,7 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
 		$mock->loadLang('cs');
 
 		$metadata = array('Plural-Forms' => "nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4 ? 1 : 2);");
-		$ref = new PropertyReflection('Nella\Localization\Dictionary', 'metadata');
+		$ref = new Property('Nella\Localization\Dictionary', 'metadata');
 		$ref->setAccessible(TRUE);
 		$ref->setValue($mock, $metadata);
 		$ref->setAccessible(FALSE);
@@ -93,12 +93,12 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
 				), 
 			)
 		);
-		$ref = new PropertyReflection('Nella\Localization\Dictionary', 'dictionary');
+		$ref = new Property('Nella\Localization\Dictionary', 'dictionary');
 		$ref->setAccessible(TRUE);
 		$ref->setValue($mock, $dictionary);
 		$ref->setAccessible(FALSE);
 
-		$ref = new PropertyReflection('Nella\Localization\Translator', 'dictionaries');
+		$ref = new Property('Nella\Localization\Translator', 'dictionaries');
 		$ref->setAccessible(TRUE);
 		$ref->setValue($this->translator, array($mock));
 		$ref->setAccessible(FALSE);

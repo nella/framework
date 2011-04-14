@@ -43,12 +43,12 @@ class Dictionary extends \Nette\FreezableObject
 
 	/**
 	 * @param string
-	 * @throws \InvalidStateException
+	 * @throws \Nette\InvalidStateException
 	 */
 	public function loadLang($lang)
 	{
 		if ($this->isFrozen()) {
-			throw new \InvalidStateException("Dictionary is already loaded");
+			throw new \Nette\InvalidStateException("Dictionary is already loaded");
 		}
 
 		$parser = new GettextParser;
@@ -66,11 +66,12 @@ class Dictionary extends \Nette\FreezableObject
 	 * @param string
 	 * @param int
 	 * @return string
+	 * @throws \Nette\InvalidStateException
 	 */
 	public function translate($message, $count = NULL)
 	{
 		if (!$this->isFrozen()) {
-			throw new \InvalidStateException("Dictionary not loaded");
+			throw new \Nette\InvalidStateException("Dictionary not loaded");
 		}
 
 		if (!isset($this->dictionary[$message])) {

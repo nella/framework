@@ -9,6 +9,7 @@
 
 // Define dirs constants
 define('APP_DIR', __DIR__);
+define('TEMP_DIR',__DIR__ . "/_temp");
 if (file_exists(APP_DIR . "/../dependency")) {
 	define('DEPENDENCY_DIR', APP_DIR . "/../dependency");
 } else {
@@ -24,9 +25,7 @@ if (file_exists(__DIR__ . "/../src/Nella")) {
 }
 
 // Setup Nette profiler
-Nette\Debug::enable();
-Nette\Debug::$logDirectory = APP_DIR;
-Nette\Debug::$maxLen = 4096;
+Nette\Diagnostics\Debugger::enable(Nette\Diagnostics\Debugger::DEVELOPMENT, APP_DIR);
 
 /**
  * @param mixed
@@ -34,12 +33,13 @@ Nette\Debug::$maxLen = 4096;
  */
 function fdump($var, $file = NULL)
 {
-	file_put_contents($file ?: __DIR__ . "/dump.html", "<code><pre>" . \Nette\Debug::dump($var, true) . "</pre></code>", FILE_APPEND);
+	file_put_contents($file ?: __DIR__ . "/dump.html", "<code><pre>" . \Nette\Diagnostics\Debugger::dump($var, true) . "</pre></code>", FILE_APPEND);
 }
 
 // Init Nette Framework robot loader
 $loader = new Nette\Loaders\RobotLoader;
-$loader->setCacheStorage(new Nette\Caching\MemoryStorage);
+//$loader->setCacheStorage(new Nette\Caching\Storages\MemoryStorage);
+$loader->setCacheStorage(new Nette\Caching\Storages\FileStorage(TEMP_DIR));
 $loader->addDirectory(DEPENDENCY_DIR);
 $loader->addDirectory(APP_DIR);
 $loader->register();

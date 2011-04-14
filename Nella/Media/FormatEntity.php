@@ -187,7 +187,7 @@ class FormatEntity extends \Nella\Models\Entity implements IFormat
 		}
 		
 		if ($this->watermark) {
-			throw new \NotImplementedException;
+			throw new \Nette\NotImplementedException;
 		}
 
 		return $image;

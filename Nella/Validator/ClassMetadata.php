@@ -34,7 +34,7 @@ class ClassMetadata extends \Nette\Object
 	public function __construct($class)
 	{
 		if (!class_exists(strtolower($class))) {
-			throw new \InvalidArgumentException("Class '$class' not exist");
+			throw new \Nette\InvalidArgumentException("Class '$class' not exist");
 		}
 
 		$this->name = $class;
@@ -72,7 +72,7 @@ class ClassMetadata extends \Nette\Object
 	 * @param string
 	 * @param array
 	 * @return ClassMetadata
-	 * @throws \InvalidStateException
+	 * @throws \Nette\InvalidStateException
 	 */
 	public function addRule($name, $type, $data = NULL)
 	{
@@ -82,7 +82,7 @@ class ClassMetadata extends \Nette\Object
 			return $rule[0];
 		};
 		if (isset($this->rules[$lower]) && in_array($type, array_map($mapper, $this->rules[$lower]))) {
-			throw new \InvalidStateException("Rule type '$type' for property '{$this->name}::\$$name' already exists");
+			throw new \Nette\InvalidStateException("Rule type '$type' for property '{$this->name}::\$$name' already exists");
 		}
 
 		if (!isset($this->rules[$lower]) || !is_array($this->rules[$lower])) {
@@ -95,10 +95,10 @@ class ClassMetadata extends \Nette\Object
 	}
 
 	/**
-	 * @return \Nette\Reflection\ClassReflection
+	 * @return \Nette\Reflection\ClassType
 	 */
 	public function getClassReflection()
 	{
-		return new \Nette\Reflection\ClassReflection(strtolower($this->name));
+		return new \Nette\Reflection\ClassType(strtolower($this->name));
 	}
 }

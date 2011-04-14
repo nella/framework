@@ -7,9 +7,9 @@
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
 
-namespace NellaTests\Application;
+namespace NellaTests\Application\UI;
 
-require_once __DIR__ . "/../bootstrap.php";
+require_once __DIR__ . "/../../bootstrap.php";
 
 class BackendPresenterTest extends \PHPUnit_Framework_TestCase
 {
@@ -107,7 +107,7 @@ class BackendPresenterTest extends \PHPUnit_Framework_TestCase
 	{
 		$registry = new \Nella\FreezableArray;
 		$registry['foo'] = function($parent, $name) { return "bar"; };
-		$context = new \Nette\Context;
+		$context = new \Nette\DI\Context;
 		$context->addService('Nella\Registry\GlobalComponentFactories', $registry);
 		$this->presenter->setContext($context);
 	}

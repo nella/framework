@@ -9,8 +9,8 @@
 
 namespace Nella\Doctrine;
 
-use Nette\Debug, 
-	Nette\String;
+use Nette\Diagnostics\Debugger, 
+	Nette\StringUtils;
 
 /**
  * Debug panel for Doctrine
@@ -18,7 +18,7 @@ use Nette\Debug,
  * @author	David Grudl
  * @author	Patrik Votoček
  */
-class Panel extends \Nette\Object implements \Nette\IDebugPanel, \Doctrine\DBAL\Logging\SQLLogger
+class Panel extends \Nette\Object implements \Nette\Diagnostics\IPanel, \Doctrine\DBAL\Logging\SQLLogger
 {
 	/** @var int maximum SQL length */
 	static public $maxLength = 1000;
@@ -39,24 +39,27 @@ class Panel extends \Nette\Object implements \Nette\IDebugPanel, \Doctrine\DBAL\
 	 */
 	public function startQuery($sql, array $params = NULL, array $types = NULL)
 	{
-		Debug::timer('doctrine');
+		Debugger::timer('doctrine');
 		
 		$source = NULL;
 		foreach (debug_backtrace(FALSE) as $row) {
-			if (isset($row['file']) && is_file($row['file']) && strpos($row['file'], NETTE_DIR . DIRECTORY_SEPARATOR) === FALSE && strpos($row['file'], "Doctrine") === FALSE && strpos($row['file'], "Repository") === FALSE) {
+			if (isset($row['file'])
+			 && is_file($row['file'])
+			 && strpos($row['file'], NETTE_DIR . DIRECTORY_SEPARATOR) === FALSE
+			 && strpos($row['file'], "Doctrine") === FALSE
+			 && strpos($row['file'], "Repository") === FALSE) {
 				$source = array($row['file'], (int) $row['line']);
 				break;
 			}
 		}
 		$this->queries[] = array($sql, $params, NULL, 0, NULL, $source);
-		//$this->queries[] = array($result->queryString, $params, $result->time, $result->rowCount(), $result->getConnection(), $source);
 	}
 	
 	public function stopQuery()
 	{
 		$keys = array_keys($this->queries);
 		$key = end($keys);
-		$this->queries[$key][2] = Debug::timer('doctrine');
+		$this->queries[$key][2] = Debugger::timer('doctrine');
 		$this->totalTime += $this->queries[$key][2];
 	}
 
@@ -83,17 +86,17 @@ class Panel extends \Nette\Object implements \Nette\IDebugPanel, \Doctrine\DBAL\
 
 			$s .= '<tr><td>' . sprintf('%0.3f', $time * 1000);
 			
-			$s .= '</td><td class="database-sql">' . \Nette\Database\Connection::highlightSql(String::truncate($sql, self::$maxLength));
+			$s .= '</td><td class="database-sql">' . \Nette\Database\Connection::highlightSql(StringUtils::truncate($sql, self::$maxLength));
 			if ($source) {
 				list($file, $line) = $source;
-				$s .= (Debug::$editor ? "<a href='{$h(\Nette\DebugHelpers::editorLink($file, $line))}'" : '<span')
+				$s .= (Debugger::$editor ? "<a href='{$h(\Nette\Diagnostics\Helpers::editorLink($file, $line))}'" : '<span')
 					. " class='database-source' title='{$h($file)}:$line'>"
-					. "{$h(basename(dirname($file)) . '/' . basename($file))}:$line" . (Debug::$editor ? '</a>' : '</span>');
+					. "{$h(basename(dirname($file)) . '/' . basename($file))}:$line" . (Debugger::$editor ? '</a>' : '</span>');
 			}
 
 			$s .= '</td><td>';
 			foreach ($params as $param) {
-				$s .= Debug::dump($param, TRUE) . "<br>";
+				$s .= Debugger::dump($param, TRUE) . "<br>";
 			}
 
 			$s .= '</td><td>' . $rows . '</td></tr>';
@@ -117,7 +120,7 @@ class Panel extends \Nette\Object implements \Nette\IDebugPanel, \Doctrine\DBAL\
 	public static function create()
 	{
 		$panel = new static;
-		Debug::addPanel($panel);
+		Debugger::addPanel($panel);
 		return $panel;
 	}
 }

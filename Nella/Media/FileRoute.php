@@ -15,7 +15,7 @@ namespace Nella\Media;
  * @author	Pavel Kučera
  * @author	Patrik Votoček
  */
-class FileRoute extends \Nette\Application\Route
+class FileRoute extends \Nette\Application\Routers\Route
 {
 	const FILE_KEY = 'file';
 
@@ -57,9 +57,9 @@ class FileRoute extends \Nette\Application\Route
 	}
 
 	/**
-	 * @param  string  URL mask, e.g. '<presenter>/<action>/<id \d{1,3}>'
-	 * @param  array|string   default values or metadata
-	 * @param  int     flags
+	 * @param string  URL mask, e.g. '<presenter>/<action>/<id \d{1,3}>'
+	 * @param rray|string   default values or metadata
+	 * @param int     flags
 	 */
 	public function __construct($mask, $metadata = array(), $flags = 0)
 	{
@@ -74,11 +74,11 @@ class FileRoute extends \Nette\Application\Route
 
 	/**
 	 * Maps HTTP request to a PresenterRequest object.
-	 * @param  Nette\Web\IHttpRequest
-	 * @return \Nette\Application\PresenterRequest|NULL
-	 * @throws \InvalidStateException
+	 * @param  Nette\Http\IRequest
+	 * @return \Nette\Application\Request|NULL
+	 * @throws \Nette\InvalidStateException
 	 */
-	public function match(\Nette\Web\IHttpRequest $httpRequest)
+	public function match(\Nette\Http\IRequest $httpRequest)
 	{
 		if (($presenterRequest = parent::match($httpRequest)) === NULL) {
 			return NULL;
@@ -86,7 +86,7 @@ class FileRoute extends \Nette\Application\Route
 
 		$params = $presenterRequest->params;
 		if (!isset($params[self::FILE_KEY])) {
-			throw new \InvalidStateException('Missing file in route definition.');
+			throw new \Nette\InvalidStateException('Missing file in route definition.');
 		}
 
 		// Find file

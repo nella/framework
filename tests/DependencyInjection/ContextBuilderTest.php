@@ -34,7 +34,7 @@ class ContextBuilderTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * @expectedException InvalidArgumentException
+	 * @expectedException Nette\InvalidArgumentException
 	 */
 	public function testSetContextClassException1()
 	{
@@ -42,7 +42,7 @@ class ContextBuilderTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * @expectedException InvalidArgumentException
+	 * @expectedException Nette\InvalidArgumentException
 	 */
 	public function testSetContextClassException2()
 	{
@@ -75,7 +75,7 @@ class ContextBuilderTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * @expectedException InvalidStateException
+	 * @expectedException Nette\InvalidStateException
 	 */
 	public function testLoadIniException()
 	{

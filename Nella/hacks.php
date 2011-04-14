@@ -11,8 +11,8 @@
 @header("X-Powered-By: Nette Framework with Nella"); // @ - headers may have been sent
 
 // Set debug options
-Nette\Debug::$strictMode = TRUE;
-Nette\Debug::$maxLen = 4096;
+Nette\Diagnostics\Debugger::$strictMode = TRUE;
+Nette\Diagnostics\Debugger::$maxLen = 4096;
 
 // Set better dependency injection container
 $configurator = new Nella\DependencyInjection\ContextBuilder;

@@ -29,10 +29,10 @@ class UserableListener extends \Nette\Object implements \Doctrine\Common\EventSu
 	 * @param \Nella\Security\IdentityEntity
 	 * @param \Nette\Caching\ICacheStorage
 	 */
-	public function __construct(\Nella\Security\IdentityEntity $identity = NULL, \Nette\Caching\ICacheStorage $storage = NULL)
+	public function __construct(\Nella\Security\IdentityEntity $identity = NULL, \Nette\Caching\IStorage $cacheStorage = NULL)
 	{
 		$this->identity = $identity;
-		$this->cache = $storage ? new Cache($storage, "Nella.Models.Userable") : array();
+		$this->cache = $cacheStorage ? new Cache($cacheStorage, "Nella.Models.Userable") : array();
 	}
 
 	/**
@@ -91,7 +91,7 @@ class UserableListener extends \Nette\Object implements \Doctrine\Common\EventSu
 			$files = $data = array();
 			foreach ($metadata->getReflectionProperties() as $prop) {
 				$class = $prop->getDeclaringClass();
-				$ref = new \Nette\Reflection\PropertyReflection($class->getName(), $prop->getName());
+				$ref = new \Nette\Reflection\Property($class->getName(), $prop->getName());
 				if ($ref->hasAnnotation('creator') || $ref->hasAnnotation('editor')) {
 					$data[] = $ref;
 				}
@@ -113,10 +113,10 @@ class UserableListener extends \Nette\Object implements \Doctrine\Common\EventSu
     }
 
     /**
-     * @param \Nette\Web\IUser
+     * @param \Nette\Http\IUser
      * @return UserableListener
      */
-    public static function getInstance(\Nette\Web\IUser $user)
+    public static function getInstance(\Nette\Http\IUser $user)
     {
     	return new static($user->identity ? $user->identity->entity : NULL);
     }

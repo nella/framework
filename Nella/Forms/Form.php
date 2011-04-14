@@ -14,12 +14,17 @@ namespace Nella\Forms;
  *
  * @author	Patrik Votoček
  */
-class Form extends \Nette\Application\AppForm
+class Form extends \Nette\Application\UI\Form
 {
+	/*const DATE = 'Nella\Forms\Date::validate';
+	const DATETIME = 'Nella\Forms\DateTime::validate';
+	const TIME = 'Nella\Forms\Time::validate';*/
+	
 	/**
-	 * Application form constructor.
+	 * @param \Nette\ComponentModel\IContainer
+	 * @param string
 	 */
-	public function __construct(\Nette\IComponentContainer $parent = NULL, $name = NULL)
+	public function __construct(\Nette\ComponentModel\IContainer $parent = NULL, $name = NULL)
 	{
 		parent::__construct($parent, $name);
 		$this->setup();
@@ -30,10 +35,6 @@ class Form extends \Nette\Application\AppForm
 		// Setup columns
 	}
 
-	/*const DATE = 'Nella\Forms\Date::validate';
-	const DATETIME = 'Nella\Forms\DateTime::validate';
-	const TIME = 'Nella\Forms\Time::validate';*/
-
 	/**
 	 * Adds an email input control to the form.
 	 *
@@ -41,7 +42,7 @@ class Form extends \Nette\Application\AppForm
 	 * @param string	label
 	 * @param int	width of the control
 	 * @param int	maximum number of characters the user may enter
-	 * @return \Nette\Forms\TextInput
+	 * @return \Nette\Forms\Controls\TextInput
 	 */
 	public function addEmail($name, $label = NULL, $cols = NULL, $maxLength = NULL)
 	{
@@ -57,7 +58,7 @@ class Form extends \Nette\Application\AppForm
 	 * @param string	label
 	 * @param int	width of the control
 	 * @param int	maximum number of characters the user may enter
-	 * @return \Nette\Forms\TextInput
+	 * @return \Nette\Forms\Controls\TextInput
 	 */
 	public function addUrl($name, $label = NULL, $cols = NULL, $maxLength = NULL)
 	{
@@ -74,7 +75,7 @@ class Form extends \Nette\Application\AppForm
 	 * @param int	incremental number
 	 * @param int	minimal value
 	 * @param int	maximal value
-	 * @return \Nette\Forms\TextInput
+	 * @return \Nette\Forms\Controls\TextInput
 	 */
 	public function addNumber($name, $label = NULL, $step = 1, $min = NULL, $max = NULL)
 	{
@@ -105,7 +106,7 @@ class Form extends \Nette\Application\AppForm
 	 * @param int	incremental number
 	 * @param int	minimal value
 	 * @param int	maximal value
-	 * @return \Nette\Forms\TextInput
+	 * @return \Nette\Forms\Controls\TextInput
 	 */
 	public function addRange($name, $label = NULL, $step = 1, $min = NULL, $max = NULL)
 	{
@@ -123,7 +124,7 @@ class Form extends \Nette\Application\AppForm
 	 */
 	public function addDate($name, $label = NULL, $cols = NULL)
 	{
-		return $this[$name] = new Date($label, $cols, NULL);
+		return $this[$name] = new Controls\Date($label, $cols, NULL);
 	}
 
 	/**
@@ -136,7 +137,7 @@ class Form extends \Nette\Application\AppForm
 	 */
 	public function addDateTime($name, $label = NULL, $cols = NULL)
 	{
-		return $this[$name] = new DateTime($label, $cols, NULL);
+		return $this[$name] = new Controls\DateTime($label, $cols, NULL);
 	}
 
 	/**
@@ -149,7 +150,7 @@ class Form extends \Nette\Application\AppForm
 	 */
 	public function addTime($name, $label = NULL, $cols = NULL)
 	{
-		return $this[$name] = new Time($label, $cols, NULL);
+		return $this[$name] = new Controls\Time($label, $cols, NULL);
 	}
 
 	/**
@@ -159,7 +160,7 @@ class Form extends \Nette\Application\AppForm
 	 * @param string	label
 	 * @param int	width of the control
 	 * @param int	maximum number of characters the user may enter
-	 * @return \Nette\Forms\TextInput
+	 * @return \Nette\Forms\Controls\TextInput
 	 */
 	public function addSearch($name, $label = NULL, $cols = NULL, $maxLength = NULL)
 	{
@@ -174,7 +175,7 @@ class Form extends \Nette\Application\AppForm
 	 * @param string	label
 	 * @param int	width of the control
 	 * @param int	height of the control
-	 * @return \Nette\Forms\TextInput
+	 * @return \Nette\Forms\Controls\TextInput
 	 */
 	public function addEditor($name, $label = NULL, $cols = NULL, $rows = NULL)
 	{
@@ -191,7 +192,7 @@ class Form extends \Nette\Application\AppForm
 	 */
 	public function addMultipleFile($name, $label = NULL)
 	{
-		return $this[$name] = new MultipleFileUpload($label);
+		return $this[$name] = new Controls\MultipleFileUpload($label);
 	}
 
 	/**
@@ -212,13 +213,13 @@ class Form extends \Nette\Application\AppForm
 
 	/**
 	 * @param array
-	 * @throws \InvalidStateException
+	 * @throws \Nette\InvalidStateException
 	 */
 	protected function processErrors(array $errors)
 	{
 		foreach ($errors as $name => $messages) {
 			if (!isset($this[$name])) {
-				throw new \InvalidStateException("Invalid value '$name' with messages '" . implode("', '", $messages) . "'");
+				throw new \Nette\InvalidStateException("Invalid value '$name' with messages '" . implode("', '", $messages) . "'");
 			}
 			foreach ($messages as $error) {
 				$this[$name]->addError($error);

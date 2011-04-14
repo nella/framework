@@ -55,7 +55,7 @@ class FormTest extends \PHPUnit_Framework_TestCase
 	{
 		$item = $this->form->addEmail('email', "E-mail");
 		
-		$this->assertInstanceOf('Nette\Forms\TextInput', $item, 'is Nette\Forms\TextInput');
+		$this->assertInstanceOf('Nette\Forms\Controls\TextInput', $item, 'is Nette\Forms\Controls\TextInput');
 		$this->assertEquals('email', $item->control->type, "email type");
 		$this->assertTrue($this->isRuleExist($item, Form::EMAIL), "Form::EMAIL after Form::FILLED");
 	}
@@ -64,7 +64,7 @@ class FormTest extends \PHPUnit_Framework_TestCase
 	{
 		$item = $this->form->addUrl('url', "URL");
 		
-		$this->assertInstanceOf('Nette\Forms\TextInput', $item, 'is Nette\Forms\TextInput');
+		$this->assertInstanceOf('Nette\Forms\Controls\TextInput', $item, 'is Nette\Forms\Controls\TextInput');
 		$this->assertEquals("url", $item->control->type, "url type");
 		$this->assertTrue($this->isRuleExist($item, Form::URL), "Form::URL after Form::FILLED");
 	}
@@ -73,7 +73,7 @@ class FormTest extends \PHPUnit_Framework_TestCase
 	{
 		$item = $this->form->addNumber('number', "Number", 2, 0, 20);
 		
-		$this->assertInstanceOf('Nette\Forms\TextInput', $item, 'is Nette\Forms\TextInput');
+		$this->assertInstanceOf('Nette\Forms\Controls\TextInput', $item, 'is Nette\Forms\Controls\TextInput');
 		$this->assertEquals("number", $item->control->type, "number type");
 		$this->assertEquals(0, $item->control->min, "min");
 		$this->assertEquals(20, $item->control->max, "max");
@@ -86,7 +86,7 @@ class FormTest extends \PHPUnit_Framework_TestCase
 	{
 		$item = $this->form->addRange('range', "Range", 2, 0, 20);
 		
-		$this->assertInstanceOf('Nette\Forms\TextInput', $item, 'is Nette\Forms\TextInput');
+		$this->assertInstanceOf('Nette\Forms\Controls\TextInput', $item, 'is Nette\Forms\Controls\TextInput');
 		$this->assertEquals("range", $item->control->type, "range type");
 		$this->assertEquals(0, $item->control->min, "min");
 		$this->assertEquals(20, $item->control->max, "max");
@@ -99,7 +99,7 @@ class FormTest extends \PHPUnit_Framework_TestCase
 	{
 		$item = $this->form->addDate('date', "Date");
 		
-		$this->assertInstanceOf('Nella\Forms\Date', $item, 'is Nella\Forms\Date');
+		$this->assertInstanceOf('Nella\Forms\Controls\Date', $item, 'is Nella\Forms\Controls\Date');
 		$this->assertEquals("date", $item->control->type, "date type");
 		//$this->assertTrue($this->isRuleExist($item, Form::DATE), "Form::DATE after Form::FILLED");
 	}
@@ -108,7 +108,7 @@ class FormTest extends \PHPUnit_Framework_TestCase
 	{
 		$item = $this->form->addDateTime('datetime', "Datetime");
 		
-		$this->assertInstanceOf('Nella\Forms\DateTime', $item, 'is Nette\Forms\DateTime');
+		$this->assertInstanceOf('Nella\Forms\Controls\DateTime', $item, 'is Nette\Forms\Controls\DateTime');
 		$this->assertEquals("datetime", $item->control->type, "datetime type");
 		//$this->assertTrue($this->isRuleExist($item, Form::DATETIME), "Form::DATETIME after Form::FILLED");
 	}
@@ -117,7 +117,7 @@ class FormTest extends \PHPUnit_Framework_TestCase
 	{
 		$item = $this->form->addTime('time', "Time");
 		
-		$this->assertInstanceOf('Nella\Forms\Time', $item, 'is Nella\Forms\Time');
+		$this->assertInstanceOf('Nella\Forms\Controls\Time', $item, 'is Nella\Forms\Controls\Time');
 		$this->assertEquals("time", $item->control->type, "time type");
 		//$this->assertTrue($this->isRuleExist($item, Form::TIME), "Form::TIME after Form::FILLED");
 	}
@@ -126,7 +126,7 @@ class FormTest extends \PHPUnit_Framework_TestCase
 	{
 		$item = $this->form->addSearch('search', "Search");
 		
-		$this->assertInstanceOf('Nette\Forms\TextInput', $item, 'is Nette\Forms\TextInput');
+		$this->assertInstanceOf('Nette\Forms\Controls\TextInput', $item, 'is Nette\Forms\Controls\TextInput');
 		$this->assertEquals("search", $item->control->type, "search type");
 	}
 	
@@ -134,7 +134,7 @@ class FormTest extends \PHPUnit_Framework_TestCase
 	{
 		$item = $this->form->addEditor('editor', "Editor");
 		
-		$this->assertInstanceOf('Nette\Forms\TextArea', $item, 'is Nette\Forms\TextArea');
+		$this->assertInstanceOf('Nette\Forms\Controls\TextArea', $item, 'is Nette\Forms\Controls\TextArea');
 		$this->assertTrue((bool) $item->control->{'data-nella-editor'}, "editor data attribute");
 	}
 }

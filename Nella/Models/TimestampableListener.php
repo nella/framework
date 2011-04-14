@@ -27,9 +27,9 @@ class TimestampableListener extends \Nette\Object implements \Doctrine\Common\Ev
 	/**
 	 * @param \Nette\Caching\ICacheStorage
 	 */
-	public function __construct(\Nette\Caching\ICacheStorage $storage = NULL)
+	public function __construct(\Nette\Caching\IStorage $cacheStorage = NULL)
 	{
-		$this->cache = $storage ? new Cache($storage, "Nella.Models.Timestampable") : array();
+		$this->cache = $cacheStorage ? new Cache($cacheStorage, "Nella.Models.Timestampable") : array();
 	}
 
 	/**
@@ -86,7 +86,7 @@ class TimestampableListener extends \Nette\Object implements \Doctrine\Common\Ev
 			$files = $data = array();
 			foreach ($metadata->getReflectionProperties() as $prop) {
 				$class = $prop->getDeclaringClass();
-				$ref = new \Nette\Reflection\PropertyReflection($class->getName(), $prop->getName());
+				$ref = new \Nette\Reflection\Property($class->getName(), $prop->getName());
 				if ($ref->hasAnnotation('timestampable')) {
 					$data[] = $ref;
 				}

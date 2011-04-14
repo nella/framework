@@ -7,7 +7,7 @@
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
 
-namespace Nella\Application;
+namespace Nella\Application\UI;
 
 /**
  * Base backend presenter
@@ -24,7 +24,7 @@ abstract class BackendPresenter extends Presenter
 		parent::startup();
 
 		if (!$this->getUser()->isLoggedIn()) {
-			if ($this->getUser()->logoutReason === \Nette\Web\User::INACTIVITY) {
+			if ($this->getUser()->logoutReason === \Nette\Http\User::INACTIVITY) {
 				$this->flashMessage(__("You have been logged out due to inactivity. Please login again."), \Nella\FLASH_INFO);
 			}
 
@@ -36,7 +36,7 @@ abstract class BackendPresenter extends Presenter
 				$this->lang = $this->getUser()->identity->entity->lang;
 			}
 		} catch (\InvalidStateException $e) {
-			if ($this->getUser()->logoutReason === \Nette\Web\User::INACTIVITY) {
+			if ($this->getUser()->logoutReason === \Nette\Http\User::INACTIVITY) {
 				$this->flashMessage(__("Your login session expired. Please login again."), \Nella\FLASH_ERROR);
 			}
 
@@ -44,7 +44,7 @@ abstract class BackendPresenter extends Presenter
 			$this->redirect($this->loginLink, array('backlink' => $this->getApplication()->storeRequest()));
 		}
 
-		$ref = new \Nette\Reflection\ClassReflection(get_called_class());
+		$ref = new \Nette\Reflection\ClassType(get_called_class());
 		$method = $this->formatActionMethod($this->getAction());
 		if ($ref->hasMethod($method) && !$this->isAllowed($method)) {
 			throw new \Nette\Application\BadRequestException("You don't have permission to access this '{$this->getAction()}' action", 403);
@@ -88,7 +88,7 @@ abstract class BackendPresenter extends Presenter
 	/**
 	 * Component factory. Delegates the creation of components to a createComponent<Name> method.
 	 * @param  string
-	 * @return \Nette\IComponent
+	 * @return \Nette\ComponentModel\IComponent
 	 */
 	protected function createComponent($name)
 	{

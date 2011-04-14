@@ -7,7 +7,7 @@
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
 
-namespace Nella\Forms;
+namespace Nella\Forms\Controls;
 
 /**
  * Form datetime field item
@@ -24,10 +24,10 @@ class DateTime extends BaseDateTime
 	public static $timeFormat = "G:i";
 
 	/**
-	 * @param  string  control name
-	 * @param  string  label
-	 * @param  int  width of the control
-	 * @param  int  maximum number of characters the user may enter
+	 * @param string  control name
+	 * @param string  label
+	 * @param int  width of the control
+	 * @param int  maximum number of characters the user may enter
 	 */
 	public function __construct($label = NULL, $cols = NULL, $maxLength = NULL)
 	{

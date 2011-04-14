@@ -21,7 +21,7 @@ class PresenterFactoryTest extends \PHPUnit_Framework_TestCase
 	
 	public function setUp()
 	{
-		$context = new \Nette\Context;
+		$context = new \Nette\DI\Context;
 		$context->addService('Nella\Registry\NamespacePrefixes', ContextBuilder::createRegistryNamespacePrefixes());
 		$context->addService('Nella\Registry\TemplateDirs', ContextBuilder::createRegistryTemplateDirs());
 		$this->loader = new \Nella\Application\PresenterFactory(__DIR__, $context);

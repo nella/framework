@@ -26,9 +26,9 @@ class NellaLoader extends \Nette\Loaders\AutoLoader
 		'nella\image' => '/Image.php',
 		'nella\consoleservicefactory' => '/ConsoleServiceFactory.php',
 		'nella\application\application' => '/Application/Application.php',
-		'nella\application\backendpresenter' => '/Application/BackendPresenter.php',
-		'nella\application\control' => '/Application/Control.php',
-		'nella\application\presenter' => '/Application/Presenter.php',
+		'nella\application\ui\backendpresenter' => '/Application/UI/BackendPresenter.php',
+		'nella\application\ui\control' => '/Application/UI/Control.php',
+		'nella\application\ui\presenter' => '/Application/UI/Presenter.php',
 		'nella\application\presenterfactory' => '/Application/PresenterFactory.php',
 		'nella\dependencyinjection\icontext' => '/DependencyInjection/IContext.php',
 		'nella\dependencyinjection\context' => '/DependencyInjection/Context.php',
@@ -40,12 +40,13 @@ class NellaLoader extends \Nette\Loaders\AutoLoader
 		'nella\doctrine\entitymanagerhelper' => '/Doctrine/EntityManagerHelper.php',
 		'nella\doctrine\panel' => '/Doctrine/Panel.php',
 		'nella\doctrine\servicefactory' => '/Doctrine/ServiceFactory.php',
-		'nella\forms\basedatetime' => '/Forms/BaseDateTime.php',
-		'nella\forms\date' => '/Forms/Date.php',
-		'nella\forms\datetime' => '/Forms/DateTime.php',
+		'nella\forms\controls\basedatetime' => '/Forms/Controls/BaseDateTime.php',
+		'nella\forms\controls\date' => '/Forms/Controls/Date.php',
+		'nella\forms\controls\datetime' => '/Forms/Controls/DateTime.php',
+		'nella\forms\controls\time' => '/Forms/Controls/Time.php',
+		'nella\forms\controls\multiplefileupload' => '/Forms/Controls/MultipleFileUpload.php', 
 		'nella\forms\form' => '/Forms/Form.php',
-		'nella\forms\time' => '/Forms/Time.php',
-		'nella\forms\multiplefileupload' => '/Forms/MultipleFileUpload.php', 
+		'nella\latte\macros' => '/Latte/Macros.php',
 		'nella\localization\dictionary' => '/Localization/Dictionary.php',
 		'nella\localization\gettextparser' => '/Localization/GettextParser.php',
 		'nella\localization\translator' => '/Localization/Translator.php',
@@ -79,7 +80,6 @@ class NellaLoader extends \Nette\Loaders\AutoLoader
 		'nella\security\identityentity' => '/Security/IdentityEntity.php',
 		'nella\security\permissionentity' => '/Security/PermissionEntity.php',
 		'nella\security\roleentity' => '/Security/RoleEntity.php',
-		'nella\templates\macros' => '/Templates/Macros.php',
 		'nella\tools\curlbadrequestexception' => '/Tools/cUrlRequest.php',
 		'nella\tools\curlrequest' => '/Tools/cUrlRequest.php',
 		'nella\tools\curlresponse' => '/Tools/cUrlResponse.php',
@@ -122,7 +122,7 @@ class NellaLoader extends \Nette\Loaders\AutoLoader
 	{
 		$type = ltrim(strtolower($type), '\\');
 		if (isset($this->list[$type])) {
-			\Nette\Loaders\LimitedScope::load(NELLA_FRAMEWORK_DIR . $this->list[$type]);
+			\Nette\Utils\LimitedScope::load(NELLA_FRAMEWORK_DIR . $this->list[$type]);
 			self::$count++;
 		}
 	}

@@ -71,7 +71,7 @@ class Identity extends \Nette\Object implements \Nette\Security\IIdentity, \Seri
 
 	/**
 	 * @param string
-	 * @throws InvalidStateException
+	 * @throws \Nette\InvalidStateException
 	 */
 	public function unserialize($serialized)
 	{
@@ -82,7 +82,7 @@ class Identity extends \Nette\Object implements \Nette\Security\IIdentity, \Seri
 		$this->entity = $service->repository->find($this->id);
 
 		if (!$this->entity) {
-			throw new \InvalidStateException("User with id {$this->id} not found");
+			throw new \Nette\InvalidStateException("User with id {$this->id} not found");
 		}
 	}
 }

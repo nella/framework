@@ -55,13 +55,13 @@ class Service extends \Nette\Object
 	/**
 	 * @param string
 	 * @return \Doctrine\ORM\EntityRepository
-	 * @throws \InvalidArgumentException
+	 * @throws \Nette\InvalidArgumentException
 	 */
 	public function getRepository($entityClass = NULL)
 	{
 		$entityClass = $entityClass ?: $this->getEntityClass();
 		if (empty($entityClass)) {
-			throw new \InvalidArgumentException("Default entity name is not set, you must set entity name in param");
+			throw new \Nette\InvalidArgumentException("Default entity name is not set, you must set entity name in param");
 		}
 		
 		return $this->getEntityManager()->getRepository($entityClass);
@@ -70,13 +70,13 @@ class Service extends \Nette\Object
 	/**
 	 * @param string
 	 * @return \Doctrine\ORM\ClassMetadata
-	 * @throws \InvalidArgumentException
+	 * @throws \Nette\InvalidArgumentException
 	 */
 	public function getClassMetadata($entityClass = NULL)
 	{
 		$entityClass = $entityClass ?: $this->getEntityClass();
 		if (empty($entityClass)) {
-			throw new \InvalidArgumentException("Default entity name is not set, you must set entity name in param");
+			throw new \Nette\InvalidArgumentException("Default entity name is not set, you must set entity name in param");
 		}
 		
 		return $this->getEntityManager()->getClassMetadata($entityClass);
@@ -132,14 +132,14 @@ class Service extends \Nette\Object
 	 */
 	public function setEntityData($entity, $data)
 	{
-		$ref = new \Nette\Reflection\ClassReflection(get_class($entity));
+		$ref = new \Nette\Reflection\ClassType(get_class($entity));
 		foreach ($data as $key => $value) {
 			if (!is_array($value)) {
-				$method = "set" . \Nette\String::firstUpper($key);
+				$method = "set" . \Nette\StringUtils::firstUpper($key);
 				if ($ref->hasMethod($method)) {
 					$entity->$method($value);
 				}
-			} // @todo implements collection
+			} // @todo implements collections
 		}
 	}
 	

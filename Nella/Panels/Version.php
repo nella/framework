@@ -9,14 +9,14 @@
 
 namespace Nella\Panels;
 
-use Nette\Reflection\ClassReflection;
+use Nette\Reflection\Class¨Type;
 
 /**
  * Version panel for nette debug bar
  *
  * @author		Patrik Votoček
  */
-class Version implements \Nette\IDebugPanel
+class Version implements \Nette\Diagnostics\IPanel
 {
 	/** @var array */
 	private $updates = array();
@@ -87,7 +87,7 @@ class Version implements \Nette\IDebugPanel
 			'revision' => \Nette\Framework::REVISION, 
 			'url' => "http://files.nette.org/NetteFramework-%tag2%-PHP5.3.zip", 
 			'url-dev' => "http://files.nette.org/NetteFramework-%version%dev-PHP5.3.zip", 
-			'file' => ClassReflection::from('Nette\Framework')->getFileName(), 
+			'file' => ClassType::from('Nette\Framework')->getFileName(), 
 		);
 		
 		// Nella Framework
@@ -97,7 +97,7 @@ class Version implements \Nette\IDebugPanel
 			'revision' => \Nella\Framework::REVISION, 
 			'url' => "http://s3.nella-project.org/package/NellaFramework-%tag%.zip",  
 			'url-dev' => "http://s3.nella-project.org/package/NellaFramework-%version%dev.zip", 
-			'file' => ClassReflection::from('Nella\Framework')->getFileName(), 
+			'file' => ClassType::from('Nella\Framework')->getFileName(), 
 		);
 
 		// dibi
@@ -108,7 +108,7 @@ class Version implements \Nette\IDebugPanel
 				'revision' => \dibi::REVISION, 
 				'url' => "http://files.dibiphp.com/dibi-%tag2%.zip", 
 				'url-dev' => "http://files.dibiphp.com/latest.zip", 
-				'file' => ClassReflection::from('dibi')->getFileName(), 
+				'file' => ClassType::from('dibi')->getFileName(), 
 			);
 		}
 		
@@ -120,7 +120,7 @@ class Version implements \Nette\IDebugPanel
 				'revision' => \Texy::REVISION, 
 				'url' => "http://files.texy.info/latest.zip", 
 				'url-dev' => "http://files.texy.info/texy-%version%-dev.zip", 
-				'file' => ClassReflection::from('Texy')->getFileName(), 
+				'file' => ClassType::from('Texy')->getFileName(), 
 			);
 		}
 		
@@ -132,7 +132,7 @@ class Version implements \Nette\IDebugPanel
 				'revision' => NULL, 
 				'url' => "http://github.com/%user%/%repo%/zipball/%tag%", 
 				'url-dev' => NULL, 
-				'file' => ClassReflection::from('Doctrine\Common\Version')->getFileName(), 
+				'file' => ClassType::from('Doctrine\Common\Version')->getFileName(), 
 			);
 		}
 		
@@ -144,7 +144,7 @@ class Version implements \Nette\IDebugPanel
 				'revision' => NULL, 
 				'url' => "http://github.com/%user%/%repo%/zipball/%tag%", 
 				'url-dev' => NULL, 
-				'file' => ClassReflection::from('Doctrine\DBAL\Version')->getFileName(),
+				'file' => ClassType::from('Doctrine\DBAL\Version')->getFileName(),
 			);
 		}
 		
@@ -156,7 +156,7 @@ class Version implements \Nette\IDebugPanel
 				'revision' => NULL, 
 				'url' => "http://github.com/%user%/%repo%/zipball/%tag%", 
 				'url-dev' => NULL, 
-				'file' => ClassReflection::from('Doctrine\ORM\Version')->getFileName(),
+				'file' => ClassType::from('Doctrine\ORM\Version')->getFileName(),
 			);
 		}
 		
@@ -168,7 +168,7 @@ class Version implements \Nette\IDebugPanel
 				'revision' => NULL, 
 				'url' => "http://github.com/%user%/%repo%/zipball/%tag%", 
 				'url-dev' => NULL, 
-				'file' => ClassReflection::from('Doctrine\MongoDB\Version')->getFileName(),
+				'file' => ClassType::from('Doctrine\MongoDB\Version')->getFileName(),
 			);
 		}
 		
@@ -180,7 +180,7 @@ class Version implements \Nette\IDebugPanel
 				'revision' => NULL, 
 				'url' => "http://github.com/%user%/%repo%/zipball/%tag%", 
 				'url-dev' => NULL, 
-				'file' => ClassReflection::from('Doctrine\ODM\MongoDB\Version')->getFileName(),
+				'file' => ClassType::from('Doctrine\ODM\MongoDB\Version')->getFileName(),
 			);
 		}
 		
@@ -192,7 +192,7 @@ class Version implements \Nette\IDebugPanel
 				'revision' => NULL, 
 				'url' => "http://github.com/%user%/%repo%/zipball/%tag%", 
 				'url-dev' => NULL, 
-				'file' => ClassReflection::from('Doctrine_Core')->getFileName(), 
+				'file' => ClassType::from('Doctrine_Core')->getFileName(), 
 			);
 		}
 		
@@ -204,7 +204,7 @@ class Version implements \Nette\IDebugPanel
 				'revision' => NULL, 
 				'url' => "http://github.com/%user%/%repo%/zipball/%tag%", 
 				'url-dev' => NULL, 
-				'file' => ClassReflection::from('Symfony\Component\HttpKernel\Kernel')->getFileName(), 
+				'file' => ClassType::from('Symfony\Component\HttpKernel\Kernel')->getFileName(), 
 			);
 		}
 		
@@ -379,10 +379,10 @@ class Version implements \Nette\IDebugPanel
 	public static function register(array $libs = NULL)
 	{
 		if (static::$registered) {
-			throw new \InvalidStateException("Version panel is already registered");
+			throw new \Nette\InvalidStateException("Version panel is already registered");
 		}
 		
-		\Nette\Debug::addPanel(new static($libs));
+		\Nette\Diagnostics\Debugger::addPanel(new static($libs));
 		static::$registered = TRUE;
 	}
 }

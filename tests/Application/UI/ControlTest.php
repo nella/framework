@@ -7,24 +7,24 @@
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
 
-namespace NellaTests\Application;
+namespace NellaTests\Application\UI;
 
 use Nella\DependencyInjection\ContextBuilder;
 
-require_once __DIR__ . "/../bootstrap.php";
+require_once __DIR__ . "/../../bootstrap.php";
 
 class ControlTest extends \PHPUnit_Framework_TestCase
 {
-	/** @var \Nella\Application\Control */
+	/** @var ControlMock */
 	private $control;
 	
 	public function setUp()
 	{
-		$context = new \Nette\Context;
+		$context = new \Nette\DI\Context;
 		$context->addService('Nella\Registry\NamespacePrefixes', ContextBuilder::createRegistryNamespacePrefixes());
 		$context->addService('Nella\Registry\TemplateDirs', ContextBuilder::createRegistryTemplateDirs());
 		$reg = $context->getService('Nella\Registry\NamespacePrefixes');
-		$reg['tests'] = 'NellaTests\\Application\\';
+		$reg['tests'] = 'NellaTests\\Application\\UI\\';
 		$this->control = new ControlMock(new PresenterMock, 'test');
 		$this->control->presenter->setContext($context);
 	}
@@ -62,7 +62,7 @@ class ControlTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
-  	 * @expectedException InvalidStateException
+  	 * @expectedException Nette\InvalidStateException
 	 */
 	public function testFormatTemplateFileException()
   	{
@@ -83,7 +83,7 @@ class ControlTest extends \PHPUnit_Framework_TestCase
 	{
 		$registry = new \Nella\FreezableArray;
 		$registry['foo'] = function($parent, $name) { return "bar"; };
-		$context = new \Nette\Context;
+		$context = new \Nette\DI\Context;
 		$context->addService('Nella\Registry\GlobalComponentFactories', $registry);
 		$this->control->presenter->setContext($context);
 	}

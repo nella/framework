@@ -7,19 +7,19 @@
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
 
-namespace NellaTests\Forms;
+namespace NellaTests\Forms\Controls;
 
-require_once __DIR__ . "/../bootstrap.php";
+require_once __DIR__ . "/../../bootstrap.php";
 
 class DateTimeTest extends \PHPUnit_Framework_TestCase
 {
-	/** @var Nella\Forms\DateTime */
+	/** @var Nella\Forms\Controls\DateTime */
 	private $item;
 	
 	public function setUp()
 	{
 		$form = new \Nella\Forms\Form;
-		$form['foo'] = $this->item = new \Nella\Forms\DateTime("foo");
+		$form['foo'] = $this->item = new \Nella\Forms\Controls\DateTime("foo");
 	}
 	
 	public function testType()

@@ -7,19 +7,19 @@
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
 
-namespace NellaTests\Application;
+namespace NellaTests\Application\UI;
 
-class BackendPresenterMock extends \Nella\Application\BackendPresenter
+class BackendPresenterMock extends \Nella\Application\UI\BackendPresenter
 {
 	/** @var \NellaTests\Mocks\User */
 	private $userMock;
 	/** @var string */
 	public $lang = "en";
 	
-	public function __construct( Nette\IComponentContainer $parent = NULL, $name = NULL )
+	public function __construct(\Nette\ComponentModel\IContainer $parent = NULL, $name = NULL)
 	{
 		$this->userMock = new \NellaTests\Mocks\User;
-		$this->setContext(new \Nette\Context);
+		$this->setContext(new \Nette\DI\Context);
 		$this->getContext()->addService('Nella\Registry\GlobalComponentFactories', new \Nella\FreezableArray);
 		parent::__construct($parent, $name);
 	}
@@ -46,7 +46,7 @@ class BackendPresenterMock extends \Nella\Application\BackendPresenter
 	
 	public function setSignal($signal)
 	{
-		$ref = new \Nette\Reflection\PropertyReflection('Nette\Application\Presenter', 'signal');
+		$ref = new \Nette\Reflection\Property('Nette\Application\UI\Presenter', 'signal');
 		$ref->setAccessible(TRUE);
 		$ref->setValue($this, $signal);
 		$ref->setAccessible(TRUE);
@@ -54,8 +54,8 @@ class BackendPresenterMock extends \Nella\Application\BackendPresenter
 	
 	public function getApplication()
 	{
-		$context = new \Nette\Context;
-		$context->addService('Nette\Web\Session', new \Nette\Web\Session);
+		$context = new \Nette\UIqContext;
+		$context->addService('Nette\Http\Session', new \Nette\Http\Session);
 		$app = new \Nette\Application\Application;
 		$app->setContext($context);
 		return $app;

@@ -15,7 +15,7 @@ namespace Nella\Media;
  * @author	Pavel Kučera
  * @author	Patrik Votoček
  */
-class ImageRoute extends \Nette\Application\Route
+class ImageRoute extends \Nette\Application\Routers\Route
 {
 	const FORMAT_KEY = 'format';
 	const IMAGE_KEY = 'image';
@@ -84,9 +84,9 @@ class ImageRoute extends \Nette\Application\Route
 	}
 
 	/**
-	 * @param  string  URL mask, e.g. '<presenter>/<action>/<id \d{1,3}>'
-	 * @param  array|string   default values or metadata
-	 * @param  int     flags
+	 * @param string  URL mask, e.g. '<presenter>/<action>/<id \d{1,3}>'
+	 * @param array|string   default values or metadata
+	 * @param int     flags
 	 */
 	public function __construct($mask, $metadata = array(), $flags = 0)
 	{
@@ -106,11 +106,11 @@ class ImageRoute extends \Nette\Application\Route
 
 	/**
 	 * Maps HTTP request to a PresenterRequest object.
-	 * @param  \Nette\Web\IHttpRequest
-	 * @return \Nette\Application\PresenterRequest|NULL
-	 * @throws \InvalidStateException
+	 * @param \Nette\Http\IRequest
+	 * @return \Nette\Application\Request|NULL
+	 * @throws \Nette\InvalidStateException
 	 */
-	public function match(\Nette\Web\IHttpRequest $httpRequest)
+	public function match(\Nette\Http\IRequest $httpRequest)
 	{
 		if (($presenterRequest = parent::match($httpRequest)) === NULL) {
 			return NULL;
@@ -118,10 +118,10 @@ class ImageRoute extends \Nette\Application\Route
 
 		$params = $presenterRequest->params;
 		if (!isset($params[self::FORMAT_KEY])) {
-			throw new \InvalidStateException('Missing format in route definition.');
+			throw new \Nette\InvalidStateException('Missing format in route definition.');
 		}
 		if (!isset($params[self::IMAGE_KEY])) {
-			throw new \InvalidStateException('Missing id in route definition.');
+			throw new \Nette\InvalidStateException('Missing id in route definition.');
 		}
 
 		// Find image

@@ -23,6 +23,7 @@ class FreezableArray extends \Nette\FreezableObject implements \ArrayAccess, \Co
 
 	/**
 	 * Freezes an array
+	 * 
 	 * @return void
 	 */
 	public function freeze()
@@ -34,7 +35,8 @@ class FreezableArray extends \Nette\FreezableObject implements \ArrayAccess, \Co
 	}
 
 	/**
-	 * Returns an iterator over all items.
+	 * Returns an iterator over all items
+	 * 
 	 * @return \ArrayIterator
 	 */
 	public function getIterator()
@@ -44,7 +46,8 @@ class FreezableArray extends \Nette\FreezableObject implements \ArrayAccess, \Co
 	}
 
 	/**
-	 * Returns items count.
+	 * Returns items count
+	 * 
 	 * @return int
 	 */
 	public function count()
@@ -54,7 +57,8 @@ class FreezableArray extends \Nette\FreezableObject implements \ArrayAccess, \Co
 	}
 
 	/**
-	 * Replaces or appends a item.
+	 * Replaces or appends a item
+	 * 
 	 * @param  string
 	 * @param  mixed
 	 * @return FreezableArray
@@ -63,7 +67,7 @@ class FreezableArray extends \Nette\FreezableObject implements \ArrayAccess, \Co
 	{
 		if ($this->isFrozen()) {
 			$class = get_called_class();
-			throw new \InvalidStateException("Cannot set $key, because the $class has been frozen");
+			throw new \Nette\InvalidStateException("Cannot set $key, because the $class has been frozen");
 		}
 
 		$this->list[$key] = $value;
@@ -71,24 +75,26 @@ class FreezableArray extends \Nette\FreezableObject implements \ArrayAccess, \Co
 	}
 
 	/**
-	 * Returns a item.
-	 * @param  string
+	 * Returns a item
+	 * 
+	 * @param string
 	 * @return mixed
-	 * @throws \MemberAccessException
+	 * @throws \Nette\MemberAccessException
 	 */
 	public function offsetGet($key)
 	{
 		$this->freeze();
 		if (!$this->offsetExists($key)) {
 			$class = get_called_class();
-			throw new \MemberAccessException("Cannot read an undeclared item {$class}['{$key}'].");
+			throw new \Nette\MemberAccessException("Cannot read an undeclared item {$class}['{$key}'].");
 		}
 		return $this->list[$key];
 	}
 
 	/**
-	 * Determines whether a item exists.
-	 * @param  string
+	 * Determines whether a item exists
+	 * 
+	 * @param string
 	 * @return bool
 	 */
 	public function offsetExists($key)
@@ -98,15 +104,16 @@ class FreezableArray extends \Nette\FreezableObject implements \ArrayAccess, \Co
 	}
 
 	/**
-	 * Removes the element at the specified position in this list.
-	 * @param  string
+	 * Removes the element at the specified position in this list
+	 * 
+	 * @param string
 	 * @return FreezableArray
 	 */
 	public function offsetUnset($key)
 	{
 		if ($this->isFrozen()) {
 			$class = get_called_class();
-			throw new \InvalidStateException("Cannot unset $key, because the $class has been frozen");
+			throw new \Nette\InvalidStateException("Cannot unset $key, because the $class has been frozen");
 		}
 		unset($this->list[$key]);
 		return $this;

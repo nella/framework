@@ -9,7 +9,7 @@
 
 namespace Nella\Localization;
 
-use Nette\String;
+use Nette\StringUtils;
 
 /**
  * Gettext localization file parser
@@ -30,15 +30,15 @@ class GettextParser extends \Nette\Object implements IParser
 	/**
 	 * @param string file path
 	 * @return array
-	 * @throws \InvalidArgumentException
+	 * @throws \Nette\InvalidArgumentException
 	 */
 	public function decode($filename)
 	{
 		if (!file_exists($filename)) {
-			throw new \InvalidArgumentException("File '$filename' does not exist");
+			throw new \Nette\InvalidArgumentException("File '$filename' does not exist");
 		}
 		if (@filesize($filename) < 10) {
-			throw new \InvalidArgumentException("File '$filename' is not a gettext file");
+			throw new \Nette\InvalidArgumentException("File '$filename' is not a gettext file");
 		}
 
 		$handle = @fopen($filename, "rb");
@@ -50,12 +50,12 @@ class GettextParser extends \Nette\Object implements IParser
 		};
 
 		$input = $read(1);
-		if (String::lower(substr(dechex($input[1]), -8)) == "950412de") {
+		if (StringUtils::lower(substr(dechex($input[1]), -8)) == "950412de") {
 			$endian = FALSE;
-		} elseif (String::lower(substr(dechex($input[1]), -8)) == "de120495") {
+		} elseif (StringUtils::lower(substr(dechex($input[1]), -8)) == "de120495") {
 			$endian = TRUE;
 		} else {
-			throw new \InvalidArgumentException("File '$filename' is not a gettext file");
+			throw new \Nette\InvalidArgumentException("File '$filename' is not a gettext file");
 		}
 
 		$input = $read(1);
@@ -92,8 +92,8 @@ class GettextParser extends \Nette\Object implements IParser
 					continue;
 				}
 
-				$original = explode(String::chr(0x00), $original);
-				$translation = explode(String::chr(0x00), $translation);
+				$original = explode(StringUtils::chr(0x00), $original);
+				$translation = explode(StringUtils::chr(0x00), $translation);
 				$output['dictionary'][is_array($original) ? $original[0] : $original]['original'] = $original;
 				$output['dictionary'][is_array($original) ? $original[0] : $original]['translation'] = $translation;
 			}

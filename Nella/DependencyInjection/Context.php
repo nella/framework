@@ -9,8 +9,8 @@
 
 namespace Nella\DependencyInjection;
 
-use Nette\Reflection\ClassReflection,
-	Nette\Environment;
+use Nette\Environment, 
+	Nette\StringUtils;
 
 /**
  * Dependency injection service container
@@ -52,12 +52,12 @@ class Context extends \Nette\FreezableObject implements IContext, \ArrayAccess
 	/**
 	 * @param string
 	 * @return Context
-	 * @throws \InvalidStateException
+	 * @throws \Nette\InvalidStateException
 	 */
 	public function setEnvironment($environment)
 	{
 		if ($this->isFrozen() && $environment != $this->environment) {
-			throw new \InvalidStateException("Service container is frozen and cannot be changed");
+			throw new \Nette\InvalidStateException("Service container is frozen and cannot be changed");
 		}
 
 		$this->environment = $environment;
@@ -68,19 +68,19 @@ class Context extends \Nette\FreezableObject implements IContext, \ArrayAccess
 	 * @param string
 	 * @param mixed
 	 * @return Context
-	 * @throws \InvalidStateException
-	 * @throws \InvalidArgumentException
+	 * @throws \Nette\InvalidStateException
+	 * @throws \Nette\InvalidArgumentException
 	 */
 	public function setParameter($key, $value)
 	{
 		if ($this->isFrozen()) {
-			throw new \InvalidStateException("Service container is frozen for changes");
+			throw new \Nette\InvalidStateException("Service container is frozen for changes");
 		}
 
 		if (!is_string($key)) {
-			throw new \InvalidArgumentException("Parameter key must be integer or string, " . gettype($key) . " given.");
+			throw new \Nette\InvalidArgumentException("Parameter key must be integer or string, " . gettype($key) . " given.");
 		} elseif (!preg_match('#^[a-zA-Z0-9_]+$#', $key)) {
-			throw new \InvalidArgumentException("Parameter key must be non-empty alphanumeric string, '$key' given.");
+			throw new \Nette\InvalidArgumentException("Parameter key must be non-empty alphanumeric string, '$key' given.");
 		}
 
 		$this->parameters[$key] = $value;
@@ -122,9 +122,9 @@ class Context extends \Nette\FreezableObject implements IContext, \ArrayAccess
 			$data = $tmp;
 		} else {
 			if (is_string($data)) {
-				if (\Nette\String::startsWith($data, '@') && $this->hasService(substr($data, 1))) {
+				if (StringUtils::startsWith($data, '@') && $this->hasService(substr($data, 1))) {
 					$data = $this->getService(substr($data, 1));
-				} elseif (\Nette\String::startsWith($data, '%') && \Nette\String::endsWith($data, '%')) { // @todo: better (DI) implementation
+				} elseif (StringUtils::startsWith($data, '%') && StringUtils::endsWith($data, '%')) { // @todo: better (DI) implementation
 					$data = $this->getParameter(substr($data, 1, -1));
 				}
 			}
@@ -136,12 +136,12 @@ class Context extends \Nette\FreezableObject implements IContext, \ArrayAccess
 	/**
 	 * @param string
 	 * @return mixed
-	 * @throws \InvalidStateException
+	 * @throws \Nette\InvalidStateException
 	 */
 	public function getParameter($key)
 	{
 		if (!$this->hasParameter($key)) {
-			throw new \InvalidStateException("Unknown context parameter '$key'.");
+			throw new \Nette\InvalidStateException("Unknown context parameter '$key'.");
 		}
 		return $this->expandParameter($this->parameters[$key]);
 	}
@@ -154,8 +154,8 @@ class Context extends \Nette\FreezableObject implements IContext, \ArrayAccess
 	 * @param bool
 	 * @param array
 	 * @return Context
-	 * @throws \InvalidArgumentException
-	 * @throws \Nette\AmbiguousServiceException
+	 * @throws \Nette\InvalidArgumentException
+	 * @throws \Nette\DI\AmbiguousServiceException
 	 *
 	 * @author Patrik Votoček
 	 * @author David Grudl
@@ -163,19 +163,19 @@ class Context extends \Nette\FreezableObject implements IContext, \ArrayAccess
 	public function addService($name, $service, $singleton = TRUE, array $options = NULL)
 	{
 		if ($this->isFrozen()) {
-			throw new \InvalidStateException("Service container is frozen and cannot be changed");
+			throw new \Nette\InvalidStateException("Service container is frozen and cannot be changed");
 		}
 
 		if (!is_string($name) || $name === '') {
-			throw new \InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
+			throw new \Nette\InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
 		}
 
 		$lower = strtolower($name);
 		if (isset($this->registry[$lower])) { // only for instantiated services?
-			throw new \Nette\AmbiguousServiceException("Service named '$name' has already been registered.");
+			throw new \Nette\DI\AmbiguousServiceException("Service named '$name' has already been registered.");
 		}
 		if (isset($this->aliases[$lower])) {
-			throw new \Nette\AmbiguousServiceException("Service named '$name' is already used as a service alias.");
+			throw new \Nette\DI\AmbiguousServiceException("Service named '$name' is already used as a service alias.");
 		}
 
 		if ($service instanceof self) {
@@ -184,13 +184,13 @@ class Context extends \Nette\FreezableObject implements IContext, \ArrayAccess
 
 		} elseif (is_object($service) && !($service instanceof \Closure || $service instanceof \Nette\Callback)) {
 			if (!$singleton || $options) {
-				throw new \InvalidArgumentException("Service named '$name' is an instantiated object and must therefore be singleton without options.");
+				throw new \Nette\InvalidArgumentException("Service named '$name' is an instantiated object and must therefore be singleton without options.");
 			}
 			$this->registry[$lower] = $service;
 
 		} else {
 			if (!$service) {
-				throw new \InvalidArgumentException("Service named '$name' is empty.");
+				throw new \Nette\InvalidArgumentException("Service named '$name' is empty.");
 			}
 
 			$factory = new ServiceFactory($this, $name);
@@ -216,8 +216,14 @@ class Context extends \Nette\FreezableObject implements IContext, \ArrayAccess
 			if (isset($options['methods'])) {
 				$factory->methods = $options['methods'];
 			}
-
+			
 			$this->addFactory($factory);
+			
+			if (isset($options['aliases']) && count($options['aliases'])) {
+				foreach ($options['aliases'] as $alias) {
+					$this->addAlias($alias, $lower);
+				}
+			}
 		}
 
 		return $this;
@@ -229,34 +235,34 @@ class Context extends \Nette\FreezableObject implements IContext, \ArrayAccess
 	 * @param string
 	 * @param string
 	 * @return Context
-	 * @throws \InvalidArgumentException
-	 * @throws \Nette\AmbiguousServiceException
+	 * @throws \Nette\InvalidArgumentException
+	 * @throws \Nette\DI\AmbiguousServiceException
 	 */
 	public function addAlias($alias, $service)
 	{
 		if ($this->isFrozen()) {
-			throw new \InvalidStateException("Service container is frozen for changes");
+			throw new \Nette\InvalidStateException("Service container is frozen for changes");
 		}
 
 		if (!is_string($alias) || $alias === '') {
-			throw new \InvalidArgumentException("Service alias name must be a non-empty string, " . gettype($alias) . " given.");
+			throw new \Nette\InvalidArgumentException("Service alias name must be a non-empty string, " . gettype($alias) . " given.");
 		}
 		if (!is_string($service) || $service === '') {
-			throw new \InvalidArgumentException("Service name must be a non-empty string, " . gettype($service) . " given.");
+			throw new \Nette\InvalidArgumentException("Service name must be a non-empty string, " . gettype($service) . " given.");
 		}
 
 		$lower = strtolower($service);
 
 		if (!isset($this->registry[$lower]) && !isset($this->factories[$lower])) {
-			throw new \InvalidArgumentException("Service '$service' not found.");
+			throw new \Nette\InvalidArgumentException("Service '$service' not found.");
 		}
 
 		$lowerA = strtolower($alias);
 		if (isset($this->aliases[$lowerA])) {
-			throw new \Nette\AmbiguousServiceException("Service alias named '$alias' has already been registered.");
+			throw new \Nette\DI\AmbiguousServiceException("Service alias named '$alias' has already been registered.");
 		}
 		if (isset($this->registry[$lowerA]) || isset($this->factories[$lowerA])) {
-			throw new \Nette\AmbiguousServiceException("Service alias named '$alias' is already used as a service.");
+			throw new \Nette\DI\AmbiguousServiceException("Service alias named '$alias' is already used as a service.");
 		}
 
 		$this->aliases[$lowerA] = $lower;
@@ -270,9 +276,9 @@ class Context extends \Nette\FreezableObject implements IContext, \ArrayAccess
 	 * @param string
 	 * @param array
 	 * @return mixed
-	 * @throws \InvalidArgumentException
-	 * @throws \Nette\AmbiguousServiceException
-	 * @throws \InvalidStateException
+	 * @throws \Nette\InvalidArgumentException
+	 * @throws \Nette\DI\AmbiguousServiceException
+	 * @throws \Nette\InvalidStateException
 	 *
 	 * @author Patrik Votoček
 	 * @author David Grudl
@@ -287,7 +293,7 @@ class Context extends \Nette\FreezableObject implements IContext, \ArrayAccess
 
 		if (isset($this->registry[$lower])) { // instantiated singleton
 			if ($options) {
-				throw new \InvalidArgumentException("Service named '$name' is singleton and therefore can not have options.");
+				throw new \Nette\InvalidArgumentException("Service named '$name' is singleton and therefore can not have options.");
 			}
 			return $this->registry[$lower];
 
@@ -309,7 +315,7 @@ class Context extends \Nette\FreezableObject implements IContext, \ArrayAccess
 			}
 			return $service;
 		} else {
-			throw new \InvalidStateException("Service '$name' not found.");
+			throw new \Nette\InvalidStateException("Service '$name' not found.");
 		}
 	}
 
@@ -319,7 +325,7 @@ class Context extends \Nette\FreezableObject implements IContext, \ArrayAccess
 	 * @param  string
 	 * @param  bool
 	 * @return bool
-	 * @throws \InvalidArgumentException
+	 * @throws \Nette\InvalidArgumentException
 	 *
 	 * @author Patrik Votoček
 	 * @author David Grudl
@@ -338,7 +344,7 @@ class Context extends \Nette\FreezableObject implements IContext, \ArrayAccess
 	{
 		$lower = strtolower($name);
 		if (!isset($this->factories[$lower])) {
-			throw new \InvalidStateException("Service factory '$name' not found.");
+			throw new \Nette\InvalidStateException("Service factory '$name' not found.");
 		}
 
 		return $this->factories[$lower];
@@ -347,19 +353,21 @@ class Context extends \Nette\FreezableObject implements IContext, \ArrayAccess
 	/**
 	 * @param IServiceFactory
 	 * @return Context
+	 * @throws \Nette\InvalidStateException
+	 * @throws \Nette\DI\AmbiguousServiceException
 	 */
 	public function addFactory(IServiceFactory $factory)
 	{
 		if ($this->isFrozen()) {
-			throw new \InvalidStateException("Service container is frozen for changes");
+			throw new \Nette\InvalidStateException("Service container is frozen for changes");
 		}
 
 		$lower = strtolower($factory->getName());
 		if (isset($this->registry[$lower])) { // only for instantiated services?
-			throw new \Nette\AmbiguousServiceException("Service named '{$factory->getName()}' has already been registered.");
+			throw new \Nette\DI\AmbiguousServiceException("Service named '{$factory->getName()}' has already been registered.");
 		}
 		if (isset($this->aliases[$lower])) {
-			throw new \Nette\AmbiguousServiceException("Service named '{$factory->getName()}' is already used as a service alias.");
+			throw new \Nette\DI\AmbiguousServiceException("Service named '{$factory->getName()}' is already used as a service alias.");
 		}
 
 		$this->factories[$lower] = $factory;
@@ -373,7 +381,7 @@ class Context extends \Nette\FreezableObject implements IContext, \ArrayAccess
 	 *
 	 * @param string
 	 * @return Context
-	 * @throws \InvalidArgumentException
+	 * @throws \Nette\InvalidArgumentException
 	 *
 	 * @author Patrik Votoček
 	 * @author David Grudl
@@ -381,11 +389,11 @@ class Context extends \Nette\FreezableObject implements IContext, \ArrayAccess
 	public function removeService($name)
 	{
 		if ($this->isFrozen()) {
-			throw new \InvalidStateException("Service container is frozen for changes");
+			throw new \Nette\InvalidStateException("Service container is frozen for changes");
 		}
 
 		if (!is_string($name) || $name === '') {
-			throw new \InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
+			throw new \Nette\InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
 		}
 
 		$lower = strtolower($name);

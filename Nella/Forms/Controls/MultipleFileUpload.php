@@ -7,16 +7,16 @@
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
 
-namespace Nella\Forms;
+namespace Nella\Forms\Controls;
 
-use Nette\Web\HttpUploadedFile;
+use Nette\Http\FileUpload;
 
 /**
  * Text box and browse button that allow users to select a multiple files to upload to the server.
  *
  * @author	Patrik Votoček
  */
-class MultipleFileUpload extends \Nette\Forms\FormControl
+class MultipleFileUpload extends \Nette\Forms\Controls\BaseControl
 {
 	/**
 	 * @param string
@@ -32,13 +32,13 @@ class MultipleFileUpload extends \Nette\Forms\FormControl
 	 * This method will be called when the component (or component's parent) becomes attached to a monitored object.
 	 * Do not call this method yourself.
 	 *
-	 * @param \Nette\IComponent
+	 * @param \Nette\ComponentModel\IComponent
 	 */
 	protected function attached($form)
 	{
 		if ($form instanceof Form) {
 			if ($form->getMethod() !== Form::POST) {
-				throw new \InvalidStateException("File upload requires method POST.");
+				throw new \Nette\InvalidStateException("File upload requires method POST.");
 			}
 			$form->getElementPrototype()->enctype = 'multipart/form-data';
 		}
@@ -62,7 +62,7 @@ class MultipleFileUpload extends \Nette\Forms\FormControl
 	/**
 	 * Sets control's value.
 	 * 
-	 * @param  array|\Nette\Web\HttpUploadedFile
+	 * @param  array|\Nette\Http\FileUpload
 	 * @return MultipleFileUpload  provides a fluent interface
 	 */
 	public function setValue($value)
@@ -70,12 +70,12 @@ class MultipleFileUpload extends \Nette\Forms\FormControl
 		if (is_array($value) && is_array(reset($value))) {
 			$this->value = array();
 			foreach ($value as $key => $file) {
-				$this->value[$key] = new HttpUploadedFile($file);
+				$this->value[$key] = new FileUpload($file);
 			}
-		} elseif (is_array($value) && reset($value) instanceof HttpUploadedFile) {
+		} elseif (is_array($value) && reset($value) instanceof FileUpload) {
 			$this->value = $value;
 		} else {
-			throw new \NotImplementedException;
+			throw new \Nette\NotImplementedException;
 		}
 		
 		if (count($this->value) == 1 && !reset($this->value)->temporaryFile) {
@@ -88,14 +88,14 @@ class MultipleFileUpload extends \Nette\Forms\FormControl
 	/**
 	 * Filled validator: has been any filed?
 	 * 
-	 * @param  Nette\Forms\IFormControl
+	 * @param  \Nette\Forms\IControl
 	 * @return bool
 	 */
-	public static function validateFilled(\Nette\Forms\IFormControl $control)
+	public static function validateFilled(\Nette\Forms\IControl $control)
 	{
 		return (bool) count(array_filter(
 			$control->getValue(), function($file) {
-				return $file instanceof HttpUploadedFile && $file->isOK();
+				return $file instanceof FileUpload && $file->isOK();
 			}
 		));
 	}
@@ -111,7 +111,7 @@ class MultipleFileUpload extends \Nette\Forms\FormControl
 	{
 		$isFiles = (bool) count(array_filter(
 			$control->getValue(), function($file) {
-				return $file instanceof HttpUploadedFile;
+				return $file instanceof FileUpload;
 			}
 		));
 
@@ -133,7 +133,7 @@ class MultipleFileUpload extends \Nette\Forms\FormControl
 	{
 		return (bool) count(array_filter(
 			$control->getValue(), function($file) {
-				if ($file instanceof HttpUploadedFile) {
+				if ($file instanceof FileUpload) {
 					$type = strtolower($file->getContentType());
 					$mimeTypes = is_array($mimeType) ? $mimeType : explode(',', $mimeType);
 					if (in_array($type, $mimeTypes, TRUE)) {
@@ -158,7 +158,7 @@ class MultipleFileUpload extends \Nette\Forms\FormControl
 	{
 		return (bool) count(array_filter(
 			$control->getValue(), function($file) {
-				return $file instanceof HttpUploadedFile && $file->isImage();
+				return $file instanceof FileUpload && $file->isImage();
 			}
 		));
 	}

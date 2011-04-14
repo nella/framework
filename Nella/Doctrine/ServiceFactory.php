@@ -17,11 +17,11 @@ namespace Nella\Doctrine;
 class ServiceFactory extends \Nette\Object
 {
 	/**
-	 * @throws InvalidStateException
+	 * @throws \Nette\InvalidStateException
 	 */
 	final public function __construct()
 	{
-		throw new \InvalidStateException("Cannot instantiate static class " . get_called_class());
+		throw new \Nette\InvalidStateException("Cannot instantiate static class " . get_called_class());
 	}
 	
 	/**

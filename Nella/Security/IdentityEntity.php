@@ -120,7 +120,7 @@ class IdentityEntity extends \Nella\Models\Entity
 	 */
 	public function setPassword($password, $algo = "sha256")
 	{
-		$salt = \Nette\String::random();
+		$salt = \Nette\StringUtils::random();
 		$this->password = $algo . self::PASSWORD_DELIMITER . $salt . self::PASSWORD_DELIMITER . hash($algo, $salt . $password);
 		return $this;
 	}

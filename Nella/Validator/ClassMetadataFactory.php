@@ -9,6 +9,8 @@
 
 namespace Nella\Validator;
 
+use Nette\Caching\Cache;
+
 /**
  * Class metadata factory
  *
@@ -26,9 +28,9 @@ class ClassMetadataFactory extends \Nette\Object implements IClassMetadataFactor
 	/**
 	 * @param \Nette\Caching\ICacheStorage
 	 */
-	public function __construct(\Nette\Caching\ICacheStorage $cache = NULL)
+	public function __construct(\Nette\Caching\IStorage $cacheStorage = NULL)
 	{
-		$this->cache = $cache ? new \Nette\Caching\Cache($cache, "Nella.Validator.Metadata") : $cache;
+		$this->cache = $cacheStorage ? new Cache($cacheStorage, "Nella.Validator.Metadata") : array();
 		$this->loadDefaultParsers();
 	}
 
@@ -51,7 +53,7 @@ class ClassMetadataFactory extends \Nette\Object implements IClassMetadataFactor
 	/**
 	 * @param string
 	 * @return ClassMetadata
-	 * @throws \InvalidStateException
+	 * @throws \Nette\InvalidStateException
 	 */
 	public function getClassMetadata($class)
 	{
@@ -66,7 +68,7 @@ class ClassMetadataFactory extends \Nette\Object implements IClassMetadataFactor
 		}
 
 		if (!class_exists($lower)) {
-			throw new \InvalidArgumentException("Class '$class' not exist");
+			throw new \Nette\InvalidArgumentException("Class '$class' not exist");
 		}
 
 		$metadata = new ClassMetadata($class);
@@ -76,7 +78,7 @@ class ClassMetadataFactory extends \Nette\Object implements IClassMetadataFactor
 
 		if ($this->cache) {
 			$this->cache->save($lower, $metadata, array(
-				\Nette\Caching\Cache::FILES => array($metadata->getReflection()->getFileName())
+				Cache::FILES => array($metadata->getReflection()->getFileName())
 			));
 		}
 

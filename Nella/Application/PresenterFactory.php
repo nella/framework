@@ -21,9 +21,9 @@ class PresenterFactory extends \Nette\Application\PresenterFactory
 
 	/**
 	 * @param string
-	 * @param \Nette\IContext
+	 * @param \Nette\DI\IContext
 	 */
-	public function __construct($baseDir, \Nette\IContext $context)
+	public function __construct($baseDir, \Nette\DI\IContext $context)
 	{
 		$this->registry = $context->getService('Nella\Registry\NamespacePrefixes');
 		parent::__construct($baseDir, $context);
@@ -69,7 +69,7 @@ class PresenterFactory extends \Nette\Application\PresenterFactory
 		}
 
 		$class = $this->formatPresenterClasses($name);
-		$reflection = \Nette\Reflection\ClassReflection::from($class);
+		$reflection = \Nette\Reflection\ClassType::from($class);
 		$class = $reflection->getName();
 
 		if (!$reflection->implementsInterface('Nette\Application\IPresenter')) {
@@ -116,7 +116,7 @@ class PresenterFactory extends \Nette\Application\PresenterFactory
 	public function unformatPresenterClass($class)
 	{
 		$mapper = function ($prefix) use ($class) {
-			if (\Nette\String::startsWith($class, $prefix)) {
+			if (\Nette\StringUtils::startsWith($class, $prefix)) {
 				return $prefix;
 			}
 		};

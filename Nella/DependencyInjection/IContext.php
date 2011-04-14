@@ -14,13 +14,13 @@ namespace Nella\DependencyInjection;
  * 
  * @author	Patrik Votoček
  */
-interface IContext extends \Nette\IContext
+interface IContext extends \Nette\DI\IContext
 {
 	/**
 	 * @param string
 	 * @param mixed
 	 * @return Context
-	 * @throws \InvalidStateException
+	 * @throws \Nette\InvalidStateException
 	 */
 	public function setParameter($key, $value);
 	

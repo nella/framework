@@ -105,16 +105,16 @@ class ServiceFactoryTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * @expectedException InvalidStateException
+	 * @expectedException Nette\InvalidStateException
 	 */
 	public function testCreateInstanceException1()
 	{
-		$this->factory->setClass(\Nette\String::random() . "VrtakSuperUperDuperCoolClass");
+		$this->factory->setClass(\Nette\StringUtils::random() . "VrtakSuperUperDuperCoolClass");
 		$this->factory->createInstanceMock();
 	}
 	
 	/**
-	 * @expectedException InvalidStateException
+	 * @expectedException Nette\InvalidStateException
 	 */
 	public function testCreateInstanceException2()
 	{
@@ -122,7 +122,7 @@ class ServiceFactoryTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * @expectedException InvalidStateException
+	 * @expectedException Nette\InvalidStateException
 	 */
 	public function testCreateInstanceException3()
 	{

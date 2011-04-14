@@ -47,7 +47,7 @@ class ValidatorListener extends \Nette\Object implements \Doctrine\Common\EventS
     	$errors = $this->validator->validate($entity);
 
     	if (count($errors)) {
-			throw new InvalidEntityStateException("Entity $class is not valid", $errors);
+			throw new \Nella\Models\NotValidEntityException("Entity $class is not valid", $errors);
     	}
     }
 

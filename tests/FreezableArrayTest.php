@@ -49,7 +49,7 @@ class FreezableArrayTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * @expectedException MemberAccessException
+	 * @expectedException Nette\MemberAccessException
 	 */
 	public function testUndefined()
 	{
@@ -57,7 +57,7 @@ class FreezableArrayTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * @expectedException InvalidStateException
+	 * @expectedException Nette\InvalidStateException
 	 */
 	public function testFrozenSet()
 	{
@@ -66,7 +66,7 @@ class FreezableArrayTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * @expectedException InvalidStateException
+	 * @expectedException Nette\InvalidStateException
 	 */
 	public function testFrozenUnset()
 	{
