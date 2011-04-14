@@ -100,12 +100,10 @@
 		</exec>
 
 		<!-- TMP fix DDC-1104 - START -->
-		<exec executable="sed" dir="${basedir}/_DoctrineORM/lib/Doctrine/ORM/Mapping/Driver">
-			<arg line=" '/require/d' AnnotationDriver.php > AnnotationDriver2.php" />
+		<exec executable="sed" dir="${basedir}/_DoctrineORM/lib/Doctrine/ORM/Mapping/Driver"
+			output="${basedir}/_DoctrineORM/lib/Doctrine/ORM/Mapping/Driver/AnnotationDriver.php">
+			<arg line=" '/require/d' AnnotationDriver.php" />
 		</exec>
-		<delete file="${basedir}/_DoctrineORM/lib/Doctrine/ORM/Mapping/Driver/AnnotationDriver.php" />
-		<move file="${basedir}/_DoctrineORM/lib/Doctrine/ORM/Mapping/Driver/AnnotationDriver2.php"
-				tofile="${basedir}/_DoctrineORM/lib/Doctrine/ORM/Mapping/Driver/AnnotationDriver.php"/>
 		<!-- TMP fix DDC-1104 - END -->
 		
 		<delete dir="${basedir}/dependency/Doctrine"/>
