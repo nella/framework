@@ -72,7 +72,7 @@ class ContextBuilder extends \Nette\DI\Configurator
 
 	/**
 	 * @param Config
-	 * @throws \NotSupportedException
+	 * @throws \Nette\NotSupportedException
 	 */
 	protected function loadIni(Config $config)
 	{
@@ -125,7 +125,7 @@ class ContextBuilder extends \Nette\DI\Configurator
 						break;
 					default:
 						if (ini_get($key) != $value) { // intentionally ==
-							throw new \NotSupportedException('Required function ini_set() is disabled.');
+							throw new \Nette\NotSupportedException('Required function ini_set() is disabled.');
 						}
 				}
 			}
@@ -253,7 +253,7 @@ class ContextBuilder extends \Nette\DI\Configurator
 	public $defaultServices = array(
 		'Nette\Application\Application' => array('factory' => array(__CLASS__, 'createApplication')),
 		'Nette\Http\Context' => array(
-			'class' => 'Nette\Web\HttpContext', 
+			'class' => 'Nette\Http\Context', 
 			'aliases' => array('Nette\Web\HttpContext'), 
 		),
 		'Nette\Http\IRequest' => array(
@@ -265,7 +265,7 @@ class ContextBuilder extends \Nette\DI\Configurator
 			'aliases' => array('Nette\Web\IHttpResponse'), 
 		),
 		'Nette\Http\IUser' => array(
-			'class' => 'Nette\Web\User', 
+			'class' => 'Nette\Http\User', 
 			'aliases' => array('Nette\Web\IUser'), 
 		),
 		'Nette\Caching\IStorage' => array(

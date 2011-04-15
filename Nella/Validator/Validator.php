@@ -102,7 +102,7 @@ class Validator extends \Nette\Object implements IValidator
 	}
 
 	/**
-	 * @param \Nette\Reflection\PropertyReflection
+	 * @param \Nette\Reflection\Property
 	 * @param mixed
 	 * @return mixed
 	 */

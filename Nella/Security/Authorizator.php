@@ -14,7 +14,7 @@ namespace Nella\Security;
  *
  * @author	Patrik Votoček
  */
-class Authorizator extends \Nette\Security\	Permission
+class Authorizator extends \Nette\Security\Permission
 {
 	const ROLE = 'role';
 	const RESOURCE = 'resource';

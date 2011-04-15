@@ -9,7 +9,7 @@
 
 namespace Nella\Panels;
 
-use Nette\Reflection\Class¨Type;
+use Nette\Reflection\ClassType;
 
 /**
  * Version panel for nette debug bar

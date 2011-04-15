@@ -24,7 +24,7 @@ class GettextParser extends \Nette\Object implements IParser
 	 */
 	public function encode($var, $filename)
 	{
-		throw new \NotImplementedException;
+		throw new \Nette\NotImplementedException;
 	}
 
 	/**

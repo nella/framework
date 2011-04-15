@@ -33,7 +33,7 @@ Nette\Diagnostics\Debugger::enable(Nette\Diagnostics\Debugger::DEVELOPMENT, APP_
  */
 function fdump($var, $file = NULL)
 {
-	file_put_contents($file ?: __DIR__ . "/dump.html", "<code><pre>" . \Nette\Diagnostics\Debugger::dump($var, true) . "</pre></code>", FILE_APPEND);
+	file_put_contents($file ?: __DIR__ . "/dump.html", "<code><pre>" . Nette\Diagnostics\Debugger::dump($var, true) . "</pre></code>", FILE_APPEND);
 }
 
 // Init Nette Framework robot loader

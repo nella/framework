@@ -42,7 +42,7 @@ class UserableListenerTest extends \PHPUnit_Framework_TestCase
 		
 		$args = new \Doctrine\ORM\Event\LoadClassMetadataEventArgs($em->getClassMetadata('NellaTests\Models\UserableEntityMock'), $em);
 		$this->listener->loadClassMetadata($args);
-		$entity = new \NellaTests\Models\UserableEntityMock;
+		$entity = new UserableEntityMock;
 		
 		$em->persist($entity);
 		

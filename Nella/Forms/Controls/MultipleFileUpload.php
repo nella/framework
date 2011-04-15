@@ -48,7 +48,7 @@ class MultipleFileUpload extends \Nette\Forms\Controls\BaseControl
 	/**
 	 * Generates control's HTML element.
 	 * 
-	 * @return \Nette\Web\Html
+	 * @return \Nette\Utils\Html
 	 */
 	public function getControl()
 	{

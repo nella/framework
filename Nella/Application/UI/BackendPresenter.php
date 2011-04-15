@@ -35,7 +35,7 @@ abstract class BackendPresenter extends Presenter
 			if ($this->getUser()->identity instanceof \Nella\Security\Identity) {
 				$this->lang = $this->getUser()->identity->entity->lang;
 			}
-		} catch (\InvalidStateException $e) {
+		} catch (\Nette\InvalidStateException $e) {
 			if ($this->getUser()->logoutReason === \Nette\Http\User::INACTIVITY) {
 				$this->flashMessage(__("Your login session expired. Please login again."), \Nella\FLASH_ERROR);
 			}

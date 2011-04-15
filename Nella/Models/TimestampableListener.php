@@ -10,7 +10,7 @@
 namespace Nella\Models;
 
 use Nette\Caching\Cache,
-	Nette\Reflection\PropertyReflection;
+	Nette\Reflection\Property;
 
 /**
  * Timestampable listenere
@@ -25,7 +25,7 @@ class TimestampableListener extends \Nette\Object implements \Doctrine\Common\Ev
 	private $cache;
 
 	/**
-	 * @param \Nette\Caching\ICacheStorage
+	 * @param \Nette\Caching\IStorage
 	 */
 	public function __construct(\Nette\Caching\IStorage $cacheStorage = NULL)
 	{
@@ -86,7 +86,7 @@ class TimestampableListener extends \Nette\Object implements \Doctrine\Common\Ev
 			$files = $data = array();
 			foreach ($metadata->getReflectionProperties() as $prop) {
 				$class = $prop->getDeclaringClass();
-				$ref = new \Nette\Reflection\Property($class->getName(), $prop->getName());
+				$ref = new Property($class->getName(), $prop->getName());
 				if ($ref->hasAnnotation('timestampable')) {
 					$data[] = $ref;
 				}

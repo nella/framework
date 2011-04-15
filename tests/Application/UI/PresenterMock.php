@@ -19,7 +19,7 @@ class PresenterMock extends \Nella\Application\UI\Presenter
 
 namespace Nella;
 
-class MyPresenter extends \Nella\Application\UI\Presenter { }
+class MyPresenter extends Application\UI\Presenter { }
 
 namespace Nella\Foo;
 

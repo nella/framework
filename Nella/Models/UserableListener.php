@@ -27,7 +27,7 @@ class UserableListener extends \Nette\Object implements \Doctrine\Common\EventSu
 
 	/**
 	 * @param \Nella\Security\IdentityEntity
-	 * @param \Nette\Caching\ICacheStorage
+	 * @param \Nette\Caching\IStorage
 	 */
 	public function __construct(\Nella\Security\IdentityEntity $identity = NULL, \Nette\Caching\IStorage $cacheStorage = NULL)
 	{

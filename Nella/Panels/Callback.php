@@ -29,7 +29,7 @@ class Callback extends \Nette\Object implements \Nette\Diagnostics\IPanel
 	 */
 	public function __construct(array $items = NULL)
 	{
-		$cache = \Nette\Environment::getApplication()
+		$cache = Environment::getApplication()
 			->context->getService('Nette\Caching\IStorage');
 		
 		$this->items = array(

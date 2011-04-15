@@ -49,7 +49,7 @@ class FileRoute extends \Nette\Application\Routers\Route
 
 	/**
 	 * @param int
-	 * @return \Nella\Media\FileEntity
+	 * @return FileEntity
 	 */
 	protected function getFile($id)
 	{

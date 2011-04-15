@@ -26,7 +26,7 @@ class ClassMetadataFactory extends \Nette\Object implements IClassMetadataFactor
 	private $parsers = array();
 
 	/**
-	 * @param \Nette\Caching\ICacheStorage
+	 * @param \Nette\Caching\IStorage
 	 */
 	public function __construct(\Nette\Caching\IStorage $cacheStorage = NULL)
 	{

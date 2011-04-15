@@ -41,7 +41,7 @@ class TimestampableListenerTest extends \PHPUnit_Framework_TestCase
 		
 		$args = new \Doctrine\ORM\Event\LoadClassMetadataEventArgs($em->getClassMetadata('NellaTests\Models\TimestampableEntityMock'), $em);
 		$this->listener->loadClassMetadata($args);
-		$entity = new \NellaTests\Models\TimestampableEntityMock;
+		$entity = new TimestampableEntityMock;
 		
 		$em->persist($entity);
 		
