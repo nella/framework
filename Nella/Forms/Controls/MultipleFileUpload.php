@@ -9,7 +9,8 @@
 
 namespace Nella\Forms\Controls;
 
-use Nette\Http\FileUpload;
+use Nette\Application\UI\Form, 
+	Nette\Http\FileUpload;
 
 /**
  * Text box and browse button that allow users to select a multiple files to upload to the server.
