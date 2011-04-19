@@ -35,7 +35,7 @@ class Authorizator extends \Nette\Security\Permission
 					$this->addResource($permission->resource);
 				}
 				
-				$this->allow($role->name, $permission->resource, $permission->privilege);
+				$this->{$permission->allow ? 'allow' : 'deny'}($role->name, $permission->resource, $permission->privilege);
 			}
 		}
 	}
