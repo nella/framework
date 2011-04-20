@@ -436,7 +436,7 @@ class cUrlRequest extends \Nette\Object
 				$to->path = $from->path;
 			}
 
-			return $to->absoluteUri;
+			return $to->absoluteUrl;
 		};
 
 		$headers = $this->response->headers;
