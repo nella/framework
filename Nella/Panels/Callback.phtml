@@ -48,7 +48,7 @@ var callbackPanel = {
 				}
 			}
 		}
-		xmlHttp.open("POST", <?php echo json_encode(\Nette\Environment::getApplication()->getService('Nette\Http\IRequest')->getUri()->getAbsoluteUri()); ?>, true);
+		xmlHttp.open("POST", <?php echo json_encode(\Nette\Environment::getApplication()->getService('Nette\Http\IRequest')->getUrl()->getAbsoluteUri()); ?>, true);
 		xmlHttp.setRequestHeader('X-Callback-Panel', 'TRUE');
 		xmlHttp.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 		xmlHttp.send(JSON.stringify(data));
