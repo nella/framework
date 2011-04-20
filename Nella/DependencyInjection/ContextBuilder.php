@@ -370,8 +370,8 @@ class ContextBuilder extends \Nette\DI\Configurator
 	 */
 	public static function createApplication(array $options = NULL)
 	{
-		if (Environment::getVariable('baseUri', NULL) === NULL) {
-			Environment::setVariable('baseUri', Environment::getHttpRequest()->getUrl()->getBaseUrl());
+		if (Environment::getVariable('baseUrl', NULL) === NULL) {
+			Environment::setVariable('baseUrl', Environment::getHttpRequest()->getUrl()->getBaseUrl());
 		}
 
 		$context = clone Environment::getContext();
