@@ -116,7 +116,7 @@ class PresenterFactory extends \Nette\Application\PresenterFactory
 	public function unformatPresenterClass($class)
 	{
 		$mapper = function ($prefix) use ($class) {
-			if (\Nette\StringUtils::startsWith($class, $prefix)) {
+			if (\Nette\Utils\Strings::startsWith($class, $prefix)) {
 				return $prefix;
 			}
 		};

@@ -9,7 +9,7 @@
 
 namespace Nella\Validator;
 
-use Nette\StringUtils;
+use Nette\Utils\Strings;
 
 /**
  * Object property validator
@@ -188,15 +188,16 @@ class Validator extends \Nette\Object implements IValidator
 	/**
 	 * URL validator matching urls including port number and also relative urls
 	 *
+	 * @author Pavel Kučera
 	 * @param string
 	 * @return bool
 	 */
 	public static function validateUrl($url)
 	{
 		$chars = "a-z0-9\x80-\xFF";
-		$isAbsoluteUrl = (bool) StringUtils::match($url, "#^(?:https?://|)(?:[$chars](?:[-$chars]{0,61}[$chars])?\\.)+[-$chars]{2,19}(?::([0-9]+))?(/\S*)?$#i");
-		$isRelativeUrl = (bool) StringUtils::match($url, "#^/\S+$#i");
-		$isValidIpUrl = (bool) StringUtils::match($url, "#^(?:https?://|)(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)(?:[.](?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)){3}(/\S*)?$#");
+		$isAbsoluteUrl = (bool) Strings::match($url, "#^(?:https?://|)(?:[$chars](?:[-$chars]{0,61}[$chars])?\\.)+[-$chars]{2,19}(?::([0-9]+))?(/\S*)?$#i");
+		$isRelativeUrl = (bool) Strings::match($url, "#^/\S+$#i");
+		$isValidIpUrl = (bool) Strings::match($url, "#^(?:https?://|)(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)(?:[.](?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)){3}(/\S*)?$#");
 
 		return $isAbsoluteUrl || $isRelativeUrl || $isValidIpUrl;
 	}
@@ -214,7 +215,7 @@ class Validator extends \Nette\Object implements IValidator
 		$localPart = "(?:\"(?:[ !\\x23-\\x5B\\x5D-\\x7E]*|\\\\[ -~])+\"|$atom+(?:\\.$atom+)*)"; // quoted or unquoted
 		$chars = "a-z0-9\x80-\xFF"; // superset of IDN
 		$domain = "[$chars](?:[-$chars]{0,61}[$chars])"; // RFC 1034 one domain component
-		return (bool) StringUtils::match($email, "(^$localPart@(?:$domain?\\.)+[-$chars]{2,19}\\z)i");
+		return (bool) Strings::match($email, "(^$localPart@(?:$domain?\\.)+[-$chars]{2,19}\\z)i");
 	}
 
 	/**
@@ -349,6 +350,6 @@ class Validator extends \Nette\Object implements IValidator
 	 */
 	public static function validateRegexp($input, $pattern)
 	{
-		return (bool) StringUtils::match($input, $pattern);
+		return (bool) Strings::match($input, $pattern);
 	}
 }

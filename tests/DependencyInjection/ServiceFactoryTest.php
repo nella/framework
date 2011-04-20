@@ -109,7 +109,7 @@ class ServiceFactoryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testCreateInstanceException1()
 	{
-		$this->factory->setClass(\Nette\StringUtils::random() . "VrtakSuperUperDuperCoolClass");
+		$this->factory->setClass(\Nette\Utils\Strings::random() . "VrtakSuperUperDuperCoolClass");
 		$this->factory->createInstanceMock();
 	}
 	

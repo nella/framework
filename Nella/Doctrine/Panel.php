@@ -9,8 +9,7 @@
 
 namespace Nella\Doctrine;
 
-use Nette\Diagnostics\Debugger, 
-	Nette\StringUtils;
+use Nette\Diagnostics\Debugger;
 
 /**
  * Debug panel for Doctrine
@@ -86,7 +85,7 @@ class Panel extends \Nette\Object implements \Nette\Diagnostics\IPanel, \Doctrin
 
 			$s .= '<tr><td>' . sprintf('%0.3f', $time * 1000);
 			
-			$s .= '</td><td class="database-sql">' . \Nette\Database\Connection::highlightSql(StringUtils::truncate($sql, self::$maxLength));
+			$s .= '</td><td class="database-sql">' . \Nette\Database\Connection::highlightSql(\Nette\Utils\Strings::truncate($sql, self::$maxLength));
 			if ($source) {
 				list($file, $line) = $source;
 				$s .= (Debugger::$editor ? "<a href='{$h(\Nette\Diagnostics\Helpers::editorLink($file, $line))}'" : '<span')

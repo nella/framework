@@ -10,7 +10,7 @@
 namespace Nella\Tools;
 
 use Nette\Http\Url,
-	Nette\StringUtils;
+	Nette\Strings;
 
 /**
  * Nella cUrl wrapper request class
@@ -238,11 +238,11 @@ class cUrlRequest extends \Nette\Object
 		$headers = array();
 		foreach ($this->headers as $key => $value) {
 			//fix HTTP_ACCEPT_CHARSET to Accept-Charset
-			$key = StringUtils::replace($key, array(
+			$key = Strings::replace($key, array(
 				'~^HTTP_~i' => '',
 				'~_~' => '-'
 			));
-			$key = StringUtils::replace($key, array(
+			$key = Strings::replace($key, array(
 				'~(?P<word>[a-z]+)~i',
 			), function($match) {
 				return ucfirst(strtolower(current($match)));

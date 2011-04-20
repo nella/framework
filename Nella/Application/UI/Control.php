@@ -41,7 +41,7 @@ abstract class Control extends \Nette\Application\UI\Control
 			$class = get_called_class();
 		}
 		foreach ($this->getPresenter()->context->getService('Nella\Registry\NamespacePrefixes') as $prefix) {
-			if (\Nette\StringUtils::startsWith($class, $prefix)) {
+			if (\Nette\Utils\Strings::startsWith($class, $prefix)) {
 				$class = substr($class, strlen($prefix));
 				break;
 			}

@@ -135,7 +135,7 @@ class Service extends \Nette\Object
 		$ref = new \Nette\Reflection\ClassType(get_class($entity));
 		foreach ($data as $key => $value) {
 			if (!is_array($value)) {
-				$method = "set" . \Nette\StringUtils::firstUpper($key);
+				$method = "set" . \Nette\Utils\Strings::firstUpper($key);
 				if ($ref->hasMethod($method)) {
 					$entity->$method($value);
 				}

@@ -10,7 +10,7 @@
 namespace Nella\DependencyInjection;
 
 use Nette\Environment, 
-	Nette\StringUtils;
+	Nette\Utils\Strings;
 
 /**
  * Dependency injection service container
@@ -122,9 +122,9 @@ class Context extends \Nette\FreezableObject implements IContext, \ArrayAccess
 			$data = $tmp;
 		} else {
 			if (is_string($data)) {
-				if (StringUtils::startsWith($data, '@') && $this->hasService(substr($data, 1))) {
+				if (Strings::startsWith($data, '@') && $this->hasService(substr($data, 1))) {
 					$data = $this->getService(substr($data, 1));
-				} elseif (StringUtils::startsWith($data, '%') && StringUtils::endsWith($data, '%')) { // @todo: better (DI) implementation
+				} elseif (Strings::startsWith($data, '%') && Strings::endsWith($data, '%')) { // @todo: better (DI) implementation
 					$data = $this->getParameter(substr($data, 1, -1));
 				}
 			}

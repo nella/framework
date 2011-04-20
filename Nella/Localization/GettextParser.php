@@ -9,7 +9,7 @@
 
 namespace Nella\Localization;
 
-use Nette\StringUtils;
+use Nette\UtilsStrings;
 
 /**
  * Gettext localization file parser
@@ -50,9 +50,9 @@ class GettextParser extends \Nette\Object implements IParser
 		};
 
 		$input = $read(1);
-		if (StringUtils::lower(substr(dechex($input[1]), -8)) == "950412de") {
+		if (Strings::lower(substr(dechex($input[1]), -8)) == "950412de") {
 			$endian = FALSE;
-		} elseif (StringUtils::lower(substr(dechex($input[1]), -8)) == "de120495") {
+		} elseif (Strings::lower(substr(dechex($input[1]), -8)) == "de120495") {
 			$endian = TRUE;
 		} else {
 			throw new \Nette\InvalidArgumentException("File '$filename' is not a gettext file");
@@ -92,8 +92,8 @@ class GettextParser extends \Nette\Object implements IParser
 					continue;
 				}
 
-				$original = explode(StringUtils::chr(0x00), $original);
-				$translation = explode(StringUtils::chr(0x00), $translation);
+				$original = explode(Strings::chr(0x00), $original);
+				$translation = explode(Strings::chr(0x00), $translation);
 				$output['dictionary'][is_array($original) ? $original[0] : $original]['original'] = $original;
 				$output['dictionary'][is_array($original) ? $original[0] : $original]['translation'] = $translation;
 			}
