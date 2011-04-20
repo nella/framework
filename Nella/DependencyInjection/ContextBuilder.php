@@ -283,12 +283,7 @@ class ContextBuilder extends \Nette\DI\Configurator
 		),
 		'Nette\Loaders\RobotLoader' => array('factory' => array(__CLASS__, 'createRobotLoader'), 'run' => TRUE),
 		'Nette\Latte\DefaultMacros' => array('class' => 'Nella\Latte\Macros'),
-		'Nette\Latte\Engine' => array(
-			'class' => 'Nette\Latte\Engine',
-			'methods' => array(
-				array('method' => "setHandler", 'arguments' => array('@Nette\Latte\DefaultMacros')),
-			),
-		),
+		'Nette\Latte\Engine' => array('factory' => array(__CLASS__, "createLatteEngine")), 
 		'Nella\Registry\GlobalComponentFactories' => array(
 			'factory' => array(__CLASS__, 'createRegistryGlobalComponentFactories')
 		),
@@ -418,5 +413,31 @@ class ContextBuilder extends \Nette\DI\Configurator
 		$registry['app'] = APP_DIR;
 		$registry['nella'] = NELLA_FRAMEWORK_DIR;
 		return $registry;
+	}
+	
+	/**
+	 * @return \Closure
+	 */
+	public static function createLatteEngine()
+	{
+		return function($s) {
+			$parser = new \Nette\Latte\Parser;
+			$parser->setDelimiters('\\{(?![\\s\'"{}*])', '\\}');
+
+			// context-aware escaping
+			$parser->escape = '$template->escape';
+			
+			// initialize handlers
+			$parser->handler = Environment::getApplication()
+				->context->getService('Nette\Latte\DefaultMacros');
+			$parser->handler->initialize($parser, $s);
+			
+			// process all {tags} and <tags/>
+			$s = $parser->parse($s);
+			
+			$parser->handler->finalize($s);
+			
+			return $s;
+		};
 	}
 }
