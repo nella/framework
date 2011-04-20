@@ -80,6 +80,7 @@ class NellaLoader extends \Nette\Loaders\AutoLoader
 		'nella\security\identityentity' => '/Security/IdentityEntity.php',
 		'nella\security\permissionentity' => '/Security/PermissionEntity.php',
 		'nella\security\roleentity' => '/Security/RoleEntity.php',
+		'nella\security\rolerepository' => '/Security/RoleRepository.php',
 		'nella\tools\curlbadrequestexception' => '/Tools/cUrlRequest.php',
 		'nella\tools\curlrequest' => '/Tools/cUrlRequest.php',
 		'nella\tools\curlresponse' => '/Tools/cUrlResponse.php',

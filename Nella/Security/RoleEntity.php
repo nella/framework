@@ -14,7 +14,7 @@ namespace Nella\Security;
  *
  * @author	Patrik Votoček
  *
- * @entity(repositoryClass="Nella\Models\Repository")
+ * @entity(repositoryClass="Nella\Security\RoleRepository")
  * @table(name="acl_roles")
  * @hasLifecycleCallbacks
  *
