@@ -16,7 +16,7 @@ use Nette\Environment;
  *
  * @author	Patrik Votoček
  */
-class Callback extends \Nette\Object implements \Nette\Diagnostics\IPanel
+class Callback extends \Nette\Object implements \Nette\Diagnostics\IBarPanel
 {
 	const VERSION = "1.5";
 	/** @var array */
