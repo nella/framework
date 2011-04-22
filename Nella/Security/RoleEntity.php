@@ -12,13 +12,16 @@ namespace Nella\Security;
 /**
  * Role entity
  *
+ * @author	Pavel Kučera
  * @author	Patrik Votoček
  *
  * @entity(repositoryClass="Nella\Security\RoleRepository")
  * @table(name="acl_roles")
  * @hasLifecycleCallbacks
  *
+ * @property-read array $children
  * @property string $name
+ * @property RoleEntity|NULL $parent
  * @property-read array $permissions
  */
 class RoleEntity extends \Nella\Models\Entity
@@ -29,7 +32,18 @@ class RoleEntity extends \Nella\Models\Entity
 	 */
 	private $name;
 	/**
-	 * @oneToMany(targetEntity="PermissionEntity", mappedBy="role")
+     * @manyToOne(targetEntity="RoleEntity", inversedBy="children")
+     * @joinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE")
+	 * @var RoleEntity
+	 */
+	private $parent;
+	/**
+     * @oneToMany(targetEntity="RoleEntity", mappedBy="parent", cascade={"all"})
+	 * @var \Doctrine\Common\Collections\ArrayCollection
+     */
+	private $children;
+	/**
+	 * @oneToMany(targetEntity="PermissionEntity", mappedBy="role", cascade={"all"})
 	 * @var array
 	 */
 	private $permissions;
@@ -38,6 +52,7 @@ class RoleEntity extends \Nella\Models\Entity
 	{
 		parent::__construct();
 		$this->permissions = new \Doctrine\Common\Collections\ArrayCollection;
+		$this->children = new \Doctrine\Common\Collections\ArrayCollection;
 	}
 
 	/**
@@ -60,27 +75,40 @@ class RoleEntity extends \Nella\Models\Entity
 	}
 
 	/**
+	 * @return RoleEntity|NULL
+	 */
+	public function getParent()
+	{
+		return $this->parent;
+	}
+
+	/**
+	 * @param RoleEntity|NULL
+	 * @return RoleEntity
+	 */
+	public function setParent($parent)
+	{
+		if (!($parent instanceof RoleEntity) && $parent !== NULL) {
+			throw new \InvalidArgumentException("Parent muset be either an instance of Nella\Security\RoleEntity or null");
+		}
+
+		$this->parent = $parent;
+		return $this;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getChildren()
+	{
+		return $this->children->toArray();
+	}
+
+	/**
 	 * @return array
 	 */
 	public function getPermissions()
 	{
 		return $this->permissions;
-	}
-
-	/**
-	 * @prePersist
-	 * @preUpdate
-	 *
-	 * @throws \Nella\Models\EmptyValuesException
-	 * @throws \Nella\Models\InvalidFormatException
-	 * @throws \Nella\Models\DuplicateEntryException
-	 */
-	public function check()
-	{
-		$service = $this->getModelService('Nella\Models\Service', 'Nella\Security\RoleEntity');
-
-		if (!$service->repository->isColumnUnique($this->id, 'name', $this->name)) {
-			throw new \Nella\Models\DuplicateEntryException('name', "Value of 'name' must be unique");
-		}
 	}
 }
