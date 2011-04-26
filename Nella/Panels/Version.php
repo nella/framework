@@ -16,7 +16,7 @@ use Nette\Reflection\ClassType;
  *
  * @author		Patrik Votoček
  */
-class Version implements \Nette\Diagnostics\IPanel
+class Version implements \Nette\Diagnostics\IBarPanel
 {
 	/** @var array */
 	private $updates = array();
