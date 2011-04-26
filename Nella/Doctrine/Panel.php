@@ -17,7 +17,7 @@ use Nette\Diagnostics\Debugger;
  * @author	David Grudl
  * @author	Patrik Votoček
  */
-class Panel extends \Nette\Object implements \Nette\Diagnostics\IPanel, \Doctrine\DBAL\Logging\SQLLogger
+class Panel extends \Nette\Object implements \Nette\Diagnostics\IBarPanel, \Doctrine\DBAL\Logging\SQLLogger
 {
 	/** @var int maximum SQL length */
 	static public $maxLength = 1000;

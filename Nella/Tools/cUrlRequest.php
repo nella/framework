@@ -10,7 +10,7 @@
 namespace Nella\Tools;
 
 use Nette\Http\Url,
-	Nette\Strings;
+	Nette\Utils\Strings;
 
 /**
  * Nella cUrl wrapper request class
