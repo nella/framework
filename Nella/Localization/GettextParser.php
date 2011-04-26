@@ -9,7 +9,7 @@
 
 namespace Nella\Localization;
 
-use Nette\UtilsStrings;
+use Nette\Utils\Strings;
 
 /**
  * Gettext localization file parser
