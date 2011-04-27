@@ -13,7 +13,7 @@ namespace Nella\Security;
  * Custom identity - does not store data in session
  *
  * @author	Patrik Votoček
- * 
+ *
  * @property-read int $id
  * @property-read array $roles
  * @property-read IdentityEntity $entity

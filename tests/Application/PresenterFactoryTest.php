@@ -9,8 +9,8 @@
 
 namespace NellaTests\Application;
 
-use Nella\Application\PresenterLoader, 
-	Nella\DependencyInjection\ContextBuilder;
+use Nella\Application\PresenterLoader,
+	Nella\DI\ContextBuilder;
 
 require_once __DIR__ . "/../bootstrap.php";
 
@@ -18,7 +18,7 @@ class PresenterFactoryTest extends \PHPUnit_Framework_TestCase
 {
 	/** @var Nella\Application\PresenterLoader */
 	private $loader;
-	
+
 	public function setUp()
 	{
 		$context = new \Nette\DI\Context;
@@ -26,7 +26,7 @@ class PresenterFactoryTest extends \PHPUnit_Framework_TestCase
 		$context->addService('Nella\Registry\TemplateDirs', ContextBuilder::createRegistryTemplateDirs());
 		$this->loader = new \Nella\Application\PresenterFactory(__DIR__, $context);
 	}
-	
+
 	public function testFormatPresenterClass()
 	{
 		$this->assertEquals('App\FooPresenter', $this->loader->formatPresenterClass('Foo'), "->formatPresenterClass('Foo')");
@@ -46,7 +46,7 @@ class PresenterFactoryTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals('Foo:Bar', $this->loader->unformatPresenterClass('Nella\Foo\BarPresenter'), "->unformatPresenterClass('Nella\\Foo\\BarPresenter')");
 		$this->assertEquals('Foo:Bar:Baz', $this->loader->unformatPresenterClass('Nella\Foo\Bar\BazPresenter'), "->unformatPresenterClass('Nella\\Foo\\Bar\\BazPresenter')");
 	}
-	
+
 	public function testGetPresenterClass()
 	{
 		$name = 'Foo';
@@ -58,7 +58,7 @@ class PresenterFactoryTest extends \PHPUnit_Framework_TestCase
 		$name = 'Foo:My';
 		$this->assertEquals('Nella\Foo\MyPresenter', $this->loader->getPresenterClass($name), "->getPresenterClass('$name')");
 	}
-	
+
 	/**
 	 * @expectedException Nette\Application\InvalidPresenterException
 	 */
@@ -67,7 +67,7 @@ class PresenterFactoryTest extends \PHPUnit_Framework_TestCase
 		$name = NULL;
 		$this->loader->getPresenterClass($name);
 	}
-	
+
 	/**
 	 * @expectedException Nette\Application\InvalidPresenterException
 	 */
@@ -76,7 +76,7 @@ class PresenterFactoryTest extends \PHPUnit_Framework_TestCase
 		$name = 'Bar';
 		$this->loader->getPresenterClass($name);
 	}
-	
+
 	/**
 	 * @expectedException Nette\Application\InvalidPresenterException
 	 */
@@ -85,7 +85,7 @@ class PresenterFactoryTest extends \PHPUnit_Framework_TestCase
 		$name = 'Baz';
 		$this->loader->getPresenterClass($name);
 	}
-	
+
 	/**
 	 * @expectedException Nette\Application\InvalidPresenterException
 	 */
@@ -94,14 +94,14 @@ class PresenterFactoryTest extends \PHPUnit_Framework_TestCase
 		$name = 'Bar';
 		$this->loader->getPresenterClass($name);
 	}
-	
+
 	/**
 	 * @expectedException Nette\Application\InvalidPresenterException
 	 */
 	public function testGetPresenterClassException5()
 	{
 		$this->loader->caseSensitive = TRUE;
-		
+
 		$name = 'my';
 		$this->loader->getPresenterClass($name);
 	}

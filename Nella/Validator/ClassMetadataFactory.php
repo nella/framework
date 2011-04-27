@@ -36,7 +36,7 @@ class ClassMetadataFactory extends \Nette\Object implements IClassMetadataFactor
 
 	protected function loadDefaultParsers()
 	{
-		$this->addParser(new AnnotationParser);
+		$this->addParser(new MetadataParsers\Annotation);
 		//$this->addParser(new DoctrineAnnotationParser);
 	}
 

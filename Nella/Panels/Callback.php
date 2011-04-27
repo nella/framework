@@ -18,43 +18,39 @@ use Nette\Environment;
  */
 class Callback extends \Nette\Object implements \Nette\Diagnostics\IBarPanel
 {
-	const VERSION = "1.5";
+	const VERSION = "1.6";
 	/** @var array */
 	private $items = array();
 	/** @var bool */
 	private static $registered = FALSE;
-	
+
 	/**
+	 * @param \Nella\DI\IContext
 	 * @param array
 	 */
-	public function __construct(array $items = NULL)
+	public function __construct(\Nella\DI\IContext $context, array $items = NULL)
 	{
-		$cache = Environment::getApplication()
-			->context->getService('Nette\Caching\IStorage');
-		
+		$cache = $context->getService('Nette\Caching\IStorage');
+		$loader = $context->getService('Nette\Loaders\RobotLoader');
+
 		$this->items = array(
 			'--cache' => array(
-				'callback' => callback($cache, 'clean'), 
-				'name' => "Invalidate cache", 
+				'callback' => callback($cache, 'clean'),
+				'name' => "Invalidate cache",
 				'args' => array(array(\Nette\Caching\Cache::ALL => TRUE))
 			),
+			'--robotloader' => array(
+				'callback' => callback($loader, 'rebuild'),
+				'name' => "Rebuild",
+				'args' => array(),
+			),
 		);
-		
+
 		if ($items) {
 			$this->items = array_merge($this->items, $items);
 		}
 
 		$this->processRequest();
-	}
-
-	/**
-	 * Returns panel ID.
-	 * @return string
-	 * @see Nette\IDebugPanel::getId()
-	 */
-	public function getId()
-	{
-		return "callback-panel";
 	}
 
 	/**
@@ -64,7 +60,10 @@ class Callback extends \Nette\Object implements \Nette\Diagnostics\IBarPanel
 	 */
 	public function getTab()
 	{
-		return '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAK8AAACvABQqw0mAAAABh0RVh0U29mdHdhcmUAQWRvYmUgRmlyZXdvcmtzT7MfTgAAAY9JREFUOI2lkj1rVUEQhp93d49XjYiCUUFtgiBpFLyWFhKxEAsbGy0ErQQrG/EHCII/QMTGSrQ3hY1FijS5lQp2guBHCiFRSaLnnN0di3Pu9Rpy0IsDCwsz8+w776zMjP+J0JV48nrufMwrc2AUbt/CleMv5ycClHH1UZWWD4MRva4CByYDpHqjSgKEETcmHiHmItW5STuF/FfAg8HZvghHDDMpkKzYXScPgFcx9XBw4WImApITn26cejEAkJlxf7F/MOYfy8K3OJGtJlscKsCpAJqNGRknd+jO6TefA8B6WU1lMrBZ6fiE1R8Zs7hzVJHSjvJnNMb/hMSmht93IYIP5Qhw99zSx1vP+5eSxZmhzpzttmHTbcOKk+413Sav4v3J6ZsfRh5sFdefnnhr2Gz75rvHl18d3aquc43f1/BjaN9V1wn4tq6eta4LtnUCQuPWHmAv0AOKDNXstZln2/f3zgCUX8oFJx1zDagGSmA1mn2VmREk36pxw5NgzVqDhOTFLhjtOgMxmqVOE/81fgFilqPyaom5BAAAAABJRU5ErkJggg==">callback';
+		return '<span title="Callbacks">
+			<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAK8AAACvABQqw0mAAAABh0RVh0U29mdHdhcmUAQWRvYmUgRmlyZXdvcmtzT7MfTgAAAY9JREFUOI2lkj1rVUEQhp93d49XjYiCUUFtgiBpFLyWFhKxEAsbGy0ErQQrG/EHCII/QMTGSrQ3hY1FijS5lQp2guBHCiFRSaLnnN0di3Pu9Rpy0IsDCwsz8+w776zMjP+J0JV48nrufMwrc2AUbt/CleMv5ycClHH1UZWWD4MRva4CByYDpHqjSgKEETcmHiHmItW5STuF/FfAg8HZvghHDDMpkKzYXScPgFcx9XBw4WImApITn26cejEAkJlxf7F/MOYfy8K3OJGtJlscKsCpAJqNGRknd+jO6TefA8B6WU1lMrBZ6fiE1R8Zs7hzVJHSjvJnNMb/hMSmht93IYIP5Qhw99zSx1vP+5eSxZmhzpzttmHTbcOKk+413Sav4v3J6ZsfRh5sFdefnnhr2Gz75rvHl18d3aquc43f1/BjaN9V1wn4tq6eta4LtnUCQuPWHmAv0AOKDNXstZln2/f3zgCUX8oFJx1zDagGSmA1mn2VmREk36pxw5NgzVqDhOTFLhjtOgMxmqVOE/81fgFilqPyaom5BAAAAABJRU5ErkJggg==">
+			callback
+			</span>';
 	}
 
 	/**
@@ -95,7 +94,7 @@ class Callback extends \Nette\Object implements \Nette\Diagnostics\IBarPanel
 					}
 				}
 			}
-			
+
 			die(json_encode(array('status' => "OK")));
 		}
 	}
@@ -110,8 +109,8 @@ class Callback extends \Nette\Object implements \Nette\Diagnostics\IBarPanel
 		if (self::$registered) {
 			throw new \Nette\InvalidStateException("Callback panel is already registered");
 		}
-		
-		\Nette\Diagnostics\Debugger::addPanel(new static($items));
+
+		\Nette\Diagnostics\Debugger::$bar->addPanel(new static($items));
 		self::$registered = TRUE;
 	}
 }

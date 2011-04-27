@@ -51,7 +51,7 @@ class Dictionary extends \Nette\FreezableObject
 			throw new \Nette\InvalidStateException("Dictionary is already loaded");
 		}
 
-		$parser = new GettextParser;
+		$parser = new Parsers\Gettext;
 		$path = $this->dir . "/" . $lang . ".mo";
 		if (file_exists($path)) {
 			$data = $parser->decode();

@@ -15,7 +15,7 @@ Nette\Diagnostics\Debugger::$strictMode = TRUE;
 Nette\Diagnostics\Debugger::$maxLen = 4096;
 
 // Set better dependency injection container
-$configurator = new Nella\DependencyInjection\ContextBuilder;
+$configurator = new Nella\DI\ContextBuilder;
 $configurator->onAfterLoad[] = function() {
 	// Load panels
 	Nella\Panels\Callback::register();
