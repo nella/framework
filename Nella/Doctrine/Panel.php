@@ -2,7 +2,7 @@
 /**
  * This file is part of the Nella Framework.
  *
- * Copyright (c) 2006, 2011 Patrik VotoËek (http://patrik.votocek.cz)
+ * Copyright (c) 2006, 2011 Patrik Votoƒçek (http://patrik.votocek.cz)
  *
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
@@ -16,7 +16,7 @@ use Nette\Diagnostics\Debugger,
  * Debug panel for Doctrine
  *
  * @author	David Grudl
- * @author	Patrik VotoËek
+ * @author	Patrik Votoƒçek
  */
 class Panel extends \Nette\Object implements \Nette\Diagnostics\IBarPanel, \Doctrine\DBAL\Logging\SQLLogger
 {
