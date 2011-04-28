@@ -15,39 +15,39 @@ class FreezableArrayTest extends \PHPUnit_Framework_TestCase
 {
 	/** @var \Nella\FreezableArray */
 	private $arr;
-	
+
 	public function setUp()
 	{
 		$this->arr = new \Nella\FreezableArray;
 		$this->arr['foo'] = "bar";
 	}
-	
+
 	public function testGet()
 	{
 		$this->assertTrue(isset($this->arr['foo']), "isset(\$arr['foo']) if defined offset");
 		$this->assertEquals("bar", $this->arr['foo'], "\$arr['foo'] equals 'bar'");
 	}
-	
+
 	public function testSet()
 	{
 		$this->arr['bar'] = "foo";
 		$this->assertTrue(isset($this->arr['bar']), "isset(\$arr['bar']) if defined offset");
 		$this->assertEquals("foo", $this->arr['bar'], "\$arr['bar'] equals 'foo'");
 	}
-	
+
 	public function testUnset()
 	{
 		unset($this->arr['foo']);
 		$this->assertFalse(isset($this->arr['foo']), "isset(\$arr['foo']) if defined offset");
 	}
-	
+
 	public function testIterator()
 	{
 		$iterator = $this->arr->getIterator();
 		$this->assertInstanceOf("ArrayIterator", $iterator);
 		$this->assertEquals("bar", $iterator->current(), "->current equals 'bar'");
 	}
-	
+
 	/**
 	 * @expectedException Nette\MemberAccessException
 	 */
@@ -55,22 +55,22 @@ class FreezableArrayTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->arr['bar'];
 	}
-	
+
 	/**
 	 * @expectedException Nette\InvalidStateException
 	 */
 	public function testFrozenSet()
 	{
-		$this->arr->getIterator();
+		$this->arr->freeze();
 		$this->arr['bar'] = "foo";
 	}
-	
+
 	/**
 	 * @expectedException Nette\InvalidStateException
 	 */
 	public function testFrozenUnset()
 	{
-		$this->arr->getIterator();
+		$this->arr->freeze();
 		unset($this->arr['foo']);
 	}
 }
