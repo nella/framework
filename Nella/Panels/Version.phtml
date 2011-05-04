@@ -28,7 +28,7 @@ namespace Nella\Panels;
 	<tr>
 		<th><?php echo htmlspecialchars($lib['name']) ?></th>
 		<td<?php if (!isset($lib['revision'])): ?> colspan="2"<?php endif ?>><?php echo htmlspecialchars($lib['version']) ?></td>
-		<?php if (!isset($lib['revision'])): ?><td><?php echo htmlspecialchars($lib['revision']) ?></td><?php endif ?>
+		<?php if (isset($lib['revision'])): ?><td><?php echo htmlspecialchars($lib['revision']) ?></td><?php endif ?>
 	</tr>
 	<?php endforeach ?>
 	</table>
