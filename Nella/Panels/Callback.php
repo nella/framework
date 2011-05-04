@@ -104,13 +104,13 @@ class Callback extends \Nette\Object implements \Nette\Diagnostics\IBarPanel
 	 *
 	 * @param array	items for add to pannel
 	 */
-	public static function register(array $items = NULL)
+	public static function register(\Nella\DI\IContext $context, array $items = NULL)
 	{
 		if (self::$registered) {
 			throw new \Nette\InvalidStateException("Callback panel is already registered");
 		}
 
-		\Nette\Diagnostics\Debugger::$bar->addPanel(new static($items));
+		\Nette\Diagnostics\Debugger::$bar->addPanel(new static($context, $items));
 		self::$registered = TRUE;
 	}
 }
