@@ -139,7 +139,7 @@ class Panel extends \Nette\Object implements \Nette\Diagnostics\IBarPanel, \Doct
 	{
 		$panel = new static;
 		Debugger::$bar->addPanel($panel);
-		Debugger::$blueScreen->addPanel(callback($this, 'renderException'));
+		Debugger::$blueScreen->addPanel(callback($panel, 'renderException'));
 		return $panel;
 	}
 }
