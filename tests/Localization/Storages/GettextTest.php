@@ -7,21 +7,31 @@
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
 
-namespace NellaTests\Localization\Parsers;
+namespace NellaTests\Localization\Storages;
+
+use Nella\Localization\Dictionary;
+
+require_once __DIR__ . "/../../bootstrap.php";
 
 class GettextTest extends \PHPUnit_Framework_TestCase
 {
-	/** @var \Nella\Localization\Parsers\Gettext */
-	private $parser;
+	/** @var \Nella\Localization\Storages\Gettext */
+	private $storage;
 
 	public function setUp()
 	{
-		$this->parser = new \Nella\Localization\Parsers\Gettext;
+		$this->storage = new \Nella\Localization\Storages\Gettext(__DIR__ . "/GettextTest.mo");
+	}
+	
+	public function testInstance()
+	{
+		$this->assertInstanceOf('Nella\Localization\IStorage', $this->storage, "is instance of 'Nella\\Localization\\IStorage'");
 	}
 
-	public function testDecode()
+	public function testLoad()
 	{
-		$data = $this->parser->decode(__DIR__ . "/GettextTest.mo");
+		$dictionary = new Dictionary(__DIR__, $this->storage);
+		$this->storage->load("test", $dictionary);
 
 		$this->assertEquals(array(
 			'Plural-Forms' => "nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4 ? 1 : 2);",
@@ -38,32 +48,30 @@ class GettextTest extends \PHPUnit_Framework_TestCase
 			'X-Poedit-SourceCharset' => "utf-8",
 			'X-Poedit-KeywordsList' => "__;_n;_x;_nx;_;!_",
 			'Language-Team:' => NULL,
-		), $data['metadata'], "metadata");
+		), $dictionary->metadata, "metadata");
+		
+		//dump($dictionary->iterator);
+		//exit(255)
 
 		$this->assertEquals(array(
 			'Test' => array(
-				'original' => array(
-					0 => "Test",
-				),
+				'status' => Dictionary::STATUS_SAVED, 
 				'translation' => array(
 					0 => "Test",
 				),
 			),
 			'Test plural %s' => array(
-				'original' => array(
-					0 => "Test plural %s",
-					1 => "Test plurals %s",
-				),
+				'status' => Dictionary::STATUS_SAVED,
 				'translation' => array(
 					0 => "Test plural %s 1",
 					1 => "Test plural %s 2",
 					2 => "Test plural %s 3",
 				),
 			),
-		), $data['dictionary'], "dictionary");
+		), $dictionary->iterator->getArrayCopy(), "dictionary");
 	}
 
-	public function testEncode()
+	public function testSave()
 	{
 		$this->markTestSkipped("Not implemented");
 	}

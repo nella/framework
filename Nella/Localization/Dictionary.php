@@ -15,16 +15,24 @@ namespace Nella\Localization;
  * @author	Patrik Votoček
  *
  * @property-read string $dir
- * @property-read string $module
- * @property-read array $metadata
- * @property-read array $dictionary
+ * @property string $pluralForm
+ * @property array $metadata
+ * @property-read \ArrayIterator $iterator
  */
-class Dictionary extends \Nette\FreezableObject
+class Dictionary extends \Nella\FreezableObject implements \IteratorAggregate, \Serializable
 {
+	const STATUS_SAVED = TRUE, 
+		STATUS_TRANSLATED = FALSE, 
+		STATUS_UNTRANSLATED = NULL;
+	
 	/** @var string */
 	private $dir;
+	/** @var IStorage */
+	private $storage;
 	/** @var string */
-	private $module;
+	private $lang;
+	/** @var string */
+	private $pluralForm;
 	/** @var array */
 	private $metadata;
 	/** @var array */
@@ -34,31 +42,105 @@ class Dictionary extends \Nette\FreezableObject
 	 * @param string
 	 * @param string
 	 */
-	public function __construct($dir, $module = NULL)
+	public function __construct($dir, IStorage $storage)
 	{
 		$this->dir = $dir;
-		$this->module = $module;
+		$this->storage = $storage;
 		$this->metadata = $this->dictionary = array();
+	}
+	
+	/**
+	 * @return string
+	 */
+	public function getDir()
+	{
+		return $this->dir;
+	}
+	
+	/**
+	 * @return string
+	 */
+	public function getPluralForm()
+	{
+		return $this->pluralForm;
+	}
+	
+	/**
+	 * @param string
+	 * @return Dictionary
+	 */
+	public function setPluralForm($pluralForm)
+	{
+		$this->pluralForm = $pluralForm;
+		return $this;
+	}
+	
+	/**
+	 * @internal
+	 * @return array
+	 */
+	public function getMetadata()
+	{
+		return $this->metadata;
+	}
+	
+	/**
+	 * @internal
+	 * @param array
+	 * @return Dictionary
+	 */
+	public function setMetadata(array $metadata = array())
+	{
+		$this->updating();
+		
+		$this->metadata = $metadata;
+		return $this;
+	}
+	
+	/**
+	 * @param string
+	 * @param array
+	 * @param bool
+	 * @return Dictionary
+	 */
+	public function addTranslation($message, array $translation = array(), $status = self::STATUS_SAVED)
+	{
+		$this->dictionary[$message] = array(
+			'status' => $status, 
+			'translation' => $translation, 
+		);
+		
+		return $this;
+	}
+	
+	/**
+	 * @param string
+	 * @return bool
+	 */
+	public function hasTranslation($message)
+	{
+		return isset($this->dictionary[$message]);
+	}
+	
+	/**
+	 * @return \ArrayIterator
+	 */
+	public function getIterator()
+	{
+		return new \ArrayIterator($this->dictionary);
 	}
 
 	/**
 	 * @param string
 	 * @throws \Nette\InvalidStateException
 	 */
-	public function loadLang($lang)
+	public function init($lang)
 	{
-		if ($this->isFrozen()) {
-			throw new \Nette\InvalidStateException("Dictionary is already loaded");
-		}
+		$this->updating();
 
-		$parser = new Parsers\Gettext;
-		$path = $this->dir . "/" . $lang . ".mo";
-		if (file_exists($path)) {
-			$data = $parser->decode();
-			$this->metadata = $data['metadata'];
-			$this->dictionary = $data['dictionary'];
-		}
-
+		$this->lang = $lang;
+		$this->storage->load($this->lang, $this);
+		
 		$this->freeze();
 	}
 
@@ -71,63 +153,63 @@ class Dictionary extends \Nette\FreezableObject
 	public function translate($message, $count = NULL)
 	{
 		if (!$this->isFrozen()) {
-			throw new \Nette\InvalidStateException("Dictionary not loaded");
+			throw new \Nette\InvalidStateException("Dictionary not inicialized");
 		}
 
-		if (!isset($this->dictionary[$message])) {
+		if (!$this->hasTranslation($message)) {
 			return NULL;
 		}
 
-		$translations = $this->dictionary[$message]['translation'];
-		$plural = $this->getPluralForm($count);
+		$translation = $this->dictionary[$message]['translation'];
+		$plural = $this->parsePluralForm($count);
 
-		return isset($translations[$plural]) ? $translations[$plural] : $translations[0];
+		return isset($translation[$plural]) ? $translation[$plural] : $translation[0];
 	}
 
 	/**
 	 * @param int
-	 * @param int
+	 * @return int
 	 */
-	protected function getPluralForm($form)
+	protected function parsePluralForm($form)
 	{
-		if (!isset($this->metadata['Plural-Forms']) || $form === NULL) {
+		if (!isset($this->pluralForm) || $form === NULL) {
 			return 0;
 		}
 
-		eval($x = preg_replace('/([a-z]+)/', '$$1', "n=$form;".$this->metadata['Plural-Forms'].";"));
+		eval($x = preg_replace('/([a-z]+)/', '$$1', "n=$form;".$this->pluralForm.";"));
 
 		return $plural;
 	}
-
+	
+	/**
+	 * @return Dictionary
+	 */
+	public function save()
+	{
+		$this->storage->save($this, $this->lang);
+		return $this;
+	}
+	
 	/**
 	 * @return string
 	 */
-	public function getDir()
+	public function serialize()
 	{
-		return $this->dir;
+		return serialize(array(
+			'metadata' => $this->metadata, 
+			'pluralForm' => $this->pluralForm, 
+			'dicionary' => $this->dictionary, 
+		));
 	}
 
 	/**
-	 * @return string
+	 * @param string
 	 */
-	public function getModule()
+	public function unserialize($serialized)
 	{
-		return $this->module;
-	}
-
-	/**
-	 * @return array
-	 */
-	public function getMetadata()
-	{
-		return $this->metadata;
-	}
-
-	/**
-	 * @return array
-	 */
-	public function getDictionary()
-	{
-		return $this->dictionary;
+		$data = unserialize($serialized);
+		$this->metadata = $data['metadata'];
+		$this->pluralForm = $data['pluralForm'];
+		$this->dictionary = $data['dictionary'];
 	}
 }

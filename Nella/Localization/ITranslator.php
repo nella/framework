@@ -7,12 +7,17 @@
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
 
-namespace NellaTests\Localization;
+namespace Nella\Localization;
 
-class TranslatorMock extends \Nella\Localization\Translator
+/**
+ * Translator adapter
+ * 
+ * @author	Patrik Votocek
+ */
+interface ITranslator extends \Nette\Localization\ITranslator
 {
-	public function getDictionariesMock()
-	{
-		return $this->dictionaries;
-	}
+	/**
+	 * @return array
+	 */
+	public function getDictionaries();
 }

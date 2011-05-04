@@ -10,21 +10,21 @@
 namespace Nella\Localization;
 
 /**
- * Localization parser interface
+ * Localization storage interface
  *
  * @author	Patrik Votoček
  */
-interface IParser
+interface IStorage
 {
 	/**
-	 * @param mixed
-	 * @param string save file path
+	 * @param Dictionary
+	 * @param string
 	 */
-	public function encode($var, $file);
+	public function save(Dictionary $dictionary, $lang);
 	
 	/**
-	 * @param string file path
-	 * @return array
+	 * @param string
+	 * @return Dictionary
 	 */
-	public function decode($file);
+	public function load($lang, Dictionary $dictionary);
 }

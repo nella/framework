@@ -11,23 +11,25 @@ namespace NellaTests\Localization;
 
 require_once __DIR__ . "/../bootstrap.php";
 
-use Nette\Reflection\Property;
-
 class TranslatorTest extends \PHPUnit_Framework_TestCase
 {
-	/** @var TranslatorMock */
+	/** @var \Nella\Localization\Translator */
 	private $translator;
 	
 	public function setUp()
 	{
-		$this->translator = new TranslatorMock;
+		$this->translator = new \Nella\Localization\Translator;
 	}
 	
 	public function testDicionaries()
 	{
+		$this->assertEquals(0, count($this->translator->dictionaries), "->dictionaries default is not inicialized");
+		
 		$this->translator->addDictionary(__DIR__);
-		$dictionary = current($this->translator->getDictionariesMock());
-
+		$dictionaries = $this->translator->getDictionaries();
+		$this->assertEquals(1, count($dictionaries), "->getDictionaries() after ->addDictionary() count 1 dictionary");
+		
+		$dictionary = reset($dictionaries);
 		$this->assertInstanceOf('Nella\Localization\Dictionary', $dictionary, "is dictionary instance of localization dictionary");
 		$this->assertEquals(__DIR__, $dictionary->getDir(), "is dictionary loaded valid dir");
 	}
@@ -63,42 +65,14 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
 		$this->translator->lang = "cs";
 		$this->translator->freeze();
 
-		$mock = new \Nella\Localization\Dictionary(__DIR__);
-		$mock->loadLang('cs');
+		$mock = new \Nella\Localization\Dictionary(__DIR__, new Storages\Mock(array(
+			'simple translated text' => array("jednoduchy prelozeny text"), 
+			'translated text' => array("prelozeny text", "prelozene texty", "prelozenych textu"), 
+		)));
+		$mock->setPluralForm('nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4 ? 1 : 2);');
+		$mock->init('test');
 
-		$metadata = array('Plural-Forms' => "nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4 ? 1 : 2);");
-		$ref = new Property('Nella\Localization\Dictionary', 'metadata');
-		$ref->setAccessible(TRUE);
-		$ref->setValue($mock, $metadata);
-		$ref->setAccessible(FALSE);
-
-		$dictionary = array(
-			'simple translated text' => array(
-				'original' => array(
-					0 => "simple translated text", 
-				), 
-				'translation' => array(
-					0 => "jednoduchy prelozeny text", 
-				), 
-			), 
-			'translated text' => array(
-				'original' => array(
-					0 => "translated text", 
-					1 => "translated texts", 
-				), 
-				'translation' => array(
-					0 => "prelozeny text", 
-					1 => "prelozene texty", 
-					2 => "prelozenych textu", 
-				), 
-			)
-		);
-		$ref = new Property('Nella\Localization\Dictionary', 'dictionary');
-		$ref->setAccessible(TRUE);
-		$ref->setValue($mock, $dictionary);
-		$ref->setAccessible(FALSE);
-
-		$ref = new Property('Nella\Localization\Translator', 'dictionaries');
+		$ref = new \Nette\Reflection\Property('Nella\Localization\Translator', 'dictionaries');
 		$ref->setAccessible(TRUE);
 		$ref->setValue($this->translator, array($mock));
 		$ref->setAccessible(FALSE);
