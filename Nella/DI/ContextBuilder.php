@@ -420,24 +420,6 @@ class ContextBuilder extends \Nette\DI\Configurator
 	 */
 	public static function createLatteEngine()
 	{
-		return function($s) {
-			$parser = new \Nette\Latte\Parser;
-			$parser->setDelimiters('\\{(?![\\s\'"{}*])', '\\}');
-
-			// context-aware escaping
-			$parser->escape = '$template->escape';
-
-			// initialize handlers
-			$parser->handler = Environment::getApplication()
-				->context->getService('Nette\Latte\DefaultMacros');
-			$parser->handler->initialize($parser, $s);
-
-			// process all {tags} and <tags/>
-			$s = $parser->parse($s);
-
-			$parser->handler->finalize($s);
-
-			return $s;
-		};
+		return new \Nella\Latte\Engine(Environment::getApplication()->context);
 	}
 }
