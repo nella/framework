@@ -19,7 +19,7 @@ class Application extends \Nette\Application\Application
 	public function run()
 	{
 		if (PHP_SAPI == "cli") {
-			$this->getContext()->getService('Symfony\Component\Console\Application')->run();
+			$this->context->getService('console')->run();
 		} else {
 			parent::run();
 		}

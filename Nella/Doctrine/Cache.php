@@ -17,14 +17,14 @@ namespace Nella\Doctrine;
 class Cache extends \Doctrine\Common\Cache\AbstractCache
 {
 	/** @var array */
-	private $data = array();
+	private $cache = array();
 
 	/**
 	 * @param \Nette\Caching\IStorage
 	 */
 	public function  __construct(\Nette\Caching\IStorage $cacheStorage)
 	{
-		$this->data = new \Nette\Caching\Cache($cacheStorage, "Nella.Doctrine");
+		$this->cache = new \Nette\Caching\Cache($cacheStorage, "Nella.Doctrine");
 	}
 
 	/**
@@ -32,7 +32,7 @@ class Cache extends \Doctrine\Common\Cache\AbstractCache
 	 */
 	public function getIds()
 	{
-		return array_keys($this->data);
+		throw new \Nette\NotImplementedException; // wait fot $cache->getIds() in Nette\Caching\Cache 
 	}
 
 	/**
@@ -40,8 +40,8 @@ class Cache extends \Doctrine\Common\Cache\AbstractCache
 	 */
 	protected function _doFetch($id)
 	{
-		if (isset($this->data[$id])) {
-			return $this->data[$id];
+		if (isset($this->cache[$id])) {
+			return $this->cache->load($id);
 		}
 		return FALSE;
 	}
@@ -51,7 +51,7 @@ class Cache extends \Doctrine\Common\Cache\AbstractCache
 	 */
 	protected function _doContains($id)
 	{
-		return isset($this->data[$id]);
+		return isset($this->cache[$id]);
 	}
 
 	/**
@@ -70,9 +70,9 @@ class Cache extends \Doctrine\Common\Cache\AbstractCache
 		}
 		
 		if ($lifeTime != 0) {
-			$this->data->save($id, $data, array('expire' => time() + $lifeTime, 'tags' => array("doctrine"), 'files' => $files));
+			$this->cache->save($id, $data, array('expire' => time() + $lifeTime, 'tags' => array("doctrine"), 'files' => $files));
 		} else {
-			$this->data->save($id, $data, array('tags' => array("doctrine"), 'files' => $files));
+			$this->cache->save($id, $data, array('tags' => array("doctrine"), 'files' => $files));
 		}
 		return TRUE;
 	}
@@ -82,7 +82,7 @@ class Cache extends \Doctrine\Common\Cache\AbstractCache
 	 */
 	protected function _doDelete($id)
 	{
-		unset($this->data[$id]);
+		$this->cache->delete($id);
 		return TRUE;
 	}
 }

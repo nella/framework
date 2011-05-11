@@ -16,10 +16,10 @@ namespace Nella\Latte;
  */
 class Engine extends \Nette\Latte\Engine
 {
-	public function __construct(\Nella\DI\IContext $context)
+	public function __construct(\Nette\DI\IContainer $container)
 	{
 		$this->parser = new \Nette\Latte\Parser;
-		$this->parser->handler = $context->getService('Nette\Latte\DefaultMacros');
+		$this->parser->handler = $container->getService('macros');
 		$class = get_class($this->parser->handler);
 		$this->parser->macros = $class::$defaultMacros;
 	}

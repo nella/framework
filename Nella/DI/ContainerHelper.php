@@ -7,34 +7,34 @@
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
 
-namespace Nella\Doctrine;
+namespace Nella\DI;
 
 /**
- * Console helper.
- *
- * @author	Patrik Votoček
+ * The dependency injection container helper.
+ * 
+ * @author	Patrik Votocek
  */
-class EntityManagerHelper extends \Symfony\Component\Console\Helper\Helper
+class ContainerHelper extends \Symfony\Component\Console\Helper\Helper
 {
-	/** @var Container */
+	/** @var \Nette\DI\IContainer */
     protected $container;
 
     /**
-     * @param Container
+     * @param \Nette\DI\IContainer
      */
-    public function __construct(Container $container)
+    public function __construct(\Nette\DI\IContainer $container)
     {
         $this->container = $container;
     }
 
 	/**
-     * Retrieves Doctrine ORM EntityManager
+     * Retrieves Nella DI Container
      *
-     * @return \Doctrine\ORM\EntityManager
+     * @return \Nette\DI\IContainer
      */
-    public function getEntityManager()
+    public function getContainer()
     {
-        return $this->container->getEntityManager();
+        return $this->container;
     }
 
     /**
@@ -42,6 +42,6 @@ class EntityManagerHelper extends \Symfony\Component\Console\Helper\Helper
      */
     public function getName()
     {
-        return 'entityManager';
+        return 'diContainer';
     }
 }

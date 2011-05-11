@@ -121,7 +121,11 @@ class IdentityEntity extends \Nella\Models\Entity
 	public function setPassword($password, $algo = "sha256")
 	{
 		$salt = \Nette\Utils\Strings::random();
-		$this->password = $algo . self::PASSWORD_DELIMITER . $salt . self::PASSWORD_DELIMITER . hash($algo, $salt . $password);
+		
+		$this->password = $algo . self::PASSWORD_DELIMITER;
+		$this->password .= $salt . self::PASSWORD_DELIMITER;
+		$this->password .= hash($algo, $salt . $password);
+		
 		return $this;
 	}
 
@@ -205,8 +209,8 @@ class IdentityEntity extends \Nella\Models\Entity
 	 */
 	public function check()
 	{
-		$em = \Nette\Environment::getApplication()->context->getService('Doctrine\ORM\EntityManager');
-		$service = new \Nella\Models\Service($em, 'Nella\Security\IdentityEntity');
+		$dc = \Nette\Environment::getContext()->getService('doctrineContainer');
+		$service = $dc->getEntityService('Nella\Security\IdentityEntity');
 		if (!$service->repository->isColumnUnique($this->id, 'username', $this->username)) {
 			throw new \Nella\Models\DuplicateEntryException('username', "Username value must be unique");
 		}

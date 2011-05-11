@@ -13,17 +13,19 @@ use Nette\Reflection\ClassType;
 
 /**
  * Version panel for nette debug bar
+ * 
+ * Show and verify libraries versions with Github
  *
  * @author		Patrik Votoček
  */
-class Version implements \Nette\Diagnostics\IBarPanel
+class Version extends \Nella\FreezableObject implements \Nette\Diagnostics\IBarPanel
 {
 	/** @var array */
 	private $updates = array();
 	/** @var array */
 	private $libs = array();
-	/** @var bool */
-	private static $registered = FALSE;
+	/** @var \Nette\Caching\Cache|NULL */
+	private $cache;
 
 	const VERSION = "3.5";
 
@@ -41,6 +43,8 @@ class Version implements \Nette\Diagnostics\IBarPanel
 		$updates = $this->updates;
 		$libs = $this->libs;
 
+		$this->freeze();
+		
 		ob_start();
 		require_once __DIR__ . "/Version.phtml";
 		return ob_get_clean();
@@ -56,6 +60,8 @@ class Version implements \Nette\Diagnostics\IBarPanel
 		if (count($this->updates) < 1) {
 			$this->loadUpdates();
 		}
+		
+		$this->freeze();
 
 		$data = '<span title="Libraries Versions">
 			<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAjpJREFUeNpi/P//PwMlgAWb4M/f/xhWX3qltPrKW5P/7CxCinxsT0JU+I6byfC+ZediQ1HLiO6CX//+M0WsulW1/tKbIgZmBkGGf0B5ZiYGhu+/7/urC+Qvi9PZzMXGjN2Aj19/MSStu5Wz7sqbyQwMQPHffz8BldwFqtJk4mDj+Pfr36cF4Rrm8SYSN2B6mJBtP//sE+e6Yw9ymH58BVr96/HCKC2ng9lGJjH6oqn/Pnz8z/D9C9/CU4+9cYYB079/zAyfPvz+B3S2gZH0xDgTqbMg8aP3Pz1i+HYd6BhGhv/fvqJYisIxlOX/sjDDItJBTSCu3Flp6ndgYC48fEe/ffnheez/fzEyfPj4KdFMZjNKoIHCABdOm3HAisGz/wV72LT/DN793wI7tgZ8+/EbRQ0Trvi9fP815/Id5yZzsfwT//Xx07swC4XAFUXuGzjZUWMepwGv331W+vzyrcHfL58ZTGX5G5aU++5kY2XGUIfTAAlB7tfSfKzH/nz8dL0y2mYjKxbNeA1QlhF+pSbKvYDhy+d1f3/8fIMzLeMKwMLGZSZsinH/OVXi//sl9zfgUgcPkbdv3zKsWL6cfdWqVewszMyMQjL6rLxc7L8YmdjYLpzc/9PJcSMfKOXKysr+zczM/G5hafkXxQVnz5xhMDExEQK5Hog1gVidgZHfl4FdJg7I1oZiDSCWz0hP54Tpw8hM165eZXj77h0DI8jwf39AOYKBiQkUgIxgtrCQEIOWtjZcPUCAAQD2kictFO3NpAAAAABJRU5ErkJggg==">
@@ -206,9 +212,10 @@ class Version implements \Nette\Diagnostics\IBarPanel
 			$this->libs = $libs;
 		}
 
-		$cache = \Nette\Environment::getCache('Nella.Panels.Version');
 		$this->updates = array();
-		if (class_exists('Nella\Utils\Curl\Request') && !isset($cache['updates'])) {
+		if ($this->cache && $this->cache->load('updates')) {
+			$this->updates = $this->cache->load('updates');
+		} elseif (class_exists('Nella\Utils\Curl\Request') && !isset($cache['updates'])) {
 			$files = array();
 
 			foreach ($this->libs as $repo => $lib) {
@@ -221,9 +228,12 @@ class Version implements \Nette\Diagnostics\IBarPanel
 
 			$files[] = __FILE__;
 			$files[] = __DIR__ . "/Version.phtml";
-			$cache->save('updates', $this->updates, array('expire' => time() + 60 * 60 * 2, 'files' => $files));
-		} elseif (isset($cache['updates'])) {
-			$this->updates = $cache['updates'];
+			if ($this->cache) {
+				$this->cache->save('updates', $this->updates, array(
+					'expire' => time() + 60 * 60 * 2, 
+					'files' => $files, 
+				));
+			}
 		}
 	}
 
@@ -354,27 +364,25 @@ class Version implements \Nette\Diagnostics\IBarPanel
 
 		return;
 	}
-
+	
 	/**
+	 * @param string
 	 * @param array
 	 */
-	protected function __construct(array $libs = NULL)
+	public function addLib($id, array $lib)
 	{
-		$this->libs = $libs;
+		$this->updating();
+		$this->libs[$id] = $lib;
+		return $this;
 	}
 
 	/**
-	 * Register this panel
-	 *
-	 * @param array
+	 * @param \Nette\Caching\IStorage
 	 */
-	public static function register(array $libs = NULL)
+	public function __construct(\Nette\Caching\IStorage $cacheStorage = NULL)
 	{
-		if (static::$registered) {
-			throw new \Nette\InvalidStateException("Version panel is already registered");
-		}
-
-		\Nette\Diagnostics\Debugger::addPanel(new static($libs));
-		static::$registered = TRUE;
+		$this->cache = $cacheStorage
+			? new \Nette\Caching\Cache($cacheStorage, 'Nella.Panels.Versions') : NULL;
+		\Nette\Diagnostics\Debugger::$bar->addPanel($this);
 	}
 }

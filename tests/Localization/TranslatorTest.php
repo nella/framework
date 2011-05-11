@@ -25,7 +25,7 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->assertEquals(0, count($this->translator->dictionaries), "->dictionaries default is not inicialized");
 		
-		$this->translator->addDictionary(__DIR__);
+		$this->translator->addDictionary('test', __DIR__);
 		$dictionaries = $this->translator->getDictionaries();
 		$this->assertEquals(1, count($dictionaries), "->getDictionaries() after ->addDictionary() count 1 dictionary");
 		

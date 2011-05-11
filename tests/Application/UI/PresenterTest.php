@@ -20,15 +20,15 @@ class PresenterTest extends \PHPUnit_Framework_TestCase
 
 	public function setUp()
 	{
-		$context = new \Nette\DI\Context;
-		$context->addService('Nella\Registry\NamespacePrefixes', ContextBuilder::createRegistryNamespacePrefixes());
-		$context->addService('Nella\Registry\TemplateDirs', ContextBuilder::createRegistryTemplateDirs());
+		$container = \Nette\Environment::getContext();
 		$this->presenter = new PresenterMock;
-		$this->presenter->setContext($context);
+		$this->presenter->setContext($container);
 	}
 
 	public function testFormmatLayoutTemplatesFiles()
 	{
+		$this->presenter->name = "Foo";
+		$this->presenter->layout = "bar";
 		$this->assertEquals(array(
 			APP_DIR . "/templates/Foo/@bar.latte",
 			APP_DIR . "/templates/Foo.@bar.latte",
@@ -36,9 +36,11 @@ class PresenterTest extends \PHPUnit_Framework_TestCase
 			NELLA_FRAMEWORK_DIR . "/templates/Foo/@bar.latte",
 			NELLA_FRAMEWORK_DIR . "/templates/Foo.@bar.latte",
 			NELLA_FRAMEWORK_DIR . "/templates/@bar.latte",
-		), $this->presenter->formatLayoutTemplateFiles('Foo', 'bar'),
-		"->formatLayoutTemplateFiles('Foo', 'bar')");
+		), $this->presenter->formatLayoutTemplateFiles(),
+		"->formatLayoutTemplateFiles() Foo:@bar");
 
+		$this->presenter->name = "Foo:Bar";
+		$this->presenter->layout = "layout";
 		$this->assertEquals(array(
 			APP_DIR . "/Foo/templates/Bar/@layout.latte",
 			APP_DIR . "/Foo/templates/Bar.@layout.latte",
@@ -54,8 +56,8 @@ class PresenterTest extends \PHPUnit_Framework_TestCase
 			NELLA_FRAMEWORK_DIR . "/templates/Foo/Bar.@layout.latte",
 			NELLA_FRAMEWORK_DIR . "/templates/Foo/@layout.latte",
 			NELLA_FRAMEWORK_DIR . "/templates/@layout.latte",
-		), $this->presenter->formatLayoutTemplateFiles('Foo:Bar', 'layout'),
-		"->formatLayoutTemplateFiles('Foo:Bar', 'layout')");
+		), $this->presenter->formatLayoutTemplateFiles(),
+		"->formatLayoutTemplateFiles() Foo:Bar:@layout");
 	}
 
 	public function testFormatTemplatesFiles()
@@ -64,6 +66,8 @@ class PresenterTest extends \PHPUnit_Framework_TestCase
 			return @realpath($path);
 		};
 
+		$this->presenter->name = "Foo";
+		$this->presenter->view = "bar";
 		$this->assertEquals(array(
 			APP_DIR . "/templates/Foo/bar.latte",
 			APP_DIR . "/templates/Foo.bar.latte",
@@ -73,9 +77,11 @@ class PresenterTest extends \PHPUnit_Framework_TestCase
 			NELLA_FRAMEWORK_DIR . "/templates/Foo.bar.latte",
 			NELLA_FRAMEWORK_DIR . "/templates/Foo/@global.latte",
 			NELLA_FRAMEWORK_DIR . "/templates/@global.latte",
-		), $this->presenter->formatTemplateFiles('Foo', 'bar'),
-		"->formatTemplateFiles('Foo', 'bar')");
+		), $this->presenter->formatTemplateFiles(),
+		"->formatTemplateFiles() Foo:bar");
 
+		$this->presenter->name = "Foo:Bar";
+		$this->presenter->view = "baz";
 		$this->assertEquals(array(
 			APP_DIR . "/Foo/templates/Bar/baz.latte",
 			APP_DIR . "/Foo/templates/Bar.baz.latte",
@@ -96,21 +102,13 @@ class PresenterTest extends \PHPUnit_Framework_TestCase
 			NELLA_FRAMEWORK_DIR . "/templates/Foo/@global.latte",
 			NELLA_FRAMEWORK_DIR . "/templates/@global.latte",
 		), $this->presenter->formatTemplateFiles('Foo:Bar', 'baz'),
-		"->formatTemplateFiles('Foo:Bar', 'baz')");
-	}
-
-	protected function setUpContext()
-	{
-		$registry = new \Nella\FreezableArray;
-		$registry['foo'] = function($parent, $name) { return "bar"; };
-		$context = new \Nette\DI\Context;
-		$context->addService('Nella\Registry\GlobalComponentFactories', $registry);
-		$this->presenter->setContext($context);
+		"->formatTemplateFiles() Foo:Bar:baz");
 	}
 
 	public function testGlobalComponent()
 	{
-		$this->setUpContext();
+		$this->presenter->getContext()->getService('components')
+			->addComponent('foo', function($parent, $name) { return "bar"; });
 
 		$this->assertEquals("bar", $this->presenter->createComponentMock('foo'));
 		$this->assertNull($this->presenter->createComponentMock('bar'));

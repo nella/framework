@@ -22,7 +22,7 @@ class ExtractorTest extends \PHPUnit_Framework_TestCase
 	protected function setUp()
 	{
 		$this->translator = new \Nella\Localization\Translator;
-		$this->translator->addDictionary(__DIR__ . "/Filters", new Storages\Mock(array(
+		$this->translator->addDictionary('test', __DIR__ . "/Filters", new Storages\Mock(array(
 			'Translation' => array("Překlad"), 
 		)));
 		$this->translator->setLang('test')->init();

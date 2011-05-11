@@ -20,11 +20,10 @@ class ControlTest extends \PHPUnit_Framework_TestCase
 
 	public function setUp()
 	{
-		$context = new \Nette\DI\Context;
-		$context->addService('Nella\Registry\NamespacePrefixes', ContextBuilder::createRegistryNamespacePrefixes());
-		$context->addService('Nella\Registry\TemplateDirs', ContextBuilder::createRegistryTemplateDirs());
-		$reg = $context->getService('Nella\Registry\NamespacePrefixes');
-		$reg['tests'] = 'NellaTests\\Application\\UI\\';
+		$context = \Nette\Environment::getContext();
+		$prefixies = $context->getParam('prefixies');
+		$prefixies[] = 'NellaTests\\Application\\UI\\';
+		$context->setParam('prefixies', $prefixies);
 		$this->control = new ControlMock(new PresenterMock, 'test');
 		$this->control->presenter->setContext($context);
 	}
@@ -32,20 +31,24 @@ class ControlTest extends \PHPUnit_Framework_TestCase
 	public function testFormatTemplateFiles()
 	{
 		$this->assertEquals(array(
-			APP_DIR . "/Foo/Bar.latte",
-			APP_DIR . "/templates/Foo/Bar.latte",
-			NELLA_FRAMEWORK_DIR . "/Foo/Bar.latte",
-			NELLA_FRAMEWORK_DIR . "/templates/Foo/Bar.latte",
-		),
-		$this->control->formatTemplateFilesMock('Nella\Foo\Bar::render'), "->formatTemplateFiles() for Foo\\Bar::render");
+				APP_DIR . "/Foo/Bar.latte",
+				APP_DIR . "/templates/Foo/Bar.latte",
+				NELLA_FRAMEWORK_DIR . "/Foo/Bar.latte",
+				NELLA_FRAMEWORK_DIR . "/templates/Foo/Bar.latte",
+			),
+			$this->control->formatTemplateFilesMock('Nella\Foo\Bar::render'), 
+			"->formatTemplateFiles() for Foo\\Bar::render"
+		);
 
 		$this->assertEquals(array(
-			APP_DIR . "/Foo/Bar.baz.latte",
-			APP_DIR . "/templates/Foo/Bar.baz.latte",
-			NELLA_FRAMEWORK_DIR . "/Foo/Bar.baz.latte",
-			NELLA_FRAMEWORK_DIR . "/templates/Foo/Bar.baz.latte",
-		),
-		$this->control->formatTemplateFilesMock('Nella\Foo\Bar::renderBaz'), "->formatTemplateFiles() for Foo\\Bar::renderBaz");
+				APP_DIR . "/Foo/Bar.baz.latte",
+				APP_DIR . "/templates/Foo/Bar.baz.latte",
+				NELLA_FRAMEWORK_DIR . "/Foo/Bar.baz.latte",
+				NELLA_FRAMEWORK_DIR . "/templates/Foo/Bar.baz.latte",
+			),
+			$this->control->formatTemplateFilesMock('Nella\Foo\Bar::renderBaz'), 
+			"->formatTemplateFiles() for Foo\\Bar::renderBaz"
+		);
 
 		$this->assertEquals(array(
 			APP_DIR . "/Foo.barBaz.latte",
@@ -71,7 +74,6 @@ class ControlTest extends \PHPUnit_Framework_TestCase
 
 	public function testRender()
 	{
-		$this->markTestSkipped("because not set tempDir");
 		ob_start();
 		$this->control->render();
 		$data = ob_get_clean();
@@ -79,18 +81,10 @@ class ControlTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals("TEST", $data, "->render()");
 	}
 
-	protected function setUpContext()
-	{
-		$registry = new \Nella\FreezableArray;
-		$registry['foo'] = function($parent, $name) { return "bar"; };
-		$context = new \Nette\DI\Context;
-		$context->addService('Nella\Registry\GlobalComponentFactories', $registry);
-		$this->control->presenter->setContext($context);
-	}
-
 	public function testGlobalComponent()
 	{
-		$this->setUpContext();
+		$this->control->presenter->context->getService('components')
+			->addComponent('foo', function($parent, $name) { return "bar"; });
 
 		$this->assertEquals("bar", $this->control->createComponentMock('foo'));
 		$this->assertNull($this->control->createComponentMock('bar'));

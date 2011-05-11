@@ -19,32 +19,31 @@ class FileRoute extends \Nette\Application\Routers\Route
 {
 	const FILE_KEY = 'file';
 
-	/** @var \Doctrine\ORM\EntityManager */
-	private $em;
-
-	/** @var \Nella\Models\Service */
-	private $service;
-
+	/** @var \Nette\DI\IContainer */
+	private $container;
+	
 	/**
-	 * @param \Doctrine\ORM\EntityManager
-	 * @return FileRoute
+	 * @param \Nette\DI\IContainer
 	 */
-	public function setEntityManager(\Doctrine\ORM\EntityManager $em)
+	public function setContainer(\Nette\DI\IContainer $container)
 	{
-		$this->em = $em;
-		return $this;
+		$this->container = $container;
 	}
-
+	
+	/**
+	 * @return \Nella\Doctrine\Container
+	 */
+	protected function getEntityContainer()
+	{
+		return $this->container->getService('doctrineContainer');
+	}
+	
 	/**
 	 * @return \Nella\Models\Service
 	 */
 	protected function getService()
 	{
-		if (!$this->service) {
-			$this->service = new \Nella\Models\Service($this->em, 'Nella\Media\FileEntity');
-		}
-
-		return $this->service;
+		return $this->getEntityContainer()->getEntityService('Nella\Media\FileEntity');
 	}
 
 	/**

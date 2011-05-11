@@ -135,7 +135,7 @@ class Panel extends \Nette\Object implements \Nette\Diagnostics\IBarPanel, \Doct
 	/**
 	 * @return Panel
 	 */
-	public static function create()
+	public static function register()
 	{
 		$panel = new static;
 		Debugger::$bar->addPanel($panel);
