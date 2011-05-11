@@ -50,9 +50,15 @@ class VersionEntity extends \Nella\Models\Entity
 	 */
 	public function __construct(\Nella\Models\IVersionableEntity $entity)
 	{
+		$snapshot = $entity->takeSnapshot();
+		if ($snapshot === NULL || is_string($snapshot)) {
+			throw new \Nette\InvalidStateException(
+				"Snapshot data (\$entity->takeSnapshot() return) must be string"
+			);
+		}
 		$this->created = new \DateTime;
 		$this->entityId = $entity->getId();
-		$this->entityData = $entity->takeSnapshot();
+		$this->entityData = $snapshot;
 		$this->entityClass = get_class($entity);
 	}
 
