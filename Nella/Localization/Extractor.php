@@ -31,6 +31,7 @@ class Extractor extends \Nella\FreezableObject
 		
 		$this->onFreeze[] = function(Extractor $extractor) { // Setup default filters
 			$extractor->addFilter(new Filters\Latte);
+			$extractor->addFilter(new Filters\Nella);
 		};
 	}
 
