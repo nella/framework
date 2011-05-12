@@ -165,7 +165,7 @@
 		</exec>
 
 		<exec executable="php" dir="${basedir}" failonerror="on" logerror="on">
-			<arg line=" tools/Apigen/apigen.php -s temp -d build/api" />
+			<arg line=" tools/Apigen/apigen.php --config tools/Apigen/config.neon" />
 		</exec>
 
 		<copy todir="${basedir}/package/API-reference">
