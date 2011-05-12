@@ -18,6 +18,7 @@ use Nella\Localization\Dictionary;
  */
 class Latte extends \Nette\Object implements \Nella\Localization\IFilter
 {
+	/** @var array */
 	public $exts = array("*.latte");
 	
 	/**
