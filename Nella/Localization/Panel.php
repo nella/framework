@@ -25,13 +25,21 @@ class Panel extends \Nella\FreezableObject implements \Nette\Diagnostics\IBarPan
 	private $extractor;
 	
 	/**
+	 * @param \Nette\DI\IContainer
 	 * @param ITranslator
 	 */
-	public function __construct(ITranslator $translator)
+	public function __construct(\Nette\DI\IContainer $container, ITranslator $translator = NULL)
 	{
+		if (!$translator) {
+			$translator = $container->getService('translator');
+		}
+		
 		$this->translator = $translator;
 		$this->extractor = new Extractor($translator);
-		$this->processRequests();
+		
+		$this->processRequests($container);
+		
+		\Nette\Diagnostics\Debugger::$bar->addPanel($this);
 	}
 	
 	/**
@@ -71,13 +79,15 @@ class Panel extends \Nella\FreezableObject implements \Nette\Diagnostics\IBarPan
 		return $dictionaries;
 	}
 	
-	protected function processRequests()
+	/**
+	 * @param \Nette\DI\IContainer
+	 */
+	protected function processRequests(\Nette\DI\IContainer $container)
 	{
 		$this->updating();
 		
-		$context = \Nette\Environment::getApplication()->context;
-		$httpRequest = $context->getService('Nette\Web\IHttpRequest');
-		$httpResponse = $context->getService('Nette\Web\IHttpResponse');
+		$httpRequest = $container->getService('Nette\Web\IHttpRequest');
+		$httpResponse = $container->getService('Nette\Web\IHttpResponse');
 		
 		if ($httpRequest->getHeader(self::XHR_HEADER, FALSE)) {
 			$data = FALSE;
@@ -127,14 +137,6 @@ class Panel extends \Nella\FreezableObject implements \Nette\Diagnostics\IBarPan
 		ob_start();
 		require_once __DIR__ . "/Panel.phtml";
 		return ob_get_clean();
-	}
-
-	/**
-	 * @param ITranslator
-	 */
-	public static function register(ITranslator $translator)
-	{
-		\Nette\Diagnostics\Debugger::$bar->addPanel(new static($translator));
 	}
 }
 

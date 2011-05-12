@@ -47,6 +47,8 @@ class Configurator extends \Nette\Configurator
 		'validator' => array(__CLASS__, 'createValidator'), 
 		'versionPanel' => array(__CLASS__, 'createVersionPanel'), 
 		'callbackPanel' => array(__CLASS__, 'createCallbackPanel'), 
+		'translatorPanel' => array(__CLASS__, 'createTranslatorPanel'), 
+		'translator' => array(__CLASS__, 'createTranslator'), 
 	);
 	
 	/**
@@ -236,5 +238,25 @@ class Configurator extends \Nette\Configurator
 	public static function createCallbackPanel(IContainer $container)
 	{
 		return new \Nella\Panels\Callback($container);
+	}
+	
+	/**
+	 * @param \Nette\DI\IContainer
+	 * @return \Nella\Localization\ITranslator
+	 */
+	public static function createTranslator(IContainer $container)
+	{
+		$translator = new \Nella\Localization\Translator;
+		$translator->addDictionary('Nella', NELLA_FRAMEWORK_DIR);
+		return $translator;
+	}
+	
+	/**
+	 * @param \Nette\DI\IContainer
+	 * @return \Nella\Localization\Panel
+	 */
+	public static function createTranslatorPanel(IContainer $container)
+	{
+		return new \Nella\Localization\Panel($container);
 	}
 }

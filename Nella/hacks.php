@@ -39,6 +39,7 @@ $configurator->onCreateContainer[] = function(\Nette\DI\Container $container) {
 	// Load panels
 	$container->getService('callbackPanel');
 	$container->getService('versionPanel');
+	$container->getService('translatorPanel');
 };
 Nette\Environment::setConfigurator($configurator);
 
