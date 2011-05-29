@@ -13,7 +13,7 @@ namespace Nella\Security;
  * Custom identity - does not store data in session
  *
  * @author	Patrik Votoček
- * 
+ *
  * @property-read int $id
  * @property-read array $roles
  * @property-read IdentityEntity $entity
@@ -77,8 +77,9 @@ class Identity extends \Nette\Object implements \Nette\Security\IIdentity, \Seri
 	{
 		$this->id = unserialize($serialized);
 
-		$entityManager = \Nette\Environment::getApplication()->context->getService('Doctrine\ORM\EntityManager'); // @todo how to better DI?
-		$service = new \Nella\Models\Service($entityManager, 'Nella\Security\IdentityEntity');
+		$dc = \Nette\Environment::getContext()->getService('doctrineContainer'); // @todo how to better DI?
+		
+		$service = $dc->getEntityService('Nella\Security\IdentityEntity');
 		$this->entity = $service->repository->find($this->id);
 
 		if (!$this->entity) {

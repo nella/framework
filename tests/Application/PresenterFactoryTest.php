@@ -9,32 +9,27 @@
 
 namespace NellaTests\Application;
 
-use Nella\Application\PresenterLoader, 
-	Nella\DependencyInjection\ContextBuilder;
-
 require_once __DIR__ . "/../bootstrap.php";
 
 class PresenterFactoryTest extends \PHPUnit_Framework_TestCase
 {
-	/** @var Nella\Application\PresenterLoader */
+	/** @var \Nella\Application\PresenterFactory */
 	private $loader;
-	
+
 	public function setUp()
 	{
-		$context = new \Nette\DI\Context;
-		$context->addService('Nella\Registry\NamespacePrefixes', ContextBuilder::createRegistryNamespacePrefixes());
-		$context->addService('Nella\Registry\TemplateDirs', ContextBuilder::createRegistryTemplateDirs());
-		$this->loader = new \Nella\Application\PresenterFactory(__DIR__, $context);
+		$container = \Nette\Environment::getContext();
+		$this->loader = new \Nella\Application\PresenterFactory($container);
 	}
-	
+
 	public function testFormatPresenterClass()
 	{
 		$this->assertEquals('App\FooPresenter', $this->loader->formatPresenterClass('Foo'), "->formatPresenterClass('Foo')");
 		$this->assertEquals('App\Foo\BarPresenter', $this->loader->formatPresenterClass('Foo:Bar'), "->formatPresenterClass('Foo:Bar')");
 		$this->assertEquals('App\Foo\Bar\BazPresenter', $this->loader->formatPresenterClass('Foo:Bar:Baz'), "->formatPresenterClass('Foo:Bar:Baz')");
-		$this->assertEquals('Nella\FooPresenter', $this->loader->formatPresenterClass('Foo', 'framework'), "->formatPresenterClass('Foo', 'lib')");
-		$this->assertEquals('Nella\Foo\BarPresenter', $this->loader->formatPresenterClass('Foo:Bar', 'framework'), "->formatPresenterClass('Foo:Bar', 'lib')");
-		$this->assertEquals('Nella\Foo\Bar\BazPresenter', $this->loader->formatPresenterClass('Foo:Bar:Baz', 'framework'), "->formatPresenterClass('Foo:Bar:Baz', 'lib')");
+		$this->assertEquals('Nella\FooPresenter', $this->loader->formatPresenterClass('Foo', 'Nella\\'), "->formatPresenterClass('Foo', 'lib')");
+		$this->assertEquals('Nella\Foo\BarPresenter', $this->loader->formatPresenterClass('Foo:Bar', 'Nella\\'), "->formatPresenterClass('Foo:Bar', 'lib')");
+		$this->assertEquals('Nella\Foo\Bar\BazPresenter', $this->loader->formatPresenterClass('Foo:Bar:Baz', 'Nella\\'), "->formatPresenterClass('Foo:Bar:Baz', 'lib')");
 	}
 
 	public function testUnformatPresenterClass()
@@ -46,7 +41,7 @@ class PresenterFactoryTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals('Foo:Bar', $this->loader->unformatPresenterClass('Nella\Foo\BarPresenter'), "->unformatPresenterClass('Nella\\Foo\\BarPresenter')");
 		$this->assertEquals('Foo:Bar:Baz', $this->loader->unformatPresenterClass('Nella\Foo\Bar\BazPresenter'), "->unformatPresenterClass('Nella\\Foo\\Bar\\BazPresenter')");
 	}
-	
+
 	public function testGetPresenterClass()
 	{
 		$name = 'Foo';
@@ -58,7 +53,7 @@ class PresenterFactoryTest extends \PHPUnit_Framework_TestCase
 		$name = 'Foo:My';
 		$this->assertEquals('Nella\Foo\MyPresenter', $this->loader->getPresenterClass($name), "->getPresenterClass('$name')");
 	}
-	
+
 	/**
 	 * @expectedException Nette\Application\InvalidPresenterException
 	 */
@@ -67,7 +62,7 @@ class PresenterFactoryTest extends \PHPUnit_Framework_TestCase
 		$name = NULL;
 		$this->loader->getPresenterClass($name);
 	}
-	
+
 	/**
 	 * @expectedException Nette\Application\InvalidPresenterException
 	 */
@@ -76,7 +71,7 @@ class PresenterFactoryTest extends \PHPUnit_Framework_TestCase
 		$name = 'Bar';
 		$this->loader->getPresenterClass($name);
 	}
-	
+
 	/**
 	 * @expectedException Nette\Application\InvalidPresenterException
 	 */
@@ -85,24 +80,13 @@ class PresenterFactoryTest extends \PHPUnit_Framework_TestCase
 		$name = 'Baz';
 		$this->loader->getPresenterClass($name);
 	}
-	
+
 	/**
 	 * @expectedException Nette\Application\InvalidPresenterException
 	 */
 	public function testGetPresenterClassException4()
 	{
 		$name = 'Bar';
-		$this->loader->getPresenterClass($name);
-	}
-	
-	/**
-	 * @expectedException Nette\Application\InvalidPresenterException
-	 */
-	public function testGetPresenterClassException5()
-	{
-		$this->loader->caseSensitive = TRUE;
-		
-		$name = 'my';
 		$this->loader->getPresenterClass($name);
 	}
 }

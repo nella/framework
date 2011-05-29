@@ -15,6 +15,19 @@ class PresenterMock extends \Nella\Application\UI\Presenter
 	{
 		return $this->createComponent($name);
 	}
+	
+	/**
+	 * @param string
+	 * @return \Nette\Application\UI\Presetner
+	 */
+	public function setName($name)
+	{
+		$ref = new \Nette\Reflection\Property('Nette\ComponentModel\Component', 'name');
+		$ref->setAccessible(TRUE);
+		$ref->setValue($this, $name);
+		$ref->setAccessible(FALSE);
+		return $this;
+	}
 }
 
 namespace Nella;

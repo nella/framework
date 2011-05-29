@@ -13,11 +13,11 @@ namespace Nella\Security;
  * Identity entity
  *
  * @author	Patrik Votoček
- * 
+ *
  * @entity(repositoryClass="Nella\Models\Repository")
  * @table(name="acl_users")
  * @hasLifecycleCallbacks
- * 
+ *
  * @property string $username
  * @property string $email
  * @property string $password
@@ -28,7 +28,7 @@ namespace Nella\Security;
 class IdentityEntity extends \Nella\Models\Entity
 {
 	const PASSWORD_DELIMITER = "$";
-	
+
 	/**
 	 * @column(length=128, unique=true)
 	 * @var string
@@ -108,7 +108,7 @@ class IdentityEntity extends \Nella\Models\Entity
 		if ($string || !$this->password) {
 			return $this->password;
 		}
-		
+
 		list($algo, $salt, $hash) = explode(self::PASSWORD_DELIMITER, $this->password);
 		return array('algo' => $algo, 'salt' => $salt, 'hash' => $hash);
 	}
@@ -121,10 +121,14 @@ class IdentityEntity extends \Nella\Models\Entity
 	public function setPassword($password, $algo = "sha256")
 	{
 		$salt = \Nette\Utils\Strings::random();
-		$this->password = $algo . self::PASSWORD_DELIMITER . $salt . self::PASSWORD_DELIMITER . hash($algo, $salt . $password);
+		
+		$this->password = $algo . self::PASSWORD_DELIMITER;
+		$this->password .= $salt . self::PASSWORD_DELIMITER;
+		$this->password .= hash($algo, $salt . $password);
+		
 		return $this;
 	}
-	
+
 	/**
 	 * @param string plaintext password
 	 * @return bool
@@ -135,8 +139,8 @@ class IdentityEntity extends \Nella\Models\Entity
 		if (hash($algo, $salt . $password) == $hash) {
 			return TRUE;
 		}
-		
-		return FALSE;	
+
+		return FALSE;
 	}
 
 	/**
@@ -156,7 +160,7 @@ class IdentityEntity extends \Nella\Models\Entity
 		$this->role = $role;
 		return $this;
 	}
-	
+
 	/**
 	 * @return string
 	 */
@@ -194,19 +198,19 @@ class IdentityEntity extends \Nella\Models\Entity
 		$this->realname = $realname == "" ? NULL : $realname;
 		return $this;
 	}
-	
+
 	/**
 	 * @prePersist
 	 * @preUpdate
-	 * 
+	 *
 	 * @throws \Nella\Models\EmptyValuesException
 	 * @throws \Nella\Models\InvalidFormatException
 	 * @throws \Nella\Models\DuplicateEntryException
 	 */
 	public function check()
 	{
-		$em = \Nette\Environment::getApplication()->context->getService('Doctrine\ORM\EntityManager');
-		$service = new \Nella\Models\Service($em, 'Nella\Security\IdentityEntity');
+		$dc = \Nette\Environment::getContext()->getService('doctrineContainer');
+		$service = $dc->getEntityService('Nella\Security\IdentityEntity');
 		if (!$service->repository->isColumnUnique($this->id, 'username', $this->username)) {
 			throw new \Nella\Models\DuplicateEntryException('username', "Username value must be unique");
 		}

@@ -22,23 +22,23 @@ class ImageRoute extends \Nette\Application\Routers\Route
 	const TYPE_KEY = 'type';
 	const PATH_PARAMETER = 'path';
 
-	/** @var \Doctrine\ORM\EntityManager */
-	private $em;
-
-	/** @var \Nella\Models\Service */
-	private $formatService;
-
-	/** @var \Nella\Models\Service */
-	private $imageService;
-
+	/** @var \Nette\DI\IContainer */
+	private $container;
+	
 	/**
-	 * @param \Doctrine\ORM\EntityManager
-	 * @return ImageRoute
+	 * @param \Nette\DI\IContainer
 	 */
-	public function setEntityManager(\Doctrine\ORM\EntityManager $em)
+	public function setContainer(\Nette\DI\IContainer $container)
 	{
-		$this->em = $em;
-		return $this;
+		$this->container = $container;
+	}
+	
+	/**
+	 * @return \Nella\Doctrine\Container
+	 */
+	protected function getEntityContainer()
+	{
+		return $this->container->getService('doctrineContainer');
 	}
 
 	/**
@@ -46,11 +46,7 @@ class ImageRoute extends \Nette\Application\Routers\Route
 	 */
 	protected function getFormatService()
 	{
-		if (!$this->formatService) {
-			$this->formatService = new \Nella\Models\Service($this->em, 'Nella\Media\FormatEntity');
-		}
-
-		return $this->formatService;
+		return $this->getEntityContainer()->getEntityService('Nella\Media\FormatEntity');
 	}
 
 	/**
@@ -58,11 +54,7 @@ class ImageRoute extends \Nette\Application\Routers\Route
 	 */
 	protected function getImageService()
 	{
-		if (!$this->imageService) {
-			$this->imageService = new \Nella\Models\Service($this->em, 'Nella\Media\ImageEntity');
-		}
-
-		return $this->imageService;
+		return $this->getEntityContainer()->getEntityService('Nella\Media\ImageEntity');
 	}
 
 	/**

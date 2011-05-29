@@ -8,78 +8,78 @@
  */
 ?>
 <script type="text/javascript">
-/* <![CDATA[ */
+	/* <![CDATA[ */
 
-var callbackPanel = {
-	init: function() {
-		document.getElementById('nella-callback-panel-button').onclick = function () {
-			document.getElementById('nella-callback-panel-button').disabled = true;
-			document.getElementById('nella-callback-panel-spinner').style.display = "inline";
-			callbackPanel.commit();
-		};
-	},
+	var callbackPanel = {
+		init: function() {
+			document.getElementById('nette-addons-CallbackPanel-button').onclick = function () {
+				document.getElementById('nette-addons-CallbackPanel-button').disabled = true;
+				document.getElementById('nette-addons-CallbackPanel-spinner').style.display = "inline";
+				callbackPanel.commit();
+			};
+		},
 
-	commit: function () {
-		var items = <?php echo json_encode(array_keys($items)) ?>;
-		var data = {};
+		commit: function () {
+			var items = <?php echo json_encode(array_keys($callbacks)) ?>;
+			var data = {};
 
-		for (var i in items) {
-			if (document.getElementById('nella-callback-panel'+items[i]).checked == true) {
-				data[items[i]] = true;
-			}
-		}
-
-		var xmlHttp = window.ActiveXObject ? new ActiveXObject('Microsoft.XMLHTTP') : new XMLHttpRequest();
-		xmlHttp.onreadystatechange = function() {
-			if (xmlHttp.readyState == 4) {
-				if (xmlHttp.status == 200) {
-					document.getElementById('nella-callback-panel-button').disabled = false;
-					document.getElementById('nella-callback-panel-spinner').style.display = "none";
-					for (var i in items) {
-						if (document.getElementById('nella-callback-panel'+items[i]).checked == true) {
-							document.getElementById('nella-callback-panel'+items[i]).checked = false;
-						}
-					}
-				} else {
-					var win = window.open('', 'Error');
-					win.document.write(xmlHttp.responseText);
-					document.getElementById('nella-callback-panel-button').disabled = false;
-					document.getElementById('nella-callback-panel-spinner').style.display = "none";
+			for (var i in items) {
+				if (document.getElementById('nette-addons-CallbackPanel-item'+items[i]).checked == true) {
+					data[items[i]] = true;
 				}
 			}
-		}
-		xmlHttp.open("POST", <?php echo json_encode(\Nette\Environment::getApplication()->getService('Nette\Http\IRequest')->url->absoluteUrl); ?>, true);
-		xmlHttp.setRequestHeader('X-Callback-Panel', 'TRUE');
-		xmlHttp.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-		xmlHttp.send(JSON.stringify(data));
-	}
-};
 
-/* ]]> */
+			var xmlHttp = window.ActiveXObject ? new ActiveXObject('Microsoft.XMLHTTP') : new XMLHttpRequest();
+			xmlHttp.onreadystatechange = function() {
+				if (xmlHttp.readyState == 4) {
+					if (xmlHttp.status == 200) {
+						document.getElementById('nette-addons-CallbackPanel-button').disabled = false;
+						document.getElementById('nette-addons-CallbackPanel-spinner').style.display = "none";
+						for (var i in items) {
+							if (document.getElementById('nette-addons-CallbackPanel-item'+items[i]).checked == true) {
+								document.getElementById('nette-addons-CallbackPanel-item'+items[i]).checked = false;
+							}
+						}
+					} else {
+						var win = window.open('', 'Error');
+						win.document.write(xmlHttp.responseText);
+						document.getElementById('nette-addons-CallbackPanel-button').disabled = false;
+						document.getElementById('nette-addons-CallbackPanel-spinner').style.display = "none";
+					}
+				}
+			}
+			xmlHttp.open("POST", <?php echo json_encode($absoluteUrl); ?>, true);
+			xmlHttp.setRequestHeader('<?php echo self::XHR_HEADER ?>', 'TRUE');
+			xmlHttp.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+			xmlHttp.send(JSON.stringify(data));
+		}
+	};
+
+	/* ]]> */
 </script>
 
 <h1>Callback actions</h1>
 
 <div class="nette-inner" id="nella-callback-panel-content">
 	<table style="width: 100%">
-	<?php foreach ($items as $key => $item): ?>
-	<tr>
-		<th><label for="nella-callback-panel<?php echo $key ?>" style="width: 100%; height: 100%; position: absolute;"></label><?php echo $item['name'] ?></th>
-		<td><input type="checkbox" name="--ncp-<?php echo $key ?>" id="nella-callback-panel<?php echo $key ?>"></td>
-	</tr>
-	<?php endforeach ?>
-	<tr>
-		<td colspan="2">
-			<label for="nella-callback-panel-button" style="width: 100%; height: 100%; position: absolute;"></label>
-			<input type="submit" value="Run" id="nella-callback-panel-button">
-			<img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" id="nella-callback-panel-spinner" alt="spinner" style="display: none; position: absolute;">
-		</td>
-	</tr>
+		<?php foreach ($callbacks as $key => $item): ?>
+			<tr>
+				<th><label for="nette-addons-CallbackPanel-item<?php echo $key ?>" style="width: 100%; height: 100%; position: absolute;"></label><?php echo $item['name'] ?></th>
+				<td><input type="checkbox" name="--ncp-<?php echo $key ?>" id="nette-addons-CallbackPanel-item<?php echo $key ?>"></td>
+			</tr>
+		<?php endforeach ?>
+		<tr>
+			<td colspan="2">
+				<label for="nette-addons-CallbackPanel-button" style="width: 100%; height: 100%; position: absolute;"></label>
+				<input type="submit" value="Run" id="nette-addons-CallbackPanel-button">
+				<img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" id="nette-addons-CallbackPanel-spinner" alt="spinner" style="display: none; position: absolute;">
+			</td>
+		</tr>
 	</table>
 </div>
 
 <script type="text/javascript">
-/* <![CDATA[ */
-callbackPanel.init();
-/* ]]> */
+	/* <![CDATA[ */
+	callbackPanel.init();
+	/* ]]> */
 </script>

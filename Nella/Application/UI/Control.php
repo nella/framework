@@ -17,13 +17,13 @@ namespace Nella\Application\UI;
 abstract class Control extends \Nette\Application\UI\Control
 {
 	/**
-	 * Descendant can override this method to customize template compile-time filters.
+	 * Descendant can override this method to customize template compile-time filters
+	 * 
 	 * @param \Nette\Templating\Template
 	 */
 	public function templatePrepareFilters($template)
 	{
-		// default filters
-		$template->registerFilter($this->getPresenter()->context->getService('Nette\Latte\Engine'));
+		$template->registerFilter(new \Nella\Latte\Engine($this->getContext()));
 	}
 
 	/**
@@ -40,7 +40,7 @@ abstract class Control extends \Nette\Application\UI\Control
 		if (!isset($class)) {
 			$class = get_called_class();
 		}
-		foreach ($this->getPresenter()->context->getService('Nella\Registry\NamespacePrefixes') as $prefix) {
+		foreach ($this->getPresenter()->context->getParam('prefixies') as $prefix) {
 			if (\Nette\Utils\Strings::startsWith($class, $prefix)) {
 				$class = substr($class, strlen($prefix));
 				break;
@@ -63,7 +63,7 @@ abstract class Control extends \Nette\Application\UI\Control
 		};
 
 		$files = array();
-		foreach ($this->getPresenter()->context->getService('Nella\Registry\TemplateDirs') as $dir) {
+		foreach ($this->getPresenter()->context->getParam('templates') as $dir) {
 			$files = array_merge($files, $generator($dir));
 		}
 
@@ -108,19 +108,27 @@ abstract class Control extends \Nette\Application\UI\Control
 	 */
 	protected function createComponent($name)
 	{
-		$globalComponentRegistry = $this->getPresenter()->context->getService('Nella\Registry\GlobalComponentFactories');
-		if (isset($globalComponentRegistry[$name])) {
-			return callback($globalComponentRegistry[$name])->invoke($this, $name);
+		$container = $this->getContext()->getService('components');
+		if ($container->hasComponent($name)) {
+			return $container->getComponent($name, $this);
 		}
 
 		return parent::createComponent($name);
 	}
+	
+	/**
+	 * @return \Nette\DI\IContainer
+	 */
+	public function getContext()
+	{
+		return $this->getPresenter()->context;
+	}
 
 	/**
-	 * @return \Doctrine\ORM\EntityManager
+	 * @return \Nella\Doctrine\Container
 	 */
-	public function getEntityManager()
+	public function getDoctrineContainer()
 	{
-		return $this->getPresenter()->context->getService('Doctrine\ORM\EntityManager');
+		return $this->getContext()->getService('doctrineContainer');
 	}
 }

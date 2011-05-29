@@ -64,8 +64,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
 	public function testValidate()
 	{
 		$errors = $this->validator->validate(new Bar);
-		$this->assertTrue(isset($errors['foo']), "foo property failed");
-		$this->assertEquals(2, count($errors['foo']), "foo property 2 errors");
+		$this->assertFalse(isset($errors['foo']), "foo property ok");
 	}
 	
 	public function testValidateNullables()

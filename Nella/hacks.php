@@ -15,11 +15,31 @@ Nette\Diagnostics\Debugger::$strictMode = TRUE;
 Nette\Diagnostics\Debugger::$maxLen = 4096;
 
 // Set better dependency injection container
-$configurator = new Nella\DependencyInjection\ContextBuilder;
-$configurator->onAfterLoad[] = function() {
+$configurator = new Nella\Configurator;
+$configurator->onCreateContainer[] = function(\Nette\DI\Container $container) {
+	// Run RobotLoader
+	$container->getService('Nette\Loaders\RobotLoader');
+	
+	// Init configuration
+	$container->setParam('prefixies', array(
+		'App\\', 
+		'Nella\\', 
+	));
+	$container->setParam('templates', array(
+		$container->getParam('appDir'), 
+		NELLA_FRAMEWORK_DIR, 
+	));
+	
+	// Init multilple file upload listener
+	Nella\Forms\Controls\MultipleFileUpload::register(
+		$container->getService('Nette\Web\IHttpRequest'), 
+		$container->getParam('uploadDir')
+	);
+	
 	// Load panels
-	Nella\Panels\Callback::register();
-	Nella\Panels\Version::register();
+	$container->getService('callbackPanel');
+	$container->getService('versionPanel');
+	$container->getService('translatorPanel');
 };
 Nette\Environment::setConfigurator($configurator);
 

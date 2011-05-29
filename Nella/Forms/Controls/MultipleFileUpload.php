@@ -10,7 +10,9 @@
 namespace Nella\Forms\Controls;
 
 use Nette\Application\UI\Form, 
-	Nette\Http\FileUpload;
+	Nette\Http\FileUpload, 
+	Nette\Utils\Finder, 
+	Nette\Utils\Strings;
 
 /**
  * Text box and browse button that allow users to select a multiple files to upload to the server.
@@ -19,6 +21,53 @@ use Nette\Application\UI\Form,
  */
 class MultipleFileUpload extends \Nette\Forms\Controls\BaseControl
 {
+	const MULTIPLE_FILE_UPLOAD_KEY = '_mfutoken';
+	/** @var \Nette\Http\IRequest */
+	protected static $httpRequest;
+	/** @var string */
+	protected static $storageDir;
+	/** @var int */
+	protected static $expire;
+	
+	public static function register(\Nette\Http\IRequest $httpRequest, $storageDir, $expire = 3600)
+	{
+		if (static::$httpRequest) {
+			throw new \Nette\InvalidStateException("Multiple file uploader allready registered");
+		} elseif (!file_exists($storageDir) || !is_writable($storageDir)) {
+			throw new \Nette\InvalidStateException("Storage dir must be writable");
+		}
+		
+		static::$httpRequest = $httpRequest;
+		static::$storageDir = $storageDir;
+		static::$expire = $expire;
+		
+		// process uploaded file
+		if ($httpRequest->getHeader('X-Uploader') == "Nella Framework - MFU") {
+			$files = $httpRequest->files;
+			if (isset($files['file']) && $files['file']->ok) {
+				$token = $httpRequest->getHeader('X-Nella-MFU-Token');
+				$path = static::$storageDir . "/";
+				$path .= $token . "_" . time() . "_" . Strings::random(16);
+				$path .= "." . pathinfo($files['file']->name, PATHINFO_EXTENSION);
+				$path .= ".tmp";
+				
+				$files['file']->move($path);
+			}
+			
+			echo "{success:true}";
+			exit;
+		}
+		
+		// clean expired files
+		$files = Finder::findFiles("*.tmp")->from(static::$storageDir);
+		$expire = time() + static::$expire;
+		foreach ($files as $file) {
+			if ($file->getMTime() > $expire) {
+				@unlink($file->getRealPath()); // prevents error
+			}
+		}
+	}
+	
 	/**
 	 * @param string
 	 */
@@ -53,10 +102,20 @@ class MultipleFileUpload extends \Nette\Forms\Controls\BaseControl
 	 */
 	public function getControl()
 	{
-		$token = substr(md5(uniqid()), 0, 8);
-
 		$control = parent::getControl();
 		$control->name .= "[]";
+		
+		$token = Strings::random(16);
+		
+		if (static::$httpRequest) {
+			$control->data('nella-mfu-token', $token);
+		}
+		
+		$control .= \Nette\Utils\Html::el('input')
+			->type('hidden')
+			->name($this->name . static::MULTIPLE_FILE_UPLOAD_KEY)
+			->value($token);
+		
 		return $control;
 	}
 
@@ -76,7 +135,20 @@ class MultipleFileUpload extends \Nette\Forms\Controls\BaseControl
 		} elseif (is_array($value) && reset($value) instanceof FileUpload) {
 			$this->value = $value;
 		} else {
-			throw new \Nette\NotImplementedException;
+			$token = static::$httpRequest->getPost($this->name . static::MULTIPLE_FILE_UPLOAD_KEY);
+			if ($token) {
+				$this->value = array();
+				$files = Finder::findFiles($token . "_*.tmp")->from(static::$storageDir);
+				foreach ($files as $file) {
+					$this->value[] = new FileUpload(array(
+						'error' => UPLOAD_ERR_OK, 
+						'name' => substr($file->getBaseName(), 0, -4), 
+						'tmp_name' => $file->getRealPath(), 
+						'size' => $file->getSize(), 
+						'type' => $file->getType(), 
+					));
+				}
+			}
 		}
 		
 		if (count($this->value) == 1 && !reset($this->value)->temporaryFile) {

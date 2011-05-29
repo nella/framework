@@ -25,19 +25,18 @@ abstract class Presenter extends \Nette\Application\UI\Presenter
 	 */
 	public function templatePrepareFilters($template)
 	{
-		// default filters
-		$template->registerFilter($this->getContext()->getService('Nette\Latte\Engine'));
+		$template->registerFilter(new \Nella\Latte\Engine($this->getContext()));
 	}
 
 	/**
 	 * Formats layout template file names.
 	 *
-	 * @param string
-	 * @param string
 	 * @return array
 	 */
-	public function formatLayoutTemplateFiles($presenter, $layout)
+	public function formatLayoutTemplateFiles()
 	{
+		$presenter = $this->getName();
+		$layout = $this->layout ? $this->layout : 'layout';
 		$path = str_replace(":", "/", substr($presenter, 0, strrpos($presenter, ":")));
 		$subPath = substr($presenter, strrpos($presenter, ":") !== FALSE ? strrpos($presenter, ":") + 1 : 0);
 		if ($path) {
@@ -66,7 +65,7 @@ abstract class Presenter extends \Nette\Application\UI\Presenter
 		};
 
 		$files = array();
-		foreach ($this->getContext()->getService('Nella\Registry\TemplateDirs') as $dir) {
+		foreach ($this->getContext()->getParam('templates') as $dir) {
 			$files = array_merge($files, $generator($dir));
 		}
 
@@ -76,12 +75,12 @@ abstract class Presenter extends \Nette\Application\UI\Presenter
 	/**
 	 * Formats view template file names.
 	 *
-	 * @param string
-	 * @param string
 	 * @return array
 	 */
-	public function formatTemplateFiles($presenter, $view)
+	public function formatTemplateFiles()
 	{
+		$presenter = $this->getName();
+		$view = $this->view;
 		$path = str_replace(":", "/", substr($presenter, 0, strrpos($presenter, ":")));
 		$subPath = substr($presenter, strrpos($presenter, ":") !== FALSE ? strrpos($presenter, ":") + 1 : 0);
 		if ($path) {
@@ -113,7 +112,7 @@ abstract class Presenter extends \Nette\Application\UI\Presenter
 		};
 
 		$files = array();
-		foreach ($this->getContext()->getService('Nella\Registry\TemplateDirs') as $dir) {
+		foreach ($this->getContext()->getParam('templates') as $dir) {
 			$files = array_merge($files, $generator($dir));
 		}
 
@@ -127,19 +126,19 @@ abstract class Presenter extends \Nette\Application\UI\Presenter
 	 */
 	protected function createComponent($name)
 	{
-		$globalComponentRegistry = $this->getContext()->getService('Nella\Registry\GlobalComponentFactories');
-		if (isset($globalComponentRegistry[$name])) {
-			return callback($globalComponentRegistry[$name])->invoke($this, $name);
+		$container = $this->getContext()->getService('components');
+		if ($container->hasComponent($name)) {
+			return $container->getComponent($name, $this);
 		}
 
 		return parent::createComponent($name);
 	}
 
 	/**
-	 * @return \Doctrine\ORM\EntityManager
+	 * @return \Nella\Doctrine\Container
 	 */
-	public function getEntityManager()
+	public function getDoctrineContainer()
 	{
-		return $this->getContext()->getService('Doctrine\ORM\EntityManager');
+		return $this->getContext()->getService('doctrineContainer');
 	}
 }

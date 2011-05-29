@@ -16,20 +16,15 @@ namespace Nella\Doctrine;
  */
 class EntityManagerHelper extends \Symfony\Component\Console\Helper\Helper
 {
-	/**
-     * Doctrine ORM EntityManager lazy loader
-     * @var \Closure
-     */
-    protected $_em;
+	/** @var Container */
+    protected $container;
 
     /**
-     * Constructor
-     *
-     * @param \Closure
+     * @param Container
      */
-    public function __construct(\Closure $em)
+    public function __construct(Container $container)
     {
-        $this->_em = $em;
+        $this->container = $container;
     }
 
 	/**
@@ -39,7 +34,7 @@ class EntityManagerHelper extends \Symfony\Component\Console\Helper\Helper
      */
     public function getEntityManager()
     {
-        return callback($this->_em)->invoke();
+        return $this->container->getEntityManager();
     }
 
     /**

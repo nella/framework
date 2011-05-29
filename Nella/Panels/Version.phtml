@@ -9,12 +9,9 @@
 
 namespace Nella\Panels;
 ?>
-<style>#nella-version-panel h2{font:11pt/1.5 sans-serif;margin:0;padding:2px 8px;background:#3484d2;color:white}#nella-version-panel table{width:100%}#nella-version-panel a{color:#333;background:transparent}</style>
-
-
 <h1>Libraries Versions</h1>
 
-<div class="nette-inner" id="nella-version-panel">
+<div class="nette-inner nette-addons-VersionPannel">
 	<table>
 	<tr>
 		<th>PHP</th>
@@ -27,74 +24,13 @@ namespace Nella\Panels;
 		<td colspan="2"><?php echo $_SERVER['SERVER_SOFTWARE'] ?></td>
 	</tr>
 	<?php endif ?>
+	<?php foreach ($libs as $lib): ?>
 	<tr>
-		<th><?php echo \Nette\Framework::NAME ?></th>
-		<td><?php echo \Nette\Framework::VERSION ?></td>
-		<td><?php echo \Nette\Framework::REVISION ?></td>
+		<th><?php echo htmlspecialchars($lib['name']) ?></th>
+		<td<?php if (!isset($lib['revision'])): ?> colspan="2"<?php endif ?>><?php echo htmlspecialchars($lib['version']) ?></td>
+		<?php if (isset($lib['revision'])): ?><td><?php echo htmlspecialchars($lib['revision']) ?></td><?php endif ?>
 	</tr>
-	<?php if (class_exists('Nella\Framework')): ?>
-	<tr>
-		<th><?php echo \Nella\Framework::NAME ?></th>
-		<td><?php echo \Nella\Framework::VERSION ?></td>
-		<td><?php echo \Nella\Framework::REVISION ?></td>
-	</tr>
-	<?php endif ?>
-	<?php if (class_exists('dibi')): ?>
-	<tr>
-		<th>dibi</th>
-		<td><?php echo \dibi::VERSION ?></td>
-		<td><?php echo \dibi::REVISION ?></td>
-	</tr>
-	<?php endif ?>
-	<?php if (class_exists('Doctrine\Common\Version')): ?>
-	<tr>
-		<th>Doctrine Common</th>
-		<td><?php echo \Doctrine\Common\Version::VERSION ?></td>
-		<td>&nbsp;</td>
-	</tr>
-	<?php endif ?>
-	<?php if (class_exists('Doctrine\DBAL\Version')): ?>
-	<tr>
-		<th>Doctrine DBAL</th>
-		<td><?php echo \Doctrine\DBAL\Version::VERSION ?></td>
-		<td>&nbsp;</td>
-	</tr>
-	<?php endif ?>
-	<?php if (class_exists('Doctrine\ORM\Version')): ?>
-	<tr>
-		<th>Doctrine ORM</th>
-		<td><?php echo \Doctrine\ORM\Version::VERSION ?></td>
-		<td>&nbsp;</td>
-	</tr>
-	<?php endif ?>
-	<?php if (class_exists('Doctrine\MongoDB\Version')): ?>
-	<tr>
-		<th>Doctrine MongoDB</th>
-		<td><?php echo \Doctrine\MongoDB\Version::VERSION ?></td>
-		<td>&nbsp;</td>
-	</tr>
-	<?php endif ?>
-	<?php if (class_exists('Doctrine\ODM\MongoDB\Version')): ?>
-	<tr>
-		<th>Doctrine MongoDB ODM</th>
-		<td><?php echo \Doctrine\ODM\MongoDB\Version::VERSION ?></td>
-		<td>&nbsp;</td>
-	</tr>
-	<?php endif ?>
-	<?php if (class_exists('Doctrine_Core')): ?>
-	<tr>
-		<th>Doctrine</th>
-		<td><?php echo \Doctrine_Core::VERSION ?></td>
-		<td>&nbsp;</td>
-	</tr>
-	<?php endif ?>
-	<?php if (class_exists('Texy')): ?>
-	<tr>
-		<th>Texy!</th>
-		<td><?php echo \Texy::VERSION ?></td>
-		<td><?php echo \Texy::REVISION ?></td>
-	</tr>
-	<?php endif ?>
+	<?php endforeach ?>
 	</table>
 	<?php if (isset($updates) && count($updates) > 0): ?>
 	<h2>Updates avaiable</h2>

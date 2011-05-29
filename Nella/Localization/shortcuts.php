@@ -10,18 +10,19 @@
 /**
  * Translates the given string.
  *
- * @param string
- * @return string
+ * @param string|array	message or messages
+ * @return int|array	count or variables
  */
-function __($message)
+function __($message, $count = NULL)
 {
 	return Nette\Environment::getService('Nette\Localization\ITranslator')
-		->translate($message);
+		->translate($message, $count);
 }
 
 /**
  * Translates the given string with plural.
  *
+ * @deprecated
  * @param string
  * @param string 
  * @param int plural form (positive number)
@@ -29,6 +30,7 @@ function __($message)
  */
 function _n($single, $plural, $number)
 {
+	trigger_error(__FUNCTION__ . '() is deprecated; use __(array(\$single, \$plural), \$number) instead.', E_USER_DEPRECATED);
 	return Nette\Environment::getService('Nette\Localization\ITranslator')
 		->translate(array($single, $plural), $number);
 }
@@ -36,12 +38,14 @@ function _n($single, $plural, $number)
 /**
  * Translates the given string with vsprintf.
  *
+ * @deprecated
  * @param string
  * @param array for vsprintf 
  * @return string
  */
 function _x($message, array $args)
 {
+	trigger_error(__FUNCTION__ . '() is deprecated; use __(\$message, $args) instead.', E_USER_DEPRECATED);
 	return Nette\Environment::getService('Nette\Localization\ITranslator')
 		->translate($message, $args);
 }
@@ -49,6 +53,7 @@ function _x($message, array $args)
 /**
  * Translates the given string with plural and vsprintf.
  *
+ * @deprecated
  * @param string
  * @param string
  * @param int plural form (positive number)
@@ -57,6 +62,7 @@ function _x($message, array $args)
  */
 function _nx($single, $plural, $number, array $args)
 {
+	trigger_error(__FUNCTION__ . '() is deprecated; use __(array(\$single, \$plural), array(\$number, $args[0], $args[1], ...) instead.', E_USER_DEPRECATED);
 	return Nette\Environment::getService('Nette\Localization\ITranslator')
 		->translate(array($single, $plural), array_merge(array($number), $args));
 }

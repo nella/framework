@@ -92,13 +92,14 @@ abstract class BackendPresenter extends Presenter
 	 */
 	protected function createComponent($name)
 	{
-		$globalComponentRegistry = $this->getContext()->getService('Nella\Registry\GlobalComponentFactories');
-		if (isset($globalComponentRegistry[$name])) {
-			return callback($globalComponentRegistry[$name])->invoke($this, $name);
-		}
-
 		$ucname = ucfirst($name);
-		$method = 'createComponent' . $ucname;
+		
+		$container = $this->getContext()->getService('components');
+		if ($container->hasComponent($name)) {
+			return $container->getComponent($name, $this);
+		}
+		
+		$method = "createComponent" . $ucname;
 		if ($ucname !== $name && method_exists($this, $method) && $this->getReflection()->getMethod($method)->getName() === $method) {
 			if (!$this->isAllowed($method)) {
 				throw new \Nette\Application\BadRequestException("You don't have permission for this '$name' component", 403);

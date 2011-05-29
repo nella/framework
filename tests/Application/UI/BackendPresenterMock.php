@@ -19,8 +19,8 @@ class BackendPresenterMock extends \Nella\Application\UI\BackendPresenter
 	public function __construct(\Nette\ComponentModel\IContainer $parent = NULL, $name = NULL)
 	{
 		$this->userMock = new \NellaTests\Mocks\User;
-		$this->setContext(new \Nette\DI\Context);
-		$this->getContext()->addService('Nella\Registry\GlobalComponentFactories', new \Nella\FreezableArray);
+		$context = \Nette\Environment::getContext();
+		$this->setContext($context);
 		parent::__construct($parent, $name);
 	}
 	
@@ -50,15 +50,6 @@ class BackendPresenterMock extends \Nella\Application\UI\BackendPresenter
 		$ref->setAccessible(TRUE);
 		$ref->setValue($this, $signal);
 		$ref->setAccessible(TRUE);
-	}
-	
-	public function getApplication()
-	{
-		$context = new \Nette\UIqContext;
-		$context->addService('Nette\Http\Session', new \Nette\Http\Session);
-		$app = new \Nette\Application\Application;
-		$app->setContext($context);
-		return $app;
 	}
 	
 	/**
