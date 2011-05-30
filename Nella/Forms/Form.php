@@ -196,7 +196,7 @@ class Form extends \Nette\Application\UI\Form
 	}
 
 	/**
-	 * @return \Nella\DI\IContext
+	 * @return \Nette\DI\IContainer
 	 */
 	protected function getContext()
 	{

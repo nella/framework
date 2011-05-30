@@ -25,7 +25,7 @@ class Callback extends \Nette\Object implements \Nette\Diagnostics\IBarPanel
 	private static $registered = FALSE;
 
 	/**
-	 * @param \Nella\DI\IContext
+	 * @param \Nette\DI\IConainer
 	 * @param array
 	 */
 	public function __construct(\Nella\DI\IContext $context, array $items = NULL)
