@@ -12,12 +12,13 @@ namespace Nella\Utils\LoggerStorages;
 /**
  * Database action logger entity
  *
- * @entity(repositoryClass="Nella\Models\Repository")
+ * @entity
  * @table(name="logger")
+ * @service(class="Nella\Utils\LoggerStorages\DatabaseStorage")
  *
  * @author	Patrik Votoček
  */
-class ActionEntity extends \Nella\Models\Entity
+class ActionEntity extends \Nella\Doctrine\Entity
 {
 	/**
 	 * @column(length=128)
@@ -35,8 +36,8 @@ class ActionEntity extends \Nella\Models\Entity
 	 */
 	private $message;
 	/**
-     * @manyToOne(targetEntity="Nella\Security\IdentityEntity")
-     * @joinColumn(name="user_id", referencedColumnName="id")
+     * @manyToOne(targetEntity="Nella\Security\IdentityEntity", fetch="EAGER")
+     * @joinColumn(name="user_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
 	 * @var \Nella\Security\IdentityEntity
 	 */
 	private $user;

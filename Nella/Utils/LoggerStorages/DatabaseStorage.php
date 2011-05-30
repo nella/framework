@@ -14,7 +14,7 @@ namespace Nella\Utils\LoggerStorages;
  *
  * @author	Patrik Votoček
  */
-class DatabaseStorage extends \Nella\Models\Service implements \Nella\Utils\IActionLogger
+class DatabaseStorage extends \Nella\Doctrine\Service implements \Nella\Utils\IActionLogger
 {
 	/**
 	 * @param string	module name
@@ -24,14 +24,14 @@ class DatabaseStorage extends \Nella\Models\Service implements \Nella\Utils\IAct
 	 */
 	public function logAction($module, $action = self::OTHER, $message = "", \Nette\Security\IIdentity $user = NULL)
 	{
-		if ($user) {
-			$user = $user->entity;
+		if (!$user) {
+			$user = $this->getContainer()->context->user->identity;
 		}
 
 		$entity = new ActionEntity;
 		$entity->setModule($module)->setAction($action)->setMessage($message)->setUser($user);
 
-		$this->persist($entity);
-		$this->flush();
+		$this->getEntityManager()->persist($entity);
+		$this->getEntityManager()->flush();
 	}
 }

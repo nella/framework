@@ -9,6 +9,8 @@
 
 namespace Nella\Utils\LoggerStorages;
 
+use Nette\Security\IIdentity;
+
 /**
  * File action logger
  *
@@ -20,12 +22,16 @@ class FileStorage extends \Nette\Object implements \Nella\Utils\IActionLogger
 	public static $defaultLogFile = "actions.log";
 	/** @var string */
 	private $file;
+	/** @var \Nette\Security\IIdentity */
+	private $user;
 
 	/**
+	 * @param \Nette\Security\IIdentity
 	 * @param string
 	 */
-	public function __construct($file = NULL)
+	public function __construct(IIdentity $identity, $file = NULL)
 	{
+		$this->user = $identity;
 		$logDir = \Nette\Diagnostics\Debugger::$logDirectory;
 		if ($file) {
 			$this->file = $logDir . "/" . $file;
@@ -44,7 +50,7 @@ class FileStorage extends \Nette\Object implements \Nella\Utils\IActionLogger
 	public function logAction($module, $action = self::OTHER, $message = "", \Nette\Security\IIdentity $user = NULL)
 	{
 		if (!$user) {
-			$user = \Nette\Environment::getApplication()->context->getService('Nette\Http\IUser')->identity;
+			$user = $this->user;
 		}
 
 		$data = "[" . date("Y-m-d H:i:s P") . "] $module:$action: $message #{$user->getId()}";
