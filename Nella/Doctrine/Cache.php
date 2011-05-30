@@ -16,7 +16,7 @@ namespace Nella\Doctrine;
  */
 class Cache extends \Doctrine\Common\Cache\AbstractCache
 {
-	/** @var array */
+	/** @var \Nette\Caching\Cache */
 	private $data = array();
 
 	/**
@@ -32,33 +32,31 @@ class Cache extends \Doctrine\Common\Cache\AbstractCache
 	 */
 	public function getIds()
 	{
-		return array_keys($this->data);
+		throw new \Nette\NotImplementedException; // wait fot $cache->getIds() in Nette\Caching\Cache
 	}
 
-	/**
-	 * {@inheritdoc}
-	 */
-	protected function _doFetch($id)
-	{
-		if (isset($this->data[$id])) {
-			return $this->data[$id];
-		}
-		return FALSE;
-	}
+    /**
+     * {@inheritdoc}
+     */
+    protected function _doFetch($id)
+    {
+        $data = $this->data->load($id);
+		return $data ?: FALSE;
+    }
 
-	/**
-	 * {@inheritdoc}
-	 */
-	protected function _doContains($id)
-	{
-		return isset($this->data[$id]);
-	}
+    /**
+     * {@inheritdoc}
+     */
+    protected function _doContains($id)
+    {
+        return $this->data->load($id) !== NULL;
+    }
 
-	/**
-	* {@inheritdoc}
-	*/
-	protected function _doSave($id, $data, $lifeTime = 0)
-	{
+    /**
+     * {@inheritdoc}
+     */
+    protected function _doSave($id, $data, $lifeTime = 0)
+    {
 		$files = array();
 		if ($data instanceof \Doctrine\ORM\Mapping\ClassMetadata) {
 			$ref = \Nette\Reflection\ClassType::from($data->name);
@@ -68,21 +66,22 @@ class Cache extends \Doctrine\Common\Cache\AbstractCache
 				$files[] = $ref->getFileName();
 			}
 		}
-		
+
 		if ($lifeTime != 0) {
 			$this->data->save($id, $data, array('expire' => time() + $lifeTime, 'tags' => array("doctrine"), 'files' => $files));
 		} else {
 			$this->data->save($id, $data, array('tags' => array("doctrine"), 'files' => $files));
 		}
-		return TRUE;
-	}
 
-	/**
-	 * {@inheritdoc}
-	 */
-	protected function _doDelete($id)
-	{
-		unset($this->data[$id]);
 		return TRUE;
-	}
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function _doDelete($id)
+    {
+        $this->data->save($id, NULL);
+        return TRUE;
+    }
 }

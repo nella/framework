@@ -7,10 +7,9 @@
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
 
-namespace Nella\Models\Listeners;
+namespace Nella\Doctrine\Listeners;
 
-use Nette\Caching\Cache,
-	Nette\Reflection\Property;
+use Nette\Caching\Cache;
 
 /**
  * Timestampable listenere
@@ -19,17 +18,21 @@ use Nette\Caching\Cache,
  *
  * @author	Patrik Votoček
  */
-class Timestampable extends \Nette\Object implements \Doctrine\Common\EventSubscriber
+class Userable extends \Nette\Object implements \Doctrine\Common\EventSubscriber
 {
+	/** @var \Nella\Security\User */
+	private $user;
 	/** @var \Nette\Caching\Cache */
 	private $cache;
 
 	/**
+	 * @param \Nella\Security\User
 	 * @param \Nette\Caching\IStorage
 	 */
-	public function __construct(\Nette\Caching\IStorage $cacheStorage = NULL)
+	public function __construct(\Nella\Security\User $user = NULL, \Nette\Caching\IStorage $cacheStorage = NULL)
 	{
-		$this->cache = $cacheStorage ? new Cache($cacheStorage, "Nella.Models.Timestampable") : array();
+		$this->user = $user;
+		$this->cache = $cacheStorage ? new Cache($cacheStorage, "Nella.Models.Userable") : array();
 	}
 
 	/**
@@ -38,41 +41,48 @@ class Timestampable extends \Nette\Object implements \Doctrine\Common\EventSubsc
 	public function getSubscribedEvents()
     {
         return array(
-        	\Doctrine\ORM\Events::preUpdate,
+        	\Doctrine\ORM\Events::onFlush,
         	\Doctrine\ORM\Events::loadClassMetadata,
         );
     }
 
     /**
-     * @param \Nella\Models\Entity
+     * @param \Nella\Doctrine\Entity
 	 * @return void
      */
-    protected function update(\Nella\Models\Entity $entity)
+    protected function update(\Nella\Models\IEntity $entity)
     {
-		if (array_key_exists(get_class($entity), $this->cache) && is_array($this->cache[get_class($entity)])) {
-            foreach ($this->cache[get_class($entity)] as $ref) {
+    	if (($properties = $this->cache->load(get_class($entity))) && ($identity = $this->user->identity)) {
+    		foreach ($properties as $property) {
+				$ref = new \Nette\Reflection\Property($property[0], $property[1]);
 				$ref->setAccessible(TRUE);
-				$ref->setValue($entity, new \DateTime);
-            }
-        }
+				if (!$ref->hasAnnotation('creator') || !$ref->getValue($entity)) {
+					$ref->setValue($entity, $identity);
+				}
+	        }
+	    }
     }
 
     /**
-     * @param \Doctrine\ORM\Event\PreUpdateEventArgs
+     * @param \Doctrine\ORM\Event\OnFlushEventArgs
 	 * @return void
      */
-    public function preUpdate(\Doctrine\ORM\Event\PreUpdateEventArgs $args)
+    public function onFlush(\Doctrine\ORM\Event\OnFlushEventArgs $args)
     {
     	$em = $args->getEntityManager();
         $uow = $em->getUnitOfWork();
 
         foreach ($uow->getScheduledEntityInsertions() AS $entity) {
             $this->update($entity);
+            $class = $em->getClassMetadata(get_Class($entity));
+			$uow->computeChangeSet($class, $entity);
         }
 
         foreach ($uow->getScheduledEntityUpdates() AS $entity) {
             $this->update($entity);
-        }
+            $class = $em->getClassMetadata(get_Class($entity));
+			$uow->computeChangeSet($class, $entity);
+		}
     }
 
     /**
@@ -86,9 +96,9 @@ class Timestampable extends \Nette\Object implements \Doctrine\Common\EventSubsc
 			$files = $data = array();
 			foreach ($metadata->getReflectionProperties() as $prop) {
 				$class = $prop->getDeclaringClass();
-				$ref = new Property($class->getName(), $prop->getName());
-				if ($ref->hasAnnotation('timestampable')) {
-					$data[] = $ref;
+				$ref = new \Nette\Reflection\Property($class->getName(), $prop->getName());
+				if ($ref->hasAnnotation('creator') || $ref->hasAnnotation('editor')) {
+					$data[] = array($ref->getDeclaringClass()->getName(), $ref->getName());
 				}
 				$files[] = $class->getFileName();
 			}

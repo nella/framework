@@ -10,43 +10,38 @@
 namespace Nella\Doctrine;
 
 /**
- * Console helper.
+ * Entity manager console helper
  *
  * @author	Patrik Votoček
  */
 class EntityManagerHelper extends \Symfony\Component\Console\Helper\Helper
 {
-	/**
-     * Doctrine ORM EntityManager lazy loader
-     * @var \Closure
-     */
-    protected $_em;
-
-    /**
-     * Constructor
-     *
-     * @param \Closure
-     */
-    public function __construct(\Closure $em)
-    {
-        $this->_em = $em;
-    }
+	/** @var Container */
+	protected $container;
 
 	/**
-     * Retrieves Doctrine ORM EntityManager
-     *
-     * @return \Doctrine\ORM\EntityManager
-     */
-    public function getEntityManager()
-    {
-        return callback($this->_em)->invoke();
-    }
+	 * @param Container
+	 */
+	public function __construct(Container $container)
+	{
+		$this->container = $container;
+	}
 
-    /**
-     * @see Helper
-     */
-    public function getName()
-    {
-        return 'entityManager';
-    }
+	/**
+	 * Retrieves Doctrine ORM EntityManager
+	 *
+	 * @return \Doctrine\ORM\EntityManager
+	 */
+	public function getEntityManager()
+	{
+		return $this->container->getEntityManager();
+	}
+
+	/**
+	 * @see Helper
+	 */
+	public function getName()
+	{
+		return 'entityManager';
+	}
 }

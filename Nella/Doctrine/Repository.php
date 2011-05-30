@@ -7,7 +7,7 @@
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
 
-namespace Nella\Models;
+namespace Nella\Doctrine;
 
 use Nette\ObjectMixin;
 
@@ -110,7 +110,7 @@ class Repository extends \Doctrine\ORM\EntityRepository
 
 	/**
 	 * Access to reflection
-	 * 
+	 *
 	 * @return \Nette\Reflection\ClassType
 	 */
 	public static function getReflection()
@@ -120,7 +120,7 @@ class Repository extends \Doctrine\ORM\EntityRepository
 
 	/**
 	 * Call to undefined method
-	 * 
+	 *
 	 * @param string  method name
 	 * @param array   arguments
 	 * @return mixed
@@ -137,7 +137,7 @@ class Repository extends \Doctrine\ORM\EntityRepository
 
 	/**
 	 * Call to undefined static method
-	 * 
+	 *
 	 * @param string  method name (in lower case!)
 	 * @param array   arguments
 	 * @return mixed
@@ -150,7 +150,7 @@ class Repository extends \Doctrine\ORM\EntityRepository
 
 	/**
 	 * Adding method to class
-	 * 
+	 *
 	 * @param string  method name
 	 * @param mixed   callback or closure
 	 * @return mixed
@@ -172,7 +172,7 @@ class Repository extends \Doctrine\ORM\EntityRepository
 
 	/**
 	 * Returns property value. Do not call directly
-	 * 
+	 *
 	 * @param string  property name
 	 * @return mixed   property value
 	 * @throws \Nette\MemberAccessException if the property is not defined.
@@ -184,7 +184,7 @@ class Repository extends \Doctrine\ORM\EntityRepository
 
 	/**
 	 * Sets value of a property. Do not call directly
-	 * 
+	 *
 	 * @param string  property name
 	 * @param mixed   property value
 	 * @return void
@@ -197,7 +197,7 @@ class Repository extends \Doctrine\ORM\EntityRepository
 
 	/**
 	 * Is property defined?
-	 * 
+	 *
 	 * @param string  property name
 	 * @return bool
 	 */
@@ -208,7 +208,7 @@ class Repository extends \Doctrine\ORM\EntityRepository
 
 	/**
 	 * Access to undeclared property
-	 * 
+	 *
 	 * @param string  property name
 	 * @return void
 	 * @throws \Nette\MemberAccessException

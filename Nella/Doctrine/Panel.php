@@ -87,10 +87,7 @@ class Panel extends \Nette\Object implements \Nette\Diagnostics\IBarPanel, \Doct
 		}
 
 		$s .= '</td><td>';
-		foreach ($params as $param) {
-			$s .= Debugger::dump($param, TRUE) . "<br>";
-		}
-
+		$s .= \Nette\Diagnostics\Helpers::clickableDump($params, TRUE);
 		$s .= '</td><td>' . $rows . '</td></tr>';
 		return $s;
 	}
@@ -104,7 +101,14 @@ class Panel extends \Nette\Object implements \Nette\Diagnostics\IBarPanel, \Doct
 
 	public function renderException($e)
 	{
-		if ($e instanceof \PDOException && count($this->queries)) {
+		if (($e instanceof \PDOException || $e instanceof \Nella\Models\Exception) && count($this->queries)) {
+			if (!$e instanceof \PDOException) {
+				$e = $e->getPrevious();
+				if (!is_object($e) || !$e instanceof \PDOException) {
+					return;
+				}
+			}
+
 			$s = '<table><tr><th>Time&nbsp;ms</th><th>SQL Statement</th><th>Params</th><th>Rows</th></tr>';
 			$s .= $this->processQuery(end($this->queries));
 			$s .= '</table>';
@@ -135,11 +139,11 @@ class Panel extends \Nette\Object implements \Nette\Diagnostics\IBarPanel, \Doct
 	/**
 	 * @return Panel
 	 */
-	public static function create()
+	public static function register()
 	{
 		$panel = new static;
 		Debugger::$bar->addPanel($panel);
-		Debugger::$blueScreen->addPanel(callback($this, 'renderException'));
+		Debugger::$blueScreen->addPanel(callback($panel, 'renderException'));
 		return $panel;
 	}
 }

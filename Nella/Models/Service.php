@@ -4,130 +4,105 @@
  *
  * Copyright (c) 2006, 2011 Patrik Votoček (http://patrik.votocek.cz)
  *
- * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
+ * This source file is subject to the GNU Lesser General Public License. For more information please see http://nellacms.com
  */
 
 namespace Nella\Models;
 
 /**
- * Base model service
+ * Model service
  *
  * @author	Patrik Votoček
- *
- * @property-read \Doctrine\ORM\EntityManager $entityManager
- * @property-read string $entityClass
- * @property-read \Doctrine\ORM\EntityRepository $repository
- * @property-read \Doctrine\ORM\Mapping\ClassMetadata $classMetadata
  */
-class Service extends \Nette\Object
+abstract class Service extends \Nette\Object
 {
-	/** @var \Doctrine\ORM\EntityManager */
-	private $entityManager;
+	/** @var Container */
+	private $container;
 	/** @var string */
 	private $entityClass;
 
 	/**
-	 * @param \Doctrine\ORM\EntityManager
+	 * @param Container
 	 * @param string
+	 * @return Service
 	 */
-	public function __construct(\Doctrine\ORM\EntityManager $entityManager, $entityClass = NULL)
+	public function __construct(Container $container, $entityClass)
 	{
-		$this->entityManager = $entityManager;
+		if (!class_exists($entityClass)) {
+			throw new \Nette\InvalidArgumentException("Entity '$entityClass' does not exist");
+		} elseif (!\Nette\Reflection\ClassType::from($entityClass)->implementsInterface('Nella\Models\IEntity')) {
+			throw new \Nette\InvalidArgumentException(
+				"Entity '$entityClass' does not valid entity (must implements Nella\\Models\\IEntity)"
+			);
+		}
+
+		$this->container = $container;
 		$this->entityClass = $entityClass;
 	}
 
-	/**
-	 * @return \Doctrine\ORM\EntityManager
-	 */
-	public function getEntityManager()
+	final public function getContainer()
 	{
-		return $this->entityManager;
+		return $this->container;
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getEntityClass()
+	final public function getEntityClass()
 	{
 		return $this->entityClass;
 	}
 
 	/**
-	 * @param string
-	 * @return \Doctrine\ORM\EntityRepository
-	 * @throws \Nette\InvalidArgumentException
+	 * @return mixed
 	 */
-	public function getRepository($entityClass = NULL)
+	protected function createEntityPrototype()
 	{
-		$entityClass = $entityClass ?: $this->getEntityClass();
-		if (empty($entityClass)) {
-			throw new \Nette\InvalidArgumentException("Default entity name is not set, you must set entity name in param");
-		}
-
-		return $this->getEntityManager()->getRepository($entityClass);
+		$class = $this->getEntityClass();
+		return new $class;
 	}
 
 	/**
-	 * @param string
-	 * @return \Doctrine\ORM\ClassMetadata
+	 * @param IEntity
+	 * @param array|\Traversable
 	 * @throws \Nette\InvalidArgumentException
 	 */
-	public function getClassMetadata($entityClass = NULL)
+	protected function fillData(IEntity $entity, $values)
 	{
-		$entityClass = $entityClass ?: $this->getEntityClass();
-		if (empty($entityClass)) {
-			throw new \Nette\InvalidArgumentException("Default entity name is not set, you must set entity name in param");
+		if (!is_array($values) && !$values instanceof \Traversable) {
+			throw new \Nette\InvalidArgumentException("Values must be array or Traversable");
 		}
 
-		return $this->getEntityManager()->getClassMetadata($entityClass);
+		foreach ($values as $key => $value) {
+			$method = 'set' . ucfirst($key);
+			if (method_exists($entity, $method)) {
+				$entity->$method($value);
+			}
+		}
 	}
 
 	/**
-	 * @param Entity
-	 * @return Entity
+	 * @param array|\Traversable
+	 * @return IEntity
+	 * @throws \Nette\InvalidArgumentException
 	 */
-	public function persist(Entity $entity)
+	public function create($values)
 	{
-		$this->getEntityManager()->persist($entity);
+		if (!is_array($values) && !$values instanceof \Traversable) {
+			throw new \Nette\InvalidArgumentException("Values must be array or Traversable");
+		}
+
+		$entity = $this->createEntityPrototype();
+		$this->fillData($entity, $values);
 		return $entity;
 	}
 
 	/**
-	 * @param Entity
-	 * @return Entity
+	 * @param IEntity
+	 * @param array|\Traversable
+	 * @return IEntity
+	 * @throws \Nette\InvalidArgumentException
 	 */
-	public function remove(Entity $entity)
+	public function update(IEntity $entity, $values)
 	{
-		$this->getEntityManager()->remove($entity);
+		$this->fillData($entity, $values);
 		return $entity;
-	}
-
-	public function flush()
-	{
-		return $this->getEntityManager()->flush();
-	}
-
-	/**
-	 * Persist entity and flush
-	 *
-	 * @param Entity
-	 * @return \Doctrine\ORM\EntityManager
-	 */
-	public function save($entity)
-	{
-		$this->persist($entity);
-		return $this->flush();
-	}
-
-	/**
-	 * Remove entity and flush
-	 *
-	 * @param Entity
-	 * @return \Doctrine\ORM\EntityManager
-	 */
-	public function delete($entity)
-	{
-		$this->remove($entity);
-		return $this->flush();
 	}
 }

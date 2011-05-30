@@ -7,31 +7,17 @@
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
 
-namespace Nella\Models;
+namespace Nella\Doctrine;
 
 /**
- * Basic entity with ID
- *
- * @mappedSuperclass
+ * Versionable entity interface
  *
  * @author	Patrik Votoček
- *
- * @property-read int $id
  */
-abstract class Entity extends \Nette\Object
+interface IVersionableEntity extends \Nella\Models\IEntity
 {
 	/**
-	 * @id
-	 * @generatedValue
-	 * @column(type="integer")
+	 * @return string
 	 */
-	private $id;
-
-	/**
-	 * @return int
-	 */
-	public function getId()
-	{
-		return $this->id;
-	}
+	public function takeSnapshot();
 }

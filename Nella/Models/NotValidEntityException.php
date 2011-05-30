@@ -11,14 +11,14 @@ namespace Nella\Models;
 
 /**
  * Ivalid entity state exception
- * 
+ *
  * @author	Patrik Votoček
  */
-class NotValidEntityException extends \LogicException
+class NotValidEntityException extends Exception
 {
 	/** @var array */
 	private $errors;
-	
+
 	/**
 	 * @param string
 	 * @param array
@@ -28,7 +28,7 @@ class NotValidEntityException extends \LogicException
 		parent::__construct($message);
 		$this->errors = $errors;
 	}
-	
+
 	/**
 	 * @return array
 	 */
