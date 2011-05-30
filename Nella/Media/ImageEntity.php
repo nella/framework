@@ -11,10 +11,15 @@ namespace Nella\Media;
 
 /**
  * Image media entity
- * 
- * @entity(repositoryClass="Nella\Models\Repository")
+ *
+ * @entity
  * @table(name="media_images")
- * 
+ * @service(class="Nella\Media\ImageService")
+ *
+ * @inheritanceType("JOINED")
+ * @discriminatorColumn(name="type", type="string")
+ * @discriminatorMap({"base" = "ImageEntity"})
+ *
  * @author	Patrik Votoček
  */
 class ImageEntity extends BaseFileEntity implements IImage
@@ -24,21 +29,21 @@ class ImageEntity extends BaseFileEntity implements IImage
 	 */
 	public function toImage()
 	{
-		return \Nella\Image::fromFile(STORAGE_DIR . "/" . $this->getPath());
+		return \Nella\Image::fromFile($this->getStorageDir() . "/" . $this->getPath());
 	}
-	
+
 	/**
 	 * @return string
 	 */
 	public function getType()
 	{
 		$types = array(
-			'image/jpg' => "jpg", 
-			'image/jpeg' => "jpg", 
-			'image/png' => "png", 
-			'image/gif' => "gif", 
+			'image/jpg' => "jpg",
+			'image/jpeg' => "jpg",
+			'image/png' => "png",
+			'image/gif' => "gif",
 		);
-		
+
 		$mime = $this->getMimeType();
 		return isset($types[$mime]) ? $types[$mime] : "jpg";
 	}

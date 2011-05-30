@@ -11,12 +11,12 @@ namespace Nella\Media;
 
 /**
  * Media image format entity
- * 
- * @entity(repositoryClass="Nella\Models\Repository")
+ *
+ * @entity
  * @table(name="media_formats")
- * 
+ *
  * @author	Patrik Votoček
- * 
+ *
  * @property int $width
  * @property int $height
  * @property bool $crop
@@ -24,7 +24,7 @@ namespace Nella\Media;
  * @property int $watermarkOpacity
  * @property int $watermarkPosition
  */
-class FormatEntity extends \Nella\Models\Entity implements IFormat
+class FormatEntity extends \Nella\Doctrine\Entity implements IFormat
 {
 	/**
 	 * @column(type="integer")
@@ -57,14 +57,14 @@ class FormatEntity extends \Nella\Models\Entity implements IFormat
 	 * @var int
 	 */
 	private $watermarkPosition;
-	
+
 	public function __construct()
 	{
 		parent::__construct();
 		$this->crop = TRUE;
 		$this->watermark = NULL;
 	}
-	
+
 	/**
 	 * @return int	pixels
 	 */
@@ -72,7 +72,7 @@ class FormatEntity extends \Nella\Models\Entity implements IFormat
 	{
 		return $this->width;
 	}
-	
+
 	/**
 	 * @param int
 	 * @return FormatEntity
@@ -82,7 +82,7 @@ class FormatEntity extends \Nella\Models\Entity implements IFormat
 		$this->width = $width;
 		return $this;
 	}
-	
+
 	/**
 	 * @return int	pixels
 	 */
@@ -90,7 +90,7 @@ class FormatEntity extends \Nella\Models\Entity implements IFormat
 	{
 		return $this->height;
 	}
-	
+
 	/**
 	 * @param int
 	 * @return FormatEntity
@@ -100,7 +100,7 @@ class FormatEntity extends \Nella\Models\Entity implements IFormat
 		$this->height = $height;
 		return $this;
 	}
-	
+
 	/**
 	 * @return bool
 	 */
@@ -108,7 +108,7 @@ class FormatEntity extends \Nella\Models\Entity implements IFormat
 	{
 		return $this->crop;
 	}
-	
+
 	/**
 	 * @param bool
 	 * @return FormatEntity
@@ -118,7 +118,7 @@ class FormatEntity extends \Nella\Models\Entity implements IFormat
 		$this->crop = $crop;
 		return $this;
 	}
-	
+
 	/**
 	 * @return ImageEntity
 	 */
@@ -126,7 +126,7 @@ class FormatEntity extends \Nella\Models\Entity implements IFormat
 	{
 		$this->watermark;
 	}
-	
+
 	/**
 	 * @param ImageEntity
 	 * @return FormatEntity
@@ -136,7 +136,7 @@ class FormatEntity extends \Nella\Models\Entity implements IFormat
 		$this->watermark = $watermark;
 		return $this;
 	}
-	
+
 	/**
 	 * @return int
 	 */
@@ -144,7 +144,7 @@ class FormatEntity extends \Nella\Models\Entity implements IFormat
 	{
 		return $this->watermarkOpacity;
 	}
-	
+
 	/**
 	 * @param int
 	 * @return FormatEntity
@@ -154,7 +154,7 @@ class FormatEntity extends \Nella\Models\Entity implements IFormat
 		$this->watermarkOpacity = $opacity;
 		return $this;
 	}
-	
+
 	/**
 	 * @return int
 	 */
@@ -162,7 +162,7 @@ class FormatEntity extends \Nella\Models\Entity implements IFormat
 	{
 		return $this->watermarkPosition;
 	}
-	
+
 	/**
 	 * @param int
 	 * @return FormatEntity
@@ -172,7 +172,7 @@ class FormatEntity extends \Nella\Models\Entity implements IFormat
 		$this->watermarkPosition = $position;
 		return $this;
 	}
-	
+
 	/**
 	 * @param IImage
 	 * @return \Nella\Image
@@ -185,7 +185,7 @@ class FormatEntity extends \Nella\Models\Entity implements IFormat
 		} else {
 			$image->resize($this->width, $this->height);
 		}
-		
+
 		if ($this->watermark) {
 			throw new \Nette\NotImplementedException;
 		}

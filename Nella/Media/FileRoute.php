@@ -14,37 +14,22 @@ namespace Nella\Media;
  *
  * @author	Pavel Kučera
  * @author	Patrik Votoček
+ *
+ * @property-write \Nella\Doctrine\Container
  */
 class FileRoute extends \Nette\Application\Routers\Route
 {
 	const FILE_KEY = 'file';
 
-	/** @var \Doctrine\ORM\EntityManager */
-	private $em;
-
-	/** @var \Nella\Models\Service */
-	private $service;
+	/** @var \Nella\Doctrine\Container */
+	private $container;
 
 	/**
-	 * @param \Doctrine\ORM\EntityManager
-	 * @return FileRoute
+	 * @param \Nella\Doctrine\Container
 	 */
-	public function setEntityManager(\Doctrine\ORM\EntityManager $em)
+	public function setContainer(\Nella\Doctrine\Container $container)
 	{
-		$this->em = $em;
-		return $this;
-	}
-
-	/**
-	 * @return \Nella\Models\Service
-	 */
-	protected function getService()
-	{
-		if (!$this->service) {
-			$this->service = new \Nella\Models\Service($this->em, 'Nella\Media\FileEntity');
-		}
-
-		return $this->service;
+		$this->container = $container;
 	}
 
 	/**
@@ -53,7 +38,7 @@ class FileRoute extends \Nette\Application\Routers\Route
 	 */
 	protected function getFile($id)
 	{
-		return $this->getService()->repository->find($id);
+		return $this->container->getService('Nella\Media\FileEntity')->repository->find($id);
 	}
 
 	/**
@@ -65,8 +50,8 @@ class FileRoute extends \Nette\Application\Routers\Route
 	{
 		parent::$styles[self::FILE_KEY] = array(
 			'pattern'	=> '[0-9]+',
-			self::FILTER_IN => 'rawurldecode',
-			self::FILTER_OUT => 'rawurlencode',
+			static::FILTER_IN => 'rawurldecode',
+			static::FILTER_OUT => 'rawurlencode',
 		);
 
 		parent::__construct($mask, $metadata, $flags);
@@ -85,16 +70,16 @@ class FileRoute extends \Nette\Application\Routers\Route
 		}
 
 		$params = $presenterRequest->params;
-		if (!isset($params[self::FILE_KEY])) {
+		if (!isset($params[static::FILE_KEY])) {
 			throw new \Nette\InvalidStateException('Missing file in route definition.');
 		}
 
 		// Find file
-		$file = $this->getFile($params[self::FILE_KEY]);
+		$file = $this->getFile($params[static::FILE_KEY]);
 		if (!$file) {
 			return NULL;
 		}
-		$params[self::FILE_KEY] = $file;
+		$params[static::FILE_KEY] = $file;
 
 		$presenterRequest->params = $params;
 		return $presenterRequest;

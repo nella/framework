@@ -14,6 +14,8 @@ namespace Nella\Media;
  *
  * @author	Pavel Kučera
  * @author	Patrik Votoček
+ *
+ * @property-write \Nella\Doctrine\Container
  */
 class ImageRoute extends \Nette\Application\Routers\Route
 {
@@ -22,23 +24,15 @@ class ImageRoute extends \Nette\Application\Routers\Route
 	const TYPE_KEY = 'type';
 	const PATH_PARAMETER = 'path';
 
-	/** @var \Doctrine\ORM\EntityManager */
-	private $em;
-
-	/** @var \Nella\Models\Service */
-	private $formatService;
-
-	/** @var \Nella\Models\Service */
-	private $imageService;
+	/** @var \Nella\Doctrine\Container */
+	private $container;
 
 	/**
-	 * @param \Doctrine\ORM\EntityManager
-	 * @return ImageRoute
+	 * @param \Nella\Doctrine\Container
 	 */
-	public function setEntityManager(\Doctrine\ORM\EntityManager $em)
+	public function setContainer(\Nella\Doctrine\Container $container)
 	{
-		$this->em = $em;
-		return $this;
+		$this->container = $container;
 	}
 
 	/**
@@ -46,11 +40,7 @@ class ImageRoute extends \Nette\Application\Routers\Route
 	 */
 	protected function getFormatService()
 	{
-		if (!$this->formatService) {
-			$this->formatService = new \Nella\Models\Service($this->em, 'Nella\Media\FormatEntity');
-		}
-
-		return $this->formatService;
+		return $this->container->getService('Nella\Media\FormatEntity');
 	}
 
 	/**
@@ -58,11 +48,7 @@ class ImageRoute extends \Nette\Application\Routers\Route
 	 */
 	protected function getImageService()
 	{
-		if (!$this->imageService) {
-			$this->imageService = new \Nella\Models\Service($this->em, 'Nella\Media\ImageEntity');
-		}
-
-		return $this->imageService;
+		return $this->container->getService('Nella\Media\ImageEntity');
 	}
 
 	/**
@@ -90,15 +76,15 @@ class ImageRoute extends \Nette\Application\Routers\Route
 	 */
 	public function __construct($mask, $metadata = array(), $flags = 0)
 	{
-		parent::$styles[self::FORMAT_KEY] = parent::$styles[self::IMAGE_KEY] = array(
+		parent::$styles[static::FORMAT_KEY] = parent::$styles[static::IMAGE_KEY] = array(
 			'pattern'	=> '[0-9]+',
-			self::FILTER_IN => 'rawurldecode',
-			self::FILTER_OUT => 'rawurlencode',
+			static::FILTER_IN => 'rawurldecode',
+			static::FILTER_OUT => 'rawurlencode',
 		);
-		parent::$styles[self::TYPE_KEY] = array(
+		parent::$styles[static::TYPE_KEY] = array(
 			'pattern'	=> '(jpg|png|gif)',
-			self::FILTER_IN => 'rawurldecode',
-			self::FILTER_OUT => 'rawurlencode',
+			static::FILTER_IN => 'rawurldecode',
+			static::FILTER_OUT => 'rawurlencode',
 		);
 
 		parent::__construct($mask, $metadata, $flags);
@@ -117,29 +103,29 @@ class ImageRoute extends \Nette\Application\Routers\Route
 		}
 
 		$params = $presenterRequest->params;
-		if (!isset($params[self::FORMAT_KEY])) {
+		if (!isset($params[static::FORMAT_KEY])) {
 			throw new \Nette\InvalidStateException('Missing format in route definition.');
 		}
-		if (!isset($params[self::IMAGE_KEY])) {
+		if (!isset($params[static::IMAGE_KEY])) {
 			throw new \Nette\InvalidStateException('Missing id in route definition.');
 		}
 
 		// Find image
-		$image = $this->getImage($params[self::IMAGE_KEY]);
+		$image = $this->getImage($params[static::IMAGE_KEY]);
 		if (!$image) {
 			return NULL;
 		}
-		$params[self::IMAGE_KEY] = $image;
+		$params[static::IMAGE_KEY] = $image;
 
 		// Find format
-		$format = $this->getFormat($params[self::FORMAT_KEY]);
+		$format = $this->getFormat($params[static::FORMAT_KEY]);
 		if (!$format) {
 			return NULL;
 		}
-		$params[self::FORMAT_KEY] = $format;
+		$params[static::FORMAT_KEY] = $format;
 
 		// Set path parameter
-		$params[self::PATH_PARAMETER] = $httpRequest->uri->path;
+		$params[static::PATH_PARAMETER] = $httpRequest->url->path;
 
 		$presenterRequest->params = $params;
 		return $presenterRequest;

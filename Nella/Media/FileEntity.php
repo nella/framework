@@ -11,13 +11,18 @@ namespace Nella\Media;
 
 /**
  * File media entity
- * 
- * @entity(repositoryClass="Nella\Models\Repository")
+ *
+ * @entity
  * @table(name="media_files")
- * 
+ * @service(class="Nella\Media\FileService")
+ *
+ * @inheritanceType("JOINED")
+ * @discriminatorColumn(name="type", type="string")
+ * @discriminatorMap({"base" = "FileEntity"})
+ *
  * @author	Patrik Votoček
  */
 class FileEntity extends BaseFileEntity
 {
-	
+
 }
