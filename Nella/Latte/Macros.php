@@ -18,7 +18,7 @@ class Macros extends \Nette\Latte\DefaultMacros
 {
 	/**
 	 * {image ...}
-	 * 
+	 *
 	 * @param string
 	 * @param mixed
 	 * @return string
@@ -26,25 +26,25 @@ class Macros extends \Nette\Latte\DefaultMacros
 	public function macroImage($content, $modifiers)
 	{
 		$out = ':Media:Media:image image => ?1, format => ?2, type => ?3';
-		
+
 		$data = explode(', ', $content);
 		list($image, $format) = $data;
-		
+
 		$out = str_replace("?1", $image . ' instanceof \Nella\Media\ImageEntity ? ' . $image . '->id : ' . $image, $out);
 		$out = str_replace("?2", $format . ' instanceof \Nella\Media\FormatEntity ? ' . $format . '->id : ' . $format, $out);
-		
+
 		if (count($data) < 3) {
 			$out = str_replace("?3", $image . ' instanceof \Nella\Media\ImageEntity ? ' . $image . '->type : "jpg"', $out);
 		} else {
 			$out = str_replace("?3", $data[2], $out);
 		}
-		
+
 		return $this->macroPlink($out, $modifiers);
 	}
-	
+
 	/**
 	 * {file ...}
-	 * 
+	 *
 	 * @param string
 	 * @param mixed
 	 * @return string
@@ -53,7 +53,7 @@ class Macros extends \Nette\Latte\DefaultMacros
 	{
 		$out = ':Media:Media:file file => ';
 		$out .= $content . ' instanceof \Nella\Media\FileEntity ? ' . $content . '->id : ' . $content;
-		
+
 		return $this->macroPlink($out, $modifiers);
 	}
 }

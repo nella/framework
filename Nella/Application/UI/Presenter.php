@@ -19,25 +19,79 @@ namespace Nella\Application\UI;
 abstract class Presenter extends \Nette\Application\UI\Presenter
 {
 	/**
+	 * Saves the message to template, that can be displayed after redirect
+	 *
+	 * @param  string
+	 * @param  string
+	 * @return stdClass
+	 */
+	public function flashMessage($message, $type = 'info')
+	{
+		$types = $this->getContext()->params['flashes'];
+		if (isset($types[$type])) {
+			$type = $types[$type];
+		}
+
+		return parent::flashMessage($message, $type);
+	}
+
+	/**
+	 * @param string	module name
+	 * @param string
+	 * @param string
+	 * @param user \Nette\Security\IIdentity
+	 */
+	public function logAction($module, $action = self::OTHER, $message = "", \Nette\Security\IIdentity $user = NULL)
+	{
+		return $this->getContext()->actionLogger->logAction($module, $action, $message, $user);
+	}
+
+	/**
+	 * Determines whether it links to the current page
+	 *
+	 * @param  string   destination in format "[[module:]presenter:]action" or "signal!" or "this"
+	 * @param  array|mixed
+	 * @return bool
+	 * @throws \Nette\Application\InvalidLinkException
+	 */
+	public function isLinkCurrent($destination = NULL, $args = array())
+	{
+		if (is_array($destination)) {
+			foreach ($destination as $link) {
+				if (parent::isLinkCurrent($link[0], isset($link[1]) ? $link[1] : array())) {
+					return TRUE;
+				}
+			}
+			return FALSE;
+		} elseif ($destination !== NULL) {
+			if (!is_array($args)) {
+				$args = func_get_args();
+				array_shift($args);
+			}
+			return parent::isLinkCurrent($destination, $args);
+		}
+		return FALSE;
+	}
+
+	/**
 	 * Descendant can override this method to customize template compile-time filters
-	 * 
+	 *
 	 * @param \Nette\Templating\Template
 	 */
 	public function templatePrepareFilters($template)
 	{
-		// default filters
-		$template->registerFilter($this->getContext()->getService('Nette\Latte\Engine'));
+		$template->registerFilter(new \Nella\Latte\Engine($this->getContext()));
 	}
 
 	/**
 	 * Formats layout template file names.
 	 *
-	 * @param string
-	 * @param string
 	 * @return array
 	 */
-	public function formatLayoutTemplateFiles($presenter, $layout)
+	public function formatLayoutTemplateFiles()
 	{
+		$presenter = $this->getName();
+		$layout = $this->layout ? $this->layout : 'layout';
 		$path = str_replace(":", "/", substr($presenter, 0, strrpos($presenter, ":")));
 		$subPath = substr($presenter, strrpos($presenter, ":") !== FALSE ? strrpos($presenter, ":") + 1 : 0);
 		if ($path) {
@@ -66,8 +120,12 @@ abstract class Presenter extends \Nette\Application\UI\Presenter
 		};
 
 		$files = array();
-		foreach ($this->getContext()->getService('Nella\Registry\TemplateDirs') as $dir) {
+		foreach ($this->getContext()->params['templates'] as $dir) {
 			$files = array_merge($files, $generator($dir));
+		}
+
+		if ($this->getContext()->hasService('debugPanel')) {
+			$this->getContext()->debugPanel->addTemplates(get_called_class(), $files);
 		}
 
 		return $files;
@@ -76,12 +134,12 @@ abstract class Presenter extends \Nette\Application\UI\Presenter
 	/**
 	 * Formats view template file names.
 	 *
-	 * @param string
-	 * @param string
 	 * @return array
 	 */
-	public function formatTemplateFiles($presenter, $view)
+	public function formatTemplateFiles()
 	{
+		$presenter = $this->getName();
+		$view = $this->view;
 		$path = str_replace(":", "/", substr($presenter, 0, strrpos($presenter, ":")));
 		$subPath = substr($presenter, strrpos($presenter, ":") !== FALSE ? strrpos($presenter, ":") + 1 : 0);
 		if ($path) {
@@ -113,8 +171,12 @@ abstract class Presenter extends \Nette\Application\UI\Presenter
 		};
 
 		$files = array();
-		foreach ($this->getContext()->getService('Nella\Registry\TemplateDirs') as $dir) {
+		foreach ($this->getContext()->params['templates'] as $dir) {
 			$files = array_merge($files, $generator($dir));
+		}
+
+		if ($this->getContext()->hasService('debugPanel')) {
+			$this->getContext()->debugPanel->addTemplates(get_called_class(), $files);
 		}
 
 		return $files;
@@ -127,19 +189,19 @@ abstract class Presenter extends \Nette\Application\UI\Presenter
 	 */
 	protected function createComponent($name)
 	{
-		$globalComponentRegistry = $this->getContext()->getService('Nella\Registry\GlobalComponentFactories');
-		if (isset($globalComponentRegistry[$name])) {
-			return callback($globalComponentRegistry[$name])->invoke($this, $name);
+		$container = $this->getContext()->components;
+		if ($container->hasComponent($name)) {
+			return $container->getComponent($name, $this);
 		}
 
 		return parent::createComponent($name);
 	}
 
 	/**
-	 * @return \Doctrine\ORM\EntityManager
+	 * @return \Nella\Doctrine\Container
 	 */
-	public function getEntityManager()
+	public function getDoctrineContainer()
 	{
-		return $this->getContext()->getService('Doctrine\ORM\EntityManager');
+		return $this->getContext()->doctrineContainer;
 	}
 }

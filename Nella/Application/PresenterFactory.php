@@ -9,25 +9,42 @@
 
 namespace Nella\Application;
 
+use Nette\Utils\Strings;
+
 /**
  * Nella presenter factory
  *
  * @author	Patrik Votoček
  */
-class PresenterFactory extends \Nette\Application\PresenterFactory
+class PresenterFactory extends \Nette\Object implements \Nette\Application\IPresenterFactory
 {
-	/** @var \Nella\FreezableArray */
-	private $registry;
+	const DEFAULT_NAMESPACE = 'App';
+
+	/** @var Nette\DI\IContainer */
+	private $container;
 
 	/**
-	 * @param string
-	 * @param \Nette\DI\IContext
+	 * @param Nette\DI\IContainer
 	 */
-	public function __construct($baseDir, \Nette\DI\IContext $context)
+	public function __construct(\Nette\DI\IContainer $container)
 	{
-		$this->registry = $context->getService('Nella\Registry\NamespacePrefixes');
-		parent::__construct($baseDir, $context);
+		$this->container = $container;
 	}
+
+	/**
+	 * Create new presenter instance.
+	 * @param  string  presenter name
+	 * @return IPresenter
+	 */
+	public function createPresenter($name)
+	{
+		$class = $this->getPresenterClass($name);
+		$presenter = new $class;
+		$presenter->setContext($this->container);
+		return $presenter;
+	}
+
+
 
 	/**
 	 * Format presenter class with prefixes
@@ -39,16 +56,18 @@ class PresenterFactory extends \Nette\Application\PresenterFactory
 	private function formatPresenterClasses($name)
 	{
 		$class = NULL;
-		$prefixes = (array) $this->registry->getIterator();
-		foreach (array_keys($prefixes) as $key) {
-			$class = $this->formatPresenterClass($name, $key);
+		$namespaces = isset($this->container->params['namespaces'])
+			 ? $this->container->params['namespaces']
+			 : array(static::DEFAULT_NAMESPACE);
+		foreach ($namespaces as $namespace) {
+			$class = $this->formatPresenterClass($name, $namespace);
 			if (class_exists($class)) {
 				break;
 			}
 		}
 
 		if (!class_exists($class)) {
-			$class = $this->formatPresenterClass($name);
+			$class = $this->formatPresenterClass($name, reset($namespaces));
 			throw new \Nette\Application\InvalidPresenterException("Cannot load presenter '$name', class '$class' was not found.");
 		}
 
@@ -82,9 +101,7 @@ class PresenterFactory extends \Nette\Application\PresenterFactory
 		// canonicalize presenter name
 		$realName = $this->unformatPresenterClass($class);
 		if ($name !== $realName) {
-			if ($this->caseSensitive) {
-				throw new \Nette\Application\InvalidPresenterException("Cannot load presenter '$name', case mismatch. Real name is '$realName'.");
-			}
+			throw new \Nette\Application\InvalidPresenterException("Cannot load presenter '$name', case mismatch. Real name is '$realName'.");
 		}
 
 		return $class;
@@ -98,13 +115,9 @@ class PresenterFactory extends \Nette\Application\PresenterFactory
 	 * @param string
 	 * @return string
 	 */
-	public function formatPresenterClass($presenter, $type = 'app')
+	public function formatPresenterClass($presenter, $namespace = 'App')
 	{
-		if (isset($this->registry[$type])) {
-			return $this->registry[$type].str_replace(':', "\\", $presenter.'Presenter');
-		} else {
-			return str_replace(':', '\\', $presenter).'Presenter';
-		}
+		return $namespace . "\\" . str_replace(':', "\\", $presenter.'Presenter');
 	}
 
 	/**
@@ -115,17 +128,24 @@ class PresenterFactory extends \Nette\Application\PresenterFactory
 	 */
 	public function unformatPresenterClass($class)
 	{
-		$mapper = function ($prefix) use ($class) {
-			if (\Nette\Utils\Strings::startsWith($class, $prefix)) {
-				return $prefix;
+		$active = "";
+		$namespaces = isset($this->container->params['namespaces'])
+			 ? $this->container->params['namespaces']
+			 : array(static::DEFAULT_NAMESPACE);
+		foreach ($namespaces as $namespace) {
+			if (Strings::startsWith($class, $namespace)) {
+				$current = $namespace . "\\";
+				if (!$active || strlen($active) < strlen($current)) {
+					$active = $current;
+				}
 			}
-		};
-		$reg = (array) $this->registry->getIterator();
-		if (count($prefixes = array_filter($reg, $mapper))) {
-			$prefix = current($prefixes);
-			return str_replace("\\", ':', substr($class, $class[0] == "\\" ? (strlen($prefix) + 1) : strlen($prefix), -9));
+		}
+
+		$class = Strings::startsWith('\\', $class) ? substr($class, 1) : $class;
+		if (strlen($active)) {
+			return str_replace("\\", ':', substr($class, strlen($active), -9));
 		} else {
-			return str_replace("\\", ':', substr($class, $class[0] == "\\" ? 1 : 0, -9));
+			return str_replace("\\", ':', substr($class, 0, -9));
 		}
 	}
 }

@@ -31,13 +31,6 @@ class ClassMetadataFactory extends \Nette\Object implements IClassMetadataFactor
 	public function __construct(\Nette\Caching\IStorage $cacheStorage = NULL)
 	{
 		$this->cache = $cacheStorage ? new Cache($cacheStorage, "Nella.Validator.Metadata") : array();
-		$this->loadDefaultParsers();
-	}
-
-	protected function loadDefaultParsers()
-	{
-		$this->addParser(new MetadataParsers\Annotation);
-		//$this->addParser(new DoctrineAnnotationParser);
 	}
 
 	/**

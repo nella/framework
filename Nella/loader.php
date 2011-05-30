@@ -7,12 +7,16 @@
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
 
-namespace Nella;
+use Nette\Diagnostics\Debugger;
 
 // Load and init Nette Framework
 if (!defined('NETTE')) {
 	require_once __DIR__ . "/../Nette/loader.php";
 }
+
+// Set debug options
+Debugger::$strictMode = TRUE;
+Debugger::$maxLen = 4096;
 
 /**
  * Load and configure Nella Framework
@@ -21,21 +25,12 @@ define('NELLA_FRAMEWORK', TRUE);
 define('NELLA_FRAMEWORK_DIR', __DIR__);
 define('NELLA_FRAMEWORK_VERSION_ID', 20000); // v2.0.0
 
-// Set file upload temp dir
-ini_set('upload_tmp_dir', TEMP_DIR . "/uploaded");
-// Set session dir
-ini_set('session.save_path', TEMP_DIR . "/sessions");
-
-/** #@+ Base control flash messages class */
-const FLASH_SUCCESS = "success";
-const FLASH_ERROR = "error";
-const FLASH_INFO = "info";
-const FLASH_WARNING = "warning";
-/** #@- */
-
 require_once __DIR__ . "/SplClassLoader.php";
-SplClassLoader::getInstance()->register();
+Nella\SplClassLoader::getInstance(array(
+	'Nella' => NELLA_FRAMEWORK_DIR,
+	'Doctrine' => __DIR__ . "/../Doctrine",
+	'Symfony' => __DIR__ . "/../Symfony",
+))->register();
 
-require_once __DIR__ . "/hacks.php";
 require_once __DIR__ . "/shortcuts.php";
 require_once __DIR__ . "/Localization/shortcuts.php";
