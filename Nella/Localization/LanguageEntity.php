@@ -12,7 +12,7 @@ namespace Nella\Localization;
 /**
  * Language entity
  *
- * @entity(repositoryClass="Nella\Models\Repository")
+ * @entity
  * @table(name="langs")
  *
  * @author	Patrik Votoček
@@ -21,7 +21,7 @@ namespace Nella\Localization;
  * @property string $nativeName
  * @property string $short
  */
-class LanguageEntity extends \Nella\Models\Entity
+class LanguageEntity extends \Nella\Doctrine\Entity
 {
 	/**
 	 * @column
