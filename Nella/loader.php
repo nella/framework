@@ -33,8 +33,8 @@ const FLASH_INFO = "info";
 const FLASH_WARNING = "warning";
 /** #@- */
 
-require_once __DIR__ . "/NellaLoader.php";
-NellaLoader::getInstance()->register();
+require_once __DIR__ . "/SplClassLoader.php";
+SplClassLoader::getInstance()->register();
 
 require_once __DIR__ . "/hacks.php";
 require_once __DIR__ . "/shortcuts.php";
