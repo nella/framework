@@ -14,11 +14,11 @@ namespace Nella\Security;
  *
  * @author	Pavel Kučera
  */
-class RoleRepository extends \Nella\Models\Repository
+class RoleRepository extends \Nella\Doctrine\Repository
 {
 	/**
 	 * Returns all role entities ordered by name
-	 * 
+	 *
 	 * @param bool
 	 * @return array
 	 */
@@ -26,7 +26,7 @@ class RoleRepository extends \Nella\Models\Repository
 	{
 		$qb = $this->createQueryBuilder('r')
 			->orderBy('r.name', $desc ? 'DESC' : 'ASC');
-		
+
 		return $qb->getQuery()->getResult();
 	}
 }

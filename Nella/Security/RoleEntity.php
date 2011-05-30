@@ -9,6 +9,8 @@
 
 namespace Nella\Security;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * Role entity
  *
@@ -24,7 +26,7 @@ namespace Nella\Security;
  * @property RoleEntity|NULL $parent
  * @property-read array $permissions
  */
-class RoleEntity extends \Nella\Models\Entity implements \Nette\Security\IRole
+class RoleEntity extends \Nella\Doctrine\Entity implements \Nette\Security\IRole
 {
 	/**
 	 * @column(length=128, unique=true)
@@ -51,8 +53,8 @@ class RoleEntity extends \Nella\Models\Entity implements \Nette\Security\IRole
 	public function __construct()
 	{
 		parent::__construct();
-		$this->permissions = new \Doctrine\Common\Collections\ArrayCollection;
-		$this->children = new \Doctrine\Common\Collections\ArrayCollection;
+		$this->permissions = new ArrayCollection;
+		$this->children = new ArrayCollection;
 	}
 
 	/**
@@ -62,7 +64,7 @@ class RoleEntity extends \Nella\Models\Entity implements \Nette\Security\IRole
 	 */
 	public function getRoleId()
 	{
-		return $this->getId();
+		return $this->name;
 	}
 
 	/**
@@ -96,12 +98,8 @@ class RoleEntity extends \Nella\Models\Entity implements \Nette\Security\IRole
 	 * @param RoleEntity|NULL
 	 * @return RoleEntity
 	 */
-	public function setParent($parent)
+	public function setParent(RoleEntity $parent = NULL)
 	{
-		if (!($parent instanceof RoleEntity) && $parent !== NULL) {
-			throw new \InvalidArgumentException("Parent muset be either an instance of Nella\Security\RoleEntity or null");
-		}
-
 		$this->parent = $parent;
 		return $this;
 	}
@@ -111,7 +109,7 @@ class RoleEntity extends \Nella\Models\Entity implements \Nette\Security\IRole
 	 */
 	public function getChildren()
 	{
-		return $this->children->toArray();
+		return $this->children->toArray(); // why to array?
 	}
 
 	/**

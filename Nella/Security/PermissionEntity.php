@@ -11,16 +11,18 @@ namespace Nella\Security;
 
 /**
  * Persmission entity
- * 
- * @entity(repositoryClass="Nella\Models\Repository")
+ *
+ * @entity
  * @table(name="acl_permissions")
  *
  * @author	Patrik Votoček
- * 
+ *
+ * @property RoleEntity $role
  * @property string $resource
  * @property string $privilege
+ * @property bool $allow
  */
-class PermissionEntity extends \Nella\Models\Entity
+class PermissionEntity extends \Nella\Doctrine\Entity
 {
 	/**
 	 * @manyToOne(targetEntity="RoleEntity", inversedBy="permissions")
@@ -29,12 +31,12 @@ class PermissionEntity extends \Nella\Models\Entity
 	 */
 	private $role;
 	/**
-	 * @column(length=128)
+	 * @column(length=128,nullable=true)
 	 * @var string
 	 */
 	private $resource;
 	/**
-	 * @column(length=128)
+	 * @column(length=128,nullable=true)
 	 * @var string
 	 */
 	private $privilege;
@@ -43,7 +45,26 @@ class PermissionEntity extends \Nella\Models\Entity
 	 * @var bool
 	 */
 	private $allow;
-	
+
+	/**
+	 * @return RoleEntity
+	 */
+	public function getRole()
+	{
+		return $this->role;
+	}
+
+	/**
+	 * @internal
+	 * @param RoleEntity
+	 * @return PermissionEntity
+	 */
+	public function setRole(RoleEntity $role)
+	{
+		$this->role = $role;
+		return $this;
+	}
+
 	/**
 	 * @return string
 	 */
@@ -53,6 +74,7 @@ class PermissionEntity extends \Nella\Models\Entity
 	}
 
 	/**
+	 * @internal
 	 * @param string
 	 * @return PersmissionEntity
 	 */
@@ -81,7 +103,7 @@ class PermissionEntity extends \Nella\Models\Entity
 		$this->privilege = $privilege == "" ? NULL : $privilege;
 		return $this;
 	}
-	
+
 	/**
 	 * @return bool
 	 */
@@ -89,7 +111,7 @@ class PermissionEntity extends \Nella\Models\Entity
 	{
 		return $this->allow;
 	}
-	
+
 	/**
 	 * @param bool
 	 * @return PermissionEntity

@@ -1,0 +1,24 @@
+<?php
+/**
+ * This file is part of the Nella Framework.
+ *
+ * Copyright (c) 2006, 2011 Patrik Votoček (http://patrik.votocek.cz)
+ *
+ * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
+ */
+?>
+<h1>User: <?php echo htmlspecialchars($username) ?></h1>
+
+<div class="nette-inner" id="nella-callback-panel-content">
+	<h2>Role: <?php echo htmlspecialchars($role->name) ?>
+	<?php if ($role->parent) { echo " - " . htmlspecialchars($role->parent->name); } ?></h2>
+	<?php /*<h2>Permissions</h2>
+	<table style="width: 100%">
+		<?php foreach ($permissions as $permission): ?>
+		<tr>
+			<th>Resource/Permission</th>
+			<td>Allow/Deny</td>
+		</tr>
+		<?php endforeach ?>
+	</table>*/ ?>
+</div>

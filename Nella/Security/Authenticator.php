@@ -16,28 +16,28 @@ namespace Nella\Security;
  */
 class Authenticator extends \Nette\Object implements \Nette\Security\IAuthenticator
 {
-	/** @var \Doctrine\ORM\EntityManager */
-	private $entityManager;
+	/** @var \Nella\Doctrine\Container */
+	private $container;
 
 	/**
-	 * @param \Doctrine\ORM\EntityManager
+	 * @param \Nella\Doctrine\Container
 	 */
-	public function __construct(\Doctrine\ORM\EntityManager $entityManager)
+	public function __construct(\Nella\Doctrine\Container $container)
 	{
-		$this->entityManager = $entityManager;
+		$this->container = $container;
 	}
 
 	/**
 	 * Performs an authentication
 	 *
 	 * @param array
-	 * @return Identity
+	 * @return IdentityEntity
 	 * @throws \Nette\Security\AuthenticationException
 	 */
 	public function authenticate(array $credentials)
 	{
 		list($username, $password) = $credentials;
-		$service = new \Nella\Models\Service($this->entityManager, 'Nella\Security\IdentityEntity');
+		$service = $this->container->getService('Nella\Security\CredentialsEntity');
 
 		if (strpos($username, '@') !== FALSE) {
 			$entity = $service->repository->findOneByEmail($username);
@@ -53,6 +53,6 @@ class Authenticator extends \Nette\Object implements \Nette\Security\IAuthentica
 			throw new \Nette\Security\AuthenticationException("Invalid password", self::INVALID_CREDENTIAL);
 		}
 
-		return new Identity($entity);
+		return $entity->identity;
 	}
 }

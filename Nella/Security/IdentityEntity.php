@@ -14,39 +14,26 @@ namespace Nella\Security;
  *
  * @author	Patrik Votoček
  *
- * @entity(repositoryClass="Nella\Models\Repository")
+ * @entity
  * @table(name="acl_users")
+ * @service(class="Nella\Security\IdentityService")
  * @hasLifecycleCallbacks
  *
- * @property string $username
- * @property string $email
- * @property string $password
  * @property RoleEntity $role
  * @property string $lang
- * @property string $realname
  */
-class IdentityEntity extends \Nella\Models\Entity
+class IdentityEntity extends \Nette\Object implements \Nella\Models\IEntity, \Nette\Security\IIdentity, \Serializable
 {
-	const PASSWORD_DELIMITER = "$";
+	/**
+	 * @id
+	 * @generatedValue
+	 * @column(type="integer")
+	 */
+	private $id;
 
 	/**
-	 * @column(length=128, unique=true)
-	 * @var string
-	 */
-	private $username;
-	/**
-	 * @column(length=256)
-	 * @var string
-	 */
-	private $email;
-	/**
-	 * @column(length=256)
-	 * @var string
-	 */
-	private $password;
-	/**
-	 * @manyToOne(targetEntity="RoleEntity")
-     * @joinColumn(name="role_id", referencedColumnName="id")
+	 * @manyToOne(targetEntity="RoleEntity", fetch="EAGER")
+     * @joinColumn(name="role_id", referencedColumnName="id", nullable=false)
 	 * @var RoleEntity
 	 */
 	private $role;
@@ -56,87 +43,22 @@ class IdentityEntity extends \Nella\Models\Entity
 	 */
 	private $lang;
 	/**
-	 * @column(length=256)
-	 * @var string
+	 * @internal
+	 * @var bool
 	 */
-	private $realname;
+	private $loaded = FALSE;
 
-	/**
-	 * @return string
-	 */
-	public function getUsername()
+	public function __construct()
 	{
-		return $this->username;
+
 	}
 
 	/**
-	 * @param string
-	 * @return IdentityEntity
+	 * @return int
 	 */
-	public function setUsername($username)
+	public function getId()
 	{
-		$username = trim($username);
-		$this->username = $username === "" ? NULL : $username;
-		return $this;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getEmail()
-	{
-		return $this->email;
-	}
-
-	/**
-	 * @param string
-	 * @return IdentityEntity
-	 */
-	public function setEmail($email)
-	{
-		$email = trim($email);
-		$this->email = $email == "" ? NULL : $email;
-		return $this;
-	}
-
-	/**
-	 * @param bool return as string
-	 * @return string
-	 */
-	public function getPassword($string = TRUE)
-	{
-		if ($string || !$this->password) {
-			return $this->password;
-		}
-
-		list($algo, $salt, $hash) = explode(self::PASSWORD_DELIMITER, $this->password);
-		return array('algo' => $algo, 'salt' => $salt, 'hash' => $hash);
-	}
-
-	/**
-	 * @param string
-	 * @param string
-	 * @return IdentityEntity
-	 */
-	public function setPassword($password, $algo = "sha256")
-	{
-		$salt = \Nette\Utils\Strings::random();
-		$this->password = $algo . self::PASSWORD_DELIMITER . $salt . self::PASSWORD_DELIMITER . hash($algo, $salt . $password);
-		return $this;
-	}
-
-	/**
-	 * @param string plaintext password
-	 * @return bool
-	 */
-	public function verifyPassword($password)
-	{
-		list($algo, $salt, $hash) = explode(self::PASSWORD_DELIMITER, $this->password);
-		if (hash($algo, $salt . $password) == $hash) {
-			return TRUE;
-		}
-
-		return FALSE;
+		return $this->id;
 	}
 
 	/**
@@ -158,6 +80,15 @@ class IdentityEntity extends \Nella\Models\Entity
 	}
 
 	/**
+	 * @internal
+	 * @return array
+	 */
+	public function getRoles()
+	{
+		return array($this->getRole());
+	}
+
+	/**
 	 * @return string
 	 */
 	public function getLang()
@@ -171,44 +102,51 @@ class IdentityEntity extends \Nella\Models\Entity
 	 */
 	public function setLang($lang)
 	{
-		$lang = trim($lang);
-		$this->lang = $lang == "" ? NULL : $lang;
+		$this->lang = $this->sanitizeString($lang);
 		return $this;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getRealname()
+	public function serialize()
 	{
-		return $this->realname;
+		return serialize($this->getId());
 	}
 
 	/**
 	 * @param string
-	 * @return IdentityEntity
+	 * @throws \Nette\InvalidStateException
 	 */
-	public function setRealname($realname)
+	public function unserialize($serialized)
 	{
-		$realname = trim($realname);
-		$this->realname = $realname == "" ? NULL : $realname;
-		return $this;
+		$this->id = unserialize($serialized);
+		$this->loaded = FALSE;
 	}
 
 	/**
-	 * @prePersist
-	 * @preUpdate
-	 *
-	 * @throws \Nella\Models\EmptyValuesException
-	 * @throws \Nella\Models\InvalidFormatException
-	 * @throws \Nella\Models\DuplicateEntryException
+	 * @param \Nella\Doctrine\Container
+	 * @return IdentityEntity
 	 */
-	public function check()
+	public function load(\Nella\Doctrine\Container $container)
 	{
-		$em = \Nette\Environment::getApplication()->context->getService('Doctrine\ORM\EntityManager');
-		$service = new \Nella\Models\Service($em, 'Nella\Security\IdentityEntity');
-		if (!$service->repository->isColumnUnique($this->id, 'username', $this->username)) {
-			throw new \Nella\Models\DuplicateEntryException('username', "Username value must be unique");
+		if (!$this->loaded) {
+			$service = $container->getService(get_called_class());
+			$entity = $service->repository->find($this->getId());
+			$entity->loaded = TRUE;
+			return $entity;
+		} else {
+			return $this;
 		}
+	}
+
+	/**
+	 * @param string
+	 * @return string
+	 */
+	protected function sanitizeString($s)
+	{
+		$s = trim($s);
+		return $s === "" ? NULL : $s;
 	}
 }
