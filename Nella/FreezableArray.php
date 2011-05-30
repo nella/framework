@@ -20,6 +20,24 @@ class FreezableArray extends FreezableObject implements \ArrayAccess, \Countable
 	private $list = array();
 
 	/**
+ 	 * @param  array to wrap
+ 	 * @param  bool
+	 * @return FreezableArray
+ 	 */
+ 	public static function from($arr, $recursive = TRUE)
+ 	{
+		$obj = new static;
+ 		foreach ($arr as $key => $value) {
+ 			if ($recursive && is_array($value)) {
+ 				$obj->list[$key] = static::from($value, TRUE);
+ 			} else {
+ 				$obj->list[$key] = $value;
+ 			}
+ 		}
+ 		return $obj;
+ 	}
+
+	/**
 	 * Returns an iterator over all items
 	 *
 	 * @return \ArrayIterator
@@ -27,6 +45,24 @@ class FreezableArray extends FreezableObject implements \ArrayAccess, \Countable
 	public function getIterator()
 	{
 		return new \ArrayIterator($this->list);
+	}
+
+	/**
+	 * Returns an array
+	 *
+	 * @return array
+	 */
+	public function toArray()
+	{
+		$arr = array();
+		foreach ($this->list as $key => $value) {
+			if ($value instanceof static) {
+				$arr[$key] = $value->toArray();
+			} else {
+				$arr[$key] = $value;
+			}
+		}
+		return $arr;
 	}
 
 	/**
