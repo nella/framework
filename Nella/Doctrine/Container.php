@@ -82,6 +82,12 @@ class Container extends \Nella\Models\Container
 		}
 
 		$class = $this->defaultServiceClass;
+		$metadata = $this->getEntityManager()->getClassMetadata($entityClass);
+		if (!$metadata) {
+			throw new \Nette\InvalidStateException("Entity metadata '$entityClass' not found");
+		} elseif (!class_exists($class = $metadata->serviceClassName)) {
+			throw new \Nette\InvalidStateException("Service class '$class' does not exist");
+		}
 
 		return $this->services[$entityClass] = new $class($this, $entityClass);
 	}
@@ -146,6 +152,18 @@ class Container extends \Nella\Models\Container
 	}
 
 	/**
+	 * @param \Nette\DI\Container
+	 * @return Mapping\Driver\AnnotationDriver
+	 */
+	public static function createServiceAnnotationDriver(DI\Container $context)
+	{
+		$reader = new \Doctrine\Common\Annotations\AnnotationReader();
+		$reader->setDefaultAnnotationNamespace('Doctrine\ORM\Mapping\\');
+
+		return new Mapping\Driver\AnnotationDriver($reader, $context->params['doctrine-config']['entityDirs']);
+	}
+
+	/**
 	 * @return \Doctrine\DBAL\Logging\SQLLogger
 	 */
 	public static function createServiceLogger()
@@ -168,7 +186,8 @@ class Container extends \Nella\Models\Container
 		$config->setQueryCacheImpl($storage);
 
 		// Metadata
-		$config->setMetadataDriverImpl($config->newDefaultAnnotationDriver());
+		$config->setClassMetadataFactoryName('Nella\Doctrine\Mapping\ClassMetadataFactory');
+		$config->setMetadataDriverImpl($context->annotationDriver);
 
 		// Proxies
 		$config->setProxyDir($context->params['doctrine-config']['proxyDir']);
