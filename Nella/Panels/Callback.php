@@ -18,39 +18,81 @@ use Nette\Environment;
  */
 class Callback extends \Nette\Object implements \Nette\Diagnostics\IBarPanel
 {
-	const VERSION = "1.6";
+	const VERSION = "1.6",
+		XHR_HEADER = "X-Nella-Callback-Panel";
+	/** @var \Nette\DI\IContainer */
+	private $container;
 	/** @var array */
-	private $items = array();
+	private $callbacks = array();
 	/** @var bool */
 	private static $registered = FALSE;
 
 	/**
-	 * @param \Nette\DI\IConainer
-	 * @param array
+	 * @param \Nette\DI\IContainer
 	 */
-	public function __construct(\Nella\DI\IContext $context, array $items = NULL)
+	public function __construct(\Nette\DI\IContainer $container)
 	{
-		$cache = $context->getService('Nette\Caching\IStorage');
-		$loader = $context->getService('Nette\Loaders\RobotLoader');
-
-		$this->items = array(
-			'--cache' => array(
-				'callback' => callback($cache, 'clean'),
-				'name' => "Invalidate cache",
-				'args' => array(array(\Nette\Caching\Cache::ALL => TRUE))
-			),
-			'--robotloader' => array(
-				'callback' => callback($loader, 'rebuild'),
-				'name' => "Rebuild",
-				'args' => array(),
-			),
-		);
-
-		if ($items) {
-			$this->items = array_merge($this->items, $items);
+		if (static::$registered) {
+			 throw new \Nette\InvalidStateException("Callback panel is already registered");
 		}
 
-		$this->processRequest();
+		$this->container = $container;
+
+		$this->init();
+
+		static::$registered = TRUE;
+
+		\Nette\Diagnostics\Debugger::$bar->addPanel($this);
+	}
+
+	protected function init()
+	{
+		$httpRequest = $this->container->httpRequest;
+		if ($httpRequest->getHeader(static::XHR_HEADER)) {
+			$data = (array) json_decode(file_get_contents('php://input'), TRUE);
+			foreach ($data as $key => $value) {
+				if (isset($this->callbacks[$key]) && isset($this->callbacks[$key]['callback']) && $value === TRUE) {
+					callback($this->callbacks[$key]['callback'])->invoke();
+				}
+			}
+
+			die(json_encode(array('status' => "OK")));
+		}
+
+		$cacheStorage = $this->container->cacheStorage;
+		$this->addCallback('--cache', "Invalidate cache", function() use($cacheStorage) {
+			$cacheStorage->clean(array(\Nette\Caching\Cache::ALL => TRUE));
+		});
+
+		$robotLoader = $this->container->robotLoader;
+		$this->addCallback('--robotloader', "Rebuild robotloader cache", function() use($robotLoader) {
+			$robotLoader->rebuild();
+		});
+	}
+
+	/**
+	 * @param string
+	 * @return Callback
+	 */
+	public function removeCallback($id)
+	{
+		unset($this->callbacks[$id]);
+		return $this;
+	}
+
+	/**
+	 * @param string
+	 * @param string
+	 * @param array|\Nette\Callback|\Closure
+	 * @return Callback
+	 */
+	public function addCallback($id, $name, $callback)
+	{
+		$this->callbacks[$id] = array(
+			'name' => $name,
+			'callback' => $callback,
+		);
+		return $this;
 	}
 
 	/**
@@ -73,44 +115,10 @@ class Callback extends \Nette\Object implements \Nette\Diagnostics\IBarPanel
 	 */
 	public function getPanel()
 	{
-		$items = $this->items;
+		$callbacks = $this->callbacks;
+		$absoluteUrl = $this->container->httpRequest->url->absoluteUrl;
 		ob_start();
 		require_once __DIR__ . "/Callback.phtml";
 		return ob_get_clean();
-	}
-
-	/**
-	 * Handles an incomuing request and saves the data if necessary.
-	 */
-	private function processRequest()
-	{
-		$request = Environment::getApplication()->getService('Nette\Http\IRequest');
-		if ($request->isPost() && $request->isAjax() && $request->getHeader('X-Callback-Panel')) {
-			$data = json_decode(file_get_contents('php://input'), TRUE);
-			if (count($data) > 0) {
-				foreach ($data as $key => $value) {
-					if (isset($this->items[$key]) && isset($this->items[$key]['callback']) && $value === TRUE) {
-						$this->items[$key]['callback']->invokeArgs($this->items[$key]['args']);
-					}
-				}
-			}
-
-			die(json_encode(array('status' => "OK")));
-		}
-	}
-
-	/**
-	 * Register this panel
-	 *
-	 * @param array	items for add to pannel
-	 */
-	public static function register(array $items = NULL)
-	{
-		if (self::$registered) {
-			throw new \Nette\InvalidStateException("Callback panel is already registered");
-		}
-
-		\Nette\Diagnostics\Debugger::$bar->addPanel(new static($items));
-		self::$registered = TRUE;
 	}
 }
