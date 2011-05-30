@@ -14,76 +14,54 @@ namespace Nella;
  *
  * @author	Patrik Votoček
  */
-class FreezableArray extends \Nette\FreezableObject implements \ArrayAccess, \Countable, \IteratorAggregate
+class FreezableArray extends FreezableObject implements \ArrayAccess, \Countable, \IteratorAggregate
 {
 	/** @var array */
 	private $list = array();
-	/** @var array */
-	public $onFreeze = array();
-
-	/**
-	 * Freezes an array
-	 * 
-	 * @return void
-	 */
-	public function freeze()
-	{
-		if (!$this->isFrozen()) {
-			$this->onFreeze($this);
-			parent::freeze();
-		}
-	}
 
 	/**
 	 * Returns an iterator over all items
-	 * 
+	 *
 	 * @return \ArrayIterator
 	 */
 	public function getIterator()
 	{
-		$this->freeze();
 		return new \ArrayIterator($this->list);
 	}
 
 	/**
 	 * Returns items count
-	 * 
+	 *
 	 * @return int
 	 */
 	public function count()
 	{
-		$this->freeze();
 		return count($this->list);
 	}
 
 	/**
 	 * Replaces or appends a item
-	 * 
+	 *
 	 * @param  string
 	 * @param  mixed
 	 * @return FreezableArray
 	 */
 	public function offsetSet($key, $value)
 	{
-		if ($this->isFrozen()) {
-			$class = get_called_class();
-			throw new \Nette\InvalidStateException("Cannot set $key, because the $class has been frozen");
-		}
-
+		$this->updating();
 		$this->list[$key] = $value;
 		return $this;
 	}
 
 	/**
 	 * Returns a item
-	 * 
+	 *
 	 * @param string
 	 * @return mixed
 	 * @throws \Nette\MemberAccessException
 	 */
 	public function offsetGet($key)
 	{
-		$this->freeze();
 		if (!$this->offsetExists($key)) {
 			$class = get_called_class();
 			throw new \Nette\MemberAccessException("Cannot read an undeclared item {$class}['{$key}'].");
@@ -93,28 +71,24 @@ class FreezableArray extends \Nette\FreezableObject implements \ArrayAccess, \Co
 
 	/**
 	 * Determines whether a item exists
-	 * 
+	 *
 	 * @param string
 	 * @return bool
 	 */
 	public function offsetExists($key)
 	{
-		$this->freeze();
 		return array_key_exists($key, $this->list);
 	}
 
 	/**
 	 * Removes the element at the specified position in this list
-	 * 
+	 *
 	 * @param string
 	 * @return FreezableArray
 	 */
 	public function offsetUnset($key)
 	{
-		if ($this->isFrozen()) {
-			$class = get_called_class();
-			throw new \Nette\InvalidStateException("Cannot unset $key, because the $class has been frozen");
-		}
+		$this->updating();
 		unset($this->list[$key]);
 		return $this;
 	}
