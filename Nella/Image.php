@@ -25,7 +25,7 @@ class Image extends \Nette\Image
 	{
 		return $this->resize($width, $height, self::FILL | self::ENLARGE)->crop('50%', '50%', $width, $height);
 	}
-	
+
 	/**
 	 * @param string
 	 * @return int
@@ -39,12 +39,16 @@ class Image extends \Nette\Image
 			case 'gif':
 				return static::GIF;
 				break;
-			default:
+			case 'jpg':
+			case 'jpeg':
 				return static::JPEG;
+				break;
+			default:
+				throw new \Nette\ArgumentOutOfRangeException("Type '$type' not supported");
 				break;
 		}
 	}
-	
+
 	/**
 	 * @param int
 	 * @return string
@@ -58,12 +62,15 @@ class Image extends \Nette\Image
 			case static::GIF:
 				return 'gif';
 				break;
-			default:
+			case static::JPEG:
 				return 'jpg';
+				break;
+			default:
+				throw new \Nette\ArgumentOutOfRangeException("Type '$type' not supported");
 				break;
 		}
 	}
-	
+
 	/**
 	 * Outputs image to browser.
 	 * @param  int  image type
@@ -75,7 +82,7 @@ class Image extends \Nette\Image
 		if (is_string($type)) {
 			$type = self::extToType($type);
 		}
-		
+
 		return parent::send($type, $quality);
 	}
 }
