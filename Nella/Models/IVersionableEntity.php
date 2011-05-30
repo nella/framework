@@ -14,13 +14,13 @@ namespace Nella\Models;
  *
  * @author	Patrik Votoček
  */
-interface IVersionable
+interface IVersionableEntity
 {
 	/**
 	 * @return int
 	 */
 	public function getId();
-	
+
 	/**
 	 * @return string
 	 */

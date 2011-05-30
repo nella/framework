@@ -7,7 +7,7 @@
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
 
-namespace Nella\DependencyInjection;
+namespace Nella\DI;
 
 use Nette\Environment,
 	Nette\Config\Config,
@@ -25,7 +25,7 @@ use Nette\Environment,
 class ContextBuilder extends \Nette\DI\Configurator
 {
 	/** @var string */
-	private $contextClass = 'Nella\DependencyInjection\Context';
+	private $contextClass = 'Nella\DI\Context';
 	/** @var array */
 	private $autoRunServices = array();
 
@@ -45,8 +45,8 @@ class ContextBuilder extends \Nette\DI\Configurator
 			throw new \Nette\InvalidArgumentException("Context class '$class' does not exist");
 		}
 		$ref = new \Nette\Reflection\ClassType($class);
-		if (!$ref->implementsInterface('Nella\DependencyInjection\IContext')) {
-			throw new \Nette\InvalidArgumentException("Context class '$class' is not an implementor of 'Nella\DependencyInjection\IContext' interface");
+		if (!$ref->implementsInterface('Nella\DI\IContext')) {
+			throw new \Nette\InvalidArgumentException("Context class '$class' is not an implementor of 'Nella\DI\IContext' interface");
 		}
 
 		$this->contextClass = $class;
@@ -253,37 +253,37 @@ class ContextBuilder extends \Nette\DI\Configurator
 	public $defaultServices = array(
 		'Nette\Application\Application' => array('factory' => array(__CLASS__, 'createApplication')),
 		'Nette\Http\Context' => array(
-			'class' => 'Nette\Http\Context', 
-			'aliases' => array('Nette\Web\HttpContext'), 
+			'class' => 'Nette\Http\Context',
+			'aliases' => array('Nette\Web\HttpContext'),
 		),
 		'Nette\Http\IRequest' => array(
-			'factory' => array(__CLASS__, 'createHttpRequest'), 
-			'aliases' => array('Nette\Web\IHttpRequest'), 
+			'factory' => array(__CLASS__, 'createHttpRequest'),
+			'aliases' => array('Nette\Web\IHttpRequest'),
 		),
 		'Nette\Http\IResponse' => array(
-			'class' => 'Nette\Http\Response', 
-			'aliases' => array('Nette\Web\IHttpResponse'), 
+			'class' => 'Nette\Http\Response',
+			'aliases' => array('Nette\Web\IHttpResponse'),
 		),
 		'Nette\Http\IUser' => array(
-			'class' => 'Nette\Http\User', 
-			'aliases' => array('Nette\Web\IUser'), 
+			'class' => 'Nette\Http\User',
+			'aliases' => array('Nette\Web\IUser'),
 		),
 		'Nette\Caching\IStorage' => array(
-			'factory' => array(__CLASS__, 'createCacheStorage'), 
-			'aliases' => array('Nette\Caching\ICacheStorage'), 
+			'factory' => array(__CLASS__, 'createCacheStorage'),
+			'aliases' => array('Nette\Caching\ICacheStorage'),
 		),
 		'Nette\Caching\Storages\IJournal' => array(
-			'factory' => array(__CLASS__, 'createCacheJournal'), 
-			'aliases' => array('Nette\Caching\ICacheJournal'), 
+			'factory' => array(__CLASS__, 'createCacheJournal'),
+			'aliases' => array('Nette\Caching\ICacheJournal'),
 		),
 		'Nette\Mail\IMailer' => array('factory' => array(__CLASS__, 'createMailer')),
 		'Nette\Http\Session' => array(
-			'class' => 'Nette\Http\Session', 
-			'aliases' => array('Nette\Web\Session'), 
+			'class' => 'Nette\Http\Session',
+			'aliases' => array('Nette\Web\Session'),
 		),
 		'Nette\Loaders\RobotLoader' => array('factory' => array(__CLASS__, 'createRobotLoader'), 'run' => TRUE),
 		'Nette\Latte\DefaultMacros' => array('class' => 'Nella\Latte\Macros'),
-		'Nette\Latte\Engine' => array('factory' => array(__CLASS__, "createLatteEngine")), 
+		'Nette\Latte\Engine' => array('factory' => array(__CLASS__, "createLatteEngine")),
 		'Nella\Registry\GlobalComponentFactories' => array(
 			'factory' => array(__CLASS__, 'createRegistryGlobalComponentFactories')
 		),
@@ -334,7 +334,7 @@ class ContextBuilder extends \Nette\DI\Configurator
 		),
 		'Symfony\Component\Console\Helper\HelperSet' => array(
 			'factory' => 'Nella\ConsoleServiceFactory::createHelperSet',
-			'arguments' => array('@Nella\DependencyInjection\IContext'),
+			'arguments' => array('@Nella\DI\IContext'),
 
 		),
 		'Symfony\Component\Console\Application' => array(
@@ -414,7 +414,7 @@ class ContextBuilder extends \Nette\DI\Configurator
 		$registry['nella'] = NELLA_FRAMEWORK_DIR;
 		return $registry;
 	}
-	
+
 	/**
 	 * @return \Closure
 	 */
@@ -426,17 +426,17 @@ class ContextBuilder extends \Nette\DI\Configurator
 
 			// context-aware escaping
 			$parser->escape = '$template->escape';
-			
+
 			// initialize handlers
 			$parser->handler = Environment::getApplication()
 				->context->getService('Nette\Latte\DefaultMacros');
 			$parser->handler->initialize($parser, $s);
-			
+
 			// process all {tags} and <tags/>
 			$s = $parser->parse($s);
-			
+
 			$parser->handler->finalize($s);
-			
+
 			return $s;
 		};
 	}

@@ -7,30 +7,30 @@
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
 
-namespace Nella\Tools;
+namespace Nella\Utils\LoggerStorages;
 
 /**
  * Database action logger service
  *
  * @author	Patrik Votoček
  */
-class DBActionLoggerService extends \Nella\Models\Service implements IActionLogger
+class DatabaseStorage extends \Nella\Models\Service implements \Nella\Utils\IActionLogger
 {
 	/**
 	 * @param string	module name
 	 * @param string
 	 * @param string
-	 * @param user Nette\Security\IIdentity
+	 * @param user \Nette\Security\IIdentity
 	 */
 	public function logAction($module, $action = self::OTHER, $message = "", \Nette\Security\IIdentity $user = NULL)
 	{
 		if ($user) {
 			$user = $user->entity;
 		}
-		
-		$entity = new DBActionLogger;
+
+		$entity = new ActionEntity;
 		$entity->setModule($module)->setAction($action)->setMessage($message)->setUser($user);
-		
+
 		$this->persist($entity);
 		$this->flush();
 	}

@@ -7,7 +7,7 @@
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
 
-namespace Nella\Tools;
+namespace Nella\Utils;
 
 /**
  * Basic action logger interface

@@ -7,20 +7,20 @@
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
 
-namespace Nella\Tools;
+namespace Nella\Utils\LoggerStorages;
 
 /**
  * File action logger
  *
  * @author	Patrik Votoček
  */
-class FileActionLogger extends \Nette\Object implements IActionLogger
+class FileStorage extends \Nette\Object implements \Nella\Utils\IActionLogger
 {
 	/** @var string */
 	public static $defaultLogFile = "actions.log";
 	/** @var string */
 	private $file;
-	
+
 	/**
 	 * @param string
 	 */
@@ -33,7 +33,7 @@ class FileActionLogger extends \Nette\Object implements IActionLogger
 			$this->file = $logDir . "/" . static::$defaultLogFile;
 		}
 	}
-	
+
 	/**
 	 * @param string
 	 * @param string
@@ -46,8 +46,9 @@ class FileActionLogger extends \Nette\Object implements IActionLogger
 		if (!$user) {
 			$user = \Nette\Environment::getApplication()->context->getService('Nette\Http\IUser')->identity;
 		}
-		
-		if (!@file_put_contents($this->file, "[" . date("Y-m-d H:i:s P") . "] $module:$action: $message #{$user->getId()}" . PHP_EOL, FILE_APPEND)) {
+
+		$data = "[" . date("Y-m-d H:i:s P") . "] $module:$action: $message #{$user->getId()}";
+		if (!@file_put_contents($this->file, $data . PHP_EOL, FILE_APPEND)) {
 			throw new \Nette\IOException("File '{$this->file}' is not writable");
 		}
 	}

@@ -7,31 +7,14 @@
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
 
-namespace Nella\Models;
+namespace Nella\Forms;
 
 /**
- * Basic entity with ID
- *
- * @mappedSuperclass
+ * Nella entity forms
  *
  * @author	Patrik Votoček
- *
- * @property-read int $id
  */
-abstract class Entity extends BaseEntity
+class EntityForm extends Form
 {
-	/**
-	 * @id
-	 * @generatedValue
-	 * @column(type="integer")
-	 */
-	private $id;
 
-	/**
-	 * @return int
-	 */
-	public function getId()
-	{
-		return $this->id;
-	}
 }

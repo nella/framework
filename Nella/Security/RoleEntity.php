@@ -24,7 +24,7 @@ namespace Nella\Security;
  * @property RoleEntity|NULL $parent
  * @property-read array $permissions
  */
-class RoleEntity extends \Nella\Models\Entity
+class RoleEntity extends \Nella\Models\Entity implements \Nette\Security\IRole
 {
 	/**
 	 * @column(length=128, unique=true)
@@ -53,6 +53,16 @@ class RoleEntity extends \Nella\Models\Entity
 		parent::__construct();
 		$this->permissions = new \Doctrine\Common\Collections\ArrayCollection;
 		$this->children = new \Doctrine\Common\Collections\ArrayCollection;
+	}
+
+	/**
+	 * Returns a string identifier of the Role.
+	 * @internal
+	 * @return string
+	 */
+	public function getRoleId()
+	{
+		return $this->getId();
 	}
 
 	/**

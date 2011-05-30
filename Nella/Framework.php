@@ -17,15 +17,15 @@ namespace Nella;
 final class Framework
 {
 	/**Nella Framework version identification */
-	const NAME = 'Nella Framework', 
-		VERSION = '2.0-dev', 
+	const NAME = 'Nella Framework',
+		VERSION = '2.0-dev',
 		REVISION = '$WCREV$ released on $WCDATE$';
-	
+
 	/**
 	 * Static class - cannot be instantiated.
 	 */
 	final public function __construct()
 	{
-		throw new \LogicException("Cannot instantiate static class " . get_called_class());
+		throw new \Nette\StaticClassException;
 	}
 }

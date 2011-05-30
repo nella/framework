@@ -7,22 +7,31 @@
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
 
-namespace Nella\DependencyInjection;
+namespace Nella\Models;
 
 /**
- * Dependency injection service factory
+ * Basic entity with ID
+ *
+ * @mappedSuperclass
  *
  * @author	Patrik Votoček
+ *
+ * @property-read int $id
  */
-interface IServiceFactory
+abstract class Entity extends \Nette\Object
 {
 	/**
-	 * @return string
+	 * @id
+	 * @generatedValue
+	 * @column(type="integer")
 	 */
-	public function getName();
-	
+	private $id;
+
 	/**
-	 * @return mixed
+	 * @return int
 	 */
-	public function getInstance();
+	public function getId()
+	{
+		return $this->id;
+	}
 }

@@ -13,7 +13,7 @@ namespace Nella\Models;
  * Base model service
  *
  * @author	Patrik Votoček
- * 
+ *
  * @property-read \Doctrine\ORM\EntityManager $entityManager
  * @property-read string $entityClass
  * @property-read \Doctrine\ORM\EntityRepository $repository
@@ -25,7 +25,7 @@ class Service extends \Nette\Object
 	private $entityManager;
 	/** @var string */
 	private $entityClass;
-	
+
 	/**
 	 * @param \Doctrine\ORM\EntityManager
 	 * @param string
@@ -35,7 +35,7 @@ class Service extends \Nette\Object
 		$this->entityManager = $entityManager;
 		$this->entityClass = $entityClass;
 	}
-	
+
 	/**
 	 * @return \Doctrine\ORM\EntityManager
 	 */
@@ -43,7 +43,7 @@ class Service extends \Nette\Object
 	{
 		return $this->entityManager;
 	}
-	
+
 	/**
 	 * @return string
 	 */
@@ -51,7 +51,7 @@ class Service extends \Nette\Object
 	{
 		return $this->entityClass;
 	}
-	
+
 	/**
 	 * @param string
 	 * @return \Doctrine\ORM\EntityRepository
@@ -63,10 +63,10 @@ class Service extends \Nette\Object
 		if (empty($entityClass)) {
 			throw new \Nette\InvalidArgumentException("Default entity name is not set, you must set entity name in param");
 		}
-		
+
 		return $this->getEntityManager()->getRepository($entityClass);
 	}
-	
+
 	/**
 	 * @param string
 	 * @return \Doctrine\ORM\ClassMetadata
@@ -78,37 +78,39 @@ class Service extends \Nette\Object
 		if (empty($entityClass)) {
 			throw new \Nette\InvalidArgumentException("Default entity name is not set, you must set entity name in param");
 		}
-		
+
 		return $this->getEntityManager()->getClassMetadata($entityClass);
 	}
-	
+
 	/**
-	 * @param BaseEntity
-	 * @return BaseEntity
+	 * @param Entity
+	 * @return Entity
 	 */
-	public function persist(BaseEntity $entity)
+	public function persist(Entity $entity)
 	{
 		$this->getEntityManager()->persist($entity);
 		return $entity;
 	}
-	
+
 	/**
-	 * @param BaseEntity
-	 * @return BaseEntity
+	 * @param Entity
+	 * @return Entity
 	 */
-	public function remove(BaseEntity $entity)
+	public function remove(Entity $entity)
 	{
 		$this->getEntityManager()->remove($entity);
 		return $entity;
 	}
-	
+
 	public function flush()
 	{
 		return $this->getEntityManager()->flush();
 	}
-	
+
 	/**
-	 * @param BaseEntity
+	 * Persist entity and flush
+	 *
+	 * @param Entity
 	 * @return \Doctrine\ORM\EntityManager
 	 */
 	public function save($entity)
@@ -116,41 +118,16 @@ class Service extends \Nette\Object
 		$this->persist($entity);
 		return $this->flush();
 	}
-	
+
 	/**
-	 * @param BaseEntity
+	 * Remove entity and flush
+	 *
+	 * @param Entity
+	 * @return \Doctrine\ORM\EntityManager
 	 */
-	public function getEntityPrototype()
+	public function delete($entity)
 	{
-		$class = $this->getEntityClass();
-		return new $class;
-	}
-	
-	/**
-	 * @param BaseEntity
-	 * @param array
-	 */
-	public function setEntityData($entity, $data)
-	{
-		$ref = new \Nette\Reflection\ClassType(get_class($entity));
-		foreach ($data as $key => $value) {
-			if (!is_array($value)) {
-				$method = "set" . \Nette\Utils\Strings::firstUpper($key);
-				if ($ref->hasMethod($method)) {
-					$entity->$method($value);
-				}
-			} // @todo implements collections
-		}
-	}
-	
-	/**
-	 * @param array
-	 * @return BaseEntity
-	 */
-	public function createEntity($data)
-	{
-		$entity = $this->getEntityPrototype();
-		$this->setEntityData($entity, $data);
-		return $entity;
+		$this->remove($entity);
+		return $this->flush();
 	}
 }

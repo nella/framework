@@ -7,14 +7,14 @@
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
 
-namespace Nella\Models;
+namespace Nella\Models\Listeners;
 
 /**
  * Validator listener
  *
  * @author	Patrik Votoček
  */
-class ValidatorListener extends \Nette\Object implements \Doctrine\Common\EventSubscriber
+class Validator extends \Nette\Object implements \Doctrine\Common\EventSubscriber
 {
 	/** @var \Nella\Validator\IValidator */
 	private $validator;

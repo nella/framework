@@ -17,13 +17,13 @@ namespace Nella;
 class ConsoleServiceFactory extends \Nette\Object
 {
 	/**
-	 * @param DependencyInjection\IContext
+	 * @param DI\IContext
 	 * @return \Symfony\Component\Console\Helper\HelperSet
 	 */
-	public static function createHelperSet(DependencyInjection\IContext $context)
+	public static function createHelperSet(DI\IContext $context)
 	{
 		$helperSet = new \Symfony\Component\Console\Helper\HelperSet();
-		$helperSet->set(new DependencyInjection\ContextHelper($context), 'context');
+		$helperSet->set(new DI\ContextHelper($context), 'context');
 		$helperSet->set(new Doctrine\EntityManagerHelper(function() use ($context) {
 			return $context->getService('Doctrine\ORM\EntityManager');
 		}), 'em');

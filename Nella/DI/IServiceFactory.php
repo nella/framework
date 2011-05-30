@@ -7,16 +7,22 @@
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
 
-namespace Nella\Models;
+namespace Nella\DI;
 
 /**
- * Basic entity
- * 
- * @mappedSuperclass
+ * Dependency injection service factory
  *
  * @author	Patrik Votoček
  */
-abstract class BaseEntity extends \Nette\Object
+interface IServiceFactory
 {
-	public function __construct() { }
+	/**
+	 * @return string
+	 */
+	public function getName();
+
+	/**
+	 * @return mixed
+	 */
+	public function getInstance();
 }

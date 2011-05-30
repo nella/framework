@@ -7,9 +7,9 @@
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
 
-namespace Nella\DependencyInjection;
+namespace Nella\DI;
 
-use Nette\Environment, 
+use Nette\Environment,
 	Nette\Utils\Strings;
 
 /**
@@ -36,7 +36,7 @@ class Context extends \Nette\FreezableObject implements IContext, \ArrayAccess
 
 	public function __construct()
 	{
-		$lower = strtolower('Nella\DependencyInjection\IContext');
+		$lower = strtolower('Nella\DI\IContext');
 		$this->registry[$lower] = & $this->globalRegistry[$lower];
 		$this->registry[$lower] = $this;
 	}
@@ -216,9 +216,9 @@ class Context extends \Nette\FreezableObject implements IContext, \ArrayAccess
 			if (isset($options['methods'])) {
 				$factory->methods = $options['methods'];
 			}
-			
+
 			$this->addFactory($factory);
-			
+
 			if (isset($options['aliases']) && count($options['aliases'])) {
 				foreach ($options['aliases'] as $alias) {
 					$this->addAlias($alias, $lower);

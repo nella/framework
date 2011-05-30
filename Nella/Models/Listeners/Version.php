@@ -7,7 +7,9 @@
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
 
-namespace Nella\Models;
+namespace Nella\Models\Listeners;
+
+use Nella\Models\IVersionableEntity;
 
 /**
  * Versionable listener
@@ -16,7 +18,7 @@ namespace Nella\Models;
  *
  * @author	Patrik Votoček
  */
-class VersionListener extends \Nette\Object implements \Doctrine\Common\EventSubscriber
+class Version extends \Nette\Object implements \Doctrine\Common\EventSubscriber
 {
 	/**
 	 * @return array
@@ -27,7 +29,7 @@ class VersionListener extends \Nette\Object implements \Doctrine\Common\EventSub
     }
 
     /**
-     * @param Doctrine\ORM\Event\OnFlushEventArgs
+     * @param \Doctrine\Common\EventArgs
 	 * @return void
      */
     public function postUpdate(\Doctrine\Common\EventArgs $args)
@@ -36,13 +38,13 @@ class VersionListener extends \Nette\Object implements \Doctrine\Common\EventSub
         $uow = $em->getUnitOfWork();
 
         foreach ($uow->getScheduledEntityInsertions() AS $entity) {
-            if ($entity instanceof IVersionable) {
+            if ($entity instanceof IVersionableEntity) {
                 $this->takeSnapshot($em, $entity);
             }
         }
 
         foreach ($uow->getScheduledEntityUpdates() AS $entity) {
-            if ($entity instanceof IVersionable) {
+            if ($entity instanceof IVersionableEntity) {
                 $this->takeSnapshot($em, $entity);
             }
         }
@@ -51,9 +53,9 @@ class VersionListener extends \Nette\Object implements \Doctrine\Common\EventSub
 
     /**
      * @param \Doctrine\ORM\EntityManager
-     * @param IVersionable
+     * @param \Nella\Models\IVersionableEntity
      */
-    private function takeSnapshot(\Doctrine\ORM\EntityManager $em, IVersionable $entity)
+    private function takeSnapshot(\Doctrine\ORM\EntityManager $em, IVersionableEntity $entity)
     {
         $version = new VersionEntity($entity);
         $class = $em->getClassMetadata(get_class($version));

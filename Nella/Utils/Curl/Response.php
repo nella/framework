@@ -7,33 +7,35 @@
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
 
-namespace Nella\Tools;
+namespace Nella\Utils\Curl;
 
 use Nette\Utils\Strings;
- 
+
 /**
  * cUrl wrapper response object
  *
+ * @author	Sean Huber
+ * @author	Filip Procházka
  * @author	Patrik Votoček
- * 
+ *
  * @property-read array $headers
  * @property-read string $body
- * @property-read Nella\Tools\cUrlRequest $request
+ * @property-read Request $request
  */
-class cUrlResponse extends \Nette\Object
+class Response extends \Nette\Object
 {
 	/** regexp's for parsing */
-	const HEADER_REGEXP = '~(?P<header>.*?)\:\s(?P<value>.*)~', 
-		VERSION_AND_STATUS = '~HTTP/(?P<version>\d\.\d)\s(?P<code>\d\d\d)\s(?P<status>.*)~', 
+	const HEADER_REGEXP = '~(?P<header>.*?)\:\s(?P<value>.*)~',
+		VERSION_AND_STATUS = '~HTTP/(?P<version>\d\.\d)\s(?P<code>\d\d\d)\s(?P<status>.*)~',
 		CONTENT_TYPE = '~^(?P<type>[^;]+);[\t ]*charset=(?P<charset>.+)$~i';
-	
-	/** @var Nella\Tools\cUrlRequest */
+
+	/** @var Request */
 	private $request;
 	/** @var array */
 	private $headers = array();
 	/** @var string */
 	private $body = NULL;
-	
+
 	/**
 	 * @param string
 	 * @author	Filip Procházka
@@ -55,36 +57,36 @@ class cUrlResponse extends \Nette\Object
 			$this->headers[$matches['header']] = $matches['value'];
 		}
 	}
-	
+
 	/**
 	 * @param string
-	 * @param cUrlRequest
+	 * @param Request
 	 */
-	public function __construct($response, cUrlRequest $request)
+	public function __construct($response, Request $request)
 	{
 		$this->request = $request;
-		
+
 		$headers = Strings::split(substr($response, 0, $this->request->info['header_size']), "~[\n\r]+~", PREG_SPLIT_NO_EMPTY);
 		$this->parseHeaders($headers);
 		$this->body = substr($response, $this->request->info['header_size']);
 	}
-	
+
 	/**
-	 * @return cUrlRequest
+	 * @return Request
 	 */
 	public function getRequest()
 	{
 		return $this->request;
 	}
-	
+
 	/**
 	 * @return array
 	 */
 	public function getHeaders()
-	{	
+	{
 		return $this->headers;
 	}
-	
+
 	/**
 	 * @param string
 	 * @return mixed
@@ -93,7 +95,7 @@ class cUrlResponse extends \Nette\Object
 	{
 		return isset($this->headers[$key]) ? $this->headers[$key] : NULL;
 	}
-	
+
 	/**
 	 * @return string
 	 */
@@ -101,7 +103,7 @@ class cUrlResponse extends \Nette\Object
 	{
 		return $this->body;
 	}
-	
+
 	/**
 	 * @return string
 	 */

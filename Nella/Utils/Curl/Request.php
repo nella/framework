@@ -7,7 +7,7 @@
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
 
-namespace Nella\Tools;
+namespace Nella\Utils\Curl;
 
 use Nette\Http\Url,
 	Nette\Utils\Strings;
@@ -15,6 +15,8 @@ use Nette\Http\Url,
 /**
  * Nella cUrl wrapper request class
  *
+ * @author	Sean Huber
+ * @author	Filip Procházka
  * @author	Patrik Votoček
  *
  * @property-read string $url
@@ -23,7 +25,7 @@ use Nette\Http\Url,
  * @property-read array $proxies
  * @property string $userAgent
  */
-class cUrlRequest extends \Nette\Object
+class Request extends \Nette\Object
 {
 	/** Available HTTP methods of requests */
 	const GET = 'GET',
@@ -54,7 +56,7 @@ class cUrlRequest extends \Nette\Object
 	 */
 	private $url;
 	/**
-	 * @var cUrlResponse
+	 * @var Response
 	 */
 	private $response;
 
@@ -71,7 +73,7 @@ class cUrlRequest extends \Nette\Object
 			throw new \Nette\InvalidStateException("Curl extension is not loaded!");
 		}
 
-		$ua = 'Nella\Tools\cUrl ' . \Nella\Framework::VERSION . " (http://nella-project.org)";
+		$ua = 'Nella\Utils\Curl ' . \Nella\Framework::VERSION . " (http://nella-project.org)";
 		$this->setOption('useragent', isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : $ua);
 		$this->setOption('returntransfer', TRUE);
 
@@ -118,7 +120,7 @@ class cUrlRequest extends \Nette\Object
 	/**
 	 * @param string
 	 * @param string|NULL
-	 * @return cUrlRequest
+	 * @return Request
 	 * @throws \Nette\InvalidArgumentException
 	 */
 	public function setOption($key, $value)
@@ -154,7 +156,7 @@ class cUrlRequest extends \Nette\Object
 	/**
 	 * @param string
 	 * @param string|NULL
-	 * @return cUrlRequest
+	 * @return Request
 	 */
 	public function setHeader($key, $value)
 	{
@@ -178,7 +180,7 @@ class cUrlRequest extends \Nette\Object
 	 * @param string|NULL
 	 * @param string|NULL
 	 * @param int time in seconds
-	 * @return cUrlRequest
+	 * @return Request
 	 */
 	public function addProxy($ip, $port = 3128, $username = NULL, $password = NULL, $timeout = 15)
 	{
@@ -215,7 +217,7 @@ class cUrlRequest extends \Nette\Object
 
 	/**
 	 * @param string
-	 * @return cUrlRequest
+	 * @return Request
 	 * @throws \Nette\InvalidArgumentException
 	 */
 	public function setUserAgent($userAgent)
@@ -230,8 +232,6 @@ class cUrlRequest extends \Nette\Object
 
 	/**
 	 * Formats and adds custom headers to the current request
-	 *
-	 * @author	Filip Procházka
 	 */
 	protected function setupHeaders()
 	{
@@ -262,8 +262,6 @@ class cUrlRequest extends \Nette\Object
 
 	/**
 	 * Sets the CURLOPT options for the current request
-	 *
-	 * @author	Filip Procházka
 	 * @param array
 	 */
 	protected function setupOptions($post = array())
@@ -370,7 +368,7 @@ class cUrlRequest extends \Nette\Object
 		$info = curl_getinfo($this->resource);
 
 		if ($response) {
-			$this->response = new cUrlResponse($response, $this);
+			$this->response = new Response($response, $this);
 		} else {
 			throw new \Nette\InvalidStateException($error, $info['http_code']);
 		}
@@ -381,9 +379,9 @@ class cUrlRequest extends \Nette\Object
 	 * @param string
 	 * @param array
 	 * @param int
-	 * @return cUrlResponse
+	 * @return Response
 	 * @throws \Nette\InvalidStateException
-	 * @throws cUrlBadRequestException
+	 * @throws BadRequestException
 	 */
 	protected function run($method = self::GET, $url = NULL, $post = array(), $cycles = 1)
 	{
@@ -446,7 +444,7 @@ class cUrlRequest extends \Nette\Object
 				$this->run($method, (string) $url, $post, ++$cycles);
 			}
 		} else {
-			throw new cUrlBadRequestException($headers['Status'], $this->response->info['http_code'], $this->response);
+			throw new BadRequestException($headers['Status'], $this->response->info['http_code'], $this->response);
 		}
 	}
 
@@ -454,11 +452,11 @@ class cUrlRequest extends \Nette\Object
 	 * @param string
 	 * @param string
 	 * @param array
-	 * @return cUrlResponse
+	 * @return Response
 	 */
 	public function getResponse($method = self::GET, $url = NULL, $post = array())
 	{
-		if (!($this->response instanceof cUrlResponse)) {
+		if (!($this->response instanceof Response)) {
 			$this->run($method, $url, $post);
 		}
 
@@ -466,36 +464,11 @@ class cUrlRequest extends \Nette\Object
 	}
 
 	/**
-	 * @return cUrlRequest
+	 * @return Request
 	 */
 	public function __clone()
 	{
 		$this->response = NULL;
 		return $this;
-	}
-}
-
-class cUrlBadRequestException extends \Nette\InvalidStateException
-{
-	/** @var cUrlResponse */
-	private $response;
-
-	/**
-	 * @param string
-	 * @param mixed
-	 * @param cUrlResponse
-	 */
-	public function __costruct($message, $code, cUrlResponse $response)
-	{
-		parent::__construct($message, $code);
-		$this->response = $response;
-	}
-
-	/**
-	 * @return cUrlResponse
-	 */
-	public function getResponse()
-	{
-		return $this->response;
 	}
 }

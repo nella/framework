@@ -7,16 +7,19 @@
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
 
-namespace Nella\Localization;
+namespace Nella\Localization\Parsers;
 
-use Nette\UtilsStrings;
+use Nette\Utils\Strings;
 
 /**
  * Gettext localization file parser
  *
+ * This solution is mostly based on Zend_Acl (c) Zend Technologies USA Inc. (http://www.zend.com), new BSD license
+ *
+ * @copyright  Copyright (c) 2005, 2009 Zend Technologies USA Inc.
  * @author	Patrik Votoček
  */
-class GettextParser extends \Nette\Object implements IParser
+class Gettext extends \Nette\Object implements \Nella\Localization\IParser
 {
 	/**
 	 * @param mixed

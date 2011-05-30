@@ -7,17 +7,17 @@
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
 
-namespace Nella\Tools;
+namespace Nella\Utils\LoggerStorages;
 
 /**
  * Database action logger entity
  *
  * @entity(repositoryClass="Nella\Models\Repository")
- * @table(name="logger_actions")
- * 
+ * @table(name="logger")
+ *
  * @author	Patrik Votoček
  */
-class DBActionLoggerEntity extends \Nella\Models\Entity
+class ActionEntity extends \Nella\Models\Entity
 {
 	/**
 	 * @column(length=128)
@@ -40,7 +40,7 @@ class DBActionLoggerEntity extends \Nella\Models\Entity
 	 * @var \Nella\Security\IdentityEntity
 	 */
 	private $user;
-	
+
 	/**
 	 * @return string
 	 */
@@ -48,10 +48,10 @@ class DBActionLoggerEntity extends \Nella\Models\Entity
 	{
 		return $this->module;
 	}
-	
+
 	/**
 	 * @param string
-	 * @return DBActionLoggerEntity
+	 * @return ActionEntity
 	 */
 	public function setModule($module)
 	{
@@ -59,7 +59,7 @@ class DBActionLoggerEntity extends \Nella\Models\Entity
 		$this->module = $module === "" ? NULL : $module;
 		return $this;
 	}
-	
+
 	/**
 	 * @return string
 	 */
@@ -67,10 +67,10 @@ class DBActionLoggerEntity extends \Nella\Models\Entity
 	{
 		return $this->action;
 	}
-	
+
 	/**
 	 * @param string
-	 * @return DBActionLoggerEntity
+	 * @return ActionEntity
 	 */
 	public function setAction($action)
 	{
@@ -78,7 +78,7 @@ class DBActionLoggerEntity extends \Nella\Models\Entity
 		$this->action = $action === "" ? NULL : $action;
 		return $this;
 	}
-	
+
 	/**
 	 * @return string
 	 */
@@ -86,10 +86,10 @@ class DBActionLoggerEntity extends \Nella\Models\Entity
 	{
 		return $this->message;
 	}
-	
+
 	/**
 	 * @param string
-	 * @return DBActionLoggerEntity
+	 * @return ActionEntity
 	 */
 	public function setMessage($message)
 	{
@@ -97,7 +97,7 @@ class DBActionLoggerEntity extends \Nella\Models\Entity
 		$this->message = $message === "" ? NULL : $message;
 		return $this;
 	}
-	
+
 	/**
 	 * @return \Nella\Security\IdentityEntity
 	 */
@@ -105,32 +105,14 @@ class DBActionLoggerEntity extends \Nella\Models\Entity
 	{
 		return $this->user;
 	}
-	
+
 	/**
 	 * @param \Nella\Security\IdentityEntity
-	 * @return DBActionLoggerEntity
+	 * @return ActionEntity
 	 */
 	public function setUser(\Nella\Security\IdentityEntity $user = NULL)
 	{
 		$this->user = $user;
 		return $this;
-	}
-	
-	/**
-	 * @prePersist
-	 * @preUpdate
-	 * 
-	 * @throws \Nella\Models\EmptyValuesException
-	 */
-	public function check()
-	{
-		parent::check();
-		
-		if ($this->module === NULL) {
-			throw new \Nella\Models\EmptyValuesException('module', "Module value must be non empty string");
-		}
-		if ($this->action === NULL) {
-			throw new \Nella\Models\EmptyValuesException('action', "Action value must be non empty string");
-		}
 	}
 }

@@ -7,7 +7,7 @@
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
 
-namespace Nella\Models;
+namespace Nella\Models\Listeners;
 
 /**
  * Versions storage object for repository
@@ -22,7 +22,7 @@ namespace Nella\Models;
  * @property-read string $entityData
  * @property-read string $entityClass
  */
-class VersionEntity extends Entity
+class VersionEntity extends \Nella\Models\Entity
 {
 	/**
 	 * @column(type="datetime")
@@ -46,9 +46,9 @@ class VersionEntity extends Entity
 	private $entityClass;
 
 	/**
-	 * @param IVersionable
+	 * @param \Nella\Models\IVersionableEntity
 	 */
-	public function __construct(IVersionable $entity)
+	public function __construct(\Nella\Models\IVersionableEntity $entity)
 	{
 		$this->created = new \DateTime;
 		$this->entityId = $entity->getId();

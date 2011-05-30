@@ -7,10 +7,9 @@
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
 
-namespace Nella\Models;
+namespace Nella\Models\Listeners;
 
-use Nette\Caching\Cache,
-	Nette\Reflection\Property;
+use Nette\Caching\Cache;
 
 /**
  * Timestampable listenere
@@ -19,17 +18,21 @@ use Nette\Caching\Cache,
  *
  * @author	Patrik Votoček
  */
-class TimestampableListener extends \Nette\Object implements \Doctrine\Common\EventSubscriber
+class Userable extends \Nette\Object implements \Doctrine\Common\EventSubscriber
 {
+	/** @var \Nella\Security\IdentityEntity */
+	private $identity;
 	/** @var \Nette\Caching\Cache */
 	private $cache;
 
 	/**
+	 * @param \Nella\Security\IdentityEntity
 	 * @param \Nette\Caching\IStorage
 	 */
-	public function __construct(\Nette\Caching\IStorage $cacheStorage = NULL)
+	public function __construct(\Nella\Security\IdentityEntity $identity = NULL, \Nette\Caching\IStorage $cacheStorage = NULL)
 	{
-		$this->cache = $cacheStorage ? new Cache($cacheStorage, "Nella.Models.Timestampable") : array();
+		$this->identity = $identity;
+		$this->cache = $cacheStorage ? new Cache($cacheStorage, "Nella.Models.Userable") : array();
 	}
 
 	/**
@@ -44,17 +47,19 @@ class TimestampableListener extends \Nette\Object implements \Doctrine\Common\Ev
     }
 
     /**
-     * @param BaseEntity
+     * @param \Nella\Models\Entity
 	 * @return void
      */
-    protected function update(BaseEntity $entity)
+    protected function update(\Nella\Models\Entity $entity)
     {
 		if (array_key_exists(get_class($entity), $this->cache) && is_array($this->cache[get_class($entity)])) {
-            foreach ($this->cache[get_class($entity)] as $ref) {
+	        foreach ($this->cache[get_class($entity)] as $ref) {
 				$ref->setAccessible(TRUE);
-				$ref->setValue($entity, new \DateTime);
-            }
-        }
+				if (!$ref->hasAnnotation('creator') || !$ref->getValue($entity)) {
+					$ref->setValue($entity, $this->identity);
+				}
+	        }
+	    }
     }
 
     /**
@@ -86,8 +91,8 @@ class TimestampableListener extends \Nette\Object implements \Doctrine\Common\Ev
 			$files = $data = array();
 			foreach ($metadata->getReflectionProperties() as $prop) {
 				$class = $prop->getDeclaringClass();
-				$ref = new Property($class->getName(), $prop->getName());
-				if ($ref->hasAnnotation('timestampable')) {
+				$ref = new \Nette\Reflection\Property($class->getName(), $prop->getName());
+				if ($ref->hasAnnotation('creator') || $ref->hasAnnotation('editor')) {
 					$data[] = $ref;
 				}
 				$files[] = $class->getFileName();
@@ -105,5 +110,14 @@ class TimestampableListener extends \Nette\Object implements \Doctrine\Common\Ev
 				$this->cache[$metadata->name] = $data;
 			}
 		}
+    }
+
+    /**
+     * @param \Nette\Http\IUser
+     * @return UserableListener
+     */
+    public static function getInstance(\Nette\Http\IUser $user)
+    {
+    	return new static($user->identity ? $user->identity->entity : NULL);
     }
 }
