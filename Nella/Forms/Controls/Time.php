@@ -30,6 +30,5 @@ class Time extends BaseDateTime
 		parent::__construct($label, $cols, $maxLength);
 		$this->control->type = "time";
 		$this->control->setAttribute('data-nella-forms-time', $this->translateFormatToJs(static::$format));
-		//$this->addCondition(Form::FILLED)->addRule(Form::TIME);
 	}
 }

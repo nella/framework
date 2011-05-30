@@ -35,6 +35,5 @@ class DateTime extends BaseDateTime
 		$this->control->type = "datetime";
 		$this->control->setAttribute('data-nella-forms-date', $this->translateFormatToJs(static::$dateFormat));
 		$this->control->setAttribute('data-nella-forms-time', $this->translateFormatToJs(static::$timeFormat));
-		//$this->addCondition(Form::FILLED)->addRule(Form::DATETIME);
 	}
 }

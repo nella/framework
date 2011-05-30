@@ -11,36 +11,38 @@ namespace Nella\Forms\Controls;
 
 /**
  * Form date field item
- * 
+ *
+ * @internal
+ *
  * @author	Patrik Votoček
- * 
+ *
  * @property \DateTime $value
  */
 abstract class BaseDateTime extends \Nette\Forms\Controls\TextInput
 {
 	/** @var string */
 	public static $format = "Y-n-j";
-	
+
 	/** @var array */
 	public static $formatPhpToJs = array(
-		'd' => "dd", 
-		'j' => "d", 
-		'm' => "mm", 
-		'n' => "m", 
+		'd' => "dd",
+		'j' => "d",
+		'm' => "mm",
+		'n' => "m",
 		//'z' => "oo", ???
-		'z' => "o", 
-		'Y' => "yy", 
-		'y' => "y", 
-		'U' => "@", 
-		'h' => "h", 
-		'H' => "hh", 
-		'g' => "g", 
-		'A' => "TT", 
-		'i' => "ii", 
-		's' => "ss", 
-		
+		'z' => "o",
+		'Y' => "yy",
+		'y' => "y",
+		'U' => "@",
+		'h' => "h",
+		'H' => "hh",
+		'g' => "g",
+		'A' => "TT",
+		'i' => "ii",
+		's' => "ss",
+
 	);
-	
+
 	/**
 	 * @param string
 	 * @return string
@@ -56,12 +58,17 @@ abstract class BaseDateTime extends \Nette\Forms\Controls\TextInput
 	public function getValue()
 	{
 		$value = parent::getValue();
-		return $value ? \DateTime::createFromFormat(static::$format, $value) : NULL;
+		$value = \DateTime::createFromFormat(static::$format, $value);
+		$err = \DateTime::getLastErrors();
+		if ($err['error_count']) {
+			$value = FALSE;
+		}
+		return $value ?: NULL;
 	}
 
 	/**
 	 * @param \DateTime
-	 * @return Date
+	 * @return BaseDateTime
 	 */
 	public function setValue($value = NULL)
 	{
@@ -85,7 +92,7 @@ abstract class BaseDateTime extends \Nette\Forms\Controls\TextInput
 		$value = $this->getValue();
 		return (is_null($value) || $value instanceof \DateTime);
 	}
-	
+
 	/**
 	 * @return bool
 	 */

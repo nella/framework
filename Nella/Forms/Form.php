@@ -196,7 +196,7 @@ class Form extends \Nette\Application\UI\Form
 	}
 
 	/**
-	 * @return \Nette\DI\IContainer
+	 * @return \Nella\DI\IContext
 	 */
 	protected function getContext()
 	{
@@ -204,11 +204,11 @@ class Form extends \Nette\Application\UI\Form
 	}
 
 	/**
-	 * @return \Doctrine\ORM\EntityManager
+	 * @return \Nella\Doctrine\Container
 	 */
-	protected function getEntityManager()
+	public function getDoctrineContainer()
 	{
-		return $this->getContext()->getService('Doctrine\ORM\EntityManager');
+		return $this->getContext()->getService('doctrineContainer');
 	}
 
 	/**
