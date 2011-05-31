@@ -9,6 +9,8 @@
 
 namespace Nella\Application\UI;
 
+use Nella\Security\User;
+
 /**
  * Base backend presenter
  *
@@ -19,13 +21,19 @@ abstract class BackendPresenter extends Presenter
 	/** @var string */
 	protected $loginLink = ":Security:Frontend:login";
 
-	protected function startup()
+	/**
+	 * Checks for requirements such as authorization
+	 *
+	 * @param \Nette\Reflection\ClassType
+	 * @throws \Nette\Application\ForbiddenRequestException
+	 */
+	public function checkRequirements($element)
 	{
-		parent::startup();
+		parent::checkRequirements($element);
 
-		if (!$this->getUser()->isLoggedIn()) {
-			if ($this->getUser()->logoutReason === \Nette\Http\User::INACTIVITY) {
-				$this->flashMessage(__("You have been logged out due to inactivity. Please login again."), \Nella\FLASH_INFO);
+		if (!$this->getUser()->loggedIn) {
+			if ($this->getUser()->logoutReason === User::INACTIVITY) {
+				$this->flashMessage(__("You have been logged out due to inactivity. Please login again."), 'info');
 			}
 
 			$this->redirect($this->loginLink, array('backlink' => $this->getApplication()->storeRequest()));
@@ -36,30 +44,34 @@ abstract class BackendPresenter extends Presenter
 				$this->lang = $this->getUser()->identity->entity->lang;
 			}
 		} catch (\Nette\InvalidStateException $e) {
-			if ($this->getUser()->logoutReason === \Nette\Http\User::INACTIVITY) {
-				$this->flashMessage(__("Your login session expired. Please login again."), \Nella\FLASH_ERROR);
+			if ($this->getUser()->logoutReason === User::INACTIVITY) {
+				$this->flashMessage(__("Your login session expired. Please login again."), 'error');
 			}
 
 			$this->getUser()->logout(TRUE);
 			$this->redirect($this->loginLink, array('backlink' => $this->getApplication()->storeRequest()));
 		}
 
-		$ref = new \Nette\Reflection\ClassType(get_called_class());
 		$method = $this->formatActionMethod($this->getAction());
-		if ($ref->hasMethod($method) && !$this->isAllowed($method)) {
-			throw new \Nette\Application\BadRequestException("You don't have permission to access this '{$this->getAction()}' action", 403);
+		if ($element->hasMethod($method) && !$this->isAllowed($method)) {
+			throw new \Nette\Application\ForbiddenRequestException;
 		}
 		$method = $this->formatRenderMethod($this->getView());
-		if ($ref->hasMethod($method) && !$this->isAllowed($method)) {
-			throw new \Nette\Application\BadRequestException("You don't have permission to access this '{$this->getView()}' view", 403);
+		if ($element->hasMethod($method) && !$this->isAllowed($method)) {
+			throw new \Nette\Application\ForbiddenRequestException;
 		}
 		$signal = $this->getSignal();
 		if ($signal) {
 			$method = $this->formatSignalMethod($signal[1]);
-			if ($ref->hasMethod($method) && !$this->isAllowed($method)) {
-				throw new \Nette\Application\BadRequestException("You don't have permission to access this '{$this->getSignal()}' signal", 403);
+			if ($element->hasMethod($method) && !$this->isAllowed($method)) {
+				throw new \Nette\Application\ForbiddenRequestException;
 			}
 		}
+	}
+
+	protected function startup()
+	{
+		parent::startup();
 
 		$this->setLayout('backend');
 	}
@@ -102,7 +114,7 @@ abstract class BackendPresenter extends Presenter
 		$method = "createComponent" . $ucname;
 		if ($ucname !== $name && method_exists($this, $method) && $this->getReflection()->getMethod($method)->getName() === $method) {
 			if (!$this->isAllowed($method)) {
-				throw new \Nette\Application\BadRequestException("You don't have permission for this '$name' component", 403);
+				throw new \Nette\Application\ForbiddenRequestException;
 			}
 
 			return $this->$method($name);
