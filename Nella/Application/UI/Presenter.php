@@ -80,7 +80,7 @@ abstract class Presenter extends \Nette\Application\UI\Presenter
 	 */
 	public function templatePrepareFilters($template)
 	{
-		$template->registerFilter(new \Nella\Latte\Engine($this->getContext()));
+		$template->registerFilter($this->getContext()->latteEngine);
 	}
 
 	/**

@@ -67,7 +67,7 @@ abstract class Control extends \Nette\Application\UI\Control
 	 */
 	public function templatePrepareFilters($template)
 	{
-		$template->registerFilter(new \Nella\Latte\Engine($this->getContext()));
+		$template->registerFilter($this->getPresenter(TRUE)->getContext()->latteEngine);
 	}
 
 	/**

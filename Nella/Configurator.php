@@ -129,19 +129,20 @@ class Configurator extends \Nette\Configurator
 
 	/**
 	 * @param \Nette\DI\Container
+	 * @return Latte\Engine
+	 */
+	public static function createServiceLatteEngine(\Nette\DI\Container $container)
+	{
+		return new Latte\Engine;
+	}
+
+	/**
+	 * @param \Nette\DI\Container
 	 * @return \Nella\Application\IPresenterFactory
 	 */
 	public static function createServicePresenterFactory(Container $container)
 	{
 		return new Application\PresenterFactory($container);
-	}
-
-	/**
-	 * @return \Nette\Latte\DefaultMacros
-	 */
-	public static function createServiceMacros()
-	{
-		return new Latte\Macros;
 	}
 
 	/**
