@@ -68,6 +68,7 @@ $container->addService('model', function() {
 	));
 	return $context;
 });
+$container->addService('latteEngine', 'Nella\Latte\Engine');
 
 // Set DI Container
 Nette\Environment::setContext($container);
