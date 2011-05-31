@@ -18,19 +18,32 @@ namespace Nella\Localization\Filters;
  *
  * @property-read array $translations
  */
-class LatteMacros extends \Nette\Latte\DefaultMacros
+class LatteMacros extends \Nette\Latte\Macros\MacroSet
 {
 	/** @var array */
 	private $translations = array();
 
 	/**
-	 * @param mixed $var
-	 * @param mixed $modifiers
+	 * @param \Nette\Latte\Parser
+	 */
+	public static function install(\Nette\Latte\Parser $parser)
+	{
+		$me = new static($parser);
+
+		// _
+		$me->addMacro('_', array($me, 'macroTranslate'));
+
+		return $me;
+	}
+
+	/**
+	 * @param \Nette\Latte\MacroNode
+	 * @param mixed
 	 * @return string
 	 */
-	public function macroTranslate($var, $modifiers)
+	public function macroTranslate(\Nette\Latte\MacroNode $node, $writer)
 	{
-		$x = $this->formatMacroArgs($var);
+		$x = $writer->formatArgs();
 		$x = "\$this->addTranslation(" . $x . ");";
 		eval($x); // please don't slap me
 	}
