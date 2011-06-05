@@ -24,7 +24,7 @@ class DoctrineEntity extends \Nette\Object implements \Nella\Validator\IMetadata
 
 	public function __construct(\Nella\Doctrine\Container $container)
 	{
-		$this->container = $this->container;
+		$this->container = $container;
 	}
 
 	/**
@@ -37,6 +37,10 @@ class DoctrineEntity extends \Nette\Object implements \Nella\Validator\IMetadata
 			 && ($ref->hasAnnotation('entity') || $ref->hasAnnotation('mappedSuperClass'))) {
 			$emeta = $this->container->getEntityManager()->getClassMetadata($ref->getName());
 			foreach ($emeta->fieldMappings as $field) {
+				if ($field['declared'] != $ref->getName()) {
+					continue;
+				}
+
 				switch ($field['type']) {
 					case 'integer':
 					case 'smallint':

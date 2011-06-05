@@ -34,4 +34,59 @@ class AnnotationDriver extends \Doctrine\ORM\Mapping\Driver\AnnotationDriver
 			}
 		}
 	}
+
+	/**
+     * {@inheritDoc}
+     */
+    public function getAllClassNames()
+    {
+        if ($this->_classNames !== null) {
+            return $this->_classNames;
+        }
+
+        if (!$this->_paths) {
+            throw \Doctrine\ORM\Mapping\MappingException::pathRequired();
+        }
+
+        $classes = array();
+        $includedFiles = array();
+
+        foreach ($this->_paths as $path) {
+            if ( ! is_dir($path)) {
+                throw \Doctrine\ORM\Mapping\MappingException::fileMappingDriversRequireConfiguredDirectoryPath($path);
+            }
+
+            $iterator = new \RecursiveIteratorIterator(
+                new \RecursiveDirectoryIterator($path),
+                \RecursiveIteratorIterator::LEAVES_ONLY
+            );
+
+            foreach ($iterator as $file) {
+                if (($fileName = $file->getBasename($this->_fileExtension)) == $file->getBasename()) {
+                    continue;
+                }
+
+                $sourceFile = realpath($file->getPathName());
+                if (strpos($sourceFile, realpath(NELLA_FRAMEWORK_DIR . "/Testing")) !== FALSE) {
+					continue;
+                }
+                require_once $sourceFile;
+                $includedFiles[] = $sourceFile;
+            }
+        }
+
+        $declared = get_declared_classes();
+
+        foreach ($declared as $className) {
+            $rc = new \ReflectionClass($className);
+            $sourceFile = $rc->getFileName();
+            if (in_array($sourceFile, $includedFiles) && ! $this->isTransient($className)) {
+                $classes[] = $className;
+            }
+        }
+
+        $this->_classNames = $classes;
+
+        return $classes;
+    }
 }
