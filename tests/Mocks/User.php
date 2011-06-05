@@ -35,12 +35,12 @@ class User extends \Nette\Object implements \Nette\Http\IUser
 		return new \Nette\Security\Identity('foo', array('admin'));
 	}
 
-	function setAuthenticationHandler(\Nette\Security\IAuthenticator $handler)
+	function setAuthenticator(\Nette\Security\IAuthenticator $handler)
 	{
 		return $this;
 	}
 
-	function getAuthenticationHandler()
+	function getAuthenticator()
 	{
 		return NULL;
 	}
@@ -70,12 +70,12 @@ class User extends \Nette\Object implements \Nette\Http\IUser
 		return FALSE;
 	}
 
-	function setAuthorizationHandler(\Nette\Security\IAuthorizator $handler)
+	function setAuthorizator(\Nette\Security\IAuthorizator $handler)
 	{
 		return $this;
 	}
 
-	function getAuthorizationHandler()
+	function getAuthorizator()
 	{
 		return NULL;
 	}

@@ -135,8 +135,9 @@ class User extends \Nette\Object implements \Nette\Http\IUser
 	 * @param  Nette\Security\IAuthenticator
 	 * @return User  provides a fluent interface
 	 */
-	public function setAuthenticationHandler(\Nette\Security\IAuthenticator $handler)
+	public function setAuthenticator(\Nette\Security\IAuthenticator $handler)
 	{
+		$this->context->removeService('authenticator');
 		$this->context->authenticator = $handler;
 		return $this;
 	}
@@ -145,7 +146,7 @@ class User extends \Nette\Object implements \Nette\Http\IUser
 	 * Returns authentication handler.
 	 * @return Nette\Security\IAuthenticator
 	 */
-	final public function getAuthenticationHandler()
+	final public function getAuthenticator()
 	{
 		return $this->context->authenticator;
 	}
@@ -343,8 +344,9 @@ class User extends \Nette\Object implements \Nette\Http\IUser
 	 * @param  Nette\Security\IAuthorizator
 	 * @return User  provides a fluent interface
 	 */
-	public function setAuthorizationHandler(IAuthorizator $handler)
+	public function setAuthorizator(IAuthorizator $handler)
 	{
+		$this->context->removeService('authorizator');
 		$this->context->authorizator = $handler;
 		return $this;
 	}
@@ -353,7 +355,7 @@ class User extends \Nette\Object implements \Nette\Http\IUser
 	 * Returns current authorization handler.
 	 * @return Nette\Security\IAuthorizator
 	 */
-	final public function getAuthorizationHandler()
+	final public function getAuthorizator()
 	{
 		return $this->context->authorizator;
 	}
