@@ -29,8 +29,53 @@ abstract class Service extends \Nella\Doctrine\Service
 	}
 
 	/**
-	 * @param \Nella\Media\IEntity
+	 * @param array|\Traversable
+	 * @param bool
+	 * @return \Nella\Models\IEntity
+	 * @throws \Nette\InvalidArgumentException
+	 * @throws \Nella\Models\Exception
+	 * @throws \Nella\Models\EmptyValueException
+	 * @throws \Nella\Models\DuplicateEntryException
+	 */
+	public function createFromUploadCollection($collection, $withoutFlush = FALSE)
+	{
+		if (!is_array($collection) && !$collection instanceof \Traversable) {
+			throw new \Nette\InvalidArgumentException("Collection must be array or Traversable");
+		}
+
+		$list = array();
+		foreach ($collection as $item) {
+			if (!$item instanceof \Nette\Http\FileUpload) {
+				throw new \Nette\InvalidStateException("Collection must be collection of Nette\\Http\\FileUpload");
+			}
+			$list[] = array($this->create(array('path' => $this->generatePath($item)), TRUE), $item);
+		}
+
+		try {
+			if (!$withoutFlush) {
+				$this->getEntityManager()->flush();
+			}
+
+			$dir = $this->getContainer()->expand(static::STORAGE_DIR);
+
+			$collection = array();
+			foreach ($list as $item) {
+				$collection[] = $item[1]->move($dir . "/" . $item[0]->getPath());
+			}
+
+			return $collection;
+		} catch (\PDOException $e) {
+			$this->processPDOException($e);
+		}
+	}
+
+	/**
+	 * @param \Nella\Media\BaseFileEntity
 	 * @return \Doctrine\ORM\EntityManager
+	 * @throws \Nette\InvalidArgumentException
+	 * @throws \Nella\Models\Exception
+	 * @throws \Nella\Models\EmptyValueException
+	 * @throws \Nella\Models\DuplicateEntryException
 	 */
 	public function delete(\Nella\Models\IEntity $entity)
 	{
