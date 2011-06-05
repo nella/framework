@@ -72,10 +72,35 @@ class Service extends \Nella\Models\Service implements \Nella\Models\IService
 	}
 
 	/**
+	 * @param \PDOException
+	 * @throws \Nella\Models\Exception
+	 * @throws \Nella\Models\EmptyValueException
+	 * @throws \Nella\Models\DuplicateEntryException
+	 */
+	protected function processPDOException(\PDOException $e)
+	{
+		$info = $e->errorInfo;
+		if ($info[0] == 23000 && $info[1] == 1062) { // unique fail
+			// @todo how to detect column name ?
+			throw new \Nella\Models\DuplicateEntryException($e->getMessage(), NULL, $e);
+		} elseif ($info[0] == 23000 && $info[1] == 1048) { // notnull fail
+			// @todo convert table column name to entity column name
+			$name = substr($info[2], strpos($info[2], "'") + 1);
+			$name = substr($name, 0, strpos($name, "'"));
+			throw new \Nella\Models\EmptyValueException($e->getMessage(), $name, $e);
+		} else { // other fail
+			throw new \Nella\Models\Exception($e->getMessage(), 0, $e);
+		}
+	}
+
+	/**
 	 * @param array|\Traversable
 	 * @param bool
 	 * @return \Nella\Models\IEntity
 	 * @throws \Nette\InvalidArgumentException
+	 * @throws \Nella\Models\Exception
+	 * @throws \Nella\Models\EmptyValueException
+	 * @throws \Nella\Models\DuplicateEntryException
 	 */
 	public function create($values, $withoutFlush = FALSE)
 	{
@@ -88,18 +113,7 @@ class Service extends \Nella\Models\Service implements \Nella\Models\IService
 			}
 			return $entity;
 		} catch (\PDOException $e) {
-			$info = $e->errorInfo;
-			if ($info[0] == 23000 && $info[1] == 1062) { // unique fail
-				// @todo how to detect column name ?
-				throw new \Nella\Models\DuplicateEntryException($e->getMessage(), NULL, $e);
-			} elseif ($info[0] == 23000 && $info[1] == 1048) { // notnull fail
-				// @todo convert table column name to entity column name
-				$name = substr($info[2], strpos($info[2], "'") + 1);
-				$name = substr($name, 0, strpos($name, "'"));
-				throw new \Nella\Models\EmptyValueException($e->getMessage(), $name, $e);
-			} else { // other fail
-				throw new \Nella\Models\Exception($e->getMessage(), 0, $e);
-			}
+			$this->processPDOException($e);
 		}
 	}
 
@@ -109,6 +123,9 @@ class Service extends \Nella\Models\Service implements \Nella\Models\IService
 	 * @param bool
 	 * @return \Nella\Models\IEntity
 	 * @throws \Nette\InvalidArgumentException
+	 * @throws \Nella\Models\Exception
+	 * @throws \Nella\Models\EmptyValueException
+	 * @throws \Nella\Models\DuplicateEntryException
 	 */
 	public function update(IEntity $entity, $values = NULL, $withoutFlush = FALSE)
 	{
@@ -123,18 +140,7 @@ class Service extends \Nella\Models\Service implements \Nella\Models\IService
 			}
 			return $entity;
 		} catch (\PDOException $e) {
-			$info = $e->errorInfo;
-			if ($info[0] == 23000 && $info[1] == 1062) { // unique fail
-				// @todo how to detect column name ?
-				throw new \Nella\Models\DuplicateEntryException($e->getMessage(), NULL, $e);
-			} elseif ($info[0] == 23000 && $info[1] == 1048) { // notnull fail
-				// @todo convert table column name to entity column name
-				$name = substr($info[2], strpos($info[2], "'") + 1);
-				$name = substr($name, 0, strpos($name, "'"));
-				throw new \Nella\Models\EmptyValueException($e->getMessage(), $name, $e);
-			} else { // other fail
-				throw new \Nella\Models\Exception($e->getMessage(), 0, $e);
-			}
+			$this->processPDOException($e);
 		}
 	}
 
@@ -142,6 +148,9 @@ class Service extends \Nella\Models\Service implements \Nella\Models\IService
 	 * @param \Nella\Models\IEntity
 	 * @param bool
 	 * @return \Nella\Models\IEntity
+	 * @throws \Nella\Models\Exception
+	 * @throws \Nella\Models\EmptyValueException
+	 * @throws \Nella\Models\DuplicateEntryException
 	 */
 	public function delete(IEntity $entity, $withoutFlush = FALSE)
 	{
@@ -153,18 +162,7 @@ class Service extends \Nella\Models\Service implements \Nella\Models\IService
 			}
 			return $entity;
 		} catch (\PDOException $e) {
-			$info = $e->errorInfo;
-			if ($info[0] == 23000 && $info[1] == 1062) { // unique failt
-				// @todo how to detect column name ?
-				throw new \Nella\Models\DuplicateEntryException($e->getMessage(), NULL, $e);
-			} elseif ($info[0] == 23000 && $info[1] == 1048) { // notnull fail
-				// @todo convert table column name to entity column name
-				$name = substr($info[2], strpos($info[2], "'") + 1);
-				$name = substr($name, 0, strpos($name, "'"));
-				throw new \Nella\Models\EmptyValueException($e->getMessage(), $name, $e);
-			} else { // other fail
-				throw new \Nella\Models\Exception($e->getMessage(), 0, $e);
-			}
+			$this->processPDOException($e);
 		}
 	}
 }

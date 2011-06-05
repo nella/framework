@@ -28,7 +28,7 @@ class CredentialsService extends \Nella\Doctrine\Service
 			$identityService = $this->getContainer()->getService('Nella\Security\IdentityEntity');
 			$values['identity'] = $identityService->create($values, TRUE);
 
-			$entity = parent::create($values);
+			$entity = parent::create($values, TRUE);
 			$em = $this->getEntityManager();
 			$em->persist($entity);
 			if (!$withoutFlush) {
@@ -36,18 +36,7 @@ class CredentialsService extends \Nella\Doctrine\Service
 			}
 			return $entity;
 		} catch (\PDOException $e) {
-			$info = $e->errorInfo;
-			if ($info[0] == 23000 && $info[1] == 1062) { // unique fail
-				// @todo how to detect column name ?
-				throw new \Nella\Models\DuplicateEntryException($e->getMessage(), NULL, $e);
-			} elseif ($info[0] == 23000 && $info[1] == 1048) { // notnull fail
-				// @todo convert table column name to entity column name
-				$name = substr($info[2], strpos($info[2], "'") + 1);
-				$name = substr($name, 0, strpos($name, "'"));
-				throw new \Nella\Models\EmptyValueException($e->getMessage(), $name, $e);
-			} else { // other fail
-				throw new \Nella\Models\Exception($e->getMessage(), 0, $e);
-			}
+			$this->processPDOException($e);
 		}
 	}
 }
