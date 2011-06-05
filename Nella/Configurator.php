@@ -41,11 +41,6 @@ class Configurator extends \Nette\Configurator
 		// Nella X-Powered
 		@header("X-Powered-By: Nette Framework with Nella"); // @ - headers may have been sent
 
-		// Public dir
-		if (!isset($container->params['wwwDir'])) {
-			$container->params['wwwDir'] = realpath(WWW_DIR);
-		}
-
 		// Upload dir (tmp files - Mupltiple File Uploader)
 		if (isset($container->params['tempDir'])) {
 			$container->params['uploadDir'] = $container->expand("%tempDir%/uploads");
