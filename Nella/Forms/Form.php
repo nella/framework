@@ -190,7 +190,7 @@ class Form extends \Nette\Application\UI\Form
 	 * @param string	label
 	 * @return MultipleFileUpload
 	 */
-	public function addMultipleFile($name, $label = NULL)
+	public function addMultipleUpload($name, $label = NULL)
 	{
 		return $this[$name] = new Controls\MultipleFileUpload($label);
 	}
