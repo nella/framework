@@ -22,7 +22,7 @@ class UIMacros extends \Nette\Latte\Macros\MacroSet
 	 */
 	public static function install(\Nette\Latte\Parser $parser)
 	{
-		$me = new static($parser);
+		$me = parent::install($parser);
 
 		// n:phref
 		$me->addMacro('@phref', function(MacroNode $node, $writer) use ($me) {
