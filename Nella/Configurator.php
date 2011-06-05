@@ -245,7 +245,7 @@ class Configurator extends \Nette\Configurator
 	{
 		$classMetadataFactory = new Validator\ClassMetadataFactory($container->cacheStorage);
 		$classMetadataFactory->addParser(new Validator\MetadataParsers\Annotation);
-		//$classMetadataFactory->addParser(new Validator\MetadataParsers\Doctrine($container->doctrineContainer));
+		$classMetadataFactory->addParser(new Validator\MetadataParsers\DoctrineEntity($container->doctrineContainer));
 
 		return new Validator\Validator($classMetadataFactory);
 	}
