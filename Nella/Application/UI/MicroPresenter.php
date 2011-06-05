@@ -14,7 +14,7 @@ namespace Nella\Application\UI;
  *
  * @author	Patrik Votoček
  */
-class SimplePresenter extends \NetteModule\SimplePresenter
+class MicroPresenter extends \NetteModule\MicroPresenter
 {
 
 }

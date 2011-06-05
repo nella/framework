@@ -14,7 +14,7 @@ namespace Nella\Media;
  *
  * @author	Patrik Votoček
  */
-class MediaPresenter extends \Nella\Application\UI\SimplePresenter
+class MediaPresenter extends \Nella\Application\UI\MicroPresenter
 {
 	/**
 	 * @param \Nette\Application\Request
