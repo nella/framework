@@ -121,11 +121,6 @@ class Container extends \Nella\Models\Container
 			),
 		), $database));
 
-		if (!$context->hasService('userableListener')) {
-			$context->addService('userableListener', function(DI\Container $context) {
-				return new Listeners\Userable($context->user, $context->cacheStorage);
-			}, array('listener'));
-		}
 		if (!$context->hasService('versionListener')) {
 			$context->addService('versionListener', 'Nella\Doctrine\Listeners\Version', array('listener'));
 		}
