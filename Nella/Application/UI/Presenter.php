@@ -18,6 +18,11 @@ namespace Nella\Application\UI;
  */
 abstract class Presenter extends \Nette\Application\UI\Presenter
 {
+	protected function beforeRender()
+	{
+		$this->template->productionMode = $this->getContext()->params['productionMode'];
+	}
+
 	/**
 	 * Saves the message to template, that can be displayed after redirect
 	 *
