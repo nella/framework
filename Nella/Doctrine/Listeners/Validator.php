@@ -39,7 +39,7 @@ class Validator extends \Nette\Object implements \Doctrine\Common\EventSubscribe
 
     /**
      * @param BaseEntity
-     * @throws NotValidEntityException
+     * @throws \Nella\Models\InvalidEntityException
      */
     protected function validate($entity)
     {
@@ -47,13 +47,13 @@ class Validator extends \Nette\Object implements \Doctrine\Common\EventSubscribe
     	$errors = $this->validator->validate($entity);
 
     	if (count($errors)) {
-			throw new \Nella\Models\NotValidEntityException("Entity $class is not valid", $errors);
+			throw new \Nella\Models\InvalidEntityException("Entity $class is not valid", $errors);
     	}
     }
 
     /**
      * @param \Doctrine\ORM\Event\OnFlushEventArgs $args
-     * @throws NotValidEntityException
+     * @throws \Nella\Models\InvalidEntityException
      */
     public function onFlush(\Doctrine\ORM\Event\OnFlushEventArgs $args)
     {

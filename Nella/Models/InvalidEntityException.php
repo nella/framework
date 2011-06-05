@@ -14,7 +14,7 @@ namespace Nella\Models;
  *
  * @author	Patrik Votoček
  */
-class NotValidEntityException extends Exception
+class InvalidEntityException extends Exception
 {
 	/** @var array */
 	private $errors;
