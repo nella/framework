@@ -29,6 +29,6 @@ class Date extends BaseDateTime
 	{
 		parent::__construct($label, $cols, $maxLength);
 		$this->control->type = "date";
-		$this->control->setAttribute('data-nella-forms-date', $this->translateFormatToJs(static::$format));
+		$this->control->data('nella-forms-date', $this->translateFormatToJs(static::$format));
 	}
 }

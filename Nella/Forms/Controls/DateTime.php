@@ -17,11 +17,11 @@ namespace Nella\Forms\Controls;
 class DateTime extends BaseDateTime
 {
 	/** @var string */
-	public static $format = "Y-n-j G:i";
+	public static $format = "Y-n-j H:i";
 	/** @var string */
 	public static $dateFormat = "Y-n-j";
 	/** @var string */
-	public static $timeFormat = "G:i";
+	public static $timeFormat = "H:i";
 
 	/**
 	 * @param string  control name
@@ -33,7 +33,7 @@ class DateTime extends BaseDateTime
 	{
 		parent::__construct($label, $cols, $maxLength);
 		$this->control->type = "datetime";
-		$this->control->setAttribute('data-nella-forms-date', $this->translateFormatToJs(static::$dateFormat));
-		$this->control->setAttribute('data-nella-forms-time', $this->translateFormatToJs(static::$timeFormat));
+		$this->control->data('nella-forms-date', $this->translateFormatToJs(static::$dateFormat));
+		$this->control->data('nella-forms-time', $this->translateFormatToJs(static::$timeFormat));
 	}
 }

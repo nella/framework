@@ -38,9 +38,9 @@ abstract class BaseDateTime extends \Nette\Forms\Controls\TextInput
 		'H' => "hh",
 		'g' => "g",
 		'A' => "TT",
-		'i' => "ii",
+		'i' => "mm",
 		's' => "ss",
-
+		'G' => "h",
 	);
 
 	/**
