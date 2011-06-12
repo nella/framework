@@ -157,6 +157,8 @@ class Validator extends \Nette\Object implements IValidator
 				if (reset($rule) === NULL || reset($rule) == self::NULLABLE && $this->getValue($property, $input) === NULL) {
 					unset($errors[$name]);
 					break;
+				} elseif (reset($rule) == self::NULLABLE) {
+					continue;
 				}
 
 				// load value and parse aditional validator info
