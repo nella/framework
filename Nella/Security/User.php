@@ -224,7 +224,7 @@ class User extends \Nette\Object implements \Nette\Http\IUser
 			return NULL;
 		}
 
-		$this->session = $session = $this->context->session->getNamespace('Nette.Web.User/' . $this->namespace);
+		$this->session = $session = $this->context->session->getSection('Nette.Web.User/' . $this->namespace);
 
 		if (!$session->identity instanceof IIdentity || !is_bool($session->authenticated)) {
 			$session->remove();
