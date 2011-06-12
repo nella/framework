@@ -27,7 +27,7 @@ class Email extends \Nella\Forms\EntityForm
 
 		$this->addSubmit('sub', "Save");
 
-		$this->onSubmit[] = callback($this, 'process');
+		$this->onSuccess[] = callback($this, 'process');
 	}
 
 	public function process()

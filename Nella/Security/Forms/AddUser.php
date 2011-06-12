@@ -32,7 +32,7 @@ class AddUser extends \Nella\Forms\Form
 
 		$this->addSubmit('sub', "Add");
 
-		$this->onSubmit[] = callback($this, 'process');
+		$this->onSuccess[] = callback($this, 'process');
 	}
 
 	public function process()

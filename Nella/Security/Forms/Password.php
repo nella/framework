@@ -29,7 +29,7 @@ class Password extends \Nella\Forms\Form
 
 		$this->addSubmit('sub', "Save");
 
-		$this->onSubmit[] = callback($this, 'process');
+		$this->onSuccess[] = callback($this, 'process');
 	}
 
 	public function process()

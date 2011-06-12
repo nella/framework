@@ -30,7 +30,7 @@ class Login extends \Nella\Forms\Form
 
 		$this->addSubmit('sub', "Login");
 
-		$this->onSubmit[] = callback($this, "process");
+		$this->onSuccess[] = callback($this, "process");
 	}
 
 	public function process()
