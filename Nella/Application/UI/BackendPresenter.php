@@ -30,6 +30,7 @@ abstract class BackendPresenter extends Presenter
 	public function checkRequirements($element)
 	{
 		parent::checkRequirements($element);
+		$ref = $this->getReflection();
 
 		if (!$this->getUser()->loggedIn) {
 			if ($this->getUser()->logoutReason === User::INACTIVITY) {
@@ -53,17 +54,17 @@ abstract class BackendPresenter extends Presenter
 		}
 
 		$method = $this->formatActionMethod($this->getAction());
-		if ($element->hasMethod($method) && !$this->isAllowed($method)) {
+		if ($ref->hasMethod($method) && !$this->isAllowed($method)) {
 			throw new \Nette\Application\ForbiddenRequestException;
 		}
 		$method = $this->formatRenderMethod($this->getView());
-		if ($element->hasMethod($method) && !$this->isAllowed($method)) {
+		if ($ref->hasMethod($method) && !$this->isAllowed($method)) {
 			throw new \Nette\Application\ForbiddenRequestException;
 		}
 		$signal = $this->getSignal();
 		if ($signal) {
 			$method = $this->formatSignalMethod($signal[1]);
-			if ($element->hasMethod($method) && !$this->isAllowed($method)) {
+			if ($ref->hasMethod($method) && !$this->isAllowed($method)) {
 				throw new \Nette\Application\ForbiddenRequestException;
 			}
 		}
