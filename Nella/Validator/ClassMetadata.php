@@ -76,19 +76,18 @@ class ClassMetadata extends \Nette\Object
 	 */
 	public function addRule($name, $type, $data = NULL)
 	{
-		$lower = strtolower($name);
-
 		$mapper = function ($rule) {
 			return $rule[0];
 		};
-		if (isset($this->rules[$lower]) && in_array($type, array_map($mapper, $this->rules[$lower]))) {
+
+		if (isset($this->rules[$name]) && in_array($type, array_map($mapper, $this->rules[$name]))) {
 			throw new \Nette\InvalidStateException("Rule type '$type' for property '{$this->name}::\$$name' already exists");
 		}
 
-		if (!isset($this->rules[$lower]) || !is_array($this->rules[$lower])) {
-			$this->rules[$lower] = array(array($type, $data));
+		if (!isset($this->rules[$name]) || !is_array($this->rules[$name])) {
+			$this->rules[$name] = array(array($type, $data));
 		} else {
-			$this->rules[$lower][] = array($type, $data);
+			$this->rules[$name][] = array($type, $data);
 		}
 
 		return $this;
