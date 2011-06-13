@@ -81,6 +81,10 @@ class DoctrineEntity extends \Nette\Object implements \Nella\Validator\IMetadata
 
 			foreach ($emeta->associationMappings as $field) {
 				if ($field['type'] == ClassMetadata::ONE_TO_ONE || $field['type'] == ClassMetadata::MANY_TO_ONE) {
+					if (isset($field['declared']) && $field['declared'] != $ref->getName()) {
+						continue;
+					}
+
 					$metadata->addRule($field['fieldName'], Validator::INSTANCE, $field['targetEntity']);
 					$metadata->addRule($field['fieldName'],
 						$field['joinColumns'][0]['nullable'] ? Validator::NULLABLE : Validator::NOTNULL
