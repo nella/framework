@@ -59,7 +59,6 @@ class UIMacros extends \Nette\Latte\Macros\MacroSet
 	public function macroPlink(MacroNode $node, $writer)
 	{
 		\Nette\Diagnostics\Debugger::$maxDepth = 8;
-		barDump($node);
 		return $writer->write('echo %escape($presenter->link(%node.word, %node.array?))');
 	}
 
