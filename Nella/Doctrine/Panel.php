@@ -81,9 +81,12 @@ class Panel extends \Nette\Object implements \Nette\Diagnostics\IBarPanel, \Doct
 		$s .= '</td><td class="nette-Doctrine2Panel-sql">' . Connection::highlightSql($sql);
 		if ($source) {
 			list($file, $line) = $source;
-			$s .= (Debugger::$editor ? "<a href='{$h(\Nette\Diagnostics\Helpers::editorLink($file, $line))}'" : '<span')
-				. " class='nette-Doctrine2Panel-source' title='{$h($file)}:$line'>"
-				. "{$h(basename(dirname($file)) . '/' . basename($file))}:$line" . (Debugger::$editor ? '</a>' : '</span>');
+			if (Debugger::$editor) {
+				$s .= \Nette\Diagnostics\Helpers::editorLink($file, $line);
+			} else {
+				$s .= "<span class='nette-Doctrine2Panel-source' title='{$h($file)}:$line'>"
+					. $h(basename(dirname($file)) . '/' . basename($file)) . ":" . $line . "</span>";
+			}
 		}
 
 		$s .= '</td><td>';
