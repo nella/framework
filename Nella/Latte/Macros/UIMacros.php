@@ -78,7 +78,8 @@ class UIMacros extends \Nette\Latte\Macros\MacroSet
 		list($image, $format) = $data;
 		isset($data[2]) ?: $data['2'] = 'jpg';
 
-		return $writer->write("echo %escape(\$presenter->link(':Media:Media:image', array('image'=>'$image','format'=>'$format','type'=>'$data[2]')))");
+		return $writer->write("echo %escape(\$presenter->link(':Media:Media:image', array('image'=>"
+			 . '"{' . $image . '}",\'format\'=>"{' . $format . '}"' . ",'type'=>'{$data[2]}')))");
 	}
 
 	/**
