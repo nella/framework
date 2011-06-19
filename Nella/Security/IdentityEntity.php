@@ -131,7 +131,7 @@ class IdentityEntity extends \Nette\Object implements \Nella\Models\IEntity, \Ne
 	public function load(\Nella\Doctrine\Container $container)
 	{
 		if (!$this->loaded) {
-			$service = $container->getService(get_called_class());
+			$service = $container->getService(__CLASS__);
 			$entity = $service->repository->find($this->getId());
 			$entity->loaded = TRUE;
 			return $entity;
