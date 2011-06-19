@@ -14,7 +14,7 @@ namespace Nella\Security\Forms;
  *
  * @author	Patrik Votoček
  */
-class AddUser extends \Nella\Forms\Form
+class AddUser extends \Nella\Forms\EntityForm
 {
 	public $successLink = ":Security:Backend:";
 
@@ -22,12 +22,14 @@ class AddUser extends \Nella\Forms\Form
 	{
 		parent::setup();
 
+		$roles = $this->getDoctrineContainer()->getService('Nella\Security\RoleEntity')->repository->fetchPairs('id', "name");
+
 		$this->addText('username', "Username")->setRequired();
 		$this->addEmail('email', "E-mail")->setRequired();
 		$this->addPassword('password', "Password");
 		$this->addPassword('password2', "Re-Password")->addCondition(static::FILLED)
 			->addRule(static::EQUAL, NULL, $this['password']);
-		$this->addSelect('role', "Role", array(1 => "Admin")); // @todo
+		$this->addSelect('role', "Role", $roles);
 		$this->addSelect('lang', "Lang", array('en' => "English"))->setRequired(); // @todo
 
 		$this->addSubmit('sub', "Add");
