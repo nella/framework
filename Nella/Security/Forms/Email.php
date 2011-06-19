@@ -43,7 +43,7 @@ class Email extends \Nella\Forms\EntityForm
 		} else {
 			$service->update($credentials, $values);
 			$presenter->logAction("Security", \Nella\Utils\IActionLogger::UPDATE, "Changed email");
-			$presenter->flashMessage("Email changed successfuly", 'success');
+			$presenter->flashMessage(__("Email changed successfuly"), 'success');
 			$presenter->redirect($this->successLink);
 		}
 	}

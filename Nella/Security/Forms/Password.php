@@ -44,7 +44,7 @@ class Password extends \Nella\Forms\Form
 		} else {
 			$service->update($credentials, $values);
 			$presenter->logAction("Security", \Nella\Utils\IActionLogger::UPDATE, "Changed password");
-			$presenter->flashMessage("Password changed successfuly", 'success');
+			$presenter->flashMessage(__("Password changed successfuly"), 'success');
 			$presenter->redirect($this->successLink);
 		}
 	}

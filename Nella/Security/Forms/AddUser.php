@@ -44,7 +44,7 @@ class AddUser extends \Nella\Forms\Form
 		try {
 			$entity = $service->create($values);
 			$presenter->logAction("Security", \Nella\Utils\IActionLogger::CREATE, "Created user '{$entity->username}'");
-			$presenter->flashMessage("User '{$entity->username}' successfuly added", 'success');
+			$presenter->flashMessage(__("User '%s' successfuly added", $entity->username), 'success');
 			$presenter->redirect($this->successLink);
 		} catch (\Nella\Models\InvalidEntityException $e) {
 			$this->processException($e);
