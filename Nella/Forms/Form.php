@@ -36,6 +36,20 @@ class Form extends \Nette\Application\UI\Form
 	}
 
 	/**
+	 * This method will be called when the component (or component's parent)
+	 * becomes attached to a monitored object. Do not call this method yourself.
+	 * @param  Nette\Application\IComponent
+	 * @return void
+	 */
+	protected function attached($presenter)
+	{
+		parent::attached($presenter);
+		if ($this->getContext()->hasService('translator')) {
+			$this->setTranslator($this->getContext()->translator);
+		}
+	}
+
+	/**
 	 * Adds an email input control to the form.
 	 *
 	 * @param string	control name
@@ -196,7 +210,7 @@ class Form extends \Nette\Application\UI\Form
 	}
 
 	/**
-	 * @return \Nella\DI\IContext
+	 * @return \Nette\DI\IContainer
 	 */
 	protected function getContext()
 	{

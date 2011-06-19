@@ -61,6 +61,18 @@ abstract class Control extends \Nette\Application\UI\Control
 	}
 
 	/**
+	 * @return Nette\Templating\ITemplate
+	 */
+	protected function createTemplate($class = NULL)
+	{
+		$template = parent::createTemplate($class);
+		if ($this->getContext()->hasService('translator')) {
+			$template->setTranslator($this->getContext()->translator);
+		}
+		return $template;
+	}
+
+	/**
 	 * Descendant can override this method to customize template compile-time filters
 	 *
 	 * @param \Nette\Templating\Template
