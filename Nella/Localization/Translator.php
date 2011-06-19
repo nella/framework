@@ -25,10 +25,10 @@ class Translator extends \Nette\FreezableObject implements ITranslator
 	private $storage;
 	/** @var \Nette\Caching\Cache */
 	private $cache = NULL;
-	
+
 	/** @var string */
 	private $lang = "en";
-	
+
 	/**
 	 * @param \Nette\Caching\IStorage
 	 */
@@ -38,7 +38,7 @@ class Translator extends \Nette\FreezableObject implements ITranslator
 			$this->cache = new \Nette\Caching\Cache($cacheStorage, "Nella.Translator");
 		}
 	}
-	
+
 	/**
 	 * @return IStorage
 	 */
@@ -49,7 +49,7 @@ class Translator extends \Nette\FreezableObject implements ITranslator
 		}
 		return $this->storage;
 	}
-	
+
 	/**
 	 * @param IStorage
 	 * @return Translator
@@ -60,7 +60,7 @@ class Translator extends \Nette\FreezableObject implements ITranslator
 		$this->storage = $storage;
 		return $this;
 	}
-	
+
 	/**
 	 * @param string
 	 * @param string
@@ -72,9 +72,9 @@ class Translator extends \Nette\FreezableObject implements ITranslator
 		if (!file_exists($dir)) {
 			throw new \Nette\InvalidArgumentException("Directory '$dir' not exist");
 		}
-		
+
 		$dir = realpath($dir);
-		
+
 		$storage = $storage ?: $this->getStorage();
 		$this->dictionaries[$name] = new Dictionary($dir, $storage);
 		return $this;
@@ -116,11 +116,11 @@ class Translator extends \Nette\FreezableObject implements ITranslator
 	public function init()
 	{
 		$this->updating();
-		
+
 		foreach ($this->dictionaries as $dictionary) {
 			$dictionary->init($this->lang);
 		}
-		
+
 		$this->freeze();
 	}
 
@@ -140,7 +140,7 @@ class Translator extends \Nette\FreezableObject implements ITranslator
 		$form = $args ? reset($args) : NULL;
 		$form = $form === NULL ? 1 : (is_int($form) ? $form : 0);
 		$plural = $form == 1 ? 0 : 1;
-		
+
 		$message = isset($messages[$plural]) ? $messages[$plural] : $messages[0];
 		foreach ($this->dictionaries as $dictionary) {
 			if (($tmp = $dictionary->translate(reset($messages), $form)) !== NULL) {
@@ -151,7 +151,7 @@ class Translator extends \Nette\FreezableObject implements ITranslator
 
 		if (count($args) > 0 && reset($args) !== NULL) {
 			$message = str_replace(array("%label", "%name", "%value"), array("%%label", "%%name", "%%value"), $message);
-			vsprintf($message, $args);
+			$message = vsprintf($message, $args);
 		}
 
 		return $message;
