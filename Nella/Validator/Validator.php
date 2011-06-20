@@ -236,17 +236,15 @@ class Validator extends \Nette\Object implements IValidator
 				break;
 			case 'int':
 			case 'integer':
-				return is_int($input);
+				return (bool) Strings::match($input, '/^-?[0-9]+$/');
 				break;
 			case 'float':
-				return is_float($input);
-				break;
 			case 'double':
-				return is_double($input);
+				return (bool) Strings::match($input, '/^-?[0-9]*[.,]?[0-9]+$/');
 				break;
 			case 'bool':
 			case 'boolean':
-				return is_bool($input);
+				return is_bool($input) || in_array($input, array("f", "t", "true", "false", "TRUE", "FALSE", 1, 0));
 				break;
 			case 'array':
 				return is_array($input);
