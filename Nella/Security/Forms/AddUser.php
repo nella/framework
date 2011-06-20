@@ -49,7 +49,7 @@ class AddUser extends \Nella\Forms\EntityForm
 			$presenter->flashMessage(__("User '%s' successfuly added", $entity->username), 'success');
 			$presenter->redirect($this->successLink);
 		} catch (\Nella\Models\InvalidEntityException $e) {
-			$this->processException($e);
+			$this->processErrors($e->getErrors());
 		} catch (\Nella\Models\DuplicateEntryException $e) {
 			$this['username']->addError("Username %value already exist");
 		}
