@@ -17,8 +17,8 @@ class ClassMetadataFactory extends \Doctrine\ORM\Mapping\ClassMetadataFactory
 	/**
      * Creates a new ClassMetadata instance for the given class name.
      *
-     * @param string $className
-     * @return Abarin\Mapping\ClassMetadata
+     * @param string
+     * @return Nella\Doctrine\Mapping\ClassMetadata
      */
     protected function newClassMetadataInstance($className)
     {

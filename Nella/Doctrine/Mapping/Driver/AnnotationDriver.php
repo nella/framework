@@ -16,7 +16,7 @@ class AnnotationDriver extends \Doctrine\ORM\Mapping\Driver\AnnotationDriver
 {
 	/**
 	 * @param string
-	 * @param \Doctrine\ORM\Mapping\ClassMetadataInfo $metadata
+	 * @param \Doctrine\ORM\Mapping\ClassMetadataInfo
 	 */
 	public function loadMetadataForClass($className, \Doctrine\ORM\Mapping\ClassMetadataInfo $metadata)
 	{
