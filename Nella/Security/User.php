@@ -185,7 +185,7 @@ class User extends \Nette\Object implements \Nette\Http\IUser
 	{
 		$session = $this->getSessionNamespace(TRUE);
 		if ($time) {
-			$time = Nette\DateTime::from($time)->format('U');
+			$time = \Nette\DateTime::from($time)->format('U');
 			$session->expireTime = $time;
 			$session->expireDelta = $time - time();
 

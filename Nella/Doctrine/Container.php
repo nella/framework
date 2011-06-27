@@ -100,7 +100,7 @@ class Container extends \Nella\Models\Container
 	public static function create(DI\Container $context, $sectionName = "database")
 	{
 		if (!isset($context->params[$sectionName])) {
-			throw new \Nette\InvalidStateException("Doctrine configuration section '$section' does not exist");
+			throw new \Nette\InvalidStateException("Doctrine configuration section '$sectionName' does not exist");
 		}
 
 		$database = $context->params[$sectionName];
