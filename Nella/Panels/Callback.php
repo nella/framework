@@ -9,8 +9,6 @@
 
 namespace Nella\Panels;
 
-use Nette\Environment;
-
 /**
  * Callback panel for nette debug bar
  *
@@ -47,6 +45,16 @@ class Callback extends \Nette\Object implements \Nette\Diagnostics\IBarPanel
 
 	protected function init()
 	{
+		$cacheStorage = $this->container->cacheStorage;
+		$this->addCallback('--cache', "Invalidate cache", function() use($cacheStorage) {
+			$cacheStorage->clean(array(\Nette\Caching\Cache::ALL => TRUE));
+		});
+
+		$robotLoader = $this->container->robotLoader;
+		$this->addCallback('--robotloader', "Rebuild robotloader cache", function() use($robotLoader) {
+			$robotLoader->rebuild();
+		});
+
 		$httpRequest = $this->container->httpRequest;
 		if ($httpRequest->getHeader(static::XHR_HEADER)) {
 			$data = (array) json_decode(file_get_contents('php://input'), TRUE);
@@ -58,16 +66,6 @@ class Callback extends \Nette\Object implements \Nette\Diagnostics\IBarPanel
 
 			die(json_encode(array('status' => "OK")));
 		}
-
-		$cacheStorage = $this->container->cacheStorage;
-		$this->addCallback('--cache', "Invalidate cache", function() use($cacheStorage) {
-			$cacheStorage->clean(array(\Nette\Caching\Cache::ALL => TRUE));
-		});
-
-		$robotLoader = $this->container->robotLoader;
-		$this->addCallback('--robotloader', "Rebuild robotloader cache", function() use($robotLoader) {
-			$robotLoader->rebuild();
-		});
 	}
 
 	/**
