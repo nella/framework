@@ -130,7 +130,7 @@ Nella.translator.renderDictionaryList = function(dictionaries) {
 
 Nella.translator.renderPluralForm = function(pluralForm) {
 	var $input = $('#nella-translator-panel-content-dictionaries-pluralform');
-	$input.val(pluralForm).attr('disabled', false);
+	$input.attr('disabled', false).val(pluralForm);
 };
 
 Nella.translator.renderTranslationsList = function(translations) {
