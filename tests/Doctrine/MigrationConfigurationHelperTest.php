@@ -21,6 +21,7 @@ class MigrationConfigurationHelperTest extends \Nella\Testing\TestCase
 	{
 		parent::setup();
 		$container = new \Nette\DI\Container;
+		$container->params = array('productionMode' => FALSE, 'appDir' => __DIR__ . "/..");
 		$container->addService('migrationConfiguration', new \Doctrine\DBAL\Migrations\Configuration\Configuration(
 			new \Doctrine\DBAL\Connection(array(), new \Doctrine\DBAL\Driver\PDOSqlite\Driver)
 		));

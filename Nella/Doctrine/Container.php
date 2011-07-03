@@ -31,11 +31,12 @@ class Container extends \Nella\Models\Container
 
 	/**
 	 * @param \Nette\DI\Container
+	 * @param array
 	 */
-	public function __construct(DI\Container $context)
+	public function __construct(DI\Container $context, array $configuration = array())
 	{
 		$this->context = $context;
-		$this->configuration = array(
+		$this->configuration = \Nette\Utils\Arrays::mergeTree(array(
 			'productionMode' => $context->params['productionMode'],
 			'proxyDir' => $context->expand("%appDir%/proxies"),
 			'proxyNamespace' => 'App\Models\Proxies',
@@ -46,7 +47,7 @@ class Container extends \Nella\Models\Container
 				'directory' => $context->expand("%appDir%/migrations"),
 				'namespace' => 'App\Models\Migrations',
 			)
-		);
+		), $configuration);
 	}
 
 	/**
@@ -117,8 +118,6 @@ class Container extends \Nella\Models\Container
 			throw new \Nette\InvalidStateException("Doctrine configuration section '$sectionName' does not exist");
 		}
 
-		$this->configuration = \Nette\Utils\Arrays::mergeTree($this->configuration, $context->params[$sectionName]);
-
 		if (!$context->hasService('versionListener')) {
 			$context->addService('versionListener', 'Nella\Doctrine\Listeners\Version', array('listener'));
 		}
@@ -141,7 +140,7 @@ class Container extends \Nella\Models\Container
 				}
 			}
 		}
-		return new static($context);
+		return new static($context, $context->params[$sectionName]);
 	}
 
 	/**
@@ -153,7 +152,7 @@ class Container extends \Nella\Models\Container
 		$reader = new \Doctrine\Common\Annotations\AnnotationReader();
 		$reader->setDefaultAnnotationNamespace('Doctrine\ORM\Mapping\\');
 
-		return new Mapping\Driver\AnnotationDriver($reader, $context->params['doctrine-config']['entityDirs']);
+		return new Mapping\Driver\AnnotationDriver($reader, $this->configuration['entityDirs']);
 	}
 
 	/**
@@ -183,9 +182,9 @@ class Container extends \Nella\Models\Container
 		$config->setMetadataDriverImpl($context->annotationDriver);
 
 		// Proxies
-		$config->setProxyDir($context->params['doctrine-config']['proxyDir']);
-		$config->setProxyNamespace($context->params['doctrine-config']['proxyNamespace']);
-		if ($context->params['doctrine-config']['productionMode']) {
+		$config->setProxyDir($this->configuration['proxyDir']);
+		$config->setProxyNamespace($this->configuration['proxyNamespace']);
+		if ($this->configuration['productionMode']) {
 			$config->setAutoGenerateProxyClasses(FALSE);
 		} else {
 			if ($context->hasService('logger')) {
@@ -203,7 +202,7 @@ class Container extends \Nella\Models\Container
 	 */
 	public static function createServiceMysqlSessionInitListener(DI\Container $context)
 	{
-		return new \Doctrine\DBAL\Event\Listeners\MysqlSessionInit($context->params['doctrine-config']['charset']);
+		return new \Doctrine\DBAL\Event\Listeners\MysqlSessionInit($this->configuration['charset']);
 	}
 
 	/**
@@ -227,14 +226,14 @@ class Container extends \Nella\Models\Container
 	public static function createServiceEntityManager(DI\Container $context)
 	{
 		$evm = $context->eventManager;
-		if (key_exists('driver', $context->params['doctrine-config'])
-			 && $context->params['doctrine-config']['driver'] == "pdo_mysql"
-			 && key_exists('charset', $context->params['doctrine-config'])) {
+		if (key_exists('driver', $this->configuration)
+			 && $this->configuration['driver'] == "pdo_mysql"
+			 && key_exists('charset', $this->configuration)) {
 			$evm->addEventSubscriber($context->mysqlSessionInitListener);
 		}
 
 		$context->freeze();
-		$config = $context->params['doctrine-config']->getIterator()->getArrayCopy();
+		$config = $this->configuration->getIterator()->getArrayCopy();
 		return \Doctrine\ORM\EntityManager::create($config, $context->configuration, $evm);
 	}
 
@@ -245,10 +244,10 @@ class Container extends \Nella\Models\Container
 	public static function createServiceMigrationConfiguration(DI\Container $context)
 	{
 		$config = new \Doctrine\DBAL\Migrations\Configuration\Configuration($context->entityManager->getConnection());
-		$config->setName($context->params['doctrine-config']['migration']['name']);
-		$config->setMigrationsTableName($context->params['doctrine-config']['migration']['table']);
-		$config->setMigrationsDirectory($context->params['doctrine-config']['migration']['directory']);
-		$config->setMigrationsNamespace($context->params['doctrine-config']['migration']['namespace']);
+		$config->setName($this->configuration['migration']['name']);
+		$config->setMigrationsTableName($this->configuration['migration']['table']);
+		$config->setMigrationsDirectory($this->configuration['migration']['directory']);
+		$config->setMigrationsNamespace($this->configuration['migration']['namespace']);
 		$context->freeze();
 		return $config;
 	}
