@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project name="name-of-project" default="build" basedir=".">
-	<property name="source" value="src"/>
+	<property name="source" value="Nella"/>
 	
 	<target name="vendors" description="Init vendors">
 		<exec executable="sh">
@@ -10,13 +10,11 @@
 	</target>
 	
 	<target name="clean" description="Clean up and create artifact directories">
-		<delete dir="${basedir}/build/api"/>
 		<delete dir="${basedir}/build/code-browser"/>
 		<delete dir="${basedir}/build/coverage"/>
 		<delete dir="${basedir}/build/logs"/>
 		<delete dir="${basedir}/build/pdepend"/>
 		
-		<mkdir dir="${basedir}/build/api"/>
 		<mkdir dir="${basedir}/build/code-browser"/>
 		<mkdir dir="${basedir}/build/coverage"/>
 		<mkdir dir="${basedir}/build/logs"/>
@@ -53,7 +51,7 @@
 		<exec executable="phpmd">
 			<arg path="${source}" />
 			<arg value="xml" />
-			<arg value="${basedir}/build/phpmd.xml" />
+			<arg value="codesize,design,naming,unusedcode" />
 			<arg value="--reportfile" />
 			<arg value="${basedir}/build/logs/pmd.xml" />
 		</exec>
@@ -79,7 +77,7 @@
 		<exec executable="phpcs" output="/dev/null">
 			<arg value="--report=checkstyle" />
 			<arg value="--report-file=${basedir}/build/logs/checkstyle.xml" />
-			<arg value="--standard=${basedir}/build/phpcs.xml" />
+			<arg value="--standard=Nella" />
 			<arg path="${source}" />
 		</exec>
 	</target>
