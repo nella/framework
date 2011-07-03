@@ -63,7 +63,7 @@ jQuery.fn.nellaForm = function() {
 		this['nette-submittedBy'] = (target.type in {submit:1, image:1}) ? target.name : null;
 	});
 	
-	this.find('select, textarea, input').live('keyup change paste cut', function(event) {
+	this.find('select, textarea, input').live('focus keyup change paste cut', function(event) {
 		Nette.validateControl(event.target || event.srcElement);
 	});
 	
