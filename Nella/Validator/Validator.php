@@ -244,7 +244,7 @@ class Validator extends \Nette\Object implements IValidator
 				break;
 			case 'bool':
 			case 'boolean':
-				return is_bool($input) || in_array($input, array("f", "t", "true", "false", "TRUE", "FALSE", 1, 0));
+				return is_bool($input);
 				break;
 			case 'array':
 				return is_array($input);
