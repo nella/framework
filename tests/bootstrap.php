@@ -28,7 +28,7 @@ Debugger::enable(Debugger::DEVELOPMENT, __DIR__ . "/log");
 
 // Init DI Container
 $container = new \Nette\DI\Container;
-$container->params = Nette\ArrayHash::from(array(
+$container->params = array(
 	'appDir' => __DIR__,
 	'libsDir' => VENDORS_DIR,
 	'tempDir' => __DIR__ . "/temp",
@@ -47,7 +47,7 @@ $container->params = Nette\ArrayHash::from(array(
 		'driver' => "pdo_mysql",
 		'memory' => TRUE,
 	),
-));
+);
 $container->addService('cacheStorage', 'Nette\Caching\Storages\DevNullStorage');
 $container->addService('templateCacheStorage', function(Nette\DI\Container $container) {
 	return $container->cacheStorage;
