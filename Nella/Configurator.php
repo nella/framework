@@ -106,19 +106,35 @@ class Configurator extends \Nette\Configurator
  		parent::loadConfig($file, $section);
 		$this->onAfterLoadConfig($this->getContainer());
  	}
-
+	
 	/**
 	 * @param \Nette\DI\Container
-	 * @return Application\Application
+	 * @param array
+	 * @return Nette\Application\Application
 	 */
 	public static function createServiceApplication(Container $container, array $options = NULL)
 	{
-		$application = parent::createServiceApplication($container, array(
-			'class' => 'Nella\Application\Application'
-		));
-		$application->context->addService('console', function() use($container) {
+		$context = new Container;
+		$context->addService('httpRequest', $container->httpRequest);
+		$context->addService('httpResponse', $container->httpResponse);
+		$context->addService('session', $container->session);
+		$context->addService('presenterFactory', $container->presenterFactory);
+		$context->addService('router', $container->router);
+		$context->addService('console', function() use($container) {
 			return $container->console;
 		});
+
+		Presenter::$invalidLinkMode = $container->params['productionMode']
+			? Presenter::INVALID_LINK_SILENT : Presenter::INVALID_LINK_WARNING;
+
+		$class = isset($options['class']) ? $options['class'] : 'Nella\Application\Application';
+		$application = new $class($context);
+		$application->catchExceptions = $container->params['productionMode'];
+		if ($container->session->exists()) {
+		$application->onStartup[] = function() use ($container) {
+				$container->session->start(); // opens already started session
+			};
+		}
 		return $application;
 	}
 
@@ -126,7 +142,7 @@ class Configurator extends \Nette\Configurator
 	 * @param \Nette\DI\Container
 	 * @return Latte\Engine
 	 */
-	public static function createServiceLatteEngine(\Nette\DI\Container $container)
+	public static function createServiceLatteEngine(Container $container)
 	{
 		return new Latte\Engine;
 	}
