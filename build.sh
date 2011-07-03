@@ -84,4 +84,4 @@ tar cvjf "$PACKAGE_NAME.tar.bz2" "$PACKAGE_NAME"
 # 7z
 7z a -mx9 "$PACKAGE_NAME.7z" "$PACKAGE_NAME"
 DATE_NOW=`date +%F`
-cp "$PACKAGE_NAME.tar.gz" "$PACKAGE_NAME-$DATE_NOW.7z"
+cp "$PACKAGE_NAME.tar.gz" "$PACKAGE_NAME-$DATE_NOW-$WCREV.7z"
