@@ -147,9 +147,22 @@ class Container extends \Nella\Models\Container
 	 */
 	public static function createServiceAnnotationDriver(DI\Container $context)
 	{
+		// Dis Like!!!
+		\Doctrine\Common\Annotations\AnnotationRegistry::registerFile(
+			$context->params['libsDir'] . '/Doctrine/ORM/Mapping/Driver/DoctrineAnnotations.php'
+		);
+		
+		\Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('service');
+		
 		$reader = new \Doctrine\Common\Annotations\AnnotationReader();
 		$reader->setDefaultAnnotationNamespace('Doctrine\ORM\Mapping\\');
-
+		$reader->setIgnoreNotImportedAnnotations(true);
+		$reader->setEnableParsePhpImports(false);
+		$storage = $context->hasService('annotationCache') ? $context->annotationCache : new Cache($context->cacheStorage);
+		$reader = new \Doctrine\Common\Annotations\CachedReader(
+			new \Doctrine\Common\Annotations\IndexedReader($reader), $storage
+		);
+		
 		return new Mapping\Driver\AnnotationDriver($reader, $context->params['doctrine-config']['entityDirs']);
 	}
 
