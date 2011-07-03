@@ -26,6 +26,8 @@ class Container extends \Nella\Models\Container
 	private $context;
 	/** @var string */
 	protected $defaultServiceClass = 'Nella\Doctrine\Service';
+	/** @var array */
+	protected $configuration;
 
 	/**
 	 * @param \Nette\DI\Container
@@ -33,6 +35,18 @@ class Container extends \Nella\Models\Container
 	public function __construct(DI\Container $context)
 	{
 		$this->context = $context;
+		$this->configuration = array(
+			'productionMode' => $context->params['productionMode'],
+			'proxyDir' => $context->expand("%appDir%/proxies"),
+			'proxyNamespace' => 'App\Models\Proxies',
+			'entityDirs' => array($context->params['appDir'], NELLA_FRAMEWORK_DIR),
+			'migrations' => array(
+				'name' => \Nella\Framework::NAME . " DB Migrations",
+				'table' => "db_version",
+				'directory' => $context->expand("%appDir%/migrations"),
+				'namespace' => 'App\Models\Migrations',
+			)
+		);
 	}
 
 	/**
@@ -103,23 +117,7 @@ class Container extends \Nella\Models\Container
 			throw new \Nette\InvalidStateException("Doctrine configuration section '$sectionName' does not exist");
 		}
 
-		$database = $context->params[$sectionName];
-		if ($database instanceof \Nette\ArrayHash) {
-			$database = $database->getIterator()->getArrayCopy();
-		}
-
-		$context->params['doctrine-config'] = \Nette\ArrayHash::from(array_merge(array(
-			'productionMode' => $context->params['productionMode'],
-			'proxyDir' => $context->expand("%appDir%/proxies"),
-			'proxyNamespace' => 'App\Models\Proxies',
-			'entityDirs' => array($context->params['appDir'], NELLA_FRAMEWORK_DIR),
-			'migrations' => array(
-				'name' => \Nella\Framework::NAME . " DB Migrations",
-				'table' => "db_version",
-				'directory' => $context->expand("%appDir%/migrations"),
-				'namespace' => 'App\Models\Migrations',
-			),
-		), $database));
+		$this->configuration = \Nette\Utils\Arrays::mergeTree($this->configuration, $context->params[$sectionName]);
 
 		if (!$context->hasService('versionListener')) {
 			$context->addService('versionListener', 'Nella\Doctrine\Listeners\Version', array('listener'));
