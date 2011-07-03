@@ -103,12 +103,7 @@ class Container extends \Nella\Models\Container
 			throw new \Nette\InvalidStateException("Doctrine configuration section '$sectionName' does not exist");
 		}
 
-		$database = $context->params[$sectionName];
-		if ($database instanceof \Nette\ArrayHash) {
-			$database = $database->getIterator()->getArrayCopy();
-		}
-
-		$context->params['doctrine-config'] = \Nette\ArrayHash::from(array_merge(array(
+		$context->params['doctrine-config'] = \Nette\Utils\Arrays::mergeTree(array(
 			'productionMode' => $context->params['productionMode'],
 			'proxyDir' => $context->expand("%appDir%/proxies"),
 			'proxyNamespace' => 'App\Models\Proxies',
@@ -119,7 +114,7 @@ class Container extends \Nella\Models\Container
 				'directory' => $context->expand("%appDir%/migrations"),
 				'namespace' => 'App\Models\Migrations',
 			),
-		), $database));
+		), $context->params[$sectionName]);
 
 		if (!$context->hasService('versionListener')) {
 			$context->addService('versionListener', 'Nella\Doctrine\Listeners\Version', array('listener'));
@@ -236,7 +231,7 @@ class Container extends \Nella\Models\Container
 		}
 
 		$context->freeze();
-		$config = $context->params['doctrine-config']->getIterator()->getArrayCopy();
+		$config = $context->params['doctrine-config'];
 		return \Doctrine\ORM\EntityManager::create($config, $context->configuration, $evm);
 	}
 
