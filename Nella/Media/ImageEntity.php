@@ -25,6 +25,30 @@ namespace Nella\Media;
 class ImageEntity extends BaseFileEntity implements IImage
 {
 	/**
+	 * @column
+	 * @var sting
+	 */
+	private $slug;
+	
+	/**
+	 * @return string
+	 */
+	public function getSlug()
+	{
+		return $this->slug;
+	}
+
+	/**
+	 * @param string
+	 * @return ImageEntity
+	 */
+	public function setSlug($slug)
+	{
+		$this->slug = $this->sanitizeString($slug);
+		return $this;
+	}
+	
+	/**
 	 * @return \Nella\Image
 	 */
 	public function toImage()

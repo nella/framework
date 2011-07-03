@@ -14,6 +14,7 @@ namespace Nella\Media;
  *
  * @entity
  * @table(name="media_formats")
+ * @hasLifecycleCallbacks
  *
  * @author	Patrik Votoček
  *
@@ -23,6 +24,7 @@ namespace Nella\Media;
  * @property ImageEntity $watermark
  * @property int $watermarkOpacity
  * @property int $watermarkPosition
+ * @property string $slug
  */
 class FormatEntity extends \Nella\Doctrine\Entity implements IFormat
 {
@@ -57,6 +59,11 @@ class FormatEntity extends \Nella\Doctrine\Entity implements IFormat
 	 * @var int
 	 */
 	private $watermarkPosition;
+	/**
+	 * @column(unique=true)
+	 * @var string
+	 */
+	private $slug;
 
 	public function __construct()
 	{
@@ -171,6 +178,35 @@ class FormatEntity extends \Nella\Doctrine\Entity implements IFormat
 	{
 		$this->watermarkPosition = $position;
 		return $this;
+	}
+	
+	/**
+	 * @return string
+	 */
+	public function getSlug()
+	{
+		return $this->slug;
+	}
+	
+	/**
+	 * @param string
+	 * @return FormatEntity
+	 */
+	public function setSlug($slug)
+	{
+		$this->slug = $this->sanitizeString($slug);
+		return $this;
+	}
+	
+	/**
+	 * @internal
+	 * @onFlush
+	 */
+	public function onFlush()
+	{
+		if (!$this->slug) {
+			$this->slug = $this->id;
+		}
 	}
 
 	/**
