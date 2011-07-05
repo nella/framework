@@ -6,23 +6,24 @@
 	 convertWarningsToExceptions="true">
 	<testsuites>
 		<testsuite name="Nella Framework Test Suite">
-			<directory>./</directory>
+			<directory>./tests</directory>
 		</testsuite>
 	</testsuites>
 
 	<filter>
 		<whitelist>
-			<directory suffix=".php">../Nella</directory>
+			<directory suffix=".php">./Nella</directory>
 			<exclude>
-				<directory suffix=".php">../Nella/Panels</directory>
-				<file>../Nella/shortcuts.php</file>
-				<file>../Nella/loader.php</file>
-				<file>../Nella/Localization/shortcuts.php</file>
-				<file>../Nella/Localization/Panel.php</file>
-				<file>../Nella/Doctrine/Panel.php</file>
-				<file>../Nella/Security/Panel.php</file>
-				<file>../Nella/Framework.php</file>
-				<file>../Nella/SplClassLoader.php</file>
+				<directory suffix=".php">./Nella/Panels</directory>
+				<file>./Nella/shortcuts.php</file>
+				<file>./Nella/loader.php</file>
+				<file>./Nella/Localization/shortcuts.php</file>
+				<file>./Nella/Localization/Panel.php</file>
+				<file>./Nella/Doctrine/Panel.php</file>
+				<file>./Nella/Security/Panel.php</file>
+				<file>./Nella/Framework.php</file>
+				<file>./Nella/SplClassLoader.php</file>
+				<directory suffix=".php">./vendors</directory>
 			</exclude>
 		</whitelist>
 	</filter>
