@@ -32,6 +32,9 @@ sed -i "s/\$WCDATE\$'/$WCDATE'/g" Nella/Framework.php
 git clone git://github.com/nella/sandbox.git sandbox
 cp -r vendors/* sandbox/libs/
 cp -r Nella/* sandbox/libs/Nella
+echo "Disallow: /" > sandbox/libs/Nette/netterobots.txt
+echo "Disallow: /" > sandbox/libs/Nella/netterobots.txt
+echo "Disallow: /" > sandbox/libs/Doctrine/netterobots.txt
 
 ##########################################
 # GIT remove .gitignore .gitmodules .git #
