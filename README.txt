@@ -9,7 +9,11 @@ Nella Framework focuses on security and performance and is definitely one of the
 Requirements
 ------------
 
-Nella Framework prequires PHP 5.3.0 or later and Nette Framework 2.0 or later. Please run Nette Framework "Requirements Checker" to obtain more detailed information.
+- PHP 5.3.2+
+- MySQL 5+ / SQLite 3+ / PosgreSQL
+- Nette Framework 2.0-beta+
+- Doctrine ORM 2.1.0+
+- Symfony Console 2.0-rc+
 
 
 Installation
