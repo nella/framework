@@ -17,6 +17,10 @@ namespace Nella\Media;
 class Listener extends \Nette\FreezableObject implements \Doctrine\Common\EventSubscriber
 {
 	/** @var array */
+	private $imageMetadatas = array();
+	/** @var array */
+	private $fileMetadatas = array();
+	/** @var array */
 	private $imageMap = array();
 	/** @var array */
 	private $fileMap = array();
@@ -69,8 +73,10 @@ class Listener extends \Nette\FreezableObject implements \Doctrine\Common\EventS
 	private function updateDiscriminator(\Doctrine\ORM\Mapping\ClassMetadata $metadata, \Doctrine\ORM\EntityManager $em)
 	{
     	if ($metadata->name == 'Nella\Media\FileEntity' || in_array('Nella\Media\FileEntity', $metadata->parentClasses)) {
+			$this->fileMetadatas[$metadata->name] = $metadata;
 			$metadata->setDiscriminatorMap(array_merge($metadata->discriminatorMap, $this->fileMap));
     	} elseif ($metadata->name == 'Nella\Media\ImageEntity' || in_array('Nella\Media\ImageEntity', $metadata->parentClasses)) {
+			$this->imageMetadatas[$metadata->name] = $metadata;
 			$metadata->setDiscriminatorMap(array_merge($metadata->discriminatorMap, $this->imageMap));
     	}
 	}
@@ -85,6 +91,10 @@ class Listener extends \Nette\FreezableObject implements \Doctrine\Common\EventS
 			throw new \Nette\InvalidArgumentException("Class '$class' does not exist");
 		}
 
+		foreach ($this->imageMetadatas as $metadata) {
+			$metadata->setDiscriminatorMap[$id] = $class;
+		}
+		
 		$this->imageMap[$id] = $class;
 	}
 
@@ -96,6 +106,10 @@ class Listener extends \Nette\FreezableObject implements \Doctrine\Common\EventS
 	{
 		if (!class_exists($class)) {
 			throw new \Nette\InvalidArgumentException("Class '$class' does not exist");
+		}
+		
+		foreach ($this->fileMetadatas as $metadata) {
+			$metadata->setDiscriminatorMap[$id] = $class;
 		}
 
 		$this->fileMap[$id] = $class;
