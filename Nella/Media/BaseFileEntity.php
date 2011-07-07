@@ -27,7 +27,7 @@ namespace Nella\Media;
 abstract class BaseFileEntity extends \Nella\Doctrine\Entity implements IFile
 {
 	/**
-	 * @column(type="datetime")
+	 * @column(type="datetimetz")
 	 * @var \DateTime
 	 */
 	private $uploaded;

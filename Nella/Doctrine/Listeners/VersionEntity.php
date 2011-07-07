@@ -25,7 +25,7 @@ namespace Nella\Doctrine\Listeners;
 class VersionEntity extends \Nella\Doctrine\Entity
 {
 	/**
-	 * @column(type="datetime")
+	 * @column(type="datetimetz")
 	 * @var \DateTime
 	 */
 	private $created;
