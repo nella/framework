@@ -25,6 +25,7 @@ class ServiceTest extends \Nella\Testing\TestCase
 		$container->addService('entityManager', \Doctrine\Tests\Mocks\EntityManagerMock::create(
 			new \Doctrine\DBAL\Connection(array(), new \Doctrine\DBAL\Driver\PDOSqlite\Driver)
 		));
+		$container->entityManager->getConfiguration()->getMetadataDriverImpl()->addPaths(array(__DIR__));
 		$container = new \Nella\Doctrine\Container($container);
 		$this->service = new Service($container, 'NellaTests\Doctrine\Service\EntityMock');
 	}
