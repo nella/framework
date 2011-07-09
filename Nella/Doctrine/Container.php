@@ -255,10 +255,10 @@ class Container extends \Nella\Models\Container
 	public static function createServiceMigrationConfiguration(DI\Container $context)
 	{
 		$config = new \Doctrine\DBAL\Migrations\Configuration\Configuration($context->entityManager->getConnection());
-		$config->setName($context->params['doctrine-config']['migration']['name']);
-		$config->setMigrationsTableName($context->params['doctrine-config']['migration']['table']);
-		$config->setMigrationsDirectory($context->params['doctrine-config']['migration']['directory']);
-		$config->setMigrationsNamespace($context->params['doctrine-config']['migration']['namespace']);
+		$config->setName($context->params['doctrine-config']['migrations']['name']);
+		$config->setMigrationsTableName($context->params['doctrine-config']['migrations']['table']);
+		$config->setMigrationsDirectory($context->params['doctrine-config']['migrations']['directory']);
+		$config->setMigrationsNamespace($context->params['doctrine-config']['migrations']['namespace']);
 		$context->freeze();
 		return $config;
 	}
