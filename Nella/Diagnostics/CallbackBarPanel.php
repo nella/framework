@@ -7,7 +7,7 @@
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
 
-namespace Nella\Panels;
+namespace Nella\Diagnostics;
 
 use Nette\Environment;
 
@@ -16,9 +16,9 @@ use Nette\Environment;
  *
  * @author	Patrik Votoček
  */
-class Callback extends \Nette\Object implements \Nette\Diagnostics\IBarPanel
+final class CallbackBarPanel extends \Nette\Object implements \Nette\Diagnostics\IBarPanel
 {
-	const VERSION = "1.6",
+	const VERSION = "1.7",
 		XHR_HEADER = "X-Nella-Callback-Panel";
 	/** @var \Nette\DI\IContainer */
 	private $container;
@@ -38,14 +38,25 @@ class Callback extends \Nette\Object implements \Nette\Diagnostics\IBarPanel
 
 		$this->container = $container;
 
-		$this->init();
+		$this->initDefaultsCallbacks();
 
 		static::$registered = TRUE;
-
-		\Nette\Diagnostics\Debugger::$bar->addPanel($this);
 	}
 
-	protected function init()
+	protected function initDefaultsCallbacks()
+	{
+		$cacheStorage = $this->container->cacheStorage;
+		$this->addCallback('--cache', "Invalidate cache", function() use($cacheStorage) {
+			$cacheStorage->clean(array(\Nette\Caching\Cache::ALL => TRUE));
+		});
+
+		$robotLoader = $this->container->robotLoader;
+		$this->addCallback('--robotloader', "Rebuild robotloader cache", function() use($robotLoader) {
+			$robotLoader->rebuild();
+		});
+	}
+	
+	protected function processRequest()
 	{
 		$httpRequest = $this->container->httpRequest;
 		if ($httpRequest->getHeader(static::XHR_HEADER)) {
@@ -58,21 +69,11 @@ class Callback extends \Nette\Object implements \Nette\Diagnostics\IBarPanel
 
 			die(json_encode(array('status' => "OK")));
 		}
-
-		$cacheStorage = $this->container->cacheStorage;
-		$this->addCallback('--cache', "Invalidate cache", function() use($cacheStorage) {
-			$cacheStorage->clean(array(\Nette\Caching\Cache::ALL => TRUE));
-		});
-
-		$robotLoader = $this->container->robotLoader;
-		$this->addCallback('--robotloader', "Rebuild robotloader cache", function() use($robotLoader) {
-			$robotLoader->rebuild();
-		});
 	}
 
 	/**
 	 * @param string
-	 * @return Callback
+	 * @return CallbackPanel
 	 */
 	public function removeCallback($id)
 	{
@@ -84,7 +85,7 @@ class Callback extends \Nette\Object implements \Nette\Diagnostics\IBarPanel
 	 * @param string
 	 * @param string
 	 * @param array|\Nette\Callback|\Closure
-	 * @return Callback
+	 * @return CallbackPanel
 	 */
 	public function addCallback($id, $name, $callback)
 	{
@@ -96,12 +97,15 @@ class Callback extends \Nette\Object implements \Nette\Diagnostics\IBarPanel
 	}
 
 	/**
-	 * Renders HTML code for custom tab.
+	 * Renders HTML code for custom tab
+	 * 
 	 * @return string
 	 * @see Nette\IDebugPanel::getTab()
 	 */
 	public function getTab()
 	{
+		$this->processRequest();
+		
 		return '<span title="Callbacks">
 			<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAK8AAACvABQqw0mAAAABh0RVh0U29mdHdhcmUAQWRvYmUgRmlyZXdvcmtzT7MfTgAAAY9JREFUOI2lkj1rVUEQhp93d49XjYiCUUFtgiBpFLyWFhKxEAsbGy0ErQQrG/EHCII/QMTGSrQ3hY1FijS5lQp2guBHCiFRSaLnnN0di3Pu9Rpy0IsDCwsz8+w776zMjP+J0JV48nrufMwrc2AUbt/CleMv5ycClHH1UZWWD4MRva4CByYDpHqjSgKEETcmHiHmItW5STuF/FfAg8HZvghHDDMpkKzYXScPgFcx9XBw4WImApITn26cejEAkJlxf7F/MOYfy8K3OJGtJlscKsCpAJqNGRknd+jO6TefA8B6WU1lMrBZ6fiE1R8Zs7hzVJHSjvJnNMb/hMSmht93IYIP5Qhw99zSx1vP+5eSxZmhzpzttmHTbcOKk+413Sav4v3J6ZsfRh5sFdefnnhr2Gz75rvHl18d3aquc43f1/BjaN9V1wn4tq6eta4LtnUCQuPWHmAv0AOKDNXstZln2/f3zgCUX8oFJx1zDagGSmA1mn2VmREk36pxw5NgzVqDhOTFLhjtOgMxmqVOE/81fgFilqPyaom5BAAAAABJRU5ErkJggg==">
 			callback
@@ -109,7 +113,8 @@ class Callback extends \Nette\Object implements \Nette\Diagnostics\IBarPanel
 	}
 
 	/**
-	 * Renders HTML code for custom panel.
+	 * Renders HTML code for custom panel
+	 * 
 	 * @return string
 	 * @see Nette\IDebugPanel::getPanel()
 	 */
@@ -118,7 +123,16 @@ class Callback extends \Nette\Object implements \Nette\Diagnostics\IBarPanel
 		$callbacks = $this->callbacks;
 		$absoluteUrl = $this->container->httpRequest->url->absoluteUrl;
 		ob_start();
-		require_once __DIR__ . "/Callback.phtml";
+		require_once __DIR__ . "/templates/bar.callback.panel.phtml";
 		return ob_get_clean();
+	}
+	
+	/**
+	 * @param \Nette\Diagnostics\Bar
+	 * @param \Nette\DI\IContainer
+	 */
+	public static function register(\Nette\Diagnostics\Bar $bar, \Nette\DI\IContainer $container)
+	{
+		$bar->addPanel(new static($container));
 	}
 }
