@@ -7,14 +7,14 @@
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nellacms.com
  */
 
-namespace Nella\Panels;
+namespace Nella\Diagnostics;
 
 /**
  * Tools panel for Nette debug bar
  *
  * @author	Patrik Votoček
  */
-class Debug extends \Nette\Object implements \Nette\Diagnostics\IBarPanel
+class DebugBarPanel extends \Nette\Object implements \Nette\Diagnostics\IBarPanel
 {
 	/** @var \Nette\DI\Container */
 	private $container;
@@ -30,7 +30,6 @@ class Debug extends \Nette\Object implements \Nette\Diagnostics\IBarPanel
 	{
 		$this->container = $container;
 		$this->templates = array();
-		\Nette\Diagnostics\Debugger::$bar->addPanel($this);
 	}
 
 	/**
@@ -80,7 +79,19 @@ class Debug extends \Nette\Object implements \Nette\Diagnostics\IBarPanel
 		ob_start();
 		$templates = $this->templates;
 		$services = $this->getServices();
-		require_once __DIR__ . "/Debug.phtml";
+		require_once __DIR__ . "/templates/bar.debug.panel.phtml";
 		return ob_get_clean();
+	}
+	
+	/**
+	 * @param \Nette\Diagnostics\Bar
+	 * @param \Nette\DI\Container
+	 * @return DebugBarPanel
+	 */
+	public static function register(\Nette\Diagnostics\Bar $bar, \Nette\DI\Container $container)
+	{
+		$panel = new static($container);
+		$bar->addPanel($panel);
+		return $panel;
 	}
 }
