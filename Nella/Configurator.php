@@ -276,7 +276,7 @@ class Configurator extends \Nette\Configurator
 	 */
 	public static function createServiceCallbackPanel(Container $container)
 	{
-		return new Panels\Callback($container);
+		return new \Nella\Diagnostics\CallbackBarPanel($container);
 	}
 
 	/**
@@ -314,7 +314,7 @@ class Configurator extends \Nette\Configurator
 	 */
 	public static function createServiceDebugPanel(Container $container)
 	{
-		return new Panels\Debug($container);
+		return new \Nella\Diagnostics\DebugBarPanel($container);
 	}
 
 	/**
