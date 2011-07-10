@@ -52,9 +52,8 @@ class UIMacros extends \Nette\Latte\Macros\MacroSet
 	}
 
 	/**
-	 * {link destination [,] [params]}
 	 * {plink destination [,] [params]}
-	 * n:href="destination [,] [params]"
+	 * n:phref="destination [,] [params]"
 	 */
 	public function macroPlink(MacroNode $node, $writer)
 	{
@@ -64,22 +63,32 @@ class UIMacros extends \Nette\Latte\Macros\MacroSet
 
 	/**
 	 * {image ...}
+	 * n:src
+	 * n:ihref
 	 *
 	 * @param string
 	 * @param mixed
 	 * @return string
+	 * @throws \Nette\Latte\ParseException
 	 */
 	public function macroImage(MacroNode $node, $writer)
 	{
 		$data = explode(',', $node->args);
+		
+		if (count($data) < 2) {
+			throw new \Nette\Latte\ParseException("Invalid arguments count for image macro");
+		}
+		
 		foreach ($data as &$value) {
 			$value = trim($value);
 		}
+		
 		list($image, $format) = $data;
-		isset($data[2]) ?: $data['2'] = 'jpg';
+		isset($data[2]) ?: $data['2'] = "'jpg'";
 
 		return $writer->write("echo %escape(\$presenter->link(':Media:Media:image', array('image'=>"
-			 . '"{' . $image . '}",\'format\'=>"{' . $format . '}"' . ",'type'=>'{$data[2]}')))");
+			 . $writer->formatWord($image) . ",'format'=>" . $writer->formatWord($format) . ",'type'=>"
+			 . $writer->formatWord($data[2]) . ")))");
 	}
 
 	/**
