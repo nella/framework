@@ -27,12 +27,14 @@ class Configurator extends \Nette\Configurator
 
 	/**
 	 * @param string
+	 * @param array
 	 */
-	public function __construct($containerClass = 'Nette\DI\Container')
+	public function __construct($containerClass = 'Nette\DI\Container', array $params = array())
 	{
 		parent::__construct($containerClass);
 
 		$container = $this->getContainer();
+		$container->params += $params;
 
 		// Back compatability
 		Environment::setConfigurator($this);
@@ -42,9 +44,7 @@ class Configurator extends \Nette\Configurator
 		@header("X-Powered-By: Nette Framework with Nella"); // @ - headers may have been sent
 
 		// Upload dir (tmp files - Mupltiple File Uploader)
-		if (isset($container->params['tempDir'])) {
-			$container->params['uploadDir'] = $container->expand("%tempDir%/uploads");
-		}
+		$container->params['uploadDir'] = $container->expand("%tempDir%/uploads");
 
 		// File storage dirs (upoaded images and other files)
 		if (defined('STORAGE_DIR')) {
@@ -52,13 +52,17 @@ class Configurator extends \Nette\Configurator
 		} else {
 			$container->params['storageDir'] = $container->expand("%appDir%/storage");
 		}
+		
+		// Set file upload temp dir
+		ini_set('upload_tmp_dir', $container->params['uploadDir']);
+		// Set session dir
+		ini_set('session.save_path', $container->expand("%tempDir%/sessions"));
 
-		// Image cache dir (public folteder for images thumbnails and other formats)
-		if (defined('IMAGE_CACHE_DIR')) {
-			$container->params['imageCacheDir'] = realpath(IMAGE_CACHE_DIR);
-		} else {
-			$container->params['imageCacheDir'] = $container->expand("%wwwDir%/images");
-		}
+		// Init multilple file upload listener
+		Forms\Controls\MultipleFileUpload::register(
+			$container->httpRequest,
+			$container->expand($container->params['uploadDir'])
+		);
 
 		// Namespace prefixes
 		$container->params['namespaces'] = array(0 => 'App', 9 => 'Nella');
@@ -70,17 +74,6 @@ class Configurator extends \Nette\Configurator
 			'error' => "error",
 			'info' => "info",
 			'warning' => "warning",
-		);
-
-		// Set file upload temp dir
-		ini_set('upload_tmp_dir', $container->params['uploadDir']);
-		// Set session dir
-		ini_set('session.save_path', $container->expand("%tempDir%/sessions"));
-
-		// Init multilple file upload listener
-		Forms\Controls\MultipleFileUpload::register(
-			$container->httpRequest,
-			$container->params['uploadDir']
 		);
 
 		$this->onAfterLoadConfig[] = function(Container $container) {
@@ -103,8 +96,9 @@ class Configurator extends \Nette\Configurator
  	public function loadConfig($file, $section = NULL)
  	{
  		$this->onBeforeLoadConfig($this->getContainer());
- 		parent::loadConfig($file, $section);
+ 		$container = parent::loadConfig($file, $section);
 		$this->onAfterLoadConfig($this->getContainer());
+		return $container;
  	}
 	
 	/**
@@ -131,7 +125,7 @@ class Configurator extends \Nette\Configurator
 		$application = new $class($context);
 		$application->catchExceptions = $container->params['productionMode'];
 		if ($container->session->exists()) {
-		$application->onStartup[] = function() use ($container) {
+			$application->onStartup[] = function() use ($container) {
 				$container->session->start(); // opens already started session
 			};
 		}
