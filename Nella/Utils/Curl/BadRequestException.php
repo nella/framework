@@ -19,7 +19,7 @@ class BadRequestException extends \Nette\InvalidStateException
 	 * @param mixed
 	 * @param Response
 	 */
-	public function __costruct($message, $code, Response $response)
+	public function __construct($message, $code, Response $response)
 	{
 		parent::__construct($message, $code);
 		$this->response = $response;
