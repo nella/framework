@@ -360,17 +360,22 @@ class Request extends \Nette\Object
 	/**
 	 * @return void
 	 * @throws \Nette\InvalidStateException
+	 * @throws ConnectionException
 	 */
 	private function execute()
 	{
 		$response = curl_exec($this->resource);
-		$error = curl_error($this->resource) . " (#" . curl_errno($this->resource) . ")";
+		$errno = curl_errno($this->resource);
+		$error = curl_error($this->resource);
 		$info = curl_getinfo($this->resource);
 
 		if ($response) {
 			$this->response = new Response($response, $this);
 		} else {
-			throw new \Nette\InvalidStateException($error, $info['http_code']);
+			if ($errno == CURLE_COULDNT_CONNECT || $errno == CURLE_COULDNT_RESOLVE_HOST || $errno == CURLE_COULDNT_RESOLVE_PROXY) {
+				throw new ConnectionException($error, $errno);
+			}
+			throw new \Nette\InvalidStateException($error, $errno);
 		}
 	}
 
