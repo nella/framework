@@ -7,7 +7,7 @@
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
 
-namespace Nella\Panels;
+namespace Nella\Diagnostics;
 
 use Nette\Reflection\ClassType;
 
@@ -18,7 +18,7 @@ use Nette\Reflection\ClassType;
  *
  * @author		Patrik Votoček
  */
-class Version extends \Nella\FreezableObject implements \Nette\Diagnostics\IBarPanel
+class VersionBarPanel extends \Nella\FreezableObject implements \Nette\Diagnostics\IBarPanel
 {
 	/** @var array */
 	private $updates = array();
@@ -27,7 +27,16 @@ class Version extends \Nella\FreezableObject implements \Nette\Diagnostics\IBarP
 	/** @var \Nette\Caching\Cache|NULL */
 	private $cache;
 
-	const VERSION = "3.5";
+	const VERSION = "3.6";
+	
+	/**
+	 * @param \Nette\Caching\IStorage
+	 */
+	public function __construct(\Nette\Caching\IStorage $cacheStorage = NULL)
+	{
+		$this->cache = $cacheStorage
+			? new \Nette\Caching\Cache($cacheStorage, 'Nella.Panels.Versions') : NULL;
+	}
 
 	/**
 	 * Get rendered panel
@@ -46,7 +55,7 @@ class Version extends \Nella\FreezableObject implements \Nette\Diagnostics\IBarP
 		$this->freeze();
 		
 		ob_start();
-		require_once __DIR__ . "/Version.phtml";
+		require_once __DIR__ . "/templates/bar.version.panel.phtml";
 		return ob_get_clean();
 	}
 
@@ -213,26 +222,33 @@ class Version extends \Nella\FreezableObject implements \Nette\Diagnostics\IBarP
 		}
 
 		$this->updates = array();
-		if ($this->cache && $this->cache->load('updates')) {
-			$this->updates = $this->cache->load('updates');
+		if ($this->cache && ($updates = $this->cache->load('updates'))) {
+			if (isset($updates['check'])) {
+				return;
+			} else {
+				$this->updates = $updates;
+			}
 		} elseif (class_exists('Nella\Utils\Curl\Request') && !isset($cache['updates'])) {
-			$files = array();
+			$updates = $files = array();
 
 			foreach ($this->libs as $repo => $lib) {
 				$files[] = $lib['file'];
 				$data = $this->getLatestByGithub($repo, $lib['version'], $lib['revision']);
 				if ($data) {
-					$this->updates[$lib['name']] = $data;
+					$updates[$lib['name']] = $data;
 				}
+			}
+			
+			if (count($updates)) {
+				$this->updates = $updates;
+			} else {
+				$updates['check'] = time();
 			}
 
 			$files[] = __FILE__;
 			$files[] = __DIR__ . "/Version.phtml";
 			if ($this->cache) {
-				$this->cache->save('updates', $this->updates, array(
-					'expire' => time() + 60 * 60 * 2, 
-					'files' => $files, 
-				));
+				$this->cache->save('updates', $updates, array('expire' => "+2 hours", 'files' => $files));
 			}
 		}
 	}
@@ -247,6 +263,7 @@ class Version extends \Nella\FreezableObject implements \Nette\Diagnostics\IBarP
 	{
 		$res = new \Nella\Utils\Curl\Request($url);
 		$res->setUserAgent("Mozilla/5.0 (compatible; Nella\\Panels\\Version/".self::VERSION."; http://addons.nette.org/cs/versionpanel)");
+		$res->setOption('connecttimeout', 1);
 		$res->setOption('returntransfer', TRUE)->setOption('header', TRUE)->setOption('followlocation', TRUE)->setOption('ssl_verifypeer', FALSE);
 		$res->setHeader('HTTP_ACCEPT', "text/javascript,text/json,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8*/*;q=0.5");
 		$res->setHeader('HTTP_ACCEPT_CHARSET', "windows-1250,utf-8;q=0.7,*;q=0.7")->setHeader('HTTP_KEEP_ALIVE', "300");
@@ -268,7 +285,7 @@ class Version extends \Nella\FreezableObject implements \Nette\Diagnostics\IBarP
 
 	/**
 	 * Get latest version by GitHub API
-	 *
+	 *%repo%
 	 * @param string
 	 * @param string
 	 * @param string
@@ -283,8 +300,15 @@ class Version extends \Nella\FreezableObject implements \Nette\Diagnostics\IBarP
 			$dev = TRUE;
 			$version = substr($version, 0, strpos($version, "-dev"));
 		}
-		$tags = $this->getArrayResponse("http://github.com/api/v2/json/repos/show/$userId/$repo/tags");
-		if (empty($tags) || !array_key_exists('tags', $tags)) {
+		
+		try {
+			$tags = $this->getArrayResponse("http://github.com/api/v2/json/repos/show/$userId/$repo/tags");
+			if (empty($tags) || !array_key_exists('tags', $tags)) {
+				return;
+			}
+		} catch (\Nella\Utils\Curl\BadRequestException $e) {
+			return;
+		} catch (\Nella\Utils\Curl\ConnectionException $e) {
 			return;
 		}
 
@@ -375,14 +399,13 @@ class Version extends \Nella\FreezableObject implements \Nette\Diagnostics\IBarP
 		$this->libs[$id] = $lib;
 		return $this;
 	}
-
+	
 	/**
+	 * @param \Nette\Diagnostics\Bar
 	 * @param \Nette\Caching\IStorage
 	 */
-	public function __construct(\Nette\Caching\IStorage $cacheStorage = NULL)
+	public static function register(\Nette\Diagnostics\Bar $bar, \Nette\Caching\IStorage $cacheStorage = NULL)
 	{
-		$this->cache = $cacheStorage
-			? new \Nette\Caching\Cache($cacheStorage, 'Nella.Panels.Versions') : NULL;
-		\Nette\Diagnostics\Debugger::$bar->addPanel($this);
+		$bar->addPanel(new static($cacheStorage));
 	}
 }

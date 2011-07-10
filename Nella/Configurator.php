@@ -79,10 +79,11 @@ class Configurator extends \Nette\Configurator
 		$this->onAfterLoadConfig[] = function(Container $container) {
 			// Load panels
 			if (!$container->params['consoleMode'] && !$container->params['productionMode']) {
-				$container->callbackPanel;
-				$container->versionPanel;
+				$bar = \Nette\Diagnostics\Debugger::$bar;
+				\Nella\Diagnostics\CallbackBarPanel::register($bar, $container);
+				\Nella\Diagnostics\VersionBarPanel::register($bar, $container->cacheStorage);
+				$bar->addPanel($container->debugPanel);
 				$container->translatorPanel;
-				$container->debugPanel;
 				$container->userPanel;
 			}
 		};
@@ -253,24 +254,6 @@ class Configurator extends \Nette\Configurator
 		$classMetadataFactory->addParser(new Validator\MetadataParsers\DoctrineEntity($container->doctrineContainer));
 
 		return new Validator\Validator($classMetadataFactory);
-	}
-
-	/**
-	 * @param \Nette\DI\Container
-	 * @return Panels\Version
-	 */
-	public static function createServiceVersionPanel(Container $container)
-	{
-		return new Panels\Version($container->cacheStorage);
-	}
-
-	/**
-	 * @param \Nette\DI\Container
-	 * @return Panels\Callback
-	 */
-	public static function createServiceCallbackPanel(Container $container)
-	{
-		return new \Nella\Diagnostics\CallbackBarPanel($container);
 	}
 
 	/**
