@@ -12,9 +12,10 @@ namespace Nella\Media;
 /**
  * Image media entity
  *
- * @entity
+ * @entity(repositoryClass="Nella\Media\MediaRepository")
  * @table(name="media_images")
  * @service(class="Nella\Media\ImageService")
+ * @hasLifecycleCallbacks
  *
  * @inheritanceType("JOINED")
  * @discriminatorColumn(name="type", type="string")
@@ -70,5 +71,16 @@ class ImageEntity extends BaseFileEntity implements IImage
 
 		$mime = $this->getMimeType();
 		return isset($types[$mime]) ? $types[$mime] : "jpg";
+	}
+	
+	/**
+	 * @internal
+	 * @onFlush
+	 */
+	public function onFlush()
+	{
+		if (!$this->slug) {
+			$this->slug = $this->id;
+		}
 	}
 }

@@ -28,63 +28,69 @@ class ImageRoute extends \Nette\Application\Routers\Route
 	private $container;
 
 	/**
-	 * @param \Nella\Doctrine\Container
+	 * @param string
+	 * @return int
 	 */
-	public function setContainer(\Nella\Doctrine\Container $container)
+	protected function loadFormat($slug)
 	{
-		$this->container = $container;
+		$service = $this->container->getService('Nella\Media\FormatEntity');
+		return $service->repository->fetchIdBySlug($slug);
 	}
 
 	/**
-	 * @return \Nella\Models\Service
+	 * @param string
+	 * @return int
 	 */
-	protected function getFormatService()
+	protected function loadImage($slug)
 	{
-		return $this->container->getService('Nella\Media\FormatEntity');
-	}
-
-	/**
-	 * @return \Nella\Models\Service
-	 */
-	protected function getImageService()
-	{
-		return $this->container->getService('Nella\Media\ImageEntity');
-	}
-
-	/**
-	 * @param int
-	 * @return \Nella\Models\FormatEntity
-	 */
-	protected function getFormat($id)
-	{
-		return $this->getFormatService()->repository->find($id);
-	}
-
-	/**
-	 * @param int
-	 * @return \Nella\Models\ImageEntity
-	 */
-	protected function getImage($id)
-	{
-		return $this->getImageService()->repository->find($id);
+		$service = $this->container->getService('Nella\Media\ImageEntity');
+		return $service->repository->fetchIdBySlug($slug);
 	}
 
 	/**
 	 * @param string  URL mask, e.g. '<presenter>/<action>/<id \d{1,3}>'
 	 * @param array|string   default values or metadata
 	 * @param int     flags
+	 * @param \Nella\Doctrine\Container
 	 */
-	public function __construct($mask, $metadata = array(), $flags = 0)
+	public function __construct($mask, $metadata = array(), $flags = 0, \Nella\Doctrine\Container $container)
 	{
-		parent::$styles[static::FORMAT_KEY] = parent::$styles[static::IMAGE_KEY] = array(
-			'pattern'	=> '[0-9]+',
-			static::FILTER_IN => 'rawurldecode',
-			static::FILTER_OUT => 'rawurlencode',
+		$this->container = $container;
+		
+		// String to array conversion
+		if (is_string($metadata)) {
+			$a = strrpos($metadata, ':');
+			if (!$a) {
+				throw new Nette\InvalidArgumentException("Second argument must be array or string in format Presenter:action, '$metadata' given.");
+			}
+			$metadata = array(
+				static::PRESENTER_KEY => substr($metadata, 0, $a),
+				'action' => $a === strlen($metadata) - 1 ? \Nette\Application\UI\Presenter::DEFAULT_ACTION : substr($metadata, $a + 1),
+			);
+		}
+		
+		$metadata[static::IMAGE_KEY] = array(
+			static::VALUE => isset($metadata[static::IMAGE_KEY]) && is_string($metadata[static::IMAGE_KEY])
+				? $metadata[static::IMAGE_KEY] : NULL, 
+			static::FILTER_IN => 'rawurldecode', 
+			static::FILTER_OUT => 'rawurlencode', 
+			static::PATTERN => '[0-9a-z-]+', 
 		);
-		parent::$styles[static::TYPE_KEY] = array(
-			'pattern'	=> '(jpg|png|gif)',
-			static::FILTER_IN => 'rawurldecode',
-			static::FILTER_OUT => 'rawurlencode',
+		
+		$metadata[static::FORMAT_KEY] = array(
+			static::VALUE => isset($metadata[static::FORMAT_KEY]) && is_string($metadata[static::FORMAT_KEY])
+				? $metadata[static::FORMAT_KEY] : NULL, 
+			static::FILTER_IN => 'rawurldecode', 
+			static::FILTER_OUT => 'rawurlencode', 
+			static::PATTERN => '[0-9a-z-]+', 
+		);
+		
+		$metadata[static::TYPE_KEY] = array(
+			static::VALUE => isset($metadata[static::TYPE_KEY]) && is_string($metadata[static::TYPE_KEY])
+				? $metadata[static::TYPE_KEY] : NULL, 
+			static::FILTER_IN => 'rawurldecode', 
+			static::FILTER_OUT => 'rawurlencode', 
+			static::PATTERN => '(jpg|png|gif)', 
 		);
 
 		parent::__construct($mask, $metadata, $flags);
@@ -107,22 +113,21 @@ class ImageRoute extends \Nette\Application\Routers\Route
 			throw new \Nette\InvalidStateException('Missing format in route definition.');
 		}
 		if (!isset($params[static::IMAGE_KEY])) {
-			throw new \Nette\InvalidStateException('Missing id in route definition.');
+			throw new \Nette\InvalidStateException('Missing image in route definition.');
+		}
+		if (!isset($params[static::TYPE_KEY])) {
+			throw new \Nette\InvalidStateException('Missing type in route definition.');
 		}
 
 		// Find image
-		$image = $this->getImage($params[static::IMAGE_KEY]);
-		if (!$image) {
-			return NULL;
-		}
-		$params[static::IMAGE_KEY] = $image;
-
+		$params[static::IMAGE_KEY] = $this->loadImage($params[static::IMAGE_KEY]);
 		// Find format
-		$format = $this->getFormat($params[static::FORMAT_KEY]);
-		if (!$format) {
+		$params[static::FORMAT_KEY] = $this->loadFormat($params[static::FORMAT_KEY]);
+		
+		// Invalid format / image
+		if (!$params[static::FORMAT_KEY] || !$params[static::IMAGE_KEY]) {
 			return NULL;
 		}
-		$params[static::FORMAT_KEY] = $format;
 
 		// Set path parameter
 		$params[static::PATH_PARAMETER] = $httpRequest->url->path;

@@ -126,7 +126,10 @@ class Container extends \Nella\Models\Container
 		}
 		if (!$context->hasService('mediaListener')) {
 			$context->addService('mediaListener', function(DI\Container $context) {
-				return new \Nella\Media\Listener($context->cacheStorage);
+				return new \Nella\Media\Listener(
+					$context->expand($context->params['storageDir'] . "/files"), 
+					$context->expand($context->params['storageDir'] . "/images")
+				);
 			}, array('listener'));
 		}
 

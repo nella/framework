@@ -14,8 +14,12 @@ namespace Nella\Media;
  *
  * @author	Patrik Votoček
  */
-class Listener extends \Nette\FreezableObject implements \Doctrine\Common\EventSubscriber
+class Listener extends \Nette\Object implements \Doctrine\Common\EventSubscriber
 {
+	/** @var string */
+	private $fileStorageDir;
+	/** @var string */
+	private $imageStorageDir;
 	/** @var array */
 	private $imageMetadatas = array();
 	/** @var array */
@@ -24,15 +28,15 @@ class Listener extends \Nette\FreezableObject implements \Doctrine\Common\EventS
 	private $imageMap = array();
 	/** @var array */
 	private $fileMap = array();
-	/** @var \Nette\Caching\Cache */
-	private $cache;
-
+	
 	/**
-	 * @param \Nette\Caching\IStorage
+	 * @param string
+	 * @param string
 	 */
-	public function __construct(\Nette\Caching\IStorage $cacheStorage)
+	public function __construct($fileStorageDir, $imageStorageDir)
 	{
-		$this->cache = new \Nette\Caching\Cache($cacheStorage, 'Nella.Media');
+		$this->fileStorageDir = $fileStorageDir;
+		$this->imageStorageDir = $imageStorageDir;
 	}
 
 	/**
@@ -41,7 +45,8 @@ class Listener extends \Nette\FreezableObject implements \Doctrine\Common\EventS
 	public function getSubscribedEvents()
     {
         return array(
-        	\Doctrine\ORM\Events::loadClassMetadata,
+        	\Doctrine\ORM\Events::loadClassMetadata, 
+			\Doctrine\ORM\Events::postLoad, 
         );
     }
 
@@ -50,19 +55,20 @@ class Listener extends \Nette\FreezableObject implements \Doctrine\Common\EventS
      */
     public function loadClassMetadata(\Doctrine\ORM\Event\LoadClassMetadataEventArgs $args)
     {
-    	$this->freeze();
     	$this->updateDiscriminator($args->getClassMetadata(), $args->getEntityManager());
     }
-
-    /**
-	 * This event method is intended to be used when the class metadata are changed in runtime
-	 * @param \Doctrine\ORM\Event\LifecycleEventArgs $args
+	
+	/**
+	 * @param \Doctrine\ORM\Event\LifecycleEventArgs
 	 */
-	public function prePersist(\Doctrine\ORM\Event\LifecycleEventArgs $args)
+	public function postLoad(\Doctrine\ORM\Event\LifecycleEventArgs $args)
 	{
-		$this->freeze();
-		$metadata = $args->getEntityManager()->getClassMetadata(get_class($args->getEntity()));
-		$this->updateDiscriminator($metadata, $args->getEntityManager());
+		$entity = $args->getEntity();
+		if ($entity instanceof \Nella\Media\ImageEntity) {
+			$entity->setStorageDir($this->imageStorageDir);
+		} elseif ($entity instanceof \Nella\Media\FileEntity) {
+			$entity->setStorageDir($this->fileStorageDir);
+		}
 	}
 
 	/**

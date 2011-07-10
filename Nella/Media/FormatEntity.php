@@ -12,7 +12,7 @@ namespace Nella\Media;
 /**
  * Media image format entity
  *
- * @entity
+ * @entity(repositoryClass="Nella\Media\MediaRepository")
  * @table(name="media_formats")
  * @hasLifecycleCallbacks
  *

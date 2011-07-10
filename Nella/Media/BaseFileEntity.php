@@ -36,11 +36,24 @@ abstract class BaseFileEntity extends \Nella\Doctrine\Entity implements IFile
 	 * @var string
 	 */
 	private $path;
+	/** @var string */
+	private $storageDir;
 
 	public function __construct()
 	{
 		parent::__construct();
 		$this->uploaded = new \DateTime;
+	}
+	
+	/**
+	 * @internal
+	 * @param string
+	 * @return BaseFileEntity
+	 */
+	public function setStorageDir($storageDir)
+	{
+		$this->storageDir = $storageDir;
+		return $this;
 	}
 
 	/**
@@ -49,11 +62,7 @@ abstract class BaseFileEntity extends \Nella\Doctrine\Entity implements IFile
 	 */
 	protected function getStorageDir()
 	{
-		if ($this instanceof FileEntity) {
-			return \Nette\Environment::getContext()->expand(FileService::STORAGE_DIR);
-		} else {
-			return \Nette\Environment::getContext()->expand(ImageService::STORAGE_DIR);
-		}
+		return $this->storageDir;
 	}
 
 	/**
