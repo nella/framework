@@ -21,6 +21,7 @@ namespace Nella\Security;
  *
  * @property RoleEntity $role
  * @property string $lang
+ * @property string $displayName
  */
 class IdentityEntity extends \Nette\Object implements \Nella\Models\IEntity, \Nette\Security\IIdentity, \Serializable
 {
@@ -42,6 +43,11 @@ class IdentityEntity extends \Nette\Object implements \Nella\Models\IEntity, \Ne
 	 * @var string
 	 */
 	private $lang;
+	/**
+	 * @column
+	 * @var string
+	 */
+	private $displayName;
 	/**
 	 * @internal
 	 * @var bool
@@ -103,6 +109,24 @@ class IdentityEntity extends \Nette\Object implements \Nella\Models\IEntity, \Ne
 	public function setLang($lang)
 	{
 		$this->lang = $this->sanitizeString($lang);
+		return $this;
+	}
+	
+	/**
+	 * @return string
+	 */
+	public function getDisplayName()
+	{
+		return $this->displayName;
+	}
+	
+	/**
+	 * @param string
+	 * @return IdentityEntity
+	 */
+	public function setDisplayName($displayName)
+	{
+		$this->displayName = $this->sanitizeString($displayName);
 		return $this;
 	}
 

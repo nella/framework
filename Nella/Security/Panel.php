@@ -37,15 +37,10 @@ class Panel extends \Nette\Object implements \Nette\Diagnostics\IBarPanel
 	 */
 	private function getUsername()
 	{
-		$username = 'guest';
 		if ($this->identity) {
-			$service = $this->container->getService('Nella\Security\CredentialsEntity');
-			$credentials = $service->repository->findOneByIdentity($this->identity->id);
-			if ($credentials) {
-				$username = $credentials->username;
-			}
+			return $this->identity->displayName;
 		}
-		return $username;
+		return 'not authenticated';
 	}
 
 	/**

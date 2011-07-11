@@ -26,6 +26,7 @@ class CredentialsService extends \Nella\Doctrine\Service
 	{
 		try {
 			$identityService = $this->getContainer()->getService('Nella\Security\IdentityEntity');
+			$values['displayName'] = $values['username'];
 			$values['identity'] = $identityService->create($values, TRUE);
 
 			$entity = parent::create($values, TRUE);
