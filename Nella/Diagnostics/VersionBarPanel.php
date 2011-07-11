@@ -109,7 +109,7 @@ class VersionBarPanel extends \Nella\FreezableObject implements \Nette\Diagnosti
 
 		// dibi
 		if (class_exists('dibi')) {
-			$libs['nette:dibi'] = array(
+			$libs['dg:dibi'] = array(
 				'name' => "dibi",
 				'version' => \dibi::VERSION,
 				'revision' => \dibi::REVISION,
