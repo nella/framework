@@ -229,7 +229,7 @@ class Form extends \Nette\Application\UI\Form
 	 * @param array
 	 * @throws \Nette\InvalidStateException
 	 */
-	protected function processErrors(array $errors)
+	public function processErrors(array $errors)
 	{
 		foreach ($errors as $name => $messages) {
 			if (!isset($this[$name])) {
