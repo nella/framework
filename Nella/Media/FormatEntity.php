@@ -60,7 +60,7 @@ class FormatEntity extends \Nella\Doctrine\Entity implements IFormat
 	 */
 	private $watermarkPosition;
 	/**
-	 * @column(unique=true)
+	 * @column(unique=true, nullable=true)
 	 * @var string
 	 */
 	private $slug;
@@ -196,17 +196,6 @@ class FormatEntity extends \Nella\Doctrine\Entity implements IFormat
 	{
 		$this->slug = $this->sanitizeString($slug);
 		return $this;
-	}
-	
-	/**
-	 * @internal
-	 * @onFlush
-	 */
-	public function onFlush()
-	{
-		if (!$this->slug) {
-			$this->slug = $this->id;
-		}
 	}
 
 	/**

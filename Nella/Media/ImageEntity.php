@@ -26,7 +26,7 @@ namespace Nella\Media;
 class ImageEntity extends BaseFileEntity implements IImage
 {
 	/**
-	 * @column
+	 * @column(unique=true, nullable=true)
 	 * @var sting
 	 */
 	private $slug;

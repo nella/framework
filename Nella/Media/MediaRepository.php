@@ -26,7 +26,16 @@ class MediaRepository extends \Nella\Doctrine\Repository
 			return $this->createQueryBuilder('r')->where("r.slug = :slug")->setParameter('slug', $slug)
 				->getQuery()->getSingleScalarResult();
 		} catch (\Doctrine\ORM\NoResultException $e) {
-			return NULL;
+			if (!(bool) \Nette\Utils\Strings::match($input, '/^-?[0-9]+$/')) { // if numeric use fallback
+				return NULL;
+			}
+			
+			try { // fallback for NULLable slug - use ID
+				return $this->createQueryBuilder('r')->where("r.id = :id")->setParameter('id', $slug)
+				->getQuery()->getSingleScalarResult();
+			} catch (\Doctrine\ORM\NoResultException $e) {
+				return NULL;
+			}
 		}
 	}
 }
