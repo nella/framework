@@ -42,7 +42,7 @@ class EntityForm extends Form
 				if (method_exists($entity, $method)) {
 					if ($component instanceof \Nette\Forms\Controls\Selectbox) {
 						$value = $entity->$method();
-						$arr[$name] = $value ? $value->getId() : NULL;
+						$arr[$name] = $value ? (is_string($value) ? $value : $value->getId()) : NULL;
 					} else {
 						$arr[$name] = $entity->$method();
 					}
