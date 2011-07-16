@@ -17,4 +17,26 @@ namespace Nella\Media;
 class FileService extends Service
 {
 	const STORAGE_DIR = "%storageDir%/files";
+	
+	/**
+	 * @param array|\Traversable|\Nette\Http\FileUpload
+	 * @param bool
+	 * @return FileEntity
+	 * @throws \Nette\InvalidArgumentException
+	 * @throws \Nella\Models\Exception
+	 * @throws \Nella\Models\EmptyValueException
+	 * @throws \Nella\Models\DuplicateEntryException
+	 */
+	public function create($values, $withoutFlush = FALSE)
+	{
+		try {
+			if (!$values instanceof \Nette\Http\FileUpload && isset($values['file']) && $values['file'] instanceof \Nette\Http\FileUpload) {
+				return $this->createFromUpload($values['file']);
+			}
+			
+			return parent::create($values, $withoutFlush);
+		} catch (\PDOException $e) {
+			$this->processPDOException($e);
+		}
+	}
 }

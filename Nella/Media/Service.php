@@ -9,6 +9,8 @@
 
 namespace Nella\Media;
 
+use Nette\Utils\Strings;
+
 /**
  * Base media service
  *
@@ -24,11 +26,26 @@ abstract class Service extends \Nella\Doctrine\Service
 	public function generatePath(\Nette\Http\FileUpload $upload, $path = "")
 	{
 		$ext = pathinfo($upload->getName(), PATHINFO_EXTENSION);
-		$path .= "/" . time() . "_" . \Nette\Utils\Strings::random() . "." . $ext;
+		$path .= "/" . time() . "_" . Strings::random() . "." . $ext;
 		return $path;
+	}
+	
+	/**
+	 * @param \Nette\Http\FileUpload
+	 * @param bool
+	 * @return BaseFileEntity
+	 */
+	protected function createFromUpload(\Nette\Http\FileUpload $upload, $withoutFlush = FALSE)
+	{
+		$path = $this->generatePath($upload);
+		$slug = pathinfo($path, PATHINFO_BASENAME) . '_' . Strings::webalize(pathinfo($upload->name, PATHINFO_BASENAME));
+		$entity = $this->create(array('path' => $path, 'slug' => $slug), $withoutFlush);
+		$upload->move($entity->getPath(TRUE));
+		return $entity;
 	}
 
 	/**
+	 * @deprecated
 	 * @param array|\Traversable
 	 * @param bool
 	 * @return \Nella\Models\IEntity
@@ -48,7 +65,7 @@ abstract class Service extends \Nella\Doctrine\Service
 			if (!$item instanceof \Nette\Http\FileUpload) {
 				throw new \Nette\InvalidStateException("Collection must be collection of Nette\\Http\\FileUpload");
 			}
-			$list[] = array($this->create(array('path' => $this->generatePath($item)), TRUE), $item);
+			$list[] = $this->createFromUpload($item, FALSE);
 		}
 
 		try {
@@ -56,14 +73,29 @@ abstract class Service extends \Nella\Doctrine\Service
 				$this->getEntityManager()->flush();
 			}
 
-			$dir = $this->getContainer()->expand(static::STORAGE_DIR);
-
-			$collection = array();
-			foreach ($list as $item) {
-				$collection[] = $item[1]->move($dir . "/" . $item[0]->getPath());
+			return $list;
+		} catch (\PDOException $e) {
+			$this->processPDOException($e);
+		}
+	}
+	
+	/**
+	 * @param array|\Traversable|\Nette\Http\FileUpload
+	 * @param bool
+	 * @return BaseFileEntity
+	 * @throws \Nette\InvalidArgumentException
+	 * @throws \Nella\Models\Exception
+	 * @throws \Nella\Models\EmptyValueException
+	 * @throws \Nella\Models\DuplicateEntryException
+	 */
+	public function create($values, $withoutFlush = FALSE)
+	{
+		try {
+			if ($values instanceof \Nette\Http\FileUpload) {
+				return $this->createFromUpload($values, $withoutFlush);
 			}
-
-			return $collection;
+			
+			return parent::create($values, $withoutFlush);
 		} catch (\PDOException $e) {
 			$this->processPDOException($e);
 		}
@@ -79,11 +111,8 @@ abstract class Service extends \Nella\Doctrine\Service
 	 */
 	public function delete(\Nella\Models\IEntity $entity)
 	{
-		$class = get_class($entity);
-		if ($class == 'Nella\Media\FileEntity' || $class == 'Nella\Media\ImageEntity') {
-			$path = $this->getContainer()->expand(static::STORAGE_DIR);
-			$path .= "/" . $entity->path;
-			@unlink($path);
+		if ($entity instanceof BaseFileEntity) {
+			@unlink($entity->getPath(TRUE));
 
 			return parent::delete($entity);
 		} else {

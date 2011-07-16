@@ -17,7 +17,29 @@ namespace Nella\Media;
 class ImageService extends Service
 {
 	const STORAGE_DIR = "%storageDir%/images";
-	const CACHE_DIR = "%imageCacheDir%";
+	const CACHE_DIR = "%imageCache%";
+	
+	/**
+	 * @param array|\Traversable|\Nette\Http\FileUpload
+	 * @param bool
+	 * @return ImageEntity
+	 * @throws \Nette\InvalidArgumentException
+	 * @throws \Nella\Models\Exception
+	 * @throws \Nella\Models\EmptyValueException
+	 * @throws \Nella\Models\DuplicateEntryException
+	 */
+	public function create($values, $withoutFlush = FALSE)
+	{
+		try {
+			if (!$values instanceof \Nette\Http\FileUpload && isset($values['image']) && $values['image'] instanceof \Nette\Http\FileUpload) {
+				return $this->createFromUpload($values['file']);
+			}
+			
+			return parent::create($values, $withoutFlush);
+		} catch (\PDOException $e) {
+			$this->processPDOException($e);
+		}
+	}
 
 	/**
 	 * @param \Nella\Models\IEntity
@@ -31,6 +53,15 @@ class ImageService extends Service
 			if (file_exists($path)) {
 				$id = $entity->id;
 				$files = \Nette\Utils\Finder::findFiles($id . ".jpg", $id . ".png", $id . ".gif")->from($path);
+
+				foreach($files as $file) {
+					if (file_exists($file->getRealPath())) {
+						@unlink($file->getRealPath());
+					}
+				}
+				
+				$slug = $entity->slug;
+				$files = \Nette\Utils\Finder::findFiles($slug . ".jpg", $slug . ".png", $slug . ".gif")->from($path);
 
 				foreach($files as $file) {
 					if (file_exists($file->getRealPath())) {
