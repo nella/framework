@@ -76,9 +76,9 @@ abstract class BaseFileEntity extends \Nella\Doctrine\Entity implements IFile
 	/**
 	 * @return string
 	 */
-	public function getPath()
+	public function getPath($full = FALSE)
 	{
-		return $this->path;
+		return $full ? ($this->getStorageDir() . "/" . $this->path) : $this->path;
 	}
 
 	/**
