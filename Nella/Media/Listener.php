@@ -46,6 +46,7 @@ class Listener extends \Nette\Object implements \Doctrine\Common\EventSubscriber
     {
         return array(
         	\Doctrine\ORM\Events::loadClassMetadata, 
+			\Doctrine\ORM\Events::prePersist, 
 			\Doctrine\ORM\Events::postLoad, 
         );
     }
@@ -59,16 +60,31 @@ class Listener extends \Nette\Object implements \Doctrine\Common\EventSubscriber
     }
 	
 	/**
-	 * @param \Doctrine\ORM\Event\LifecycleEventArgs
+	 * @param BaseFileEntity
 	 */
-	public function postLoad(\Doctrine\ORM\Event\LifecycleEventArgs $args)
+	protected function updateStorageDir($entity)
 	{
-		$entity = $args->getEntity();
 		if ($entity instanceof \Nella\Media\ImageEntity) {
 			$entity->setStorageDir($this->imageStorageDir);
 		} elseif ($entity instanceof \Nella\Media\FileEntity) {
 			$entity->setStorageDir($this->fileStorageDir);
 		}
+	}
+	
+	/**
+	 * @param \Doctrine\ORM\Event\LifecycleEventArgs
+	 */
+	public function prePersist(\Doctrine\ORM\Event\LifecycleEventArgs $args)
+	{
+		$this->updateStorageDir($args->getEntity());
+	}
+	
+	/**
+	 * @param \Doctrine\ORM\Event\LifecycleEventArgs
+	 */
+	public function postLoad(\Doctrine\ORM\Event\LifecycleEventArgs $args)
+	{
+		$this->updateStorageDir($args->getEntity());
 	}
 
 	/**
