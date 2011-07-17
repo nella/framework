@@ -60,13 +60,14 @@ class Service extends \Nella\Models\Service implements \Nella\Models\IService
 
 		foreach ($values as $key => $value) {
 			$method = 'set' . ucfirst($key);
-			if (method_exists($entity, 'get' . ucfirst($key)) && (is_array($value) || $value instanceof \Traversable)) {
+			
+			if (method_exists($entity, $method)) {
+				$entity->$method($value);
+			} elseif (method_exists($entity, $method = 'get' . ucfirst($key)) && (is_array($value) || $value instanceof \Traversable)) {
 				$entity->$method()->clear();
 				foreach ($value as $item) {
 					$entity->$method()->add($item);
 				}
-			} elseif (method_exists($entity, $method)) {
-				$entity->$method($value);
 			}
 		}
 	}
