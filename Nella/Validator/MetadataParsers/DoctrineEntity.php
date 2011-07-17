@@ -37,7 +37,6 @@ class DoctrineEntity extends \Nette\Object implements \Nella\Validator\IMetadata
 			 && ($ref->hasAnnotation('entity') || $ref->hasAnnotation('mappedSuperClass'))) {
 			$emeta = $this->container->getEntityManager()->getClassMetadata($ref->getName());
 			foreach ($emeta->fieldMappings as $field) {
-				barDump($field, $ref->getName() . "::\$$" . $field['fieldName']);
 				if (isset($field['declared']) && $field['declared'] != $ref->getName()) {
 					continue;
 				}
