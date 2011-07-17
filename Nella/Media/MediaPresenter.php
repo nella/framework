@@ -56,14 +56,15 @@ class MediaPresenter extends \Nella\Application\UI\MicroPresenter
 	 * @param string
 	 * @param int
 	 */
-	public function actionImage(IImage $image, IFormat $format, $path, $type = NULL)
+	public function actionImage($image, $format, $path, $type = NULL)
 	{
-		if ($format) {
-			$image = $format->process($image);
-		} else {
-			$image = $image->toImage();
-		}
+		$service = $this->getContext()->doctrineContainer->getService('Nella\Media\ImageEntity');
+		$image = $service->repository->find($image);
 		
+		$service = $this->getContext()->doctrineContainer->getService('Nella\Media\FormatEntity');
+		$format = $service->repository->find($format);
+			
+		$image = $format->process($image);
 		$context = $this->getContext();
 
 		$path = $context->expand($context->params['wwwDir']) . $path;

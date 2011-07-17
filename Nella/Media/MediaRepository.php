@@ -23,7 +23,7 @@ class MediaRepository extends \Nella\Doctrine\Repository
 	public function fetchIdBySlug($slug)
 	{
 		try {
-			return $this->createQueryBuilder('r')->where("r.slug = :slug")->setParameter('slug', $slug)
+			return $this->createQueryBuilder('r')->select("r.id")->where("r.slug = :slug")->setParameter('slug', $slug)
 				->getQuery()->getSingleScalarResult();
 		} catch (\Doctrine\ORM\NoResultException $e) {
 			if (!(bool) \Nette\Utils\Strings::match($slug, '/^-?[0-9]+$/')) { // if numeric use fallback
@@ -31,8 +31,8 @@ class MediaRepository extends \Nella\Doctrine\Repository
 			}
 			
 			try { // fallback for NULLable slug - use ID
-				return $this->createQueryBuilder('r')->where("r.id = :id")->setParameter('id', $slug)
-				->getQuery()->getSingleScalarResult();
+				return (bool) $this->createQueryBuilder('r')->select("count(r)")->where("r.id = :id")->setParameter('id', $slug)
+				->getQuery()->getSingleScalarResult() ?  $slug : NULL;
 			} catch (\Doctrine\ORM\NoResultException $e) {
 				return NULL;
 			}
