@@ -200,13 +200,14 @@ class FormatEntity extends \Nella\Doctrine\Entity implements IFormat
 
 	/**
 	 * @param IImage
-	 * @return \Nella\Image
+	 * @return \Nette\Image
 	 */
 	public function process(IImage $image)
 	{
 		$image = $image->toImage();
 		if ($this->crop) {
-			$image->resizeAndCrop($this->width, $this->height);
+			$image->resize($this->width, $this->height, \Nette\Image::FILL | \Nette\Image::ENLARGE)
+				->crop('50%', '50%', $this->width, $this->height);
 		} else {
 			$image->resize($this->width, $this->height);
 		}

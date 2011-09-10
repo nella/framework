@@ -17,7 +17,7 @@ namespace Nella\Media;
 interface IImage extends IFile
 {
 	/**
-	 * @return \Nella\Imgage
+	 * @return \Nette\Imgage
 	 */
 	public function toImage();
 }

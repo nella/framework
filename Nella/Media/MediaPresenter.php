@@ -77,6 +77,17 @@ class MediaPresenter extends \Nella\Application\UI\MicroPresenter
 		if (!$type) {
 			$image->send();
 		} else {
+			switch ($type) {
+				case 'gif':
+					$type = \Nette\Image::GIF;
+					break;
+				case 'png':
+					$type = \Nette\Image::PNG;
+					break;
+				default:
+					$type = \Nette\Image::JPEG;
+					break;
+			}
 			$image->send($type);
 		}
 
