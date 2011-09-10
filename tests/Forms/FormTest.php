@@ -9,8 +9,6 @@
 
 namespace NellaTests\Form;
 
-require_once __DIR__ . "/../bootstrap.php";
-
 use Nella\Forms\Form,
 	Nette\Forms\Rule;
 

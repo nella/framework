@@ -9,8 +9,6 @@
 
 namespace NellaTests\Utils\Curl;
 
-require_once __DIR__ . "/../../bootstrap.php";
-
 class ResponseTest extends \Nella\Testing\TestCase
 {
 	/** @var Nella\Utils\Curl\Response */

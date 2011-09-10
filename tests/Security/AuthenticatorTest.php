@@ -9,8 +9,6 @@
 
 namespace NellaTests\Security;
 
-require_once __DIR__ . "/../bootstrap.php";
-
 class AuthenticatorTest extends \Nella\Testing\TestCase
 {
 	public function testAuthenticate()

@@ -9,8 +9,6 @@
 
 namespace NellaTests\Security;
 
-require_once __DIR__ . "/../bootstrap.php";
-
 class CredentialsEntityTest extends \Nella\Testing\TestCase
 {
 	/** @var \Nella\Security\CredentialsEntity */

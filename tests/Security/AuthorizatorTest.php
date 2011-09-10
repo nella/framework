@@ -9,8 +9,6 @@
 
 namespace NellaTests\Security;
 
-require_once __DIR__ . "/../bootstrap.php";
-
 use Nella\Security\Authorizator;
 
 class AuthorizatorTest extends \Nella\Testing\TestCase

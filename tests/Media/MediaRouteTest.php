@@ -9,8 +9,6 @@
 
 namespace NellaTests;
 
-require_once __DIR__ . "/../bootstrap.php";
-
 class MediaRouteTest extends \Nella\Testing\TestCase
 {
 	/**

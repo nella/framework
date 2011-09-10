@@ -9,8 +9,6 @@
 
 namespace NellaTests\Doctrine;
 
-require_once __DIR__ . "/../bootstrap.php";
-
 class CacheTest extends \Nella\Testing\TestCase
 {
 	/** @var \Nella\Doctine\Cache */

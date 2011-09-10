@@ -9,8 +9,6 @@
 
 namespace NellaTests\Application\UI;
 
-require_once __DIR__ . "/../../bootstrap.php";
-
 class ControlTest extends \Nella\Testing\TestCase
 {
 	/** @var Control\ControlMock */

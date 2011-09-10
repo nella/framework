@@ -9,8 +9,6 @@
 
 namespace NellaTests\Doctrine\Listeners;
 
-require_once __DIR__ . "/../../bootstrap.php";
-
 class VersionableTest extends \Nella\Testing\TestCase
 {
 	/** @var Nella\Doctrine\Listeners\Versionable */

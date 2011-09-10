@@ -9,8 +9,6 @@
 
 namespace NellaTests\Forms\Controls;
 
-require_once __DIR__ . "/../../bootstrap.php";
-
 class TimeTest extends \Nella\Testing\TestCase
 {
 	/** @var \Nella\Forms\Controls\Time */

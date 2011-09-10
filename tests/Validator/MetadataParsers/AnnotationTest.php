@@ -9,8 +9,6 @@
 
 namespace NellaTests\Validator\MetadataParsers;
 
-require_once __DIR__ . "/../../bootstrap.php";
-
 class AnnotationTest extends \Nella\Testing\TestCase
 {
 	/** @var \Nella\Validator\MetadataParsers\Annotation */

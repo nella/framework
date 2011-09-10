@@ -9,8 +9,6 @@
 
 namespace NellaTests\Application\UI;
 
-require_once __DIR__ . "/../../bootstrap.php";
-
 use Nette\Reflection\ClassType;
 
 class BackendPresenterTest extends \Nella\Testing\TestCase

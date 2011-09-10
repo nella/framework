@@ -9,8 +9,6 @@
 
 namespace NellaTests\DI;
 
-require_once __DIR__ . "/../bootstrap.php";
-
 class ContainerHelperTest extends \Nella\Testing\TestCase
 {
 	/** @var \Nella\DI\ContainerHelper */

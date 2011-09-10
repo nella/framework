@@ -11,8 +11,6 @@ namespace NellaTests\Localization;
 
 use Nella\Localization\Dictionary;
 
-require_once __DIR__ . "/../bootstrap.php";
-
 class DictionaryTest extends \Nella\Testing\TestCase
 {
 	/** @var \Nella\Localization\Dictionary */

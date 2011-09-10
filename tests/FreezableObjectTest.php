@@ -11,8 +11,6 @@ namespace NellaTests;
 
 use Nella\Image;
 
-require_once __DIR__ . "/bootstrap.php";
-
 class FreezableObjectTest extends \Nella\Testing\TestCase
 {
 	/** @var FreezableObjectMock */

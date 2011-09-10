@@ -9,7 +9,6 @@
 
 namespace NellaTests\Doctrine;
 
-require_once __DIR__ . "/../bootstrap.php";
 require_once __DIR__ . "/../Mocks/EntityManagerMock.php";
 
 class EntityManagerHelperTest extends \Nella\Testing\TestCase

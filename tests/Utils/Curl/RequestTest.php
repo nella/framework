@@ -12,8 +12,6 @@ namespace NellaTests\Utils\Curl;
 use Nella\Framework,
 	Nella\Utils\Curl\Request;
 
-require_once __DIR__ . "/../../bootstrap.php";
-
 /**
  * Test: Nella cUrl wrapper
  *

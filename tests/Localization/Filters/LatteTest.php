@@ -11,8 +11,6 @@ namespace NellaTests\Localization\Filters;
 
 use Nella\Localization\Dictionary;
 
-require_once __DIR__ . "/../../bootstrap.php";
-
 class LatteTest extends \Nella\Testing\TestCase
 {
 

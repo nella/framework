@@ -9,8 +9,6 @@
 
 namespace NellaTests\Models;
 
-require_once __DIR__ . "/../bootstrap.php";
-
 class ServiceTest extends \Nella\Testing\TestCase
 {
 	/** @var \Nella\Models\Service */

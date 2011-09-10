@@ -11,7 +11,6 @@ namespace NellaTests\Doctrine;
 
 use Nella\Doctrine\Service;
 
-require_once __DIR__ . "/../bootstrap.php";
 require_once __DIR__ . "/../Mocks/EntityManagerMock.php";
 
 class ServiceTest extends \Nella\Testing\TestCase

@@ -9,8 +9,6 @@
 
 namespace NellaTests\Validator;
 
-require_once __DIR__ . "/../bootstrap.php";
-
 class ClassMetadataTest extends \Nella\Testing\TestCase
 {
 	/** @var \Nella\Validator\ClassMetadata */

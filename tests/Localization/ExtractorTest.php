@@ -9,8 +9,6 @@
 
 namespace NellaTests\Localization;
 
-require_once __DIR__ . "/../bootstrap.php";
-
 class ExtractorTest extends \Nella\Testing\TestCase
 {
 

@@ -9,8 +9,6 @@
 
 namespace NellaTests\Utils\LoggerStorages;
 
-require_once __DIR__ . "/../../bootstrap.php";
-
 use Nella\Utils\LoggerStorages\FileStorage;
 
 class FileStorageTest extends \Nella\Testing\TestCase

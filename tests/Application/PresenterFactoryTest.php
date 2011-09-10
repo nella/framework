@@ -9,8 +9,6 @@
 
 namespace NellaTests\Application;
 
-require_once __DIR__ . "/../bootstrap.php";
-
 class PresenterFactoryTest extends \Nella\Testing\TestCase
 {
 	/** @var \Nella\Application\PresenterFactory */

@@ -11,8 +11,6 @@ namespace NellaTests\Localization\Storages;
 
 use Nella\Localization\Dictionary;
 
-require_once __DIR__ . "/../../bootstrap.php";
-
 class GettextTest extends \Nella\Testing\TestCase
 {
 	/** @var \Nella\Localization\Storages\Gettext */
