@@ -26,7 +26,7 @@ final class SplClassLoader extends \Nette\Loaders\AutoLoader
 	/**
 	 * @param array
 	 */
-	protected function __construct(array $map = array('Nella' => NELLA_FRAMEWORK_DIR))
+	protected function __construct(array $map = array('Nella' => __DIR__))
 	{
 		$this->map = $map;
 	}
@@ -35,7 +35,7 @@ final class SplClassLoader extends \Nette\Loaders\AutoLoader
 	 * @param string
 	 * @param string
 	 */
-	public function addAlias($namespace, $dir)
+	public function addNamespaceAlias($namespace, $dir)
 	{
 		$this->map[$namespace] = $dir;
 		return $this;
@@ -46,7 +46,7 @@ final class SplClassLoader extends \Nette\Loaders\AutoLoader
 	 * @param array
 	 * @return SplClassLoader
 	 */
-	public static function getInstance(array $map = array('Nella' => NELLA_FRAMEWORK_DIR))
+	public static function getInstance(array $map = array('Nella' => __DIR__))
 	{
 		if (static::$instance === NULL) {
 			static::$instance = new self($map);
