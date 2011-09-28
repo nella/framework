@@ -17,17 +17,13 @@ namespace Nella\Application\UI;
 class MicroPresenter extends \NetteModule\MicroPresenter
 {
 	/**
-	 * Correctly terminates presenter.
+	 * Correctly terminates presenter
+	 * 
 	 * @return void
-	 * @throws Nette\Application\AbortException
+	 * @throws \Nette\Application\AbortException
 	 */
 	public function terminate()
 	{
-		if (func_num_args() !== 0) {
-			trigger_error(__METHOD__ . ' is not intended to send a Application\Response; use sendResponse() instead.', E_USER_WARNING);
-			$this->sendResponse(func_get_arg(0));
-		}
-		
 		throw new \Nette\Application\AbortException();
 	}
 }
