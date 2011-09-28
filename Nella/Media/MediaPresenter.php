@@ -24,9 +24,9 @@ class MediaPresenter extends \Nella\Application\UI\MicroPresenter
 	{
 		$params = $request->params;
 		if (isset($params['file'])) {
-			callback($this, 'actionFile')->invokeArgs(array('file' => $params['file']));
+			return callback($this, 'actionFile')->invokeArgs(array('file' => $params['file']));
 		} elseif (isset($params['image']) && isset($params['format'])) {
-			callback($this, 'actionImage')->invokeArgs(array(
+			return callback($this, 'actionImage')->invokeArgs(array(
 				'image' => $params['image'],
 				'format' => $params['format'],
 				'path' => $params['path'],
@@ -42,12 +42,11 @@ class MediaPresenter extends \Nella\Application\UI\MicroPresenter
 	 */
 	public function actionFile(IFile $file)
 	{
-		$this->sendResponse(new \Nette\Application\Responses\FileResponse(
+		return new \Nette\Application\Responses\FileResponse(
 			$file->getFileinfo()->getRealPath(), //$file->getContent(),
 			$file->getFilename(),
 			$file->getMimeType()
-		));
-		$this->terminate();
+		);
 	}
 
 	/**
@@ -61,7 +60,7 @@ class MediaPresenter extends \Nella\Application\UI\MicroPresenter
 		$service = $this->getContext()->doctrineContainer->getService('Nella\Media\ImageEntity');
 		$image = $service->repository->find($image);
 		
-		$service = $this->getContext()->doctrineContainer->getService('Nella\Media\FormatEntity');
+		$service = $this->getContext()->doctrineContainer->getService('Nella\Media\ImageFormatEntity');
 		$format = $service->repository->find($format);
 			
 		$image = $format->process($image);

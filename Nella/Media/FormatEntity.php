@@ -45,7 +45,7 @@ class FormatEntity extends \Nella\Doctrine\Entity implements IFormat
 	private $crop;
 	/**
 	 * @manyToOne(targetEntity="Nella\Media\ImageEntity")
-     * @joinColumn(name="watermark_id", referencedColumnName="id")
+	 * @joinColumn(name="watermark_id", referencedColumnName="id")
 	 * @var ImageEntity
 	 */
 	private $watermark;
