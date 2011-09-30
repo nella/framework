@@ -66,7 +66,38 @@ class MediaPresenter extends \Nella\Application\UI\MicroPresenter
 		}
 
 		if ($format->watermark) {
-			throw new \Nette\NotImplementedException;
+			$watermark = $format->watermark->toImage();
+			$image = new \Nette\Image;
+			switch ($format->watermarkPosition) {
+				case IImageFormat::POSITION_BOTTOM_LEFT:
+					$left = 0;
+					$top = $image->height - $watermark->height;
+					break;
+				case IImageFormat::POSITION_BOTTOM_RIGHT:
+					$left = $image->width - $watermark->width;
+					$top = $image->height - $watermark->height;
+					break;
+				case IImageFormat::POSITION_CENTER;
+					$top = ($image->height / 2) - ($watermark->height / 2);
+					$left = ($image->width / 2) - ($watermark->width / 2);
+					break;
+				case IImageFormat::POSITION_TOP_RIGHT:
+					$top = 0;
+					$left = $image->width - $watermark->width;
+					break;
+				case IImageFormat::POSITION_TOP_LEFT:
+				default:
+					$left = $top = 0;
+					break;
+			}
+			if ($left < 0) {
+				$left = 0;
+			}
+			if ($top < 0) {
+				$top = 0;
+			}
+			
+			$image->place($watermark, $left, $top, $format->watermarkOpacity);
 		}
 		
 		return $image;
