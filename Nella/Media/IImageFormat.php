@@ -10,11 +10,11 @@
 namespace Nella\Media;
 
 /**
- * Media image format interface
+ * Resource image format interface
  *
  * @author	Patrik Votoček
  */
-interface IFormat
+interface IImageFormat
 {
 	/** watermark positions */
 	const POSITION_CENTER = 1, 
@@ -30,7 +30,7 @@ interface IFormat
 	
 	/**
 	 * @param int
-	 * @return IFormat
+	 * @return IImageFormat
 	 */
 	public function setWidth($width);
 	
@@ -41,7 +41,7 @@ interface IFormat
 	
 	/**
 	 * @param int
-	 * @return IFormat
+	 * @return IImageFormat
 	 */
 	public function setHeight($height);
 	
@@ -52,7 +52,7 @@ interface IFormat
 	
 	/**
 	 * @param bool
-	 * @return IFormat
+	 * @return IImageFormat
 	 */
 	public function setCrop($crop);
 	
@@ -63,7 +63,7 @@ interface IFormat
 	
 	/**
 	 * @param IImage
-	 * @return IFormat
+	 * @return IImageFormat
 	 */
 	public function setWatermark(IImage $watermark);
 	
@@ -74,7 +74,7 @@ interface IFormat
 	
 	/**
 	 * @param int
-	 * @return IFormat
+	 * @return IImageFormat
 	 */
 	public function setWatermarkOpacity($opacity);
 	
@@ -85,7 +85,7 @@ interface IFormat
 	
 	/**
 	 * @param int
-	 * @return IFormat
+	 * @return IImageFormat
 	 */
 	public function setWatermarkPosition($position);
 	

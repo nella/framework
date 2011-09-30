@@ -33,7 +33,7 @@ class ImageRoute extends \Nette\Application\Routers\Route
 	 */
 	protected function loadFormat($slug)
 	{
-		$service = $this->container->getService('Nella\Media\FormatEntity');
+		$service = $this->container->getService('Nella\Media\ImageFormatEntity');
 		return $service->repository->fetchIdBySlug($slug);
 	}
 

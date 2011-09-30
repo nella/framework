@@ -10,7 +10,7 @@
 namespace Nella\Media;
 
 /**
- * Media image format entity
+ * Resource image format entity
  *
  * @entity(repositoryClass="Nella\Media\MediaRepository")
  * @table(name="media_formats")
@@ -26,7 +26,7 @@ namespace Nella\Media;
  * @property int $watermarkPosition
  * @property string $slug
  */
-class FormatEntity extends \Nella\Doctrine\Entity implements IFormat
+class ImageFormatEntity extends \Nella\Doctrine\Entity implements IImageFormat
 {
 	/**
 	 * @column(type="integer")
@@ -45,7 +45,7 @@ class FormatEntity extends \Nella\Doctrine\Entity implements IFormat
 	private $crop;
 	/**
 	 * @manyToOne(targetEntity="Nella\Media\ImageEntity")
-	 * @joinColumn(name="watermark_id", referencedColumnName="id")
+     * @joinColumn(name="watermark_id", referencedColumnName="id")
 	 * @var ImageEntity
 	 */
 	private $watermark;
@@ -82,7 +82,7 @@ class FormatEntity extends \Nella\Doctrine\Entity implements IFormat
 
 	/**
 	 * @param int
-	 * @return FormatEntity
+	 * @return ImageFormatEntity
 	 */
 	public function setWidth($width)
 	{
@@ -100,7 +100,7 @@ class FormatEntity extends \Nella\Doctrine\Entity implements IFormat
 
 	/**
 	 * @param int
-	 * @return FormatEntity
+	 * @return ImageFormatEntity
 	 */
 	public function setHeight($height)
 	{
@@ -118,7 +118,7 @@ class FormatEntity extends \Nella\Doctrine\Entity implements IFormat
 
 	/**
 	 * @param bool
-	 * @return FormatEntity
+	 * @return ImageFormatEntity
 	 */
 	public function setCrop($crop)
 	{
@@ -136,7 +136,7 @@ class FormatEntity extends \Nella\Doctrine\Entity implements IFormat
 
 	/**
 	 * @param ImageEntity
-	 * @return FormatEntity
+	 * @return ImageFormatEntity
 	 */
 	public function setWatermark(IImage $watermark = NULL)
 	{
@@ -154,7 +154,7 @@ class FormatEntity extends \Nella\Doctrine\Entity implements IFormat
 
 	/**
 	 * @param int
-	 * @return FormatEntity
+	 * @return ImageFormatEntity
 	 */
 	public function setWatermarkOpacity($opacity)
 	{
@@ -172,7 +172,7 @@ class FormatEntity extends \Nella\Doctrine\Entity implements IFormat
 
 	/**
 	 * @param int
-	 * @return FormatEntity
+	 * @return ImageFormatEntity
 	 */
 	public function setWatermarkPosition($position)
 	{
@@ -190,7 +190,7 @@ class FormatEntity extends \Nella\Doctrine\Entity implements IFormat
 	
 	/**
 	 * @param string
-	 * @return FormatEntity
+	 * @return ImageFormatEntity
 	 */
 	public function setSlug($slug)
 	{
