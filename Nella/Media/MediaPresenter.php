@@ -48,6 +48,29 @@ class MediaPresenter extends \Nella\Application\UI\MicroPresenter
 			$file->getMimeType()
 		);
 	}
+	
+	/**
+	 * @param IImage
+	 * @param IImageFormat
+	 * @return \Nette\Image
+	 */
+	protected function processImage(IImage $image, IImageFormat $format)
+	{
+		$image = $image->toImage();
+		
+		if ($format->crop) {
+			$image->resize($format->width, $format->height, \Nette\Image::FILL | \Nette\Image::ENLARGE)
+				->crop('50%', '50%', $format->width, $format->height);
+		} else {
+			$image->resize($format->width, $format->height);
+		}
+
+		if ($format->watermark) {
+			throw new \Nette\NotImplementedException;
+		}
+		
+		return $image;
+	}
 
 	/**
 	 * @param IImage
@@ -63,7 +86,7 @@ class MediaPresenter extends \Nella\Application\UI\MicroPresenter
 		$service = $this->getContext()->doctrineContainer->getService('Nella\Media\ImageFormatEntity');
 		$format = $service->repository->find($format);
 			
-		$image = $format->process($image);
+		$image = $this->processImage($image, $format);
 		$context = $this->getContext();
 
 		$path = $context->expand($context->params['wwwDir']) . $path;

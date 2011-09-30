@@ -88,10 +88,4 @@ interface IImageFormat
 	 * @return IImageFormat
 	 */
 	public function setWatermarkPosition($position);
-	
-	/**
-	 * @param IImage
-	 * @return \Nella\Image
-	 */
-	public function process(IImage $image);
 }
