@@ -34,19 +34,8 @@ class Panel extends \Nette\Object implements \Nette\Diagnostics\IBarPanel, \Doct
 	public function startQuery($sql, array $params = NULL, array $types = NULL)
 	{
 		Debugger::timer('doctrine');
-
-		$source = NULL;
-		foreach (debug_backtrace(FALSE) as $row) {
-			if (isset($row['file'])
-			 && is_file($row['file'])
-			 && strpos($row['file'], NETTE_DIR . DIRECTORY_SEPARATOR) === FALSE
-			 && strpos($row['file'], "Doctrine") === FALSE
-			 && strpos($row['file'], "Repository") === FALSE) {
-				$source = array($row['file'], (int) $row['line']);
-				break;
-			}
-		}
-		$this->queries[] = array($sql, $params, NULL, 0, NULL, $source);
+		
+		$this->queries[] = array($sql, $params, 0);
 	}
 
 	public function stopQuery()
@@ -74,24 +63,12 @@ class Panel extends \Nette\Object implements \Nette\Diagnostics\IBarPanel, \Doct
 	{
 		$s = '';
 		$h = 'htmlSpecialChars';
-		list($sql, $params, $time, $rows, $connection, $source) = $query;
+		list($sql, $params, $time) = $query;
 
 		$s .= '<tr><td>' . sprintf('%0.3f', $time * 1000);
-
 		$s .= '</td><td class="nette-Doctrine2Panel-sql">' . Connection::highlightSql($sql);
-		if ($source) {
-			list($file, $line) = $source;
-			if (Debugger::$editor) {
-				$s .= \Nette\Diagnostics\Helpers::editorLink($file, $line);
-			} else {
-				$s .= "<span class='nette-Doctrine2Panel-source' title='{$h($file)}:$line'>"
-					. $h(basename(dirname($file)) . '/' . basename($file)) . ":" . $line . "</span>";
-			}
-		}
-
-		$s .= '</td><td>';
-		$s .= \Nette\Diagnostics\Helpers::clickableDump($params, TRUE);
-		$s .= '</td><td>' . $rows . '</td></tr>';
+		$s .= '</td><td>' . \Nette\Diagnostics\Helpers::clickableDump($params, TRUE) . '</tr>';
+		
 		return $s;
 	}
 
@@ -112,7 +89,7 @@ class Panel extends \Nette\Object implements \Nette\Diagnostics\IBarPanel, \Doct
 				}
 			}
 
-			$s = '<table><tr><th>Time&nbsp;ms</th><th>SQL Statement</th><th>Params</th><th>Rows</th></tr>';
+			$s = '<table><tr><th>Time&nbsp;ms</th><th>SQL</th><th>Params</th></tr>';
 			$s .= $this->processQuery(end($this->queries));
 			$s .= '</table>';
 			return array(
@@ -134,7 +111,7 @@ class Panel extends \Nette\Object implements \Nette\Diagnostics\IBarPanel, \Doct
 			'<h1>Queries: ' . count($this->queries) . ($this->totalTime ? ', time: ' . sprintf('%0.3f', $this->totalTime * 1000) . ' ms' : '') . '</h1>
 			<div class="nette-inner nette-Doctrine2Panel">
 			<table>
-			<tr><th>Time&nbsp;ms</th><th>SQL Statement</th><th>Params</th><th>Rows</th></tr>' . $s . '
+			<tr><th>Time&nbsp;ms</th><th>SQL</th><th>Params</th></tr>' . $s . '
 			</table>
 			</div>';
 	}
