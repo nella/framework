@@ -9,6 +9,8 @@
 
 namespace Nella\Latte;
 
+use Nette\Latte\Parser;
+
 /**
  * Nella latte engine
  *
@@ -17,12 +19,21 @@ namespace Nella\Latte;
  */
 class Engine extends \Nette\Latte\Engine
 {
-	public function __construct()
+	/**
+	 * @param \Nette\Latte\Parser
+	 */
+	public function __construct(Parser $parser = NULL)
 	{
-		// Register Nette macros
-		parent::__construct();
+		// Init parser
+		$this->parser = $parser ?: new Parser;
 
 		// Register Nella macros
 		Macros\UIMacros::install($this->parser);
+		
+		// Register Nette macros
+		\Nette\Latte\Macros\CoreMacros::install($this->parser);
+		$this->parser->addMacro('cache', new \Nette\Latte\Macros\CacheMacro($this->parser));
+		\Nette\Latte\Macros\UIMacros::install($this->parser);
+		\Nette\Latte\Macros\FormMacros::install($this->parser);
 	}
 }
