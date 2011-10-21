@@ -26,13 +26,36 @@ class Cache extends \Doctrine\Common\Cache\AbstractCache
 	{
 		$this->data = new \Nette\Caching\Cache($cacheStorage, "Nella.Doctrine");
 	}
+	
+	/**
+	 * @param string
+	 */
+	protected function addId($id)
+	{
+		$ids = $this->data->load('__ids') ?: array();
+		$ids[] = $id;
+		$this->data->save('__ids', $ids, array('expire' => "+ 10 years"));
+	}
+	
+	/**
+	 * @param string
+	 */
+	protected function removeId($id)
+	{
+		$ids = $this->data->load('__ids') ?: array();
+		$key = array_search($id, $ids);
+		if ($key) {
+			unset($ids[$key]);
+			$this->data->save('__ids', $ids, array('expire' => "+ 10 years"));
+		}
+	}
 
 	/**
 	 * {@inheritdoc}
 	 */
 	public function getIds()
 	{
-		throw new \Nette\NotImplementedException; // wait fot $cache->getIds() in Nette\Caching\Cache
+		return $this->data->load('__ids') ?: array();
 	}
 
     /**
@@ -72,6 +95,8 @@ class Cache extends \Doctrine\Common\Cache\AbstractCache
 		} else {
 			$this->data->save($id, $data, array('tags' => array("doctrine"), 'files' => $files));
 		}
+		
+		$this->addId($id);
 
 		return TRUE;
     }
@@ -82,6 +107,7 @@ class Cache extends \Doctrine\Common\Cache\AbstractCache
     protected function _doDelete($id)
     {
         $this->data->save($id, NULL);
+		$this->removeId($id);
         return TRUE;
     }
 }

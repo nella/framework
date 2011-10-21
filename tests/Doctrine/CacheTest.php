@@ -20,11 +20,6 @@ class CacheTest extends \Nella\Testing\TestCase
 		$this->cache = new \Nella\Doctrine\Cache(new \Nette\Caching\Storages\MemoryStorage);
 	}
 
-	public function getIds()
-	{
-		$this->markTestIncomplete('Not implemented');
-	}
-
 	public function testDefault()
 	{
 		$this->assertFalse($this->cache->contains('foo'), "default is emtpy");
@@ -32,6 +27,8 @@ class CacheTest extends \Nella\Testing\TestCase
 		$this->cache->save('foo', "test");
 		$this->assertTrue($this->cache->contains('foo'), "->contains('foo')");
 		$this->assertEquals("test", $this->cache->fetch('foo'), "->load('foo')");
+		
+		$this->assertEquals(array('foo'), $this->cache->getIds(), "->getIds()");
 
 		$this->cache->delete('foo');
 		$this->assertFalse($this->cache->contains('foo'), "->contains('foo') - removed");
