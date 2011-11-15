@@ -1,3 +1,5 @@
 coverage
 vendors
-build
+doc
+logs
+api

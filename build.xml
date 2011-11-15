@@ -1,96 +1,135 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<project name="Nella Framework" default="build">
+	<property name="sourcedir" value="${basedir}/Nella" /> 
+	<property name="builddir" value="${basedir}/build" /> 
 
-<project name="name-of-project" default="build" basedir=".">
-	<property name="source" value="Nella"/>
-	
-	<target name="vendors" description="Init vendors">
+	<target name="build" depends="prepare,lint,phploc,pdepend,phpmd-ci,phpcs-ci,phpcpd,phpunit,phpcb" />
+
+	<target name="build-parallel" depends="prepare,lint,tools-parallel,phpunit,phpcb" />
+
+	<target name="tools-parallel" description="Run tools in parallel">
+		<parallel threadCount="2">
+			<sequential>
+				<antcall target="pdepend"/>
+				<antcall target="phpmd-ci"/>
+			</sequential>
+			<antcall target="phpcpd"/>
+			<antcall target="phpcs-ci"/>
+			<antcall target="phploc"/>
+			<antcall target="phpdoc"/>
+		</parallel>
+	</target>
+
+	<target name="vendors" description="Init / Update vendors">
 		<exec executable="sh">
 			<arg value="${basedir}/vendors.sh"/>
 		</exec>
 	</target>
-	
-	<target name="clean" description="Clean up and create artifact directories">
-		<delete dir="${basedir}/build/code-browser"/>
-		<delete dir="${basedir}/build/coverage"/>
-		<delete dir="${basedir}/build/logs"/>
-		<delete dir="${basedir}/build/pdepend"/>
-		
-		<mkdir dir="${basedir}/build/code-browser"/>
-		<mkdir dir="${basedir}/build/coverage"/>
-		<mkdir dir="${basedir}/build/logs"/>
-		<mkdir dir="${basedir}/build/pdepend"/>
+
+	<target name="clean" depends="vendors" description="Cleanup build artifacts">
+		<delete dir="${builddir}/code-browser"/>
+		<delete dir="${builddir}/coverage"/>
+		<delete dir="${builddir}/logs"/>
+		<delete dir="${builddir}/pdepend"/>
 	</target>
-	
-	<target name="phpunit" description="Run unit tests using PHPUnit and generates junit.xml and clover.xml">
-		<exec executable="phpunit" failonerror="true"/>
+
+	<target name="prepare" depends="clean" description="Prepare for build">
+		<mkdir dir="${builddir}/code-browser"/>
+		<mkdir dir="${builddir}/coverage"/>
+		<mkdir dir="${builddir}/logs"/>
+		<mkdir dir="${builddir}/pdepend"/>
 	</target>
-	
-	<target name="parallelTasks"
-         description="Run the pdepend, phpmd, phpcpd, phpcs and phploc tasks in parallel using a maximum of 2 threads.">
-		<parallel threadCount="2">
-			<sequential>
-				<antcall target="pdepend"/>
-				<antcall target="phpmd"/>
-			</sequential>
-			<antcall target="phpcpd"/>
-			<antcall target="phpcs"/>
-			<antcall target="phploc"/>
-		</parallel>
+
+	<target name="lint">
+		<apply executable="php" failonerror="true">
+			<arg value="-l" />
+
+			<fileset dir="${sourcedir}">
+				<include name="**/*.php" />
+			</fileset>
+
+			<fileset dir="${basedir}/tests">
+				<include name="**/*.php" />
+			</fileset>
+		</apply>
 	</target>
-	
-	<target name="pdepend" description="Generate jdepend.xml and software metrics charts using PHP_Depend">
-		<exec executable="pdepend">
-			<arg value="--jdepend-xml=${basedir}/build/logs/jdepend.xml" />
-			<arg value="--jdepend-chart=${basedir}/build/pdepend/dependencies.svg" />
-			<arg value="--overview-pyramid=${basedir}/build/pdepend/overview-pyramid.svg" />
-			<arg path="${source}" />
-		</exec>
-	</target>
-	
-	<target name="phpmd" description="Generate pmd.xml using PHPMD">
-		<exec executable="phpmd">
-			<arg path="${source}" />
-			<arg value="xml" />
-			<arg value="codesize,design,naming,unusedcode" />
-			<arg value="--reportfile" />
-			<arg value="${basedir}/build/logs/pmd.xml" />
-		</exec>
-	</target>
-	
-	<target name="phpcpd" description="Generate pmd-cpd.xml using PHPCPD">
-		<exec executable="phpcpd">
-			<arg value="--log-pmd" />
-			<arg value="${basedir}/build/logs/pmd-cpd.xml" />
-			<arg path="${source}" />
-		</exec>
-	</target>
-	
-	<target name="phploc" description="Generate phploc.csv">
+
+	<target name="phploc" description="Measure project size using PHPLOC">
 		<exec executable="phploc">
 			<arg value="--log-csv" />
-			<arg value="${basedir}/build/logs/phploc.csv" />
-			<arg path="${source}" />
+			<arg value="${builddir}/logs/phploc.csv" />
+			<arg path="${sourcedir}" />
 		</exec>
 	</target>
-	
-	<target name="phpcs" description="Generate checkstyle.xml using PHP_CodeSniffer">
+
+	<target name="pdepend" description="Calculate software metrics using PHP_Depend">
+		<exec executable="pdepend">
+			<arg value="--jdepend-xml=${builddir}/logs/jdepend.xml" />
+			<arg value="--jdepend-chart=${builddir}/pdepend/dependencies.svg" />
+			<arg value="--overview-pyramid=${builddir}/pdepend/overview-pyramid.svg" />
+			<arg path="${sourcedir}" />
+		</exec>
+	</target>
+
+	<target name="phpmd" description="Perform project mess detection using PHPMD">
+		<exec executable="phpmd">
+			<arg path="${sourcedir}" />
+			<arg value="text" />
+			<arg value="${builddir}/phpmd.xml" />
+		</exec>
+	</target>
+
+	<target name="phpmd-ci" description="Perform project mess detection using PHPMD">
+		<exec executable="phpmd">
+			<arg path="${sourcedir}" />
+			<arg value="xml" />
+			<arg value="${builddir}/phpmd.xml" />
+			<arg value="--reportfile" />
+			<arg value="${builddir}/logs/pmd.xml" />
+		</exec>
+	</target>
+
+	<target name="phpcs" description="Find coding standard violations using PHP_CodeSniffer">
+		<exec executable="phpcs">
+			<arg value="--tab-width=4" />
+			<arg value="--encoding=utf-8" />
+			<arg value="--standard=${builddir}/phpcs.xml" />
+			<arg path="${sourcedir}" />
+			<arg path="${basedir}/tests" />
+		</exec>
+	</target>
+
+	<target name="phpcs-ci" description="Find coding standard violations using PHP_CodeSniffer">
 		<exec executable="phpcs" output="/dev/null">
+			<arg value="--tab-width=4" />
+			<arg value="--encoding=utf-8" />
 			<arg value="--report=checkstyle" />
-			<arg value="--report-file=${basedir}/build/logs/checkstyle.xml" />
-			<arg value="--standard=Nella" />
-			<arg path="${source}" />
+			<arg value="--report-file=${builddir}/logs/checkstyle.xml" />
+			<arg value="--standard=${builddir}/phpcs.xml" />
+			<arg path="${sourcedir}" />
 		</exec>
 	</target>
+
+	<target name="phpcpd" description="Find duplicate code using PHPCPD">
+		<exec executable="phpcpd">
+			<arg value="--log-pmd" />
+			<arg value="${builddir}/logs/pmd-cpd.xml" />
+			<arg path="${sourcedir}" />
+		</exec>
+	</target>
+
+	<target name="phpunit" description="Run unit tests with PHPUnit">
+		<exec executable="phpunit" failonerror="true"/>
+	</target>
+
 	<target name="phpcb" description="Aggregate tool output with PHP_CodeBrowser">
 		<exec executable="phpcb">
 			<arg value="--log" />
-			<arg path="${basedir}/build/logs" />
+			<arg path="${builddir}/logs" />
 			<arg value="--source" />
-			<arg path="${source}" />
+			<arg path="${sourcedir}" />
 			<arg value="--output" />
-			<arg path="${basedir}/build/code-browser" />
+			<arg path="${builddir}/code-browser" />
 		</exec>
 	</target>
-	
-	<target name="build" depends="vendors,clean,parallelTasks,phpunit,phpcb"/>
 </project>
