@@ -44,10 +44,12 @@ class Configurator extends \Nette\Configurator
 		@header("X-Powered-By: Nette Framework with Nella"); // @ - headers may have been sent
 
 		// Upload dir (tmp files - Mupltiple File Uploader)
-		$container->params['uploadDir'] = $container->expand("%tempDir%/uploads");
+		if (!array_key_exists('uploadDir', $container->params)) {
+			$container->params['uploadDir'] = $container->expand("%tempDir%/uploads");
+		}
 
 		// File storage dirs (upoaded images and other files)
-		if (defined('STORAGE_DIR')) {
+		if (defined('STORAGE_DIR') && !array_key_exists('storageDir', $container->params)) {
 			$container->params['storageDir'] = realpath(STORAGE_DIR);
 		} else {
 			$container->params['storageDir'] = $container->expand("%appDir%/storage");
@@ -67,7 +69,7 @@ class Configurator extends \Nette\Configurator
 		// Namespace prefixes
 		$container->params['namespaces'] = array(0 => 'App', 9 => 'Nella');
 		// Templates dirs (application parts dirs)
-		$container->params['templates'] = array(0 => $container->params['appDir'], 9 => NELLA_FRAMEWORK_DIR);
+		$container->params['templates'] = array(0 => $container->params['appDir'], 9 => __DIR__);
 		// Flash message types
 		$container->params['flashes'] = array(
 			'success' => "success",
@@ -263,7 +265,7 @@ class Configurator extends \Nette\Configurator
 	public static function createServiceTranslator(Container $container)
 	{
 		$translator = new Localization\Translator;
-		$translator->addDictionary('Nella', NELLA_FRAMEWORK_DIR);
+		$translator->addDictionary('Nella', __DIR__);
 		return $translator;
 	}
 

@@ -17,7 +17,7 @@ class ContainerHelperTest extends \Nella\Testing\TestCase
 	public function setup()
 	{
 		parent::setup();
-		$this->helper = new \Nella\DI\ContainerHelper($this->context);
+		$this->helper = new \Nella\DI\ContainerHelper($this->getContext());
 	}
 
 	public function testGetContainer()
@@ -27,7 +27,7 @@ class ContainerHelperTest extends \Nella\Testing\TestCase
 			$this->helper->getContainer(),
 			'->getContainer() instance Nette\\DI\\Container'
 		);
-		$this->assertSame($this->context, $this->helper->getContainer());
+		$this->assertSame($this->getContext(), $this->helper->getContainer());
 	}
 
 	public function testGetName()

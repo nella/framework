@@ -107,7 +107,7 @@ class Container extends \Nella\Models\Container
 			'productionMode' => $context->params['productionMode'],
 			'proxyDir' => $context->expand("%appDir%/proxies"),
 			'proxyNamespace' => 'App\Models\Proxies',
-			'entityDirs' => array($context->params['appDir'], NELLA_FRAMEWORK_DIR),
+			'entityDirs' => array($context->params['appDir'], $context->params['%rootDir%'] . "/Nella"),
 			'migrations' => array(
 				'name' => \Nella\Framework::NAME . " DB Migrations",
 				'table' => "db_version",

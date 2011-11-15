@@ -1,14 +1,10 @@
-#
-# SECURITY WARNING: it is CRITICAL that this file & directory are NOT accessible directly via a web browser!
-#
-# If you don't protect this directory from direct web access, anybody will be able to see your passwords.
-# http://nette.org/security-warning
-#
-common:
-	php: # PHP configuration
-		date.timezone: Europe/Prague
-		# php.zlib.output_compression = yes
-		# php.default_charset = "UTF-8"
-
-console < common:
-
+test:
+	services:
+		cacheStorage:
+			class: Nette\Caching\Storages\MemoryStorage
+		user:
+			class: NellaTests\Mocks\User
+	
+	database:
+		driver: pdo_sqlite
+		memory: true

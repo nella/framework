@@ -17,19 +17,22 @@ class PresenterTest extends \Nella\Testing\TestCase
 	public function setup()
 	{
 		parent::setup();
-		$this->context->params['namespaces'] = array('App', 'NellaTests\Application\UI', 'Nella');
-		$this->context->params['templates'] = array(
-			$this->context->params['appDir'],
+
+		$context = $this->getContext();
+
+		$context->params['namespaces'] = array('App', 'NellaTests\Application\UI', 'Nella');
+		$context->params['templates'] = array(
+			$context->params['appDir'],
 			__DIR__,
-			NELLA_FRAMEWORK_DIR,
+			$context->expand('%rootDir%/Nella'),
 		);
 		$this->presenter = new Presenter\PresenterMock;
-		$this->presenter->setContext($this->context);
+		$this->presenter->setContext($context);
 	}
 
 	public function dataFormmatLayoutTemplatesFiles()
 	{
-		$context = \Nette\Environment::getContext();
+		$context = $this->getContext();
 		return array(
 			array('Foo', 'bar', array(
 				$context->params['appDir'] . "/templates/Foo/@bar.latte",
@@ -38,9 +41,9 @@ class PresenterTest extends \Nella\Testing\TestCase
 				__DIR__ . "/templates/Foo/@bar.latte",
 				__DIR__ . "/templates/Foo.@bar.latte",
 				__DIR__ . "/templates/@bar.latte",
-				NELLA_FRAMEWORK_DIR . "/templates/Foo/@bar.latte",
-				NELLA_FRAMEWORK_DIR . "/templates/Foo.@bar.latte",
-				NELLA_FRAMEWORK_DIR . "/templates/@bar.latte",
+				$context->expand('%rootDir%/Nella') . "/templates/Foo/@bar.latte",
+				$context->expand('%rootDir%/Nella') . "/templates/Foo.@bar.latte",
+				$context->expand('%rootDir%/Nella') . "/templates/@bar.latte",
 			)),
 			array('Foo:Bar', 'layout', array(
 				$context->params['appDir'] . "/Foo/templates/Bar/@layout.latte",
@@ -57,13 +60,13 @@ class PresenterTest extends \Nella\Testing\TestCase
 				__DIR__ . "/templates/Foo/Bar.@layout.latte",
 				__DIR__ . "/templates/Foo/@layout.latte",
 				__DIR__ . "/templates/@layout.latte",
-				NELLA_FRAMEWORK_DIR . "/Foo/templates/Bar/@layout.latte",
-				NELLA_FRAMEWORK_DIR . "/Foo/templates/Bar.@layout.latte",
-				NELLA_FRAMEWORK_DIR . "/Foo/templates/@layout.latte",
-				NELLA_FRAMEWORK_DIR . "/templates/Foo/Bar/@layout.latte",
-				NELLA_FRAMEWORK_DIR . "/templates/Foo/Bar.@layout.latte",
-				NELLA_FRAMEWORK_DIR . "/templates/Foo/@layout.latte",
-				NELLA_FRAMEWORK_DIR . "/templates/@layout.latte",
+				$context->expand('%rootDir%/Nella') . "/Foo/templates/Bar/@layout.latte",
+				$context->expand('%rootDir%/Nella') . "/Foo/templates/Bar.@layout.latte",
+				$context->expand('%rootDir%/Nella') . "/Foo/templates/@layout.latte",
+				$context->expand('%rootDir%/Nella') . "/templates/Foo/Bar/@layout.latte",
+				$context->expand('%rootDir%/Nella') . "/templates/Foo/Bar.@layout.latte",
+				$context->expand('%rootDir%/Nella') . "/templates/Foo/@layout.latte",
+				$context->expand('%rootDir%/Nella') . "/templates/@layout.latte",
 			)),
 		);
 	}
@@ -84,7 +87,7 @@ class PresenterTest extends \Nella\Testing\TestCase
 
 	public function dataFormatTemplatesFiles()
 	{
-		$context = \Nette\Environment::getContext();
+		$context = $this->getContext();
 		return array(
 			array('Foo', 'bar', array(
 				$context->params['appDir'] . "/templates/Foo/bar.latte",
@@ -95,10 +98,10 @@ class PresenterTest extends \Nella\Testing\TestCase
 				__DIR__ . "/templates/Foo.bar.latte",
 				__DIR__ . "/templates/Foo/@global.latte",
 				__DIR__ . "/templates/@global.latte",
-				NELLA_FRAMEWORK_DIR . "/templates/Foo/bar.latte",
-				NELLA_FRAMEWORK_DIR . "/templates/Foo.bar.latte",
-				NELLA_FRAMEWORK_DIR . "/templates/Foo/@global.latte",
-				NELLA_FRAMEWORK_DIR . "/templates/@global.latte",
+				$context->expand('%rootDir%/Nella') . "/templates/Foo/bar.latte",
+				$context->expand('%rootDir%/Nella') . "/templates/Foo.bar.latte",
+				$context->expand('%rootDir%/Nella') . "/templates/Foo/@global.latte",
+				$context->expand('%rootDir%/Nella') . "/templates/@global.latte",
 			)),
 			array('Foo:Bar', 'baz', array(
 				$context->params['appDir'] . "/Foo/templates/Bar/baz.latte",
@@ -119,15 +122,15 @@ class PresenterTest extends \Nella\Testing\TestCase
 				__DIR__ . "/templates/Foo/Bar/@global.latte",
 				__DIR__ . "/templates/Foo/@global.latte",
 				__DIR__ . "/templates/@global.latte",
-				NELLA_FRAMEWORK_DIR . "/Foo/templates/Bar/baz.latte",
-				NELLA_FRAMEWORK_DIR . "/Foo/templates/Bar.baz.latte",
-				NELLA_FRAMEWORK_DIR . "/Foo/templates/Bar/@global.latte",
-				NELLA_FRAMEWORK_DIR . "/Foo/templates/@global.latte",
-				NELLA_FRAMEWORK_DIR . "/templates/Foo/Bar/baz.latte",
-				NELLA_FRAMEWORK_DIR . "/templates/Foo/Bar.baz.latte",
-				NELLA_FRAMEWORK_DIR . "/templates/Foo/Bar/@global.latte",
-				NELLA_FRAMEWORK_DIR . "/templates/Foo/@global.latte",
-				NELLA_FRAMEWORK_DIR . "/templates/@global.latte",
+				$context->expand('%rootDir%/Nella') . "/Foo/templates/Bar/baz.latte",
+				$context->expand('%rootDir%/Nella') . "/Foo/templates/Bar.baz.latte",
+				$context->expand('%rootDir%/Nella') . "/Foo/templates/Bar/@global.latte",
+				$context->expand('%rootDir%/Nella') . "/Foo/templates/@global.latte",
+				$context->expand('%rootDir%/Nella') . "/templates/Foo/Bar/baz.latte",
+				$context->expand('%rootDir%/Nella') . "/templates/Foo/Bar.baz.latte",
+				$context->expand('%rootDir%/Nella') . "/templates/Foo/Bar/@global.latte",
+				$context->expand('%rootDir%/Nella') . "/templates/Foo/@global.latte",
+				$context->expand('%rootDir%/Nella') . "/templates/@global.latte",
 			)),
 		);
 	}

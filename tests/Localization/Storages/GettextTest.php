@@ -72,7 +72,7 @@ class GettextTest extends \Nella\Testing\TestCase
 		$dictionary = new Dictionary(__DIR__, $this->storage);
 		$this->storage->load("test", $dictionary);
 
-		$path = $this->context->params['tempDir'] . "/GettextTestGen.mo";
+		$path = $this->getContext()->params['tempDir'] . "/GettextTestGen.mo";
 		$this->storage = new \Nella\Localization\Storages\Gettext($path);
 		$this->storage->save($dictionary, "test");
 

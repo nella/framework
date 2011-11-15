@@ -20,7 +20,7 @@ class BackendPresenterTest extends \Nella\Testing\TestCase
 	{
 		parent::setup();
 		$this->presenter = new BackendPresenter\PresenterMock;
-		$this->presenter->setContext($this->context);
+		$this->presenter->setContext($this->getContext());
 	}
 
 	/**

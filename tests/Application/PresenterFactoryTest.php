@@ -17,8 +17,10 @@ class PresenterFactoryTest extends \Nella\Testing\TestCase
 	public function setup()
 	{
 		parent::setup();
-		$this->context->params['namespaces'] = array('App', 'Nella');
-		$this->loader = new \Nella\Application\PresenterFactory($this->context);
+		$context = $this->getContext();
+
+		$context->params['namespaces'] = array('App', 'Nella');
+		$this->loader = new \Nella\Application\PresenterFactory($context);
 	}
 
 	public function dataFormatPresenterClass()
@@ -76,7 +78,7 @@ class PresenterFactoryTest extends \Nella\Testing\TestCase
 	 */
 	public function testGetPresenterClass($presenter, $class)
 	{
-		$this->context->params['namespaces'] = array(
+		$this->getContext()->params['namespaces'] = array(
 			'NellaTests\Application\PresenterFactory',
 			'NellaTests\Application\PresenterFactoryTest',
 		);

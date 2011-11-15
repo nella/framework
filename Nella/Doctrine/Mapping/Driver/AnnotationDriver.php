@@ -67,7 +67,7 @@ class AnnotationDriver extends \Doctrine\ORM\Mapping\Driver\AnnotationDriver
                 }
 
                 $sourceFile = realpath($file->getPathName());
-                if (strpos($sourceFile, realpath(NELLA_FRAMEWORK_DIR . "/Testing")) !== FALSE) {
+                if (strpos($sourceFile, realpath(__DIR__ . "/../../../Testing")) !== FALSE) {
 					continue;
                 }
                 require_once $sourceFile;

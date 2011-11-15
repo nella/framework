@@ -17,14 +17,17 @@ class ControlTest extends \Nella\Testing\TestCase
 	public function setup()
 	{
 		parent::setup();
-		$this->context->params['namespaces'] = array('App', 'NellaTests\Application\UI\Control', 'Nella');
-		$this->context->params['templates'] = array(
-			$this->context->params['appDir'],
+
+		$context = $this->getContext();
+
+		$context->params['namespaces'] = array('App', 'NellaTests\Application\UI\Control', 'Nella');
+		$context->params['templates'] = array(
+			$context->params['appDir'],
 			__DIR__,
-			NELLA_FRAMEWORK_DIR,
+			$context->expand('%rootDir%/Nella'),
 		);
 		$this->control = new Control\ControlMock(new Control\PresenterMock, 'test');
-		$this->control->presenter->setContext($this->context);
+		$this->control->presenter->setContext($context);
 	}
 
 	public function dataFormatTemplateFiles()
@@ -36,24 +39,24 @@ class ControlTest extends \Nella\Testing\TestCase
 				$context->params['appDir'] . "/templates/Foo/Bar.latte",
 				__DIR__ . "/Foo/Bar.latte",
 				__DIR__ . "/templates/Foo/Bar.latte",
-				NELLA_FRAMEWORK_DIR . "/Foo/Bar.latte",
-				NELLA_FRAMEWORK_DIR . "/templates/Foo/Bar.latte",
+				$context->expand('%rootDir%/Nella') . "/Foo/Bar.latte",
+				$context->expand('%rootDir%/Nella') . "/templates/Foo/Bar.latte",
 			)),
 			array('Nella\Foo\Bar::renderBaz', array(
 				$context->params['appDir'] . "/Foo/Bar.baz.latte",
 				$context->params['appDir'] . "/templates/Foo/Bar.baz.latte",
 				__DIR__ . "/Foo/Bar.baz.latte",
 				__DIR__ . "/templates/Foo/Bar.baz.latte",
-				NELLA_FRAMEWORK_DIR . "/Foo/Bar.baz.latte",
-				NELLA_FRAMEWORK_DIR . "/templates/Foo/Bar.baz.latte",
+				$context->expand('%rootDir%/Nella') . "/Foo/Bar.baz.latte",
+				$context->expand('%rootDir%/Nella') . "/templates/Foo/Bar.baz.latte",
 			)),
 			array('Nella\Foo::renderBarBaz', array(
 				$context->params['appDir'] . "/Foo.barBaz.latte",
 				$context->params['appDir'] . "/templates/Foo.barBaz.latte",
 				__DIR__ . "/Foo.barBaz.latte",
 				__DIR__ . "/templates/Foo.barBaz.latte",
-				NELLA_FRAMEWORK_DIR . "/Foo.barBaz.latte",
-				NELLA_FRAMEWORK_DIR . "/templates/Foo.barBaz.latte",
+				$context->expand('%rootDir%/Nella') . "/Foo.barBaz.latte",
+				$context->expand('%rootDir%/Nella') . "/templates/Foo.barBaz.latte",
 			)),
 		);
 	}

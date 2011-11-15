@@ -18,24 +18,22 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
 {
 	/** @var \Nette\DI\Container */
 	protected $context;
-
 	/**
-     * Enable or disable the backup and restoration of the $GLOBALS array.
-     * Overwrite this attribute in a child class of TestCase.
-     * Setting this attribute in setUp() has no effect!
-     *
-     * @var bool
-     */
-    protected $backupGlobals = FALSE;
-
+	 * Enable or disable the backup and restoration of the $GLOBALS array.
+	 * Overwrite this attribute in a child class of TestCase.
+	 * Setting this attribute in setUp() has no effect!
+	 *
+	 * @var bool
+	 */
+	protected $backupGlobals = FALSE;
 	/**
-     * Enable or disable the backup and restoration of static attributes.
-     * Overwrite this attribute in a child class of TestCase.
-     * Setting this attribute in setUp() has no effect!
-     *
-     * @var bool
-     */
-    protected $backupStaticAttributes = FALSE;
+	 * Enable or disable the backup and restoration of static attributes.
+	 * Overwrite this attribute in a child class of TestCase.
+	 * Setting this attribute in setUp() has no effect!
+	 *
+	 * @var bool
+	 */
+	protected $backupStaticAttributes = FALSE;
 
 	public function runBare()
 	{
@@ -49,8 +47,12 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
 		}
 	}
 
-	protected function setup()
+	protected function getContext()
 	{
-		$this->context = clone \Nette\Environment::getContext();
+		static $context;
+		if (!$context) {
+			$context = \Nette\Environment::getContext();
+		}
+		return $context;
 	}
 }
