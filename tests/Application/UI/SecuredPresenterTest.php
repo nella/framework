@@ -22,7 +22,7 @@ class SecuredPresenterTest extends \Nella\Testing\TestCase
 	{
 		parent::setup();
 		$this->presenter = new SecuredPresenter\PresenterMock;
-		$this->presenter->setContext($this->context);
+		$this->presenter->setContext($this->getContext());
 	}
 
 	/**
