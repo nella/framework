@@ -120,6 +120,9 @@ class MediaPresenter extends \Nella\Application\UI\MicroPresenter
 		$image = $this->processImage($image, $format);
 		$context = $this->getContext();
 
+		$basePath = $context->getService("httpRequest")->getUrl()->getBasePath();
+		$path = substr($path, \Nette\Utils\Strings::length($basePath) - 1);
+
 		$path = $context->expand($context->params['wwwDir']) . $path;
 		$dir = pathinfo($path, PATHINFO_DIRNAME);
 		if (!file_exists($dir)) {
