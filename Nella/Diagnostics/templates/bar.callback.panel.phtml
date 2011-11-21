@@ -68,8 +68,8 @@ namespace Nella\Diagnostics;
 	<table style="width: 100%">
 		<?php foreach ($callbacks as $key => $item): ?>
 			<tr>
-				<th><label for="nella-callback-panel-item<?php echo $key ?>" style="width: 100%; height: 100%; position: absolute;"></label><?php echo $item['name'] ?></th>
-				<td><input type="checkbox" name="--ncp-<?php echo $key ?>" id="nella-callback-panel-item<?php echo $key ?>"></td>
+				<th><label for="nella-callback-panel-item<?php echo htmlspecialchars($key, ENT_QUOTES) ?>" style="width: 100%; height: 100%; position: absolute;"></label><?php echo htmlspecialchars($item['name']) ?></th>
+				<td><input type="checkbox" name="--ncp-<?php echo htmlspecialchars($key, ENT_QUOTES) ?>" id="nella-callback-panel-item<?php echo htmlspecialchars($key, ENT_QUOTES) ?>"></td>
 			</tr>
 		<?php endforeach ?>
 		<tr>
