@@ -1,5 +1,5 @@
-Welcome to Nella Framework
-==========================
+Welcome to Nella Framework ![travis-ci status](https://secure.travis-ci.org/nella/framework.png)
+================================================================================================
 
 Nella Framework is a powerful Nette Framework overlay for creating web applications and services in PHP 5.3. Nella Framework is designed with simplicity, speed and flexibility in mind. It allows developers to easy built better websites.
 
@@ -19,7 +19,7 @@ Requirements
 Installation
 ------------
 
-After downloading the latest distribution package from http://nella-project.org/#framework, extract it to a directory accessible by web server. The installation is done!
+After downloading the latest distribution package from [http://nella-project.org/#framework](http://nella-project.org/#framework), extract it to a directory accessible by web server. The installation is done!
 
 The source tree includes the following directories:
 
@@ -34,5 +34,5 @@ The source tree includes the following directories:
 
 -----
 
-homepage: http://nella-project.org
-repository: http://github.com/nella/framework
+homepage: [http://nella-project.org](http://nella-project.org)
+repository: [http://github.com/nella/framework](http://github.com/nella/framework)
