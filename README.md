@@ -13,7 +13,7 @@ Requirements
 - MySQL 5+ / SQLite 3+ / PosgreSQL
 - Nette Framework 2.0-beta+
 - Doctrine ORM 2.1.0+
-- Symfony Console 2.0-rc+
+- Symfony Console 2.0+
 
 
 Installation
