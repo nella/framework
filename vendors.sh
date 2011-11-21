@@ -5,11 +5,12 @@
 ##########
 
 VENDOR_VERSION_NETTE="2.0beta"
-VENDOR_VERSION_DOCTRINE="2.1.2"
+VENDOR_VERSION_DOCTRINE="2.1.3"
 VENDOR_VERSION_DOCTRINE_MIGRATIONS="master"
-VENDOR_VERSION_SYMFONY_CONSOLE="2.0.5"
+VENDOR_VERSION_SYMFONY_CONSOLE="2.0.6"
 
-VENDOR_URL_NETTE="http://files.nette.org/releases/2.0/NetteFramework-$VENDOR_VERSION_NETTE-PHP5.3.zip"
+#VENDOR_URL_NETTE="http://files.nette.org/releases/2.0/NetteFramework-$VENDOR_VERSION_NETTE-PHP5.3.zip"
+VENDOR_URL_NETTE="http://dl.dropbox.com/u/7913909/NetteFramework-$VENDOR_VERSION_NETTE-PHP5.3.tar.gz" # tmp
 VENDOR_URL_DOCTRINE="http://www.doctrine-project.org/downloads/DoctrineORM-$VENDOR_VERSION_DOCTRINE-full.tar.gz"
 VENDOR_URL_DOCTRINE_MIGRATIONS="https://github.com/Vrtak-CZ/migrations/tarball/$VENDOR_VERSION_DOCTRINE_MIGRATIONS"
 VENDOR_URL_SYMFONY_CONSOLE="http://pear.symfony.com/get/Console-$VENDOR_VERSION_SYMFONY_CONSOLE.tgz"
@@ -35,7 +36,9 @@ wget --no-check-certificate $VENDOR_URL_SYMFONY_CONSOLE -O "vendors/_SymfonyCons
 ###########
 
 # Nette
-7z x "vendors/_Nette.zip" -o"vendors/_Nette";
+#7z x "vendors/_Nette.zip" -o"vendors/_Nette"
+mkdir "vendors/_Nette"
+tar xzvf "vendors/_Nette.zip" -C "vendors/_Nette"
 rm "vendors/_Nette.zip"
 mv "vendors/_Nette/NetteFramework-$VENDOR_VERSION_NETTE-PHP5.3/Nette" "vendors/Nette"
 mv "vendors/_Nette/NetteFramework-$VENDOR_VERSION_NETTE-PHP5.3/license.txt" "vendors/Nette/license.txt"
