@@ -42,7 +42,8 @@ jQuery.ajaxSetup({
 		var errorWin = window.open('', 'Error');
 		errorWin.document.write(xhr.responseText);
 		return false;
-	}
+	},
+	dataType: 'json'
 });
 //-------------------------------------------------------------------------------------
 
@@ -55,7 +56,15 @@ jQuery.fn.nellaForm = function() {
 	form.noValidate = true; // disable browser HTML5 validation
 
 	this.live('submit', function(event) {
-		return Nette.validateForm(event.target || event.srcElement);
+		if(Nette.validateForm(event.target || event.srcElement)){
+			$this = $(event.target);
+			if($this.data('nellaAjaxSnippet')) {
+				return $this.nellaAjaxSnippetForm();
+			} else {
+				return true;
+			}
+		}
+		return false;
 	});
 
 	this.live('click', function(event) {
@@ -103,26 +112,23 @@ jQuery.fn.nellaAjaxSnippet = function() {
 };
 
 jQuery.fn.nellaAjaxSnippetForm = function() {
-	$(this).live('submit', function(event) {
-		event.preventDefault();
-		$this = $(this);
-		var sumit_btn = $this.find('input[type=submit]');
-		sumit_btn.attr('disabled', 'disabled').addClass('loading');
-		$.post($this.attr('action'), $this.serialize(), function(data) {
-			Nella.processPayload(data);
-			sumit_btn.removeClass('loading').removeAttr('disabled');
-			if (window.history && window.history.pushState) {
-				window.history.pushState(null, document.title, $this.attr('action'));
-			}
-		});
-		return false;
+	$this = $(this);
+	var sumit_btn = $this.find('input[type=submit]');
+	sumit_btn.attr('disabled', 'disabled').addClass('loading');
+	$.post($this.attr('action'), $this.serialize(), function(data) {
+		Nella.processPayload(data);
+		sumit_btn.removeClass('loading').removeAttr('disabled');
+		if (window.history && window.history.pushState) {
+			window.history.pushState(null, document.title, $this.attr('action'));
+		}
 	});
+	return false;
 };
 
 $(document).ready(function() {
 	// Forms
 	$('form').nellaForm();
-	$('form[data-nella-ajax-snippet]').nellaAjaxSnippetForm();
+	//$('form[data-nella-ajax-snippet]').nellaAjaxSnippetForm();
 	// Datetime (for time and datetime please use: http://trentrichardson.com/examples/timepicker/)
 	$('input[type="time"]').each(function() {
 		$this = $(this);
