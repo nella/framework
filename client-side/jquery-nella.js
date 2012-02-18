@@ -42,7 +42,8 @@ jQuery.ajaxSetup({
 		var errorWin = window.open('', 'Error');
 		errorWin.document.write(xhr.responseText);
 		return false;
-	}
+	},
+	dataType: 'json'
 });
 //-------------------------------------------------------------------------------------
 
