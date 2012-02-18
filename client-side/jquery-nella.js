@@ -14,8 +14,8 @@ Nella.addError = function(elem, message) {
 	}
 	if (message) {
 		$(elem).after($("<span>", {
-			class: 'error', 
-			id: elem.id + '_error', 
+			class: 'error',
+			id: elem.id + '_error',
 			html: message
 		}));
 	}
@@ -50,27 +50,27 @@ jQuery.fn.nellaForm = function() {
 	if (this.length < 1) {
 		return;
 	}
-	
+
 	var form = this[0];
 	form.noValidate = true; // disable browser HTML5 validation
-	
+
 	this.live('submit', function(event) {
 		return Nette.validateForm(event.target || event.srcElement);
 	});
-	
+
 	this.live('click', function(event) {
 		var target = event.target || event.srcElement;
 		this['nette-submittedBy'] = (target.type in {submit:1, image:1}) ? target.name : null;
 	});
-	
+
 	this.find('select, textarea, input').live('keyup change paste cut', function(event) {
 		Nette.validateControl(event.target || event.srcElement);
 	});
-	
+
 	for (var i = 0; i < form.elements.length; i++) {
 		Nette.toggleControl(form.elements[i], null, true);
 	}
-	
+
 	if (/MSIE/.exec(navigator.userAgent)) {
 		var labels = {};
 		for (i = 0, elms = form.getElementsByTagName('label'); i < elms.length; i++) {
@@ -87,7 +87,7 @@ jQuery.fn.nellaForm = function() {
 };
 
 /*jQuery.fn.nellaAjax = function() {
-	
+
 };*/
 
 jQuery.fn.nellaAjaxSnippet = function() {
@@ -105,12 +105,14 @@ jQuery.fn.nellaAjaxSnippet = function() {
 jQuery.fn.nellaAjaxSnippetForm = function() {
 	$(this).live('submit', function(event) {
 		event.preventDefault();
-		this.find('input[type=submit]').attr('disbled', true).addClass('loading');
-		$.post(this.attr('action'), this.serialize(), function(data) {
+		$this = $(this);
+		var sumit_btn = $this.find('input[type=submit]');
+		sumit_btn.attr('disabled', 'disabled').addClass('loading');
+		$.post($this.attr('action'), $this.serialize(), function(data) {
 			Nella.processPayload(data);
-			this.find('input[type=submit]').removeClass('loading').removeAttr('disabled');
+			sumit_btn.removeClass('loading').removeAttr('disabled');
 			if (window.history && window.history.pushState) {
-				window.history.pushState(null, document.title, this.attr('action'));
+				window.history.pushState(null, document.title, $this.attr('action'));
 			}
 		});
 		return false;
@@ -128,8 +130,8 @@ $(document).ready(function() {
 	});
 	$('input[type="datetime"]').each(function() {
 		$this = $(this);
-		$this.datetimepicker({ 
-			format: $this.attr('data-nella-forms-date'), 
+		$this.datetimepicker({
+			format: $this.attr('data-nella-forms-date'),
 			timeFormat: $this.attr('data-nella-forms-time')
 		});
 	});
@@ -145,7 +147,7 @@ $(document).ready(function() {
 		$this = $(this);
 		$this.bind('click', function() { return confirm($this.attr('data-nella-confirm')) });
 	});
-	
+
 	$('a[data-nella-ajax-snippet]').nellaAjaxSnippet();
 });
 
