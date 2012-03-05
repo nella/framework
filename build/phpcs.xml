@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ruleset name="Nella Framework">
-	<description>Nella Framework coding standards</description>
-
-	<rule ref="Kukulich" />
-</ruleset>

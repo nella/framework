@@ -7,46 +7,38 @@
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
 
-use Nella\SplClassLoader,
-	Nette\Diagnostics\Debugger;
+use Nette\Diagnostics\Debugger;
 
 // Load libs
 $params = array(
-	'appName' => "Nella Framework Test Suite", 
-	'rootDir' => __DIR__ . "/..", 
-	'appDir' => __DIR__, 
+	'appDir' => __DIR__,
 	'wwwDir' => __DIR__, 
 	'libsDir' => __DIR__ . "/../vendors", 
 	'tempDir' => __DIR__ . "/temp", 
-	'storageDir' => "%tempDir",
-	'imageCacheDir' => "%tempDir",
+	'fixturesDir' => __DIR__ . "/fixtures"
 );
 
 require_once $params['libsDir'] . "/Nette/loader.php";
-require_once __DIR__ . "/../Nella/SplClassLoader.php";
-SplClassLoader::getInstance(array(
-	'Nella' => __DIR__ . "/../Nella",
-	'NellaTests' => __DIR__,
-	'Doctrine' => $params['libsDir'] . "/Doctrine",
-	'Symfony' => $params['libsDir'] . "/Symfony"
-))->register();
+require_once __DIR__ . "/../Nella/loader.php";
+Nella\SplClassLoader::getInstance()
+    ->addNamespaceAlias('NellaTests', __DIR__ . '/cases')
+    ->addNamespaceAlias('Doctrine', $params['libsDir'] . "/Doctrine")
+	->addNamespaceAlias('Symfony', $params['libsDir'] . "/Symfony");
 
 // Setup Nette profiler
+//Debugger::$browser = '';
 Debugger::$strictMode = TRUE;
-Debugger::enable(Debugger::DEVELOPMENT, FALSE);
+Debugger::enable(Debugger::DEVELOPMENT, __DIR__ . "/temp/log");
 
 // Init DI Container
-$configurator = new \Nella\Configurator('Nette\DI\Container', $params);
+$configurator = new \Nette\Config\Configurator;
+$configurator->addParameters($params);
+$configurator->setTempDirectory($params['tempDir']);
 
-$container = $configurator->loadConfig(__DIR__ . "/config.neon", "test");
+$configurator->addConfig(__DIR__ . "/config.neon", FALSE);
+$container = $configurator->createContainer();
 
-$container->addService('model', function() {
-	$context = new \Nella\Doctrine\Container;
-	$context->addService('entityManager', \Doctrine\Tests\Mocks\EntityManagerMock::create(
-		new \Doctrine\DBAL\Connection(array(), new \Doctrine\DBAL\Driver\PDOSqlite\Driver)
-	));	
-	return $context;
-});
+require_once __DIR__ . "/mocks/EntityManagerMock.php";
+require_once __DIR__ . "/mocks/UserStorage.php";
 
-// Set DI Container
-Nette\Environment::setContext($container);
+\Nette\Environment::setContext($container);

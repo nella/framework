@@ -4,15 +4,14 @@
 # Config #
 ##########
 
-VENDOR_VERSION_NETTE="2.0beta"
-VENDOR_VERSION_DOCTRINE="2.1.3"
+VENDOR_VERSION_NETTE="2.0.1"
+VENDOR_VERSION_DOCTRINE="2.2.1"
 VENDOR_VERSION_DOCTRINE_MIGRATIONS="master"
-VENDOR_VERSION_SYMFONY_CONSOLE="2.0.6"
+VENDOR_VERSION_SYMFONY_CONSOLE="2.0.11"
 
-#VENDOR_URL_NETTE="http://files.nette.org/releases/2.0/NetteFramework-$VENDOR_VERSION_NETTE-PHP5.3.zip"
-VENDOR_URL_NETTE="http://dl.dropbox.com/u/7913909/NetteFramework-$VENDOR_VERSION_NETTE-PHP5.3.tar.gz" # tmp
+VENDOR_URL_NETTE="http://files.nette.org/releases/2.0/NetteFramework-$VENDOR_VERSION_NETTE-PHP5.3.tar.bz2"
 VENDOR_URL_DOCTRINE="http://www.doctrine-project.org/downloads/DoctrineORM-$VENDOR_VERSION_DOCTRINE-full.tar.gz"
-VENDOR_URL_DOCTRINE_MIGRATIONS="https://github.com/Vrtak-CZ/migrations/tarball/$VENDOR_VERSION_DOCTRINE_MIGRATIONS"
+VENDOR_URL_DOCTRINE_MIGRATIONS="https://github.com/doctrine/migrations/tarball/$VENDOR_VERSION_DOCTRINE_MIGRATIONS"
 VENDOR_URL_SYMFONY_CONSOLE="http://pear.symfony.com/get/Console-$VENDOR_VERSION_SYMFONY_CONSOLE.tgz"
 
 ##################
@@ -26,7 +25,7 @@ mkdir "vendors"
 # Download #
 ############
 
-wget --no-check-certificate $VENDOR_URL_NETTE -O "vendors/_Nette.zip"
+wget --no-check-certificate $VENDOR_URL_NETTE -O "vendors/_Nette.tar.bz2"
 wget --no-check-certificate $VENDOR_URL_DOCTRINE -O "vendors/_Doctrine.tar.gz"
 wget --no-check-certificate $VENDOR_URL_DOCTRINE_MIGRATIONS -O "vendors/_DoctrineMigrations.tar.gz"
 wget --no-check-certificate $VENDOR_URL_SYMFONY_CONSOLE -O "vendors/_SymfonyConsole.tar.gz"
@@ -36,10 +35,9 @@ wget --no-check-certificate $VENDOR_URL_SYMFONY_CONSOLE -O "vendors/_SymfonyCons
 ###########
 
 # Nette
-#7z x "vendors/_Nette.zip" -o"vendors/_Nette"
 mkdir "vendors/_Nette"
-tar xzvf "vendors/_Nette.zip" -C "vendors/_Nette"
-rm "vendors/_Nette.zip"
+tar xjvf "vendors/_Nette.tar.bz2" -C "vendors/_Nette"
+rm "vendors/_Nette.tar.bz2"
 mv "vendors/_Nette/NetteFramework-$VENDOR_VERSION_NETTE-PHP5.3/Nette" "vendors/Nette"
 mv "vendors/_Nette/NetteFramework-$VENDOR_VERSION_NETTE-PHP5.3/license.txt" "vendors/Nette/license.txt"
 rm -rf "vendors/_Nette"
@@ -49,10 +47,10 @@ mkdir "vendors/_Doctrine"
 tar xzvf "vendors/_Doctrine.tar.gz" -C "vendors/_Doctrine"
 rm "vendors/_Doctrine.tar.gz"
 mkdir "vendors/Doctrine"
-mv "vendors/_Doctrine/doctrine-orm/Doctrine/Common" "vendors/Doctrine/Common"
-mv "vendors/_Doctrine/doctrine-orm/Doctrine/DBAL" "vendors/Doctrine/DBAL"
-mv "vendors/_Doctrine/doctrine-orm/Doctrine/ORM" "vendors/Doctrine/ORM"
-mv "vendors/_Doctrine/doctrine-orm/LICENSE" "vendors/Doctrine/license.txt"
+mv "vendors/_Doctrine/DoctrineORM-$VENDOR_VERSION_DOCTRINE/Doctrine/Common" "vendors/Doctrine/Common"
+mv "vendors/_Doctrine/DoctrineORM-$VENDOR_VERSION_DOCTRINE/Doctrine/DBAL" "vendors/Doctrine/DBAL"
+mv "vendors/_Doctrine/DoctrineORM-$VENDOR_VERSION_DOCTRINE/Doctrine/ORM" "vendors/Doctrine/ORM"
+mv "vendors/_Doctrine/DoctrineORM-$VENDOR_VERSION_DOCTRINE/LICENSE" "vendors/Doctrine/license.txt"
 rm -rf "vendors/_Doctrine"
 
 # Doctrine Migrations

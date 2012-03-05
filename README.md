@@ -9,17 +9,17 @@ Nella Framework focuses on security and performance and is definitely one of the
 Requirements
 ------------
 
-- PHP 5.3.2+
-- MySQL 5+ / SQLite 3+ / PosgreSQL
-- Nette Framework 2.0-beta+
-- Doctrine ORM 2.1.0+
-- Symfony Console 2.0+
+Nella Framework requires PHP 5.3.2 with PDO.
+
+- Nette Framework 2.0.x
+- Doctrine ORM 2.2.x
+- Symfony Console 2.0.x
 
 
 Installation
 ------------
 
-After downloading the latest distribution package from [http://nella-project.org/#framework](http://nella-project.org/#framework), extract it to a directory accessible by web server. The installation is done!
+After downloading the latest distribution package from [http://nellafw.org](http://nellafw.org/download), extract it to a directory accessible by web server. The installation is done!
 
 The source tree includes the following directories:
 
@@ -34,5 +34,5 @@ The source tree includes the following directories:
 
 -----
 
-homepage: [http://nella-project.org](http://nella-project.org)
-repository: [http://github.com/nella/framework](http://github.com/nella/framework)
+Nella Framework: homepage [http://nellafw.org](http://nellafw.org) and repository [http://github.com/nella/framework](http://github.com/nella/framework)
+Sandbox, pre-packaged and configured project: [http://github.com/nella/framework-sandbox](http://github.com/nella/framework-sandbox)

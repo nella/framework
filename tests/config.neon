@@ -1,10 +1,10 @@
-test:
-	services:
-		cacheStorage:
-			class: Nette\Caching\Storages\MemoryStorage
-		user:
-			class: NellaTests\Mocks\User
-	
+services:
+	cacheStorage:
+		class: Nette\Caching\Storages\MemoryStorage
+	#userStorage:
+	#	class: NellaTests\Mocks\UserStorage
+
+parameters:
 	database:
 		driver: pdo_sqlite
 		memory: true

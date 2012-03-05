@@ -47,6 +47,9 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
 		}
 	}
 
+	/**
+	 * @return \Nette\DI\Container
+	 */
 	protected function getContext()
 	{
 		static $context;
