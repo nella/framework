@@ -9,6 +9,8 @@
 
 namespace Nella\NetteAddons\Media\Routes;
 
+use Nette\Http\Url;
+
 /**
  * File route
  *
@@ -61,8 +63,15 @@ class FileRoute extends \Nette\Application\Routers\Route
 	 * @param  \Nette\Http\Url referential URI
 	 * @return string|NULL
 	 */
-	public function constructUrl(\Nette\Application\Request $appRequest, \Nette\Http\Url $refUrl)
+	public function constructUrl(\Nette\Application\Request $appRequest, Url $refUrl)
 	{
-		return $this->route->constructUrl($appRequest, $refUrl);
+		$url = $this->route->constructUrl($appRequest, $refUrl);
+		if ($url != NULL) {
+			if (is_string($url)) {
+				$url = new Url($url);
+			}
+			$url->setQuery('')->canonicalize();
+		}
+		return $url;
 	}
 }
