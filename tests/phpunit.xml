@@ -2,20 +2,20 @@
 <phpunit backupGlobals="false" backupStaticAttributes="false" bootstrap="./bootstrap.php" convertErrorsToExceptions="true" convertNoticesToExceptions="true" convertWarningsToExceptions="true">
 	<filter>
 		<whitelist>
-			<directory suffix=".php">./Nella</directory>
+			<directory suffix=".php">../Nella</directory>
 			<exclude>
-				<directory suffix=".php">./Nella/Diagnostics</directory>
-				<directory suffix=".php">./Nella/Testing</directory>
-				<file>./Nella/shortcuts.php</file>
-				<file>./Nella/loader.php</file>
-				<file>./Nella/Framework.php</file>
-				<directory suffix=".php">./vendors</directory>
+				<directory suffix=".php">../Nella/Diagnostics</directory>
+				<directory suffix=".php">../Nella/Testing</directory>
+				<file>../Nella/shortcuts.php</file>
+				<file>../Nella/loader.php</file>
+				<file>../Nella/Framework.php</file>
+				<directory suffix=".php">../vendors</directory>
 			</exclude>
 		</whitelist>
 	</filter>
 	<testsuites>
 		<testsuite name="Nella Framework Test Suite">
-			<directory>cases</directory>
+			<directory>./cases</directory>
 		</testsuite>
 	</testsuites>
 </phpunit>
