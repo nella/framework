@@ -89,7 +89,7 @@ class Extension extends \Nette\Config\CompilerExtension
 
 		// cache
 		$builder->addDefinition($this->prefix('cache'))
-			->setClass('Nella\Addons\Doctrine\Cache', array('@cacheStorage'));
+			->setClass('Nella\NetteAddons\Doctrine\Cache', array('@cacheStorage'));
 
 		// annotation reader factory
 		$annotationReaderFactory = $builder->addDefinition($this->prefix('annotationReader'))
@@ -296,7 +296,7 @@ class Extension extends \Nette\Config\CompilerExtension
 
 		$cfg = new \Doctrine\DBAL\Configuration;
 		if (isset($config['debugger']) && $config['debugger'] === TRUE) {
-			$panel = new \Nella\Addons\Doctrine\Diagnostics\ConnectionPanel;
+			$panel = new \Nella\NetteAddons\Doctrine\Diagnostics\ConnectionPanel;
 			if (Debugger::$bar) {
 				Debugger::$bar->addPanel($panel);
 			}
