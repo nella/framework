@@ -49,4 +49,23 @@ class Configurator extends \Nette\Config\Configurator
 
 		return $this->addConfig($file, $section);
 	}
+
+	/**
+	 * @return Compiler
+	 */
+	protected function createCompiler()
+	{
+		$compiler = new \Nette\Config\Compiler;
+
+		$nette = new \Nette\Config\Extensions\NetteExtension;
+		$nette->defaults['container']['debugger'] = TRUE;
+
+		$compiler->addExtension('php', new \Nette\Config\Extensions\PhpExtension)
+				->addExtension('constants', new \Nette\Config\Extensions\ConstantsExtension)
+				->addExtension('nette', $nette)
+				->addExtension('doctrine', new \Nella\Doctrine\Config\Extension)
+				->addExtension('migrations', new \Nella\NetteAddons\Doctrine\Config\MigrationsExtension);
+
+		return $compiler;
+	}
 }
