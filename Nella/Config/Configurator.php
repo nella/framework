@@ -25,4 +25,14 @@ class Configurator extends \Nette\Config\Configurator
 	{
 		return \Nella\SplClassLoader::getInstance();
 	}
+
+	/**
+	 * @param string
+	 * @param string|bool
+	 * @return \Nette\Config\Configurator
+	 */
+	public function addConfig($file, $section = self::NONE)
+	{
+		return parent::addConfig($file, $section);
+	}
 }
