@@ -9,13 +9,42 @@
 
 namespace Nella\Doctrine;
 
+use Nella\Model\IQueryObject;
+
 /**
  * Basic entity repository
  *
  * @author	Patrik Votoček
  */
-class Repository extends \Doctrine\ORM\EntityRepository
+class Repository extends \Doctrine\ORM\EntityRepository implements \Nella\Model\IQueryable, \Nella\Model\IQueryExecutor
 {
+	/**
+	 * @param \Nella\Model\IQueryObject
+	 * @return int
+	 */
+	public function count(IQueryObject $queryObject)
+	{
+		return $queryObject->count($this);
+	}
+
+	/**
+	 * @param \Nella\Model\IQueryObject
+	 * @return array
+	 */
+	public function fetch(IQueryObject $queryObject)
+	{
+		return $queryObject->fetch($this);
+	}
+
+	/**
+	 * @param \Nella\Model\IQueryObject
+	 * @return object|NULL
+	 */
+	public function fetchOne(IQueryObject $queryObject)
+	{
+		return $queryObject->fetchOne($this);
+	}
+
 	/**
 	 * Reindex result by key
 	 *
