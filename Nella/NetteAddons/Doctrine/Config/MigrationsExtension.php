@@ -46,6 +46,10 @@ class MigrationsExtension extends \Nette\Config\CompilerExtension
 	 */
 	public function loadConfiguration()
 	{
+		if (!$this->getConfig()) {
+			return;
+		}
+
 		$config = $this->getConfig($this->getDefaults());
 		$builder = $this->getContainerBuilder();
 		
