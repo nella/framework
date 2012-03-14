@@ -7,11 +7,13 @@
 VENDOR_VERSION_NETTE="2.0.1"
 VENDOR_VERSION_DOCTRINE="2.2.1"
 VENDOR_VERSION_DOCTRINE_MIGRATIONS="master"
+VENDOR_VERSION_DOCTRINE_EXTENSIONS="master"
 VENDOR_VERSION_SYMFONY_CONSOLE="2.0.11"
 
 VENDOR_URL_NETTE="http://files.nette.org/releases/2.0/NetteFramework-$VENDOR_VERSION_NETTE-PHP5.3.tar.bz2"
 VENDOR_URL_DOCTRINE="http://www.doctrine-project.org/downloads/DoctrineORM-$VENDOR_VERSION_DOCTRINE-full.tar.gz"
 VENDOR_URL_DOCTRINE_MIGRATIONS="https://github.com/doctrine/migrations/tarball/$VENDOR_VERSION_DOCTRINE_MIGRATIONS"
+VENDOR_URL_DOCTRINE_EXTENSIONS="https://github.com/beberlei/DoctrineExtensions/tarball/$VENDOR_VERSION_DOCTRINE_EXTENSIONS"
 VENDOR_URL_SYMFONY_CONSOLE="http://pear.symfony.com/get/Console-$VENDOR_VERSION_SYMFONY_CONSOLE.tgz"
 
 ##################
@@ -28,6 +30,7 @@ mkdir "vendors"
 wget --no-check-certificate $VENDOR_URL_NETTE -O "vendors/_Nette.tar.bz2"
 wget --no-check-certificate $VENDOR_URL_DOCTRINE -O "vendors/_Doctrine.tar.gz"
 wget --no-check-certificate $VENDOR_URL_DOCTRINE_MIGRATIONS -O "vendors/_DoctrineMigrations.tar.gz"
+wget --no-check-certificate $VENDOR_URL_DOCTRINE_EXTENSIONS -O "vendors/_DoctrineExtensions.tar.gz"
 wget --no-check-certificate $VENDOR_URL_SYMFONY_CONSOLE -O "vendors/_SymfonyConsole.tar.gz"
 
 ###########
@@ -61,6 +64,15 @@ TMP_MIGRATIONS=`ls "vendors/_DoctrineMigrations" | grep migrations`
 mv "vendors/_DoctrineMigrations/$TMP_MIGRATIONS/lib/Doctrine/DBAL/Migrations" "vendors/Doctrine/DBAL/Migrations"
 mv "vendors/_DoctrineMigrations/$TMP_MIGRATIONS/LICENSE" "vendors/Doctrine/license-migrations.txt"
 rm -rf "vendors/_DoctrineMigrations"
+
+# Doctrine Extensions
+mkdir "vendors/_DoctrineExtensions"
+tar xzvf "vendors/_DoctrineExtensions.tar.gz" -C "vendors/_DoctrineExtensions"
+rm "vendors/_DoctrineExtensions.tar.gz"
+TMP_EXTENSIONS=`ls "vendors/_DoctrineExtensions" | grep DoctrineExtensions`
+mkdir 'vendors/DoctrineExtensions'
+mv "vendors/_DoctrineExtensions/$TMP_EXTENSIONS/lib/DoctrineExtensions/Paginate" "vendors/DoctrineExtensions/Paginate"
+rm -rf "vendors/_DoctrineExtensions"
 
 # Symfony Console
 mkdir "vendors/_SymfonyConsole"

@@ -15,6 +15,10 @@ Nella Framework requires PHP 5.3.2 with PDO.
 - Doctrine ORM 2.2.x
 - Symfony Console 2.0.x
 
+Optional
+
+- Doctrine Extension - Paginate
+
 
 Installation
 ------------
