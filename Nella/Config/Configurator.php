@@ -35,4 +35,18 @@ class Configurator extends \Nette\Config\Configurator
 	{
 		return parent::addConfig($file, $section);
 	}
+
+	/**
+	 * @param string
+	 * @param string|bool
+	 * @return \Nette\Config\Configurator
+	 */
+	public function addConfigIfExist($file, $section = self::NONE)
+	{
+		if (!file_exists($file)) {
+			return $this;
+		}
+
+		return $this->addConfig($file, $section);
+	}
 }
