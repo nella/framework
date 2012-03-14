@@ -16,7 +16,7 @@ if (!defined('LIBS_DIR')) {
 // Load and init Nette Framework
 if (!defined('NETTE')) {
 	$file = LIBS_DIR . "/Nette/loader.php";
-	if (!file_exists()) {
+	if (!file_exists($file)) {
 		die('You must load Nette Framework first');
 	}
 	require_once $file;
@@ -27,6 +27,7 @@ if (!defined('NETTE')) {
  */
 define('NELLA_FRAMEWORK', TRUE);
 define('NELLA_FRAMEWORK_VERSION_ID', 20000); // v2.0.0
+@header('X-Powered-By: Nette Framework with Nella Framework'); // @ - headers may be sent
 
 require_once __DIR__ . "/SplClassLoader.php";
 Nella\SplClassLoader::getInstance(array(
