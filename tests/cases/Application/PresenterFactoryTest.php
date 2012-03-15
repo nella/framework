@@ -30,6 +30,7 @@ class PresenterFactoryTest extends \Nella\Testing\TestCase
 			array('Foo', 'Nella\FooPresenter', 'Nella'),
 			array('Foo:Bar', 'Nella\Foo\BarPresenter', 'Nella'),
 			array('Foo:Bar:Baz', 'Nella\Foo\Bar\BazPresenter', 'Nella'),
+			array('Nette:Micro', 'NetteModule\MicroPresenter'),
 		);
 	}
 
@@ -50,6 +51,7 @@ class PresenterFactoryTest extends \Nella\Testing\TestCase
 			array('Nella\FooPresenter', 'Foo'),
 			array('Nella\Foo\BarPresenter', 'Foo:Bar'),
 			array('Nella\Foo\Bar\BazPresenter', 'Foo:Bar:Baz'),
+			array('NetteModule\MicroPresenter', 'Nette:Micro'),
 		);
 	}
 

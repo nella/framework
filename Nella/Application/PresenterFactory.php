@@ -129,6 +129,10 @@ class PresenterFactory extends \Nette\Object implements \Nette\Application\IPres
 	 */
 	public function formatPresenterClass($presenter, $namespace = 'App')
 	{
+		if ($presenter == 'Nette:Micro') {
+			return 'NetteModule\MicroPresenter';
+		}
+
 		return $namespace . "\\" . str_replace(':', "\\", $presenter.'Presenter');
 	}
 
@@ -140,6 +144,10 @@ class PresenterFactory extends \Nette\Object implements \Nette\Application\IPres
 	 */
 	public function unformatPresenterClass($class)
 	{
+		if ($class == 'NetteModule\MicroPresenter') {
+			return 'Nette:Micro';
+		}
+
 		$active = "";
 		$namespaces = clone $this->namespaces;
 		foreach ($namespaces as $namespace) {
