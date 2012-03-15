@@ -48,11 +48,31 @@ class Extension extends \Nella\NetteAddons\Doctrine\Config\Extension
 			foreach ($config['entityManagers'] as $name => $em) {
 				$cfg = $em + $this->emDefaults;
 
+				if ($builder->hasDefinition($this->configurationsPrefix($name.'AnnotationReader'))) {
+					$builder->addDefinition($this->configurationsPrefix($name.'DiscriminatorMapDiscovery'))
+						->setClass('Nella\Doctrine\Listeners\DiscriminatorMapDiscovery', array(
+							$builder->getDefinition($this->configurationsPrefix($name.'AnnotationReader'))
+						))
+						->addTag('doctrineListener')
+						->setAutowired(FALSE);
+				}
+
 				if ($builder->hasDefinition($this->configurationsPrefix($name))) {
 					$builder->getDefinition($this->configurationsPrefix($name))
 						->addSetup('setDefaultRepositoryClassName', array($cfg['repositoryClass']));
 				}
 			}
 		}
+	}
+
+	/**
+	 * @param \Doctrine\Common\Cache\Cache
+	 * @param bool
+	 * @return \Doctrine\Common\Annotations\CachedReader
+	 */
+	public static function createAnnotationReader(\Doctrine\Common\Cache\Cache $cache, $useSimple = FALSE)
+	{
+		require_once __DIR__ ."/../Mapping/DiscriminatorEntry.php";
+		return parent::createAnnotationReader($cache, $useSimple);
 	}
 }
