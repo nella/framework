@@ -17,10 +17,10 @@ namespace Nella\Doctrine\Config;
 class Extension extends \Nella\NetteAddons\Doctrine\Config\Extension
 {
 	/** @var array */
-	public $defaults = array(
+	public $emDefaults = array(
 		'repositoryClass' => 'Nella\Doctrine\Repository',
 	);
-	
+
 	/**
 	 * Processes configuration data
 	 *
@@ -29,24 +29,24 @@ class Extension extends \Nella\NetteAddons\Doctrine\Config\Extension
 	public function loadConfiguration()
 	{
 		parent::loadConfiguration();
-		
+
 		$builder = $this->getContainerBuilder();
-		$config = $this->getConfig($this->defaults);
-		
+		$config = $this->getConfig();
+
 		/**
 		 *  Add some stuff to Doctrine addon for Nella Framework
 		 */
-		
+
 		// Ignore Testing dir for loading entityes
 		if ($builder->hasDefinition($this->prefix('metadataDriver'))) {
 			$builder->getDefinition($this->prefix('metadataDriver'))
 				->addSetup('addIgnoredDir', array(__DIR__ . "/../../Testing"));
 		}
-		
+
 		// Set default repostitory class
 		if (isset($config['entityManagers'])) {
 			foreach ($config['entityManagers'] as $name => $em) {
-				$cfg = $em + $this->entityManagerDefaults;
+				$cfg = $em + $this->emDefaults;
 
 				if ($builder->hasDefinition($this->configurationsPrefix($name))) {
 					$builder->getDefinition($this->configurationsPrefix($name))
