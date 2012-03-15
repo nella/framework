@@ -24,16 +24,12 @@ class CliRouter extends \Nette\Object implements \Nette\Application\IRouter
 	private $callback;
 
 	/**
-	 * @param \Nette\DI\Container
+	 * @param \Symfony\Component\Console\Application
 	 */
-	public function __construct(\Nette\DI\Container $context)
+	public function __construct(\Symfony\Component\Console\Application $console)
 	{
-		if (!$context->hasService('console')) {
-			throw new \Nette\InvalidStateException('Service "console" does not exist');
-		}
-
-		$this->callback = callback(function() use($context) {
-			$context->console->run();
+		$this->callback = callback(function() use($console) {
+			$console->run();
 		});
 	}
 
