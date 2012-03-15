@@ -44,6 +44,11 @@ class Extension extends \Nella\NetteAddons\Doctrine\Config\Extension
 				->addSetup('addIgnoredDir', array(__DIR__ . "/../../Testing"));
 		}
 
+		$builder->addDefinition($this->prefix('mediaListener'))
+			->setClass('Nella\Media\Model\Listener')
+			->addTag('doctrineListener')
+			->setAutowired(FALSE);
+
 		// Set default repostitory class
 		if (isset($config['entityManagers'])) {
 			foreach ($config['entityManagers'] as $name => $em) {
