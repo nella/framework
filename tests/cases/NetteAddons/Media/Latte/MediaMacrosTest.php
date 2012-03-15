@@ -35,18 +35,18 @@ class MediaMacrosTest extends \Nella\Testing\TestCase
 	public function dataFile()
 	{
 		return array(
-			array('{file $x}', '$x'),
-			array('{file 1}', 1),
+			array('{file $x}', array('$x', "\$x instanceof \\Nella\\NetteAddons\\Media\\IFile ? pathinfo(\$x->getPath(), PATHINFO_EXTENSION) : NULL")),
+			array('{file 1, "zip"}', array(1, '"zip"')),
 		);
 	}
 
 	/**
 	 * @dataProvider dataFile
 	 */
-	public function testFile($macro, $file)
+	public function testFile($macro, $data)
 	{
-		$mask = "<?php echo Nette\\Templating\\Helpers::escapeHtml(\$_presenter->link(':Nette:Micro:', array('file'=>%file%)), ENT_NOQUOTES) ?>\n";
-		$expected = str_replace('%file%', $file, $mask);
+		$mask = "<?php echo Nette\\Templating\\Helpers::escapeHtml(\$_presenter->link(':Nette:Micro:', array('file'=>%file%,'ext'=>%ext%)), ENT_NOQUOTES) ?>\n";
+		$expected = str_replace(array('%file%', '%ext%'), $data, $mask);
 
 		$tokens = $this->parser->parse($macro);
 		$actual = $this->compiler->compile($tokens);
@@ -56,18 +56,18 @@ class MediaMacrosTest extends \Nella\Testing\TestCase
 	public function dataFhref()
 	{
 		return array(
-			array('<a n:fhref="$x">Foo</a>', '$x'),
-			array('<a n:fhref="1">Foo</a>', 1),
+			array('<a n:fhref="$x">Foo</a>', array('$x', "\$x instanceof \\Nella\\NetteAddons\\Media\\IFile ? pathinfo(\$x->getPath(), PATHINFO_EXTENSION) : NULL")),
+			array('<a n:fhref="1, zip">Foo</a>', array(1, '"zip"')),
 		);
 	}
 
 	/**
 	 * @dataProvider dataFhref
 	 */
-	public function testFhref($macro, $file)
+	public function testFhref($macro, $data)
 	{
-		$mask = "<a<?php  ?> href=\"<?php echo htmlSpecialChars(\$_presenter->link(':Nette:Micro:', array('file'=>%file%))) ?>\"<?php  ?>>Foo</a>";
-		$expected = str_replace('%file%', $file, $mask);
+		$mask = "<a<?php  ?> href=\"<?php echo htmlSpecialChars(\$_presenter->link(':Nette:Micro:', array('file'=>%file%,'ext'=>%ext%))) ?>\"<?php  ?>>Foo</a>";
+		$expected = str_replace(array('%file%', '%ext%'), $data, $mask);
 
 		$tokens = $this->parser->parse($macro);
 		$actual = $this->compiler->compile($tokens);
@@ -79,7 +79,7 @@ class MediaMacrosTest extends \Nella\Testing\TestCase
 	public function dataImage()
 	{
 		return array(
-			array('{image $x, $y}', array('$x', '$y', "\$x instanceof \\Nella\\NetteAddons\\Media\\IImage ? \$image->getImageType() : 'jpg'")),
+			array('{image $x, $y}', array('$x', '$y', "\$x instanceof \\Nella\\NetteAddons\\Media\\IImage ? \$x->getImageType() : 'jpg'")),
 			array('{image $x, $y, png}', array('$x', '$y', '"png"')),
 			array('{image $x, $y, \'gif\'}', array('$x', '$y', "'gif'")),
 			array('{image $x, $y, "jpg"}', array('$x', '$y', '"jpg"')),
@@ -87,7 +87,7 @@ class MediaMacrosTest extends \Nella\Testing\TestCase
 			array('{image 1, test}', array('1', '"test"', "'jpg'")),
 			array('{image 1, "test"}', array('1', '"test"', "'jpg'")),
 			array('{image 1, \'test\'}', array('1', "'test'", "'jpg'")),
-			array('{img $x, $y}', array('$x', '$y', "\$x instanceof \\Nella\\NetteAddons\\Media\\IImage ? \$image->getImageType() : 'jpg'")),
+			array('{img $x, $y}', array('$x', '$y', "\$x instanceof \\Nella\\NetteAddons\\Media\\IImage ? \$x->getImageType() : 'jpg'")),
 			array('{img $x, $y, png}', array('$x', '$y', '"png"')),
 			array('{img $x, $y, \'gif\'}', array('$x', '$y', "'gif'")),
 			array('{img $x, $y, "jpg"}', array('$x', '$y', '"jpg"')),
@@ -114,7 +114,7 @@ class MediaMacrosTest extends \Nella\Testing\TestCase
 	public function dataSrc()
 	{
 		return array(
-			array('<img n:src="$x, $y">', array('$x', '$y', "\$x instanceof \\Nella\\NetteAddons\\Media\\IImage ? \$image->getImageType() : 'jpg'")),
+			array('<img n:src="$x, $y">', array('$x', '$y', "\$x instanceof \\Nella\\NetteAddons\\Media\\IImage ? \$x->getImageType() : 'jpg'")),
 			array('<img n:src="$x, $y, png">', array('$x', '$y', '"png"')),
 			array('<img n:src="$x, $y, \'gif\'">', array('$x', '$y', "'gif'")),
 			array('<img n:src="1, 2">', array('1', '2', "'jpg'")),
@@ -139,7 +139,7 @@ class MediaMacrosTest extends \Nella\Testing\TestCase
 	public function dataIhref()
 	{
 		return array(
-			array('<a n:ihref="$x, $y">Foo</a>', array('$x', '$y', "\$x instanceof \\Nella\\NetteAddons\\Media\\IImage ? \$image->getImageType() : 'jpg'")),
+			array('<a n:ihref="$x, $y">Foo</a>', array('$x', '$y', "\$x instanceof \\Nella\\NetteAddons\\Media\\IImage ? \$x->getImageType() : 'jpg'")),
 			array('<a n:ihref="$x, $y, png">Foo</a>', array('$x', '$y', '"png"')),
 			array('<a n:ihref="$x, $y, \'gif\'">Foo</a>', array('$x', '$y', "'gif'")),
 			array('<a n:ihref="1, 2">Foo</a>', array('1', '2', "'jpg'")),
