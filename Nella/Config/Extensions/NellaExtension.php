@@ -21,6 +21,9 @@ class NellaExtension extends \Nette\Config\CompilerExtension
 	/** @var array */
 	public $defaults = array(
 		'namespaces' => array(),
+		'templateDirs' => array(
+			'%appDir%' => 2,
+		),
 	);
 
 	public function loadConfiguration()
@@ -38,6 +41,16 @@ class NellaExtension extends \Nette\Config\CompilerExtension
 				} else {
 					$def->addSetup('addNamespace', array($namespace, $priority));
 				}
+			}
+		}
+
+		$def = $builder->addDefinition($this->prefix('templateFilesFormatter'));
+		$def->setClass('Nella\Templating\TemplateFilesFormatter');
+		foreach ($config['templateDirs'] as $dir => $priority) {
+			if (\Nette\Utils\Validators::isNumericInt($dir)) {
+				$def->addSetup('addDir', array($priority));
+			} else {
+				$def->addSetup('addDir', array($dir, $priority));
 			}
 		}
 	}
