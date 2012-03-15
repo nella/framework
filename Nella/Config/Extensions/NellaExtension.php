@@ -53,5 +53,13 @@ class NellaExtension extends \Nette\Config\CompilerExtension
 				$def->addSetup('addDir', array($dir, $priority));
 			}
 		}
+
+		if ($builder->hasDefinition('router') && $builder->hasDefinition('console')) {
+			$builder->addDefinition('consoleRoute')
+				->setClass('Nella\Application\Routers\CliRoute', array($builder->getDefinition('container')));
+
+			$builder->getDefinition('router')
+				->addSetup('offsetSet', array(NULL, $builder->getDefinition('consoleRoute')));
+		}
 	}
 }
