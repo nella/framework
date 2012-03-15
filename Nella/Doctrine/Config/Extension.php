@@ -28,6 +28,7 @@ class Extension extends \Nella\NetteAddons\Doctrine\Config\Extension
 	 */
 	public function loadConfiguration()
 	{
+		$this->entityManagerDefaults['entityDirs'][] = realpath(__DIR__ . "/../..");
 		parent::loadConfiguration();
 
 		$builder = $this->getContainerBuilder();
