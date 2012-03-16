@@ -13,11 +13,37 @@ namespace Nella\Config;
  * Initial system DI container generator.
  *
  * @author	Patrik Votoček
- * 
+ *
  * @property-read \Nella\SplClassLoader $splClassLoader
  */
 class Configurator extends \Nette\Config\Configurator
 {
+	public function __construct()
+	{
+		@header('X-Powered-By: Nette Framework with Nella Framework');
+		require_once __DIR__ . "/../shortcuts.php";
+		parent::__construct();
+	}
+
+	/**
+	 * @return array
+	 */
+	protected function getDefaultParameters()
+	{
+		$trace = debug_backtrace(FALSE);
+		return array(
+			'appDir' => isset($trace[2]['file']) ? dirname($trace[2]['file']) : NULL,
+			'wwwDir' => isset($_SERVER['SCRIPT_FILENAME']) ? dirname($_SERVER['SCRIPT_FILENAME']) : NULL,
+			'productionMode' => static::detectProductionMode(),
+			'environment' => static::detectProductionMode() ? self::PRODUCTION : self::DEVELOPMENT,
+			'consoleMode' => PHP_SAPI === 'cli',
+			'container' => array(
+				'class' => 'SystemContainer',
+				'parent' => 'Nette\DI\Container',
+			)
+		);
+	}
+
 	/**
 	 * @return \Nella\SplClassLoader
 	 */

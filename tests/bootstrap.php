@@ -12,13 +12,14 @@ use Nette\Diagnostics\Debugger;
 // Load libs
 $params = array(
 	'appDir' => __DIR__,
-	'wwwDir' => __DIR__, 
-	'libsDir' => __DIR__ . "/../vendors", 
-	'tempDir' => __DIR__ . "/temp", 
+	'wwwDir' => __DIR__,
+	'libsDir' => __DIR__ . "/../vendors",
+	'tempDir' => __DIR__ . "/temp",
 	'fixturesDir' => __DIR__ . "/fixtures"
 );
 
-require_once $params['libsDir'] . "/Nette/loader.php";
+require_once $params['libsDir'] . "/pear-nette/Nette/Nette/loader.php";
+require_once $params['libsDir'] . "/.composer/autoload.php";
 require_once __DIR__ . "/../Nella/loader.php";
 Nella\SplClassLoader::getInstance()
     ->addNamespaceAlias('NellaTests', __DIR__ . '/cases')

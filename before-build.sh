@@ -24,5 +24,6 @@ mv build/build.sh ./
 # Init vendors #
 ################
 
-sh vendors.sh
+curl -s http://getcomposer.org/installer | php
+php composer.phar install
 
