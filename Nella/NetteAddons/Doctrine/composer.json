@@ -1,8 +1,8 @@
 {
-	"name": "nella/framework",
+	"name": "nella/nette-addon-doctrine",
 	"type": "nette-addon",
-	"description": "Nella Framework",
-	"keywords": ["nella", "framework", "doctrine", "nette"],
+	"description": "Doctrine addon for Nette Framework",
+	"keywords": ["nella", "addon", "doctrine", "nette"],
 	"homepage": "http://nellafw.org",
 	"license": "LGPLv3",
 	"authors": [
@@ -23,22 +23,21 @@
 		}
 	],
 	"autoload": {
-		"psr-0": { "Nella": "Nella/" }
+		"psr-0": {
+			"Nella\\NetteAddons\\Doctrine": ""
+		}
 	},
-	"config": {
-		"vendor-dir": "vendors"
-	},
+	"target-dir": "Nella/NetteAddons/Doctrine",
 	"require": {
 		"php": ">=5.3.2",
 		"doctrine/orm": "2.2.*",
-		"doctrine/migrations": "*",
 		"symfony/console": "2.0.*",
-		"beberlei/DoctrineExtensions": "*",
 		"pear-nette/Nette": "2.0.1"
 	},
-	"replace": {
-		"nella/nette-addon-doctrine": "self.version",
-		"nella/nette-addon-media": "self.version",
-		"nella/nette-addon-forms": "self.version"
+	"recommend": {
+		"doctrine/migrations": "*"
+	},
+	"conflict": {
+		"nella/framework": "self.version"
 	}
 }
