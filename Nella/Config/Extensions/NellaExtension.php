@@ -21,8 +21,11 @@ class NellaExtension extends \Nette\Config\CompilerExtension
 	/** @var array */
 	public $defaults = array(
 		'namespaces' => array(),
-		'templateDirs' => array(
-			'%appDir%' => 2,
+		'template' => array(
+			'dirs' => array(
+				'%appDir%' => 2,
+			),
+			'debugger' => TRUE,
 		),
 	);
 
@@ -46,12 +49,18 @@ class NellaExtension extends \Nette\Config\CompilerExtension
 
 		$def = $builder->addDefinition($this->prefix('templateFilesFormatter'));
 		$def->setClass('Nella\Templating\TemplateFilesFormatter');
-		foreach ($config['templateDirs'] as $dir => $priority) {
+		foreach ($config['template']['dirs'] as $dir => $priority) {
 			if (\Nette\Utils\Validators::isNumericInt($dir)) {
 				$def->addSetup('addDir', array($priority));
 			} else {
 				$def->addSetup('addDir', array($dir, $priority));
 			}
+		}
+		if ($config['template']['debugger']) {
+			$logger = $builder->addDefinition($this->prefix('templateFilesFormatterLogger'));
+			$logger->setClass('Nella\Templating\Diagnostics\FilesPanel');
+			$logger->addSetup('Nette\Diagnostics\Debugger::$bar->addPanel(?)', array('@self'));
+			$def->addSetup('setLogger', array($logger));
 		}
 
 		if ($builder->hasDefinition('router') && $builder->hasDefinition('doctrine.console')) {

@@ -1,0 +1,31 @@
+<?php
+
+namespace Nella\Templating\Diagnostics;
+
+use Nette\Diagnostics\Helpers;
+
+?>
+<style>#nette-debug .nella-TemplateFilesPanel .nette-inner{width:700px}#nette-debug .nette-ContainerPanel table{width:100%;white-space:nowrap}#nette-debug .nette-ContainerPanel-parameters pre{background:#FDF5CE;padding:.4em .7em;border:1px dotted silver;overflow:auto}#nette-debug .nette-ContainerPanel .created{font-weight:bold}#nette-debug .nella-TemplateFilesPanel .yes{color:green;font-weight:bold}</style>
+
+<div class="nella-TemplateFilesPanel">
+	<h1>Template Files</h1>
+
+	<div class="nette-inner">
+		<table>
+			<thead>
+				<tr>
+					<th>Input</th>
+					<th>Files</th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php foreach ($files as $input => $list): ?>
+				<tr>
+					<td><?php echo htmlspecialchars($input); ?></td>
+					<td><?php echo nl2br(htmlspecialchars(implode(" \n", $list))); ?></td>
+				</tr>
+				<?php endforeach ?>
+			</tbody>
+		</table>
+	</div>
+</div>

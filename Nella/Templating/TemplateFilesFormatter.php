@@ -24,10 +24,13 @@ class TemplateFilesFormatter extends \Nette\Object implements ITemplateFilesForm
 	public $useModuleSuffix = TRUE;
 	/** @var \SplPriorityQueue */
 	private $dirs;
+	/** @var IFilesFormatterLogger|NULL */
+	private $logger;
 
 	public function __construct()
 	{
 		$this->dirs = new \SplPriorityQueue;
+		$this->logger = NULL;
 	}
 
 	/**
@@ -38,6 +41,16 @@ class TemplateFilesFormatter extends \Nette\Object implements ITemplateFilesForm
 	public function addDir($dir, $priority = 5)
 	{
 		$this->dirs->insert($dir, $priority);
+		return $this;
+	}
+
+	/**
+	 * @param IFilesFormatterLogger
+	 * @return TemplateFilesFormatter
+	 */
+	public function setLogger(IFilesFormatterLogger $logger)
+	{
+		$this->logger = $logger;
 		return $this;
 	}
 
@@ -85,6 +98,10 @@ class TemplateFilesFormatter extends \Nette\Object implements ITemplateFilesForm
 		$dirs = clone $this->dirs;
 		foreach ($dirs as $dir) {
 			$files = array_merge($files, $generator($dir));
+		}
+
+		if ($this->logger) {
+			$this->logger->logFiles($name, $layout, $files);
 		}
 
 		return $files;
@@ -137,6 +154,10 @@ class TemplateFilesFormatter extends \Nette\Object implements ITemplateFilesForm
 		$dirs = clone $this->dirs;
 		foreach ($dirs as $dir) {
 			$files = array_merge($files, $generator($dir));
+		}
+
+		if ($this->logger) {
+			$this->logger->logFiles($name, $view, $files);
 		}
 
 		return $files;
