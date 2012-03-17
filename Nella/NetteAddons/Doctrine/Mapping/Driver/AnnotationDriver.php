@@ -64,7 +64,7 @@ class AnnotationDriver extends \Doctrine\ORM\Mapping\Driver\AnnotationDriver
 						continue 2;
 					}
 				}
-				\Nette\Utils\LimitedScope::load($sourceFile);
+				\Nette\Utils\LimitedScope::load($sourceFile, TRUE);
 				$includedFiles[] = $sourceFile;
 			}
 		}
