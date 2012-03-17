@@ -18,8 +18,16 @@ namespace Nella\Model\Config;
  */
 class Extension extends \Nette\Config\CompilerExtension
 {
+	const SERVICES_KEY = 'services';
+
 	/** @var array */
-	public $defaults = array();
+	public $defaults = array(
+		self::SERVICES_KEY => array(
+			'media.file' => "@media.fileDao",
+			'media.image' => "@media.imageDao",
+			'media.imageFormat' => "@media.imageFormatDao",
+		)
+	);
 
 	public function loadConfiguration()
 	{
@@ -35,6 +43,11 @@ class Extension extends \Nette\Config\CompilerExtension
 			->setFactory($config['entityManager'])
 			->setAutowired(FALSE);
 		unset($config['entityManager']);
+
+		foreach ($config[self::SERVICES_KEY] as $name => $def) {
+			\Nette\Config\Compiler::parseService($builder->addDefinition($this->prefix($name)), $def, FALSE);
+		}
+		unset($config[self::SERVICES_KEY]);
 		
 		foreach ($config as $name => $data) {
 			$this->setupItem($builder, $name, $data);

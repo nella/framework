@@ -92,7 +92,8 @@ class Configurator extends \Nette\Config\Configurator
 				->addExtension('doctrine', new \Nella\Doctrine\Config\Extension)
 				->addExtension('migrations', new \Nella\NetteAddons\Doctrine\Config\MigrationsExtension)
 				->addExtension('nella', new Extensions\NellaExtension)
-				->addExtension('media', new \Nella\Media\Config\Extension);
+				->addExtension('media', new \Nella\Media\Config\Extension)
+				->addExtension('model', new \Nella\Model\Config\Extension);
 
 		return $compiler;
 	}
