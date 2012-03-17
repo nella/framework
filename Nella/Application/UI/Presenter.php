@@ -29,7 +29,9 @@ abstract class Presenter extends \Nette\Application\UI\Presenter
 	 */
 	public function formatLayoutTemplateFiles()
 	{
-		return $this->getTemplateFilesFormatter()->formatLayoutTemplateFiles($this->getName(), $this->getLayout());
+		return $this->getTemplateFilesFormatter()->formatLayoutTemplateFiles(
+			$this->getName(), $this->getLayout() ? $this->getLayout() : 'layout'
+		);
 	}
 
 	/**
