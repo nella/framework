@@ -71,6 +71,51 @@ class TemplateFilesFormatterTest extends \Nella\Testing\TestCase
 		$this->assertEquals($expected, $this->formatter->formatLayoutTemplateFiles($name, $layout));
 	}
 
+	public function dataFormatLayoutFilesModule()
+	{
+		return array(
+			array(
+				"Foo", "bar",
+				array(
+					__DIR__ . "/templates/Foo/@bar.latte",
+					__DIR__ . "/templates/Foo.@bar.latte",
+					__DIR__ . "/templates/@bar.latte",
+					__DIR__ . "/Nella/templates/Foo/@bar.latte",
+					__DIR__ . "/Nella/templates/Foo.@bar.latte",
+					__DIR__ . "/Nella/templates/@bar.latte",
+				),
+			),
+			array(
+				"Foo:Bar", "layout",
+				array(
+					__DIR__ . "/FooModule/templates/Bar/@layout.latte",
+					__DIR__ . "/FooModule/templates/Bar.@layout.latte",
+					__DIR__ . "/FooModule/templates/@layout.latte",
+					__DIR__ . "/templates/FooModule/Bar/@layout.latte",
+					__DIR__ . "/templates/FooModule/Bar.@layout.latte",
+					__DIR__ . "/templates/FooModule/@layout.latte",
+					__DIR__ . "/templates/@layout.latte",
+					__DIR__ . "/Nella/FooModule/templates/Bar/@layout.latte",
+					__DIR__ . "/Nella/FooModule/templates/Bar.@layout.latte",
+					__DIR__ . "/Nella/FooModule/templates/@layout.latte",
+					__DIR__ . "/Nella/templates/FooModule/Bar/@layout.latte",
+					__DIR__ . "/Nella/templates/FooModule/Bar.@layout.latte",
+					__DIR__ . "/Nella/templates/FooModule/@layout.latte",
+					__DIR__ . "/Nella/templates/@layout.latte",
+				),
+			),
+		);
+	}
+
+	/**
+	 * @dataProvider dataFormatLayoutFilesModule
+	 */
+	public function testFormatLayoutTemplateFilesModule($name, $layout, $expected)
+	{
+		$this->formatter->useModuleSuffix = TRUE;
+		$this->assertEquals($expected, $this->formatter->formatLayoutTemplateFiles($name, $layout));
+	}
+
 	public function dataFormatFiles()
 	{
 		return array(
@@ -118,7 +163,57 @@ class TemplateFilesFormatterTest extends \Nella\Testing\TestCase
 	 */
 	public function testFormatTemplateFiles($name, $layout, $expected)
 	{
-		//$this->markTestSkipped();
+		$this->assertEquals($expected, $this->formatter->formatTemplateFiles($name, $layout));
+	}
+
+	public function dataFormatFilesModule()
+	{
+		return array(
+			array(
+				"Foo", "bar",
+				array(
+					__DIR__ . "/templates/Foo/bar.latte",
+					__DIR__ . "/templates/Foo.bar.latte",
+					__DIR__ . "/templates/Foo/@global.latte",
+					__DIR__ . "/templates/@global.latte",
+					__DIR__ . "/Nella/templates/Foo/bar.latte",
+					__DIR__ . "/Nella/templates/Foo.bar.latte",
+					__DIR__ . "/Nella/templates/Foo/@global.latte",
+					__DIR__ . "/Nella/templates/@global.latte",
+				),
+			),
+			array(
+				"Foo:Bar", "baz",
+				array(
+					__DIR__ . "/FooModule/templates/Bar/baz.latte",
+					__DIR__ . "/FooModule/templates/Bar.baz.latte",
+					__DIR__ . "/FooModule/templates/Bar/@global.latte",
+					__DIR__ . "/FooModule/templates/@global.latte",
+					__DIR__ . "/templates/FooModule/Bar/baz.latte",
+					__DIR__ . "/templates/FooModule/Bar.baz.latte",
+					__DIR__ . "/templates/FooModule/Bar/@global.latte",
+					__DIR__ . "/templates/FooModule/@global.latte",
+					__DIR__ . "/templates/@global.latte",
+					__DIR__ . "/Nella/FooModule/templates/Bar/baz.latte",
+					__DIR__ . "/Nella/FooModule/templates/Bar.baz.latte",
+					__DIR__ . "/Nella/FooModule/templates/Bar/@global.latte",
+					__DIR__ . "/Nella/FooModule/templates/@global.latte",
+					__DIR__ . "/Nella/templates/FooModule/Bar/baz.latte",
+					__DIR__ . "/Nella/templates/FooModule/Bar.baz.latte",
+					__DIR__ . "/Nella/templates/FooModule/Bar/@global.latte",
+					__DIR__ . "/Nella/templates/FooModule/@global.latte",
+					__DIR__ . "/Nella/templates/@global.latte",
+				),
+			),
+		);
+	}
+
+	/**
+	 * @dataProvider dataFormatFilesModule
+	 */
+	public function testFormatTemplateFilesModule($name, $layout, $expected)
+	{
+		$this->formatter->useModuleSuffix = TRUE;
 		$this->assertEquals($expected, $this->formatter->formatTemplateFiles($name, $layout));
 	}
 }

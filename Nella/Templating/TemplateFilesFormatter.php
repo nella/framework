@@ -70,7 +70,7 @@ class TemplateFilesFormatter extends \Nette\Object implements ITemplateFilesForm
 		}
 
 		if ($this->useModuleSuffix && $path) {
-			$path = str_replace("/", self::MODULE_SUFFIX . "/", $path) . self::MODULE_SUFFIX;
+			$path = str_replace("/", self::MODULE_SUFFIX . "/", $path);
 		}
 
 		$generator = function ($dir) use ($name, $path, $subPath, $layout) {
@@ -123,7 +123,7 @@ class TemplateFilesFormatter extends \Nette\Object implements ITemplateFilesForm
 		}
 
 		if ($this->useModuleSuffix && $path) {
-			$path = str_replace("/", self::MODULE_SUFFIX . "/", $path) . self::MODULE_SUFFIX;
+			$path = str_replace("/", self::MODULE_SUFFIX . "/", $path);
 		}
 
 		$generator = function ($dir) use ($name, $path, $subPath, $view) {
