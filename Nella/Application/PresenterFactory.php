@@ -18,8 +18,11 @@ use Nette\Utils\Strings;
  */
 class PresenterFactory extends \Nette\Object implements \Nette\Application\IPresenterFactory
 {
-	const DEFAULT_NAMESPACE = 'App';
+	const DEFAULT_NAMESPACE = 'App',
+		MODULE_SUFFIX = 'Module';
 
+	/** @var bool */
+	public $useModuleSuffix = TRUE;
 	/** @var Nette\DI\IContainer */
 	private $container;
 	/** @var \SplPriorityQueue */
@@ -133,7 +136,7 @@ class PresenterFactory extends \Nette\Object implements \Nette\Application\IPres
 			return 'NetteModule\MicroPresenter';
 		}
 
-		return $namespace . "\\" . str_replace(':', "\\", $presenter.'Presenter');
+		return $namespace . "\\" . str_replace(':', ($this->useModuleSuffix ? self::MODULE_SUFFIX : "")."\\", $presenter.'Presenter');
 	}
 
 	/**
@@ -161,9 +164,9 @@ class PresenterFactory extends \Nette\Object implements \Nette\Application\IPres
 
 		$class = Strings::startsWith('\\', $class) ? substr($class, 1) : $class;
 		if (strlen($active)) {
-			return str_replace("\\", ':', substr($class, strlen($active), -9));
+			return str_replace(($this->useModuleSuffix ? self::MODULE_SUFFIX : "")."\\", ':', substr($class, strlen($active), -9));
 		} else {
-			return str_replace("\\", ':', substr($class, 0, -9));
+			return str_replace(($this->useModuleSuffix ? self::MODULE_SUFFIX : "")."\\", ':', substr($class, 0, -9));
 		}
 	}
 }

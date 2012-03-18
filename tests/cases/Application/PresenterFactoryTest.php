@@ -19,6 +19,7 @@ class PresenterFactoryTest extends \Nella\Testing\TestCase
 		parent::setup();
 		$this->loader = new \Nella\Application\PresenterFactory($this->getContext());
 		$this->loader->addNamespace('Nella');
+		$this->loader->useModuleSuffix = FALSE;
 	}
 
 	public function dataFormatPresenterClass()
@@ -42,6 +43,28 @@ class PresenterFactoryTest extends \Nella\Testing\TestCase
 		$this->assertEquals($class, $this->loader->formatPresenterClass($presenter, $namespace), "->formatPresenterClass('$presenter')");
 	}
 
+	public function dataFormatPresenterClassModule()
+	{
+		return array(
+			array('Foo', 'App\FooPresenter'),
+			array('Foo:Bar', 'App\FooModule\BarPresenter'),
+			array('Foo:Bar:Baz', 'App\FooModule\BarModule\BazPresenter'),
+			array('Foo', 'Nella\FooPresenter', 'Nella'),
+			array('Foo:Bar', 'Nella\FooModule\BarPresenter', 'Nella'),
+			array('Foo:Bar:Baz', 'Nella\FooModule\BarModule\BazPresenter', 'Nella'),
+			array('Nette:Micro', 'NetteModule\MicroPresenter'),
+		);
+	}
+
+	/**
+	 * @dataProvider dataFormatPresenterClassModule
+	 */
+	public function testFormatPresenterClassModule($presenter, $class, $namespace = 'App')
+	{
+		$this->loader->useModuleSuffix = TRUE;
+		$this->assertEquals($class, $this->loader->formatPresenterClass($presenter, $namespace), "->formatPresenterClass('$presenter')");
+	}
+
 	public function dataUnformatPresenterClass()
 	{
 		return array(
@@ -60,6 +83,28 @@ class PresenterFactoryTest extends \Nella\Testing\TestCase
 	 */
 	public function testUnformatPresenterClass($class, $presenter)
 	{
+		$this->assertEquals($presenter, $this->loader->unformatPresenterClass($class), "->unformatPresenterClass('$class')");
+	}
+
+	public function dataUnformatPresenterClassModule()
+	{
+		return array(
+			array('App\FooPresenter', 'Foo'),
+			array('App\FooModule\BarPresenter', 'Foo:Bar'),
+			array('App\FooModule\BarModule\BazPresenter', 'Foo:Bar:Baz'),
+			array('Nella\FooPresenter', 'Foo'),
+			array('Nella\FooModule\BarPresenter', 'Foo:Bar'),
+			array('Nella\FooModule\BarModule\BazPresenter', 'Foo:Bar:Baz'),
+			array('NetteModule\MicroPresenter', 'Nette:Micro'),
+		);
+	}
+
+	/**
+	 * @dataProvider dataUnformatPresenterClassModule
+	 */
+	public function testUnformatPresenterClassModule($class, $presenter)
+	{
+		$this->loader->useModuleSuffix = TRUE;
 		$this->assertEquals($presenter, $this->loader->unformatPresenterClass($class), "->unformatPresenterClass('$class')");
 	}
 
