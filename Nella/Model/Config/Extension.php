@@ -33,11 +33,11 @@ class Extension extends \Nette\Config\CompilerExtension
 	{
 		$builder = $this->getContainerBuilder();
 		$config = $this->getConfig($this->defaults);
-		
+
 		if (!isset($config['entityManager'])) {
 			throw new \Nette\InvalidStateException('Model extension entity manager not set');
 		}
-		
+
 		$builder->addDefinition($this->prefix('entityManager'))
 			->setClass('Doctrine\ORM\EntityManager')
 			->setFactory($config['entityManager'])
@@ -48,7 +48,7 @@ class Extension extends \Nette\Config\CompilerExtension
 			\Nette\Config\Compiler::parseService($builder->addDefinition($this->prefix($name)), $def, FALSE);
 		}
 		unset($config[self::SERVICES_KEY]);
-		
+
 		foreach ($config as $name => $data) {
 			$this->setupItem($builder, $name, $data);
 		}
@@ -82,15 +82,15 @@ class Extension extends \Nette\Config\CompilerExtension
 			$def = $builder->addDefinition($this->prefix($fullname));
 			$def->setClass('Nella\Doctrine\Dao')
 				->setFactory(get_called_class()."::factory", $params);
-			foreach ($data['setup'] as $target => $args) {
-				$def->addSetup($target, $args);
+			if (isset($data['setup'])) {
+				foreach ($data['setup'] as $target => $args) {
+					$def->addSetup($target, $args);
+				}
 			}
 		} elseif (is_string($data) && class_exists($data)) {
 			$builder->addDefinition($this->prefix($fullname))
 				->setClass('Nella\Doctrine\Dao')
-					->setFactory(get_called_class()."::factory", array(
-						$this->prefix('@entityManager'), $data['entity']
-					));
+				->setFactory(get_called_class()."::factory", array($this->prefix('@entityManager'), $data));
 		} else { // really?
 			$builder->addDefinition($this->prefix($fullname))
 				->setClass('Nella\Doctrine\Dao')
