@@ -56,11 +56,12 @@ class Form extends \Nella\NetteAddons\Forms\Form
 		$template->control = $template->_control = $this->getParent();
 		$template->presenter = $template->_presenter = $presenter;
 		if ($presenter instanceof \Nette\Application\UI\Presenter) {
-			$template->setCacheStorage($presenter->getContext()->nette->templateCacheStorage);
+			$context = $presenter->getContext();
+			$template->setCacheStorage($context->nette->templateCacheStorage);
 			$template->user = $presenter->getUser();
-			$template->netteHttpResponse = $presenter->getHttpResponse();
-			$template->netteCacheStorage = $presenter->getContext()->getByType('Nette\Caching\IStorage');
-			$template->baseUri = $template->baseUrl = rtrim($presenter->getHttpRequest()->getUrl()->getBaseUrl(), '/');
+			$template->netteHttpResponse = $context->httpResponse;
+			$template->netteCacheStorage = $context->getByType('Nette\Caching\IStorage');
+			$template->baseUri = $template->baseUrl = rtrim($context->httpRequest->getUrl()->getBaseUrl(), '/');
 			$template->basePath = preg_replace('#https?://[^/]+#A', '', $template->baseUrl);
 
 			// flash message
@@ -139,12 +140,12 @@ class Form extends \Nella\NetteAddons\Forms\Form
 			}
 		}
 
-		throw new \Nette\InvalidStateException("No template files found for method '$method'");
+		throw new \Nette\InvalidStateException("No template files found");
 	}
 
 	protected function beforeRender()
 	{
-		$this->template->setFile($this->formatTemplateFile($this->getNameAndView()));
+		$this->getTempate()->setFile($this->formatTemplateFile($this->getNameAndView()));
 	}
 
 	final public function render()
@@ -152,7 +153,7 @@ class Form extends \Nella\NetteAddons\Forms\Form
 		if (func_num_args() < 1) {
 			try {
 				$this->beforeRender();
-				$this->template->render();
+				$this->getTempate()->render();
 				return;
 			} catch (\Nette\InvalidStateException $e) {
 				if ($this->invalidTemplateMode == static::THROW_EXCEPTION) {
