@@ -39,25 +39,13 @@ abstract class control extends \Nette\Application\UI\Control
 	 * @param string
 	 * @return array
 	 */
-	private function methodToNameAndView($method)
+	private function methodToView($method)
 	{
-		if (strpos($method, "::") === FALSE) {
-			$method = get_called_class() . "::" . $method;
+		$pos = strpos($method, '::');
+		if ($pos !== FALSE) {
+			$method = substr($method, strpos($method, '::')+2);
 		}
-		list($class, $method) = explode("::render", $method);
-
-		$class = substr($class, strpos($class, '\\') + 1);
-		if (\Nette\Utils\Strings::endsWith($class, 'Control')) {
-			$class = substr($class, 0, -7);
-		}
-		list($name, $view) = str_split($class, strrpos($class, '\\') + 1);
-
-		$name = substr(preg_replace('~(\w+)(?:Module)?\\\\~U', '\1:', $name), 0, -1);
-		if ($method) {
-			$view .= "." . lcfirst($method);
-		}
-
-		return array($name, $view);
+		return lcfirst(substr($method, 6));
 	}
 
 	/**
@@ -72,8 +60,8 @@ abstract class control extends \Nette\Application\UI\Control
 			throw new \Nette\InvalidStateException("Control does not attached to presenter");
 		}
 
-		list($name, $view) = $this->methodToNameAndView($method);
-		return $this->templateFilesFormatter->formatTemplateFiles($name, $view);
+		$view = $this->methodToView($method);
+		return $this->templateFilesFormatter->formatComponentTemplateFiles(get_called_class(), $view);
 	}
 
 	/**

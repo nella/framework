@@ -21,7 +21,6 @@ class ControlTest extends \Nella\Testing\TestCase
 		$context = $this->getContext();
 
 		$formatter = new \Nella\Templating\TemplateFilesFormatter;
-		$formatter->useModuleSuffix = FALSE;
 		$formatter->addDir(__DIR__, 5)
 				->addDir($context->parameters['appDir'], 999)
 				->addDir($context->expand('%appDir%/Nella'), 0);
@@ -40,54 +39,31 @@ class ControlTest extends \Nella\Testing\TestCase
 	{
 		$context = $this->getContext();
 		return array(
-			array('Nella\Foo\Bar::render', array(
-				$context->parameters['appDir'] . "/templates/Foo/Bar.latte",
-				$context->parameters['appDir'] . "/templates/Foo.Bar.latte",
-				$context->parameters['appDir'] . "/templates/Foo/@global.latte",
-				$context->parameters['appDir'] . "/templates/@global.latte",
-				__DIR__ . "/templates/Foo/Bar.latte",
-				__DIR__ . "/templates/Foo.Bar.latte",
-				__DIR__ . "/templates/Foo/@global.latte",
-				__DIR__ . "/templates/@global.latte",
-				$context->expand('%appDir%/Nella') . "/templates/Foo/Bar.latte",
-				$context->expand('%appDir%/Nella') . "/templates/Foo.Bar.latte",
-				$context->expand('%appDir%/Nella') . "/templates/Foo/@global.latte",
-				$context->expand('%appDir%/Nella') . "/templates/@global.latte",
+			array('render', array(
+				$context->parameters['appDir'] . "/Application/UI/Control/ControlMock.latte",
+				$context->parameters['appDir'] . "/Application/UI/Control/ControlMock/@global.latte",
+				$context->parameters['appDir'] . "/Application/UI/Control/@global.latte",
+				__DIR__ . "/Application/UI/Control/ControlMock.latte",
+				__DIR__ . "/Application/UI/Control/ControlMock/@global.latte",
+				__DIR__ . "/Application/UI/Control/@global.latte",
+				$context->expand('%appDir%/Nella') . "/Application/UI/Control/ControlMock.latte",
+				$context->expand('%appDir%/Nella') . "/Application/UI/Control/ControlMock/@global.latte",
+				$context->expand('%appDir%/Nella') . "/Application/UI/Control/@global.latte",
 			)),
-			array('Nella\Foo\Bar\Baz::renderTest', array(
-				$context->parameters['appDir'] . "/Foo/templates/Bar/Baz.test.latte",
-				$context->parameters['appDir'] . "/Foo/templates/Bar.Baz.test.latte",
-				$context->parameters['appDir'] . "/Foo/templates/Bar/@global.latte",
-				$context->parameters['appDir'] . "/Foo/templates/@global.latte",
-				$context->parameters['appDir'] . "/templates/Foo/Bar/Baz.test.latte",
-				$context->parameters['appDir'] . "/templates/Foo/Bar.Baz.test.latte",
-				$context->parameters['appDir'] . "/templates/Foo/Bar/@global.latte",
-				$context->parameters['appDir'] . "/templates/Foo/@global.latte",
-				$context->parameters['appDir'] . "/templates/@global.latte",
-				__DIR__ . "/Foo/templates/Bar/Baz.test.latte",
-				__DIR__ . "/Foo/templates/Bar.Baz.test.latte",
-				__DIR__ . "/Foo/templates/Bar/@global.latte",
-				__DIR__ . "/Foo/templates/@global.latte",
-				__DIR__ . "/templates/Foo/Bar/Baz.test.latte",
-				__DIR__ . "/templates/Foo/Bar.Baz.test.latte",
-				__DIR__ . "/templates/Foo/Bar/@global.latte",
-				__DIR__ . "/templates/Foo/@global.latte",
-				__DIR__ . "/templates/@global.latte",
-				$context->expand('%appDir%/Nella') . "/Foo/templates/Bar/Baz.test.latte",
-				$context->expand('%appDir%/Nella') . "/Foo/templates/Bar.Baz.test.latte",
-				$context->expand('%appDir%/Nella') . "/Foo/templates/Bar/@global.latte",
-				$context->expand('%appDir%/Nella') . "/Foo/templates/@global.latte",
-				$context->expand('%appDir%/Nella') . "/templates/Foo/Bar/Baz.test.latte",
-				$context->expand('%appDir%/Nella') . "/templates/Foo/Bar.Baz.test.latte",
-				$context->expand('%appDir%/Nella') . "/templates/Foo/Bar/@global.latte",
-				$context->expand('%appDir%/Nella') . "/templates/Foo/@global.latte",
-				$context->expand('%appDir%/Nella') . "/templates/@global.latte",
-			)),/*
-			array('Nella\Foo::renderBarBaz', array(
-				$context->parameters['appDir'] . "/templates/Foo.barBaz.latte",
-				__DIR__ . "/templates/Foo.barBaz.latte",
-				$context->expand('%appDir%/Nella') . "/templates/Foo.barBaz.latte",
-			)),*/
+			array('renderTest', array(
+				$context->parameters['appDir'] . "/Application/UI/Control/ControlMock/test.latte",
+				$context->parameters['appDir'] . "/Application/UI/Control/ControlMock.test.latte",
+				$context->parameters['appDir'] . "/Application/UI/Control/ControlMock/@global.latte",
+				$context->parameters['appDir'] . "/Application/UI/Control/@global.latte",
+				__DIR__ . "/Application/UI/Control/ControlMock/test.latte",
+				__DIR__ . "/Application/UI/Control/ControlMock.test.latte",
+				__DIR__ . "/Application/UI/Control/ControlMock/@global.latte",
+				__DIR__ . "/Application/UI/Control/@global.latte",
+				$context->expand('%appDir%/Nella') . "/Application/UI/Control/ControlMock/test.latte",
+				$context->expand('%appDir%/Nella') . "/Application/UI/Control/ControlMock.test.latte",
+				$context->expand('%appDir%/Nella') . "/Application/UI/Control/ControlMock/@global.latte",
+				$context->expand('%appDir%/Nella') . "/Application/UI/Control/@global.latte",
+			)),
 		);
 	}
 
@@ -97,11 +73,6 @@ class ControlTest extends \Nella\Testing\TestCase
 	public function testFormatTemplateFiles($method, $eq)
 	{
 		$files = $this->control->formatTemplateFilesMock($method);
-
-		//var_dump($files);
-		//var_dump($eq);
-
-		//exit(255);
 
 		$this->assertEquals($eq, $files, "->formatTemplateFiles('$method')");
 	}
@@ -113,7 +84,7 @@ class ControlTest extends \Nella\Testing\TestCase
 				->addDir($fixturesDir);
 
 		$this->assertEquals(
-			$fixturesDir . "/templates/Application/UI/Control/ControlMock.latte",
+			$fixturesDir . "/Application/UI/Control/ControlMock.latte",
 			$this->control->formatTemplateFileMock('render'),
 			"->formatTemplateFile for default view"
 		);

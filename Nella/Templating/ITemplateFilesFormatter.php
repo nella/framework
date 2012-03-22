@@ -21,7 +21,7 @@ interface ITemplateFilesFormatter
 	/**
 	 * Formats layout template file names
 	 *
-	 * @param string	presenter or control name
+	 * @param string	presenter name
 	 * @param string	layout name
 	 * @return array
 	 */
@@ -30,9 +30,18 @@ interface ITemplateFilesFormatter
 	/**
 	 * Formats view template file names
 	 *
-	 * @param string	presenter or control name
+	 * @param string	presenter name
 	 * @param string	view name
 	 * @return array
 	 */
 	public function formatTemplateFiles($name, $view);
+
+	/**
+	 * Formats layout template file names
+	 *
+	 * @param string	control name
+	 * @param string	view name
+	 * @return array
+	 */
+	public function formatComponentTemplateFiles($class, $view);
 }

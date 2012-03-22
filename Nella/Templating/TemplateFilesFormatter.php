@@ -57,7 +57,7 @@ class TemplateFilesFormatter extends \Nette\Object implements ITemplateFilesForm
 	/**
 	 * Formats layout template file names
 	 *
-	 * @param string	presenter or control name
+	 * @param string	presenter name
 	 * @param string	layout name
 	 * @return array
 	 */
@@ -110,7 +110,7 @@ class TemplateFilesFormatter extends \Nette\Object implements ITemplateFilesForm
 	/**
 	 * Formats view template file names
 	 *
-	 * @param string	presenter or control name
+	 * @param string	presenter name
 	 * @param string	view name
 	 * @return array
 	 */
@@ -146,6 +146,52 @@ class TemplateFilesFormatter extends \Nette\Object implements ITemplateFilesForm
 			if (!in_array($file, $files)) {
 				$files[] = $file;
 			}
+
+			return $files;
+		};
+
+		$files = array();
+		$dirs = clone $this->dirs;
+		foreach ($dirs as $dir) {
+			$files = array_merge($files, $generator($dir));
+		}
+
+		if ($this->logger) {
+			$this->logger->logFiles($name, $view, $files);
+		}
+
+		return $files;
+	}
+
+	/**
+	 * Formats layout template file names
+	 *
+	 * @param string	control name
+	 * @param string	view name
+	 * @return array
+	 */
+	public function formatComponentTemplateFiles($class, $view)
+	{
+		if (\Nette\Utils\Strings::endsWith($class, 'Control')) {
+			$class = substr($class, 0, -7);
+		}
+		$name = substr($class, strpos($class, '\\')+1);
+		$path = str_replace('\\', '/', substr($name, 0, strrpos($name, '\\')));
+		$subPath = substr($name, strrpos($name, '\\') !== FALSE ? strrpos($name, '\\') + 1 : 0);
+		if ($path) {
+			$path .= '/';
+		}
+
+		$generator = function ($dir) use ($name, $path, $subPath, $view) {
+			$files = array();
+			if ($view) {
+				$files[] = $dir . '/' .$path . "$subPath/$view.latte";
+				$files[] = $dir . '/' .$path . "$subPath.$view.latte";
+			} else {
+				$files[] = $dir . '/' .$path . "$subPath.latte";
+			}
+			$files[] = $dir . '/' .$path . "$subPath/@global.latte";
+			$files[] = $dir . '/' .$path . '@global.latte';
 
 			return $files;
 		};

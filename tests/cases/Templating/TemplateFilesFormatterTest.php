@@ -216,4 +216,44 @@ class TemplateFilesFormatterTest extends \Nella\Testing\TestCase
 		$this->formatter->useModuleSuffix = TRUE;
 		$this->assertEquals($expected, $this->formatter->formatTemplateFiles($name, $layout));
 	}
+
+	public function dataComponentFormatTemplateFiles()
+	{
+		return array(
+			array(
+				'App\Foo', "bar",
+				array(
+					__DIR__ . "/Foo/bar.latte",
+					__DIR__ . "/Foo.bar.latte",
+					__DIR__ . "/Foo/@global.latte",
+					__DIR__ . "/@global.latte",
+					__DIR__ . "/Nella/Foo/bar.latte",
+					__DIR__ . "/Nella/Foo.bar.latte",
+					__DIR__ . "/Nella/Foo/@global.latte",
+					__DIR__ . "/Nella/@global.latte",
+				),
+			),
+			array(
+				'App\Foo\Bar', "baz",
+				array(
+					__DIR__ . "/Foo/Bar/baz.latte",
+					__DIR__ . "/Foo/Bar.baz.latte",
+					__DIR__ . "/Foo/Bar/@global.latte",
+					__DIR__ . "/Foo/@global.latte",
+					__DIR__ . "/Nella/Foo/Bar/baz.latte",
+					__DIR__ . "/Nella/Foo/Bar.baz.latte",
+					__DIR__ . "/Nella/Foo/Bar/@global.latte",
+					__DIR__ . "/Nella/Foo/@global.latte",
+				),
+			),
+		);
+	}
+
+	/**
+	 * @dataProvider dataComponentFormatTemplateFiles
+	 */
+	public function testComponentFormatTemplateFiles($class, $view, $expected)
+	{
+		$this->assertEquals($expected, $this->formatter->formatComponentTemplateFiles($class, $view));
+	}
 }

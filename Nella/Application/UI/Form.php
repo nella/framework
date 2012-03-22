@@ -16,7 +16,7 @@ namespace Nella\Application\UI;
  *
  * @property-read \Nette\Templating\ITemplate $template
  */
-class Form extends \Nella\NetteAddons\Forms\Form
+abstract class Form extends \Nella\NetteAddons\Forms\Form
 {
 	const USE_DEFAULT_RENDERER = 1,
 		THROW_EXCEPTION = 2;
@@ -94,46 +94,44 @@ class Form extends \Nella\NetteAddons\Forms\Form
 	}
 
 	/**
+	 * @param string
 	 * @return array
 	 */
-	private function getNameAndView()
+	private function methodToView($method)
 	{
-		$class = get_called_class();
-		$class = substr($class, strpos($class, '\\') + 1);
-		if (\Nette\Utils\Strings::endsWith($class, 'Control')) {
-			$class = substr($class, 0, -7);
+		$pos = strpos($method, '::');
+		if ($pos !== FALSE) {
+			$method = substr($method, strpos($method, '::')+2);
 		}
-		list($name, $view) = str_split($class, strrpos($class, '\\') + 1);
-
-		$name = substr(preg_replace('~(\w+)(?:Module)?\\\\~U', '\1:', $name), 0, -1);
-
-		return array($name, $view);
+		return lcfirst(substr($method, 6));
 	}
 
 	/**
 	 * Formats component template files
 	 *
+	 * @param string
 	 * @return array
 	 */
-	public function formatTemplateFiles()
+	public function formatTemplateFiles($method)
 	{
 		if (!$this->templateFilesFormatter) {
 			throw new \Nette\InvalidStateException("Control does not attached to presenter");
 		}
 
-		list($name, $view) = $this->getNameAndView();
-		return $this->templateFilesFormatter->formatTemplateFiles($name, $view);
+		$view = $this->methodToView($method);
+		return $this->templateFilesFormatter->formatTemplateFiles(get_called_class(), $view);
 	}
 
 	/**
 	 * Format component template file
 	 *
+	 * @param string
 	 * @return string
 	 * @throws \Nette\InvalidStateException
 	 */
-	protected function formatTemplateFile()
+	protected function formatTemplateFile($method)
 	{
-		$files = $this->formatTemplateFiles();
+		$files = $this->formatTemplateFiles($method);
 		foreach ($files as $file) {
 			if (file_exists($file)) {
 				return $file;
@@ -143,16 +141,19 @@ class Form extends \Nella\NetteAddons\Forms\Form
 		throw new \Nette\InvalidStateException("No template files found");
 	}
 
-	protected function beforeRender()
+	/**
+	 * @param string
+	 */
+	protected function beforeRender($method)
 	{
-		$this->getTempate()->setFile($this->formatTemplateFile($this->getNameAndView()));
+		$this->getTempate()->setFile($this->formatTemplateFile($method));
 	}
 
 	final public function render()
 	{
 		if (func_num_args() < 1) {
 			try {
-				$this->beforeRender();
+				$this->beforeRender(__METHOD__);
 				$this->getTempate()->render();
 				return;
 			} catch (\Nette\InvalidStateException $e) {
