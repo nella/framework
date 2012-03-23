@@ -10,7 +10,7 @@
 namespace Nella\NetteAddons\Media\Callbacks;
 
 use Nette\Image,
-	Nella\NetteAddons\Media\IImage, 
+	Nella\NetteAddons\Media\IImage,
 	Nella\NetteAddons\Media\IImageFormat;
 
 /**
@@ -24,7 +24,7 @@ class ImagePresenterCallback extends \Nette\Object implements \Nella\NetteAddons
 	private $storage;
 	/** @var \Nella\NetteAddons\Media\IImageCacheStorage */
 	private $cacheStorage;
-	
+
 	/**
 	 * @param \Nella\NetteAddons\Media\IStorage
 	 * @param \Nella\NetteAddons\Media\IImageCacheStorage
@@ -34,7 +34,7 @@ class ImagePresenterCallback extends \Nette\Object implements \Nella\NetteAddons
 		$this->storage = $storage;
 		$this->cacheStorage = $cacheStorage;
 	}
-	
+
 	/**
 	 * @param \Nella\NetteAddons\Media\IImage
 	 * @param \Nella\NetteAddons\Media\IImageFormat
@@ -47,16 +47,11 @@ class ImagePresenterCallback extends \Nette\Object implements \Nella\NetteAddons
 		if (!$path) {
 			throw new \Nette\Application\BadRequestException('Image not found', 404);
 		}
-		
+
 		$img = $this->load($image, $format, $type);
-		if ($img instanceof Image) {
-			$img->send();
-			throw new \Nette\Application\AbortException;
-		}
-		
-		return new \Nette\Application\Responses\FileResponse($img, pathinfo($img, PATHINFO_BASENAME), $this->typeToContentType($type));
+		return new \Nella\NetteAddons\Media\Responses\ImageResponse($img);
 	}
-	
+
 	/**
 	 * @param IImage
 	 * @param IImageFormat
@@ -69,10 +64,10 @@ class ImagePresenterCallback extends \Nette\Object implements \Nella\NetteAddons
 			$this->cacheStorage->save($image, $format, $type, $this->process($image, $format));
 			$img = $this->cacheStorage->load($image, $format, $type);
 		}
-		
+
 		return $img;
 	}
-	
+
 	/**
 	 * @param IImage
 	 * @param IImageFormat
@@ -85,10 +80,10 @@ class ImagePresenterCallback extends \Nette\Object implements \Nella\NetteAddons
 		if ($format->isCrop()) {
 			$img->crop('50%', '50%', $format->getWidth(), $format->getHeight());
 		}
-		
+
 		if ($format->getWatermark() && $wmimg = $this->storage->load($format->getWatermark())) {
 			$watermark = Image::fromFile($wmimg);
-			
+
 			switch ($format->getWatermarkPosition()) {
 				case IImageFormat::POSITION_BOTTOM_LEFT:
 					$left = 0;
@@ -117,13 +112,13 @@ class ImagePresenterCallback extends \Nette\Object implements \Nella\NetteAddons
 			if ($top < 0) {
 				$top = 0;
 			}
-			
+
 			$img->place($watermark, $left, $top, $format->getWatermarkOpacity());
 		}
-		
+
 		return $img;
 	}
-	
+
 	/**
 	 * @param string
 	 * @return string

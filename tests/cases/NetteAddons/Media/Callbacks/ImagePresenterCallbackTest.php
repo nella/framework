@@ -39,13 +39,11 @@ class ImagePresenterCallbackTest extends \Nella\Testing\TestCase
 		$format->expects($this->any())->method('getWidth')->will($this->returnValue(100));
 		$format->expects($this->any())->method('getHeight')->will($this->returnValue(100));
 		$format->expects($this->any())->method('getWatermark')->will($this->returnValue(NULL));
-		
+
 		$response = callback($this->callback)->invoke($image, $format, "png");
-		$this->assertInstanceOf('Nette\Application\Responses\FileResponse', $response, 'instance FileResponse');
-		$this->assertEquals('test-logo.png', $response->getName(), "file name 'test-logo.png'");
-		$this->assertEquals('image/png', $response->getContentType(), "file content-type 'image/png'");
+		$this->assertInstanceOf('Nella\NetteAddons\Media\Responses\ImageResponse', $response, 'instance ImageResponse');
 	}
-	
+
 	/**
 	 * @expectedException Nette\Application\BadRequestException
 	 */
@@ -54,7 +52,7 @@ class ImagePresenterCallbackTest extends \Nella\Testing\TestCase
 		$image = $this->getMock('Nella\NetteAddons\Media\IImage');
 		$image->expects($this->any())->method('getPath')->will($this->returnValue('invalid.png'));
 		$format = $this->getMock('Nella\NetteAddons\Media\IImageFormat');
-		
+
 		callback($this->callback)->invoke($image, $format, "png");
 	}
 }
