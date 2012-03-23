@@ -27,6 +27,8 @@ namespace Nella\Doctrine\Mapping;
 
 /**
  * @author	Filip Procházka
+ * @Annotation
+ * @Target("CLASS")
  */
 class DiscriminatorEntry extends \Doctrine\Common\Annotations\Annotation
 {
