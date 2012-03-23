@@ -75,6 +75,9 @@ class ImagePresenterCallback extends \Nette\Object implements \Nella\NetteAddons
 	 */
 	final protected function process(IImage $image, IImageFormat $format)
 	{
+		if ($format->getWidth() == 0 && $format->getHeight() == 0 && $format->getWatermark() == NULL) {
+			return $this->storage->load($image);
+		}
 		$img = Image::fromFile($this->storage->load($image));
 		$img->resize($format->getWidth(), $format->getHeight(), $format->getFlags());
 		if ($format->isCrop()) {
