@@ -19,7 +19,7 @@ use Doctrine\ORM\Mapping as orm;
 class ImageFormatDao extends \Nella\Doctrine\Dao implements \Nella\NetteAddons\Media\Model\IImageFormatDao
 {
 	/** @var \Nella\NetteAddons\Media\IImageCacheStorage */
-	private $cacheStorage;
+	protected $cacheStorage;
 	
 	/**
 	 * @param \Nella\NetteAddons\Media\IImageCacheStorage

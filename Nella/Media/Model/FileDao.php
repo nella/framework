@@ -19,7 +19,7 @@ use Doctrine\ORM\Mapping as orm;
 class FileDao extends \Nella\Doctrine\Dao implements \Nella\NetteAddons\Media\Model\IFileDao
 {
 	/** @var \Nella\NetteAddons\Media\IStorage */
-	private $storage;
+	protected $storage;
 	
 	/**
 	 * @param \Nella\NetteAddons\Media\IStorage

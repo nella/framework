@@ -19,7 +19,7 @@ use Doctrine\ORM\Mapping as orm;
 class ImageDao extends FileDao implements \Nella\NetteAddons\Media\Model\IImageDao
 {
 	/** @var \Nella\NetteAddons\Media\IImageCacheStorage */
-	private $cacheStorage;
+	protected $cacheStorage;
 	
 	/**
 	 * @param \Nella\NetteAddons\Media\IImageCacheStorage
