@@ -31,6 +31,8 @@ use Doctrine\ORM\Mapping as orm;
  */
 class ImageFormatEntity extends \Nella\Doctrine\Entity implements \Nella\NetteAddons\Media\IImageFormat
 {
+	/** @var string */
+	public static $fullSlugFormat = '<id>-<slug>';
 	/** @var array */
 	public $onFlush = array();
 	/**
@@ -138,7 +140,7 @@ class ImageFormatEntity extends \Nella\Doctrine\Entity implements \Nella\NetteAd
 		$this->flags = $flags;
 		return $this;
 	}
-	
+
 	/**
 	 * @return bool
 	 */
@@ -146,7 +148,7 @@ class ImageFormatEntity extends \Nella\Doctrine\Entity implements \Nella\NetteAd
 	{
 		return $this->crop;
 	}
-	
+
 	/**
 	 * @param bool
 	 * @return ImageFormatEntity
@@ -210,7 +212,7 @@ class ImageFormatEntity extends \Nella\Doctrine\Entity implements \Nella\NetteAd
 		$this->watermarkPosition = $position;
 		return $this;
 	}
-	
+
 	/**
 	 * @return string
 	 */
@@ -224,9 +226,9 @@ class ImageFormatEntity extends \Nella\Doctrine\Entity implements \Nella\NetteAd
 	 */
 	public function getFullSlug()
 	{
-		return "{$this->getId()}-{$this->getSlug()}";
+		return str_replace(array('<id>', '<slug>'), array($this->getId(), $this->getSlug()), static::$fullSlugFormat);
 	}
-	
+
 	/**
 	 * @param string
 	 * @return ImageFormatEntity
@@ -236,7 +238,7 @@ class ImageFormatEntity extends \Nella\Doctrine\Entity implements \Nella\NetteAd
 		$this->slug = static::normalizeString($slug);
 		return $this;
 	}
-	
+
 	/**
 	 * @return string
 	 */

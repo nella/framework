@@ -26,6 +26,8 @@ use Doctrine\ORM\Mapping as orm;
  */
 abstract class BaseFileEntity extends \Nella\Doctrine\Entity implements \Nella\NetteAddons\Media\IFile
 {
+	/** @var string */
+	public static $fullSlugFormat = '<id>-<slug>';
 	/** @var array */
 	public $onFlush = array();
 	/**
@@ -56,7 +58,7 @@ abstract class BaseFileEntity extends \Nella\Doctrine\Entity implements \Nella\N
 		$this->path = static::normalizeString($path);
 		$this->contentType = static::normalizeString($contentType);
 	}
-	
+
 	/**
 	 * @return string
 	 */
@@ -64,7 +66,7 @@ abstract class BaseFileEntity extends \Nella\Doctrine\Entity implements \Nella\N
 	{
 		return $this->path;
 	}
-	
+
 	/**
 	 * @return \DateTime
 	 */
@@ -72,7 +74,7 @@ abstract class BaseFileEntity extends \Nella\Doctrine\Entity implements \Nella\N
 	{
 		return $this->uploaded;
 	}
-	
+
 	/**
 	 * @return string
 	 */
@@ -80,7 +82,7 @@ abstract class BaseFileEntity extends \Nella\Doctrine\Entity implements \Nella\N
 	{
 		return $this->contentType;
 	}
-	
+
 	/**
 	 * @return string
 	 */
@@ -94,9 +96,9 @@ abstract class BaseFileEntity extends \Nella\Doctrine\Entity implements \Nella\N
 	 */
 	public function getFullSlug()
 	{
-		return "{$this->getId()}-{$this->getSlug()}";
+		return str_replace(array('<id>', '<slug>'), array($this->getId(), $this->getSlug()), static::$fullSlugFormat);
 	}
-	
+
 	/**
 	 * @param string
 	 * @return BaseFileEntity
@@ -106,7 +108,7 @@ abstract class BaseFileEntity extends \Nella\Doctrine\Entity implements \Nella\N
 		$this->slug = static::normalizeString($slug);
 		return $this;
 	}
-	
+
 	/**
 	 * @return string
 	 */
