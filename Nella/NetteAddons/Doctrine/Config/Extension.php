@@ -395,6 +395,7 @@ class Extension extends \Nette\Config\CompilerExtension
 	{
 		$helperSet = new \Symfony\Component\Console\Helper\HelperSet;
 		$helperSet->set(new \Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper($em), 'em');
+		$helperSet->set(new \Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper($em->getConnection()), 'db');
 		$helperSet->set(new \Symfony\Component\Console\Helper\DialogHelper, 'dialog');
 
 		return $helperSet;
