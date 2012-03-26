@@ -20,7 +20,7 @@ class ImageDao extends FileDao implements \Nella\NetteAddons\Media\Model\IImageD
 {
 	/** @var \Nella\NetteAddons\Media\IImageCacheStorage */
 	protected $cacheStorage;
-	
+
 	/**
 	 * @param \Nella\NetteAddons\Media\IImageCacheStorage
 	 * @return ImageDao
@@ -30,7 +30,7 @@ class ImageDao extends FileDao implements \Nella\NetteAddons\Media\Model\IImageD
 		$this->cacheStorage = $cacheStorage;
 		return $this;
 	}
-	
+
 	/**
 	 * @param object
 	 * @param bool
@@ -44,15 +44,15 @@ class ImageDao extends FileDao implements \Nella\NetteAddons\Media\Model\IImageD
 				$cacheStorage->remove($entity);
 			};
 		}
-		
+
 		return parent::save($entity, $withoutFlush, $originalPath);
 	}
-	
+
 	/**
 	 * @param object
 	 * @param bool
 	 */
-	public function delete($entity, $withoutFlush = self::FLUSH)
+	public function remove($entity, $withoutFlush = self::FLUSH)
 	{
 		if ($entity->id !== NULL && $this->cacheStorage) {
 			$cacheStorage = $this->cacheStorage;
@@ -60,6 +60,6 @@ class ImageDao extends FileDao implements \Nella\NetteAddons\Media\Model\IImageD
 				$cacheStorage->remove($entity);
 			};
 		}
-		parent::delete($entity, $withoutFlush);
+		parent::remove($entity, $withoutFlush);
 	}
 }

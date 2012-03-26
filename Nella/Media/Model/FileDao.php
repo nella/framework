@@ -20,7 +20,7 @@ class FileDao extends \Nella\Doctrine\Dao implements \Nella\NetteAddons\Media\Mo
 {
 	/** @var \Nella\NetteAddons\Media\IStorage */
 	protected $storage;
-	
+
 	/**
 	 * @param \Nella\NetteAddons\Media\IStorage
 	 * @return ImageDao
@@ -63,15 +63,15 @@ class FileDao extends \Nella\Doctrine\Dao implements \Nella\NetteAddons\Media\Mo
 				$storage->save($entity, $originalPath);
 			};
 		}
-		
+
 		return parent::save($entity, $withoutFlush);
 	}
-	
+
 	/**
 	 * @param object
 	 * @param bool
 	 */
-	public function delete($entity, $withoutFlush = self::FLUSH)
+	public function remove($entity, $withoutFlush = self::FLUSH)
 	{
 		if ($entity->id !== NULL && $this->storage) {
 			$storage = $this->storage;
@@ -79,6 +79,6 @@ class FileDao extends \Nella\Doctrine\Dao implements \Nella\NetteAddons\Media\Mo
 				$storage->remove($entity);
 			};
 		}
-		parent::delete($entity, $withoutFlush);
+		parent::remove($entity, $withoutFlush);
 	}
 }

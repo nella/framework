@@ -20,7 +20,7 @@ class ImageFormatDao extends \Nella\Doctrine\Dao implements \Nella\NetteAddons\M
 {
 	/** @var \Nella\NetteAddons\Media\IImageCacheStorage */
 	protected $cacheStorage;
-	
+
 	/**
 	 * @param \Nella\NetteAddons\Media\IImageCacheStorage
 	 * @return ImageDao
@@ -60,15 +60,15 @@ class ImageFormatDao extends \Nella\Doctrine\Dao implements \Nella\NetteAddons\M
 				$cacheStorage->clean($entity);
 			};
 		}
-		
+
 		return parent::save($entity, $withoutFlush);
 	}
-	
+
 	/**
 	 * @param object
 	 * @param bool
 	 */
-	public function delete($entity, $withoutFlush = self::FLUSH)
+	public function remove($entity, $withoutFlush = self::FLUSH)
 	{
 		if ($entity instanceof \Nella\NetteAddons\Media\IImageFormat && $entity->id !== NULL && $this->cacheStorage) {
 			$cacheStorage = $this->cacheStorage;
@@ -76,7 +76,7 @@ class ImageFormatDao extends \Nella\Doctrine\Dao implements \Nella\NetteAddons\M
 				$cacheStorage->clean($entity);
 			};
 		}
-		
-		return parent::delete($entity, $withoutFlush);
+
+		return parent::remove($entity, $withoutFlush);
 	}
 }
