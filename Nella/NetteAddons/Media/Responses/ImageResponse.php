@@ -45,7 +45,7 @@ class ImageResponse extends \Nette\Object implements \Nette\Application\IRespons
 			return;
 		}
 
-		$httpResponse->setContentType(mime_content_type($this->image));
+		$httpResponse->setContentType(\Nette\Utils\MimeTypeDetector::fromFile($this->image));
 
 		$filesize = $length = filesize($this->image);
 		$handle = fopen($this->image, 'r');
