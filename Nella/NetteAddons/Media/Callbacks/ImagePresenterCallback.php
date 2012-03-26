@@ -49,6 +49,9 @@ class ImagePresenterCallback extends \Nette\Object implements \Nella\NetteAddons
 		}
 
 		$img = $this->load($image, $format, $type);
+		if (!$img) {
+			throw new \Nette\Application\BadRequestException('Image not found', 404);
+		}
 		return new \Nella\NetteAddons\Media\Responses\ImageResponse($img);
 	}
 
