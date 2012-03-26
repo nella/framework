@@ -56,6 +56,15 @@ class ImagePresenterCallback extends \Nette\Object implements \Nella\NetteAddons
 	}
 
 	/**
+	 * @param string
+	 * @return \Nette\Image
+	 */
+	protected function getImage($path)
+	{
+		return Image::fromFile($path);
+	}
+
+	/**
 	 * @param IImage
 	 * @param IImageFormat
 	 * @param string
@@ -81,14 +90,14 @@ class ImagePresenterCallback extends \Nette\Object implements \Nella\NetteAddons
 		if ($format->getWidth() == 0 && $format->getHeight() == 0 && $format->getWatermark() == NULL) {
 			return $this->storage->load($image);
 		}
-		$img = Image::fromFile($this->storage->load($image));
+		$img = $this->getImage($this->storage->load($image));
 		$img->resize($format->getWidth(), $format->getHeight(), $format->getFlags());
 		if ($format->isCrop()) {
 			$img->crop('50%', '50%', $format->getWidth(), $format->getHeight());
 		}
 
 		if ($format->getWatermark() && $wmimg = $this->storage->load($format->getWatermark())) {
-			$watermark = Image::fromFile($wmimg);
+			$watermark = $this->getImage($wmimg);
 
 			switch ($format->getWatermarkPosition()) {
 				case IImageFormat::POSITION_BOTTOM_LEFT:
