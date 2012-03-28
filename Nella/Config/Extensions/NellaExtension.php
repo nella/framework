@@ -71,5 +71,10 @@ class NellaExtension extends \Nette\Config\CompilerExtension
 			$builder->getDefinition('router')
 				->addSetup('offsetSet', array(NULL, $builder->getDefinition($this->prefix('consoleRoute'))));
 		}
+
+		if ($builder->hasDefinition('nette.latte')) {
+			$builder->getDefinition('nette.latte')
+				->addSetup('Nella\Latte\Macros\UIMacros::factory', array('@self'));
+		}
 	}
 }
