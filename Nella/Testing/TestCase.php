@@ -41,7 +41,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
 			return parent::runBare();
 		} catch (\Exception $e) {
 			if (!$e instanceof \PHPUnit_Framework_AssertionFailedError) {
-				\Nella\Diagnostics\ConsoleDebug::_exceptionHandler($e);
+				\Nette\Diagnostics\Debugger::_exceptionHandler($e);
 			}
 			throw $e;
 		}
