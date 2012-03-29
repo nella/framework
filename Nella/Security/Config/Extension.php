@@ -27,11 +27,32 @@ class Extension extends \Nette\Config\CompilerExtension
 			throw new \Nette\InvalidStateException('Model extension entity manager not set');
 		}
 
+		$builder->addDefinition($this->prefix('entityManager'))
+			->setClass('Doctrine\ORM\EntityManager')
+			->setFactory($config['entityManager']);
+
 		if ($builder->hasDefinition('nette.userStorage')) {
 			$builder->removeDefinition('nette.userStorage');
 		}
-
 		$builder->addDefinition($this->prefix('userStorage'))
-			->setClass('Nella\Security\UserStorage', array('@session', $config['entityManager']));
+			->setClass('Nella\Security\UserStorage', array('@session', $this->prefix('entityManager')));
+
+		$credentialsRepository = $builder->addDefinition($this->prefix('credentialsRepository'))
+			->setClass('Nella\Doctrine\Repository')
+			->setFactory($this->prefix('entityManager').'->getRepository(?)', array(
+				'Nella\Security\Model\CredentialsEntity'
+			));
+
+		$credentialsDao = $builder->addDefinition($this->prefix('credentialsDao'))
+			->setClass('Nella\Security\Model\CredentialsDao', array(
+				$this->prefix('entityManager'), $credentialsRepository
+			));
+
+
+		if ($builder->hasDefinition('nette.authenticator')) {
+			$builder->getDefinition('nette.authenticator')->setAutowired(FALSE);
+		}
+		$builder->addDefinition($this->prefix('authenticator'))
+			->setClass('Nella\Security\Authenticator', array($credentialsDao));
 	}
 }
