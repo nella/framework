@@ -7,7 +7,7 @@
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
 
-namespace Nella\Model\Config;
+namespace Nella\Config\Extensions;
 
 /**
  * Model extension
@@ -16,7 +16,7 @@ namespace Nella\Model\Config;
  *
  * @author	Patrik Votoček
  */
-class Extension extends \Nette\Config\CompilerExtension
+class ModelExtension extends \Nette\Config\CompilerExtension
 {
 	const SERVICES_KEY = 'services';
 
@@ -87,6 +87,8 @@ class Extension extends \Nette\Config\CompilerExtension
 					$def->addSetup($target, $args);
 				}
 			}
+		} elseif (is_string($data) && \Nette\Utils\Strings::startsWith($data, '@')) {
+			$builder->addDefinition($this->prefix($fullname))->setClass('Nella\Doctrine\Dao')->setFactory($data);
 		} elseif (is_string($data) && class_exists($data)) {
 			$builder->addDefinition($this->prefix($fullname))
 				->setClass('Nella\Doctrine\Dao')

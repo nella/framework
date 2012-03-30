@@ -50,78 +50,20 @@ class Extension extends \Nette\Config\CompilerExtension
 		$config = $this->getConfig($this->defaults);
 		$builder = $this->getContainerBuilder();
 
+		$this->processFile($config['fileStorageDir'], isset($config['fileRoute']) ? $config['fileRoute'] : NULL);
+		$this->processImage(
+			$config['imageStorageDir'], $config['imagePath'], $config['formats'],
+			isset($config['imageRoute']) ? $config['imageRoute'] : NULL
+		);
+
 		foreach ($config[self::SERVICES_KEY] as $name => $def) {
-			\Nette\Config\Compiler::parseService($builder->addDefinition($this->prefix($name)), $def, FALSE);
-		}
+			if ($this->hasDefinition($this->prefix($name))) {
+				$this->removeDefinition($this->prefix($name));
+			}
 
-		if (!$builder->hasDefinition($this->prefix('fileStorage'))) {
-			$builder->addDefinition($this->prefix('fileStorage'))
-				->setClass('Nella\NetteAddons\Media\Storages\File', array($config['fileStorageDir']))
-				->setAutowired(FALSE);
-		}
-
-		if (!$builder->hasDefinition($this->prefix('filePresenterCallback'))) {
-			$builder->addDefinition($this->prefix('filePresenterCallback'))
-				->setClass('Nella\NetteAddons\Media\Callbacks\FilePresenterCallback', array(
-					$builder->getDefinition($this->prefix('fileStorage'))
-				));
-		}
-
-		if (!$builder->hasDefinition($this->prefix('fileDao'))) {
-			$builder->addDefinition($this->prefix('fileDao'))
-				->setClass('Nella\NetteAddons\Media\Model\FileDao')
-				->setAutowired(FALSE);
-		}
-
-		if (isset($config['fileRoute'])) {
-			$builder->addDefinition($this->prefix('fileRoute'))
-				->setClass('Nella\NetteAddons\Media\Routes\FileRoute', array(
-					$config['imageRoute'],
-					$builder->getDefinition($this->prefix('fileDao')), $builder->getDefinition($this->prefix('filePresenterCallback'))
-				))
-				//->addSetup('@router::offsetSet(?, ?)', array(NULL, '@self'))
-				->setAutowired(FALSE);
-		}
-
-		if (!$builder->hasDefinition($this->prefix('imageStorage'))) {
-			$builder->addDefinition($this->prefix('imageStorage'))
-				->setClass('Nella\NetteAddons\Media\Storages\File', array($config['imageStorageDir']))
-				->setAutowired(FALSE);
-		}
-
-		if (!$builder->hasDefinition($this->prefix('imageCacheStorage'))) {
-			$builder->addDefinition($this->prefix('imageCacheStorage'))
-				->setClass('Nella\NetteAddons\Media\ImageCacheStorages\File', array($config['imagePath'], '@cacheStorage'));
-		}
-
-		if (!$builder->hasDefinition($this->prefix('imagePresenterCallback'))) {
-			$builder->addDefinition($this->prefix('imagePresenterCallback'))
-				->setClass('Nella\NetteAddons\Media\Callbacks\ImagePresenterCallback', array(
-					$builder->getDefinition($this->prefix('imageStorage')), $builder->getDefinition($this->prefix('imageCacheStorage'))
-				));
-		}
-
-		if (!$builder->hasDefinition($this->prefix('imageDao'))) {
-			$builder->addDefinition($this->prefix('imageDao'))
-				->setClass('Nella\NetteAddons\Media\Model\ImageDao')
-				->setAutowired(FALSE);
-		}
-
-		if (!$builder->hasDefinition($this->prefix('imageFormatDao'))) {
-			$builder->addDefinition($this->prefix('imageFormatDao'))
-				->setClass('Nella\NetteAddons\Media\Model\ImageFormatDao', array($config['formats']))
-				->setAutowired(FALSE);
-		}
-
-		if (isset($config['imageRoute'])) {
-			$builder->addDefinition($this->prefix('imageRoute'))
-				->setClass('Nella\NetteAddons\Media\Routes\ImageRoute', array(
-					$config['imageRoute'],
-					$builder->getDefinition($this->prefix('imageDao')), $builder->getDefinition($this->prefix('imageFormatDao')),
-					$builder->getDefinition($this->prefix('imagePresenterCallback'))
-				))
-				//->addSetup('@router::offsetSet(?, ?)', array(NULL, '@self'))
-				->setAutowired(FALSE);
+			\Nette\Config\Compiler::parseService(
+				$builder->addDefinition($this->prefix($name)), $def, FALSE
+			);
 		}
 
 		if ($builder->hasDefinition('nette.latte')) {
@@ -129,14 +71,91 @@ class Extension extends \Nette\Config\CompilerExtension
 				->addSetup('Nella\NetteAddons\Media\Latte\MediaMacros::factory', array('@self'));
 		}
 
+		$this->registerRoutes();
+	}
+
+	/**
+	 * @param string
+	 * @param string|NULL
+	 */
+	protected function processFile($storageDir, $routeMask = NULL)
+	{
+		$builder = $this->getContainerBuilder();
+
+		$builder->addDefinition($this->prefix('fileStorage'))
+			->setClass('Nella\NetteAddons\Media\Storages\File', array($storageDir))
+			->setAutowired(FALSE);
+
+		$builder->addDefinition($this->prefix('filePresenterCallback'))
+			->setClass('Nella\NetteAddons\Media\Callbacks\FilePresenterCallback', array(
+				$this->prefix('@fileStorage')
+			));
+
+		$builder->addDefinition($this->prefix('fileDao'))
+			->setClass('Nella\NetteAddons\Media\Model\FileDao')
+			->setAutowired(FALSE);
+
+		if ($routeMask) {
+			$builder->addDefinition($this->prefix('fileRoute'))
+				->setClass('Nella\NetteAddons\Media\Routes\FileRoute', array(
+					$routeMask, $this->prefix('@fileDao'), $this->prefix('@filePresenterCallback')
+				))
+				->setAutowired(FALSE);
+		}
+	}
+
+	/**
+	 * @param string
+	 * @param string
+	 * @param array
+	 * @param string|NULL
+	 */
+	protected function processImage($storageDir, $path, array $formats, $routeMask = NULL)
+	{
+		$builder = $this->getContainerBuilder();
+
+		$builder->addDefinition($this->prefix('imageStorage'))
+			->setClass('Nella\NetteAddons\Media\Storages\File', array($storageDir))
+			->setAutowired(FALSE);
+
+		$builder->addDefinition($this->prefix('imageCacheStorage'))
+			->setClass('Nella\NetteAddons\Media\ImageCacheStorages\File', array($path, '@cacheStorage'));
+
+		$builder->addDefinition($this->prefix('imagePresenterCallback'))
+			->setClass('Nella\NetteAddons\Media\Callbacks\ImagePresenterCallback', array(
+				$this->prefix('@imageStorage'), $this->prefix('@imageCacheStorage')
+			));
+
+		$builder->addDefinition($this->prefix('imageDao'))
+			->setClass('Nella\NetteAddons\Media\Model\ImageDao')
+			->setAutowired(FALSE);
+
+		$builder->addDefinition($this->prefix('imageFormatDao'))
+			->setClass('Nella\NetteAddons\Media\Model\ImageFormatDao', array($formats))
+			->setAutowired(FALSE);
+
+		if ($routeMask) {
+			$builder->addDefinition($this->prefix('imageRoute'))
+				->setClass('Nella\NetteAddons\Media\Routes\ImageRoute', array(
+					$routeMask, $this->prefix('@imageDao'), $this->prefix('@imageFormatDao'),
+					$this->prefix('@imagePresenterCallback')
+				))
+				->setAutowired(FALSE);
+		}
+	}
+
+	protected function registerRoutes()
+	{
+		$builder = $this->getContainerBuilder();
+
 		if ($builder->hasDefinition('router')) {
 			if ($builder->hasDefinition($this->prefix('fileRoute'))) {
 				$builder->getDefinition('router')
-					->addSetup('offsetSet', array(NULL, $builder->getDefinition($this->prefix('fileRoute'))));
+					->addSetup('offsetSet', array(NULL, $this->prefix('@fileRoute')));
 			}
 			if ($builder->hasDefinition($this->prefix('imageRoute'))) {
 				$builder->getDefinition('router')
-					->addSetup('offsetSet', array(NULL, $builder->getDefinition($this->prefix('imageRoute'))));
+					->addSetup('offsetSet', array(NULL, $this->prefix('@imageRoute')));
 			}
 		}
 	}

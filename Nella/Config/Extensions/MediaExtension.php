@@ -1,0 +1,139 @@
+<?php
+/**
+ * This file is part of the Nella Framework.
+ *
+ * Copyright (c) 2006, 2011 Patrik Votoček (http://patrik.votocek.cz)
+ *
+ * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
+ */
+
+namespace Nella\Config\Extensions;
+
+use Nette\Config\Configurator,
+	Nette\DI\ContainerBuilder;
+
+/**
+ * Media extension
+ *
+ * @author	Patrik Votoček
+ */
+class MediaExtension extends \Nella\NetteAddons\Media\Config\Extension
+{
+	/** @var array */
+	public $defaults = array(
+		'imagePath' => '%wwwDir%/images',
+		'fileStorageDir' => '%appDir%/storage/files',
+		'imageStorageDir' => '%appDir%/storage/images',
+		'formats' => array(),
+		self::SERVICES_KEY => array(),
+	);
+
+	/**
+	 * Processes configuration data
+	 *
+	 * @throws \Nette\InvalidStateException
+	 */
+	public function loadConfiguration()
+	{
+		if (!$this->getConfig()) {
+			return;
+		}
+
+		$config = $this->getConfig($this->defaults);
+		$builder = $this->getContainerBuilder();
+
+		if (!isset($config['entityManager'])) {
+			throw new \Nette\InvalidStateException('Model entity manager does not set');
+		}
+
+		$builder->addDefinition($this->prefix('entityManager'))
+			->setFactory($config['entityManager'])
+			->setAutowired(FALSE);
+
+		$builder->addDefinition($this->prefix('listener'))
+			->setClass('Nella\Media\Model\Listener')
+			->addTag('doctrineListener')
+			->setAutowired(FALSE);
+
+		parent::loadConfiguration();
+	}
+
+	/**
+	 * @param string
+	 * @param string|NULL
+	 */
+	protected function processFile($storageDir, $routeMask = NULL)
+	{
+		parent::processFile($storageDir, $routeMask);
+
+		$builder = $this->getContainerBuilder();
+
+		$builder->addDefinition($this->prefix('fileRepository'))
+			->setClass('Nella\Doctrine\Repository')
+			->setFactory($this->prefix('@entityManager::getRepository'), array('Nella\Media\Model\FileEntity'))
+			->setAutowired(FALSE);
+
+		if ($builder->hasDefinition($this->prefix('fileDao'))) {
+			$builder->removeDefinition($this->prefix('fileDao'));
+		}
+		$builder->addDefinition($this->prefix('fileDao'))
+			->setClass('Nella\Media\Model\FileDao', array($this->prefix('entityManager'), $this->prefix('@fileRepository')))
+			->addSetup('setStorage', array($this->prefix('@fileStorage')))
+			->setAutowired(FALSE);
+
+		if ($routeMask) {
+			$builder->getDefinition($this->prefix('fileRoute'))
+				->setClass('Nella\NetteAddons\Media\Routes\FileRoute', array(
+					$routeMask, $this->prefix('@fileDao'), $this->prefix('@filePresenterCallback'), '<file>'
+				));
+		}
+	}
+
+	/**
+	 * @param string
+	 * @param string
+	 * @param array
+	 * @param string|NULL
+	 */
+	protected function processImage($storageDir, $path, array $formats, $routeMask = NULL)
+	{
+		parent::processImage($storageDir, $path, $formats, $routeMask);
+
+		$builder = $this->getContainerBuilder();
+
+		$builder->addDefinition($this->prefix('imageRepository'))
+			->setClass('Nella\Doctrine\Repository')
+			->setFactory($this->prefix('@entityManager::getRepository'), array('Nella\Media\Model\ImageEntity'))
+			->setAutowired(FALSE);
+
+		$builder->addDefinition($this->prefix('imageFormatRepository'))
+			->setClass('Nella\Doctrine\Repository')
+			->setFactory($this->prefix('@entityManager::getRepository'), array('Nella\Media\Model\ImageFormatEntity'))
+			->setAutowired(FALSE);
+
+		if ($builder->hasDefinition($this->prefix('imageDao'))) {
+			$builder->removeDefinition($this->prefix('imageDao'));
+		}
+		$builder->addDefinition($this->prefix('imageDao'))
+			->setClass('Nella\Media\Model\ImageDao', array($this->prefix('entityManager'), $this->prefix('@imageRepository')))
+			->addSetup('setStorage', array($this->prefix('@imageStorage')))
+			->addSetup('setCacheStorage', array($this->prefix('@imageCacheStorage')))
+			->setAutowired(FALSE);
+
+		if ($builder->hasDefinition($this->prefix('imageFormatDao'))) {
+			$builder->removeDefinition($this->prefix('imageFormatDao'));
+		}
+		$builder->addDefinition($this->prefix('imageFormatDao'))
+			->setClass('Nella\Media\Model\ImageFormatDao', array($this->prefix('entityManager'), $this->prefix('@imageFormatRepository')))
+			->addSetup('setCacheStorage', array($this->prefix('@imageCacheStorage')))
+			->setAutowired(FALSE);
+
+		if ($routeMask) {
+			$builder->getDefinition($this->prefix('imageRoute'))
+				->setClass('Nella\NetteAddons\Media\Routes\ImageRoute', array(
+					$routeMask, $this->prefix('@imageDao'),
+					$this->prefix('@imageFormatDao'), $this->prefix('@imagePresenterCallback'), '<image>'
+				));
+		}
+	}
+}

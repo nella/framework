@@ -87,14 +87,14 @@ class Configurator extends \Nette\Config\Configurator
 		$nette->defaults['container']['debugger'] = TRUE;
 
 		$compiler->addExtension('php', new \Nette\Config\Extensions\PhpExtension)
-				->addExtension('constants', new \Nette\Config\Extensions\ConstantsExtension)
-				->addExtension('nette', $nette)
-				->addExtension('doctrine', new \Nella\Doctrine\Config\Extension)
-				->addExtension('migrations', new \Nella\NetteAddons\Doctrine\Config\MigrationsExtension)
-				->addExtension('nella', new Extensions\NellaExtension)
-				->addExtension('media', new \Nella\Media\Config\Extension)
-				->addExtension('security', new \Nella\Security\Config\Extension)
-				->addExtension('model', new \Nella\Model\Config\Extension);
+			->addExtension('constants', new \Nette\Config\Extensions\ConstantsExtension)
+			->addExtension('nette', $nette)
+			->addExtension('doctrine', new Extensions\DoctrineExtension)
+			->addExtension('migrations', new \Nella\NetteAddons\Doctrine\Config\MigrationsExtension)
+			->addExtension('nella', new Extensions\NellaExtension)
+			->addExtension('media', new Extensions\MediaExtension)
+			->addExtension('security', new Extensions\SecurityExtension)
+			->addExtension('model', new Extensions\ModelExtension);
 
 		return $compiler;
 	}

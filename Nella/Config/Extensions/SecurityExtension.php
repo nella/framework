@@ -7,14 +7,14 @@
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
 
-namespace Nella\Security\Config;
+namespace Nella\Config\Extensions;
 
 /**
  * Security extension
  *
  * @author    Patrik Votoček
  */
-class Extension extends \Nette\Config\CompilerExtension
+class SecurityExtension extends \Nette\Config\CompilerExtension
 {
 	public function loadConfiguration()
 	{

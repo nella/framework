@@ -47,7 +47,18 @@ class Extension extends \Nette\Config\CompilerExtension
 		'metadataCacheDriver' => '@doctrine.cache',
 		'queryCacheDriver' => '@doctrine.cache',
 		'resultCacheDriver' => NULL,
+		'console' => FALSE,
 	);
+	/** @var string|NULL */
+	protected $consoleEntityManager;
+	/** @var \Nette\Callback */
+	protected $connectionFactory;
+	/** @var \Nette\Callback */
+	protected $annotationReaderFactory;
+	/** @var \Nette\Callback */
+	protected $metadataFactory;
+	/** @var \Nette\Callback */
+	protected $entityManagerFactory;
 
 	/**
 	 * @throws \Nette\InvalidStateException
@@ -75,117 +86,175 @@ class Extension extends \Nette\Config\CompilerExtension
 		$config = $this->getConfig(array(
 			'connections' => array(),
 			'entityManagers' => array(),
-			'console' => array('entityManager' => 'default'),
+			'console' => array('entityManager' => NULL),
 		));
 		$builder = $this->getContainerBuilder();
 
-		// connection factory
-		$connectionFactory = $builder->addDefinition($this->prefix('connection'))
+		$builder->addDefinition($this->prefix('cache'))
+			->setClass('Nella\NetteAddons\Doctrine\Cache', array('@cacheStorage'));
+
+		$this->consoleEntityManager = isset($config['console']['entityManager'])
+			 ? $config['console']['entityManager'] : NULL;
+
+		$this->processFactories();
+
+		// process custom doctrine services
+		\Nette\Config\Compiler::parseServices($builder, $config, $this->name);
+
+		$this->processNestedAccessors();
+
+
+		foreach ($config['connections'] as $name => $connection) {
+			$cfg = $connection + $this->connectionDefaults;
+			$this->processConnection($name, $cfg);
+		}
+
+		foreach ($config['entityManagers'] as $name => $em) {
+			$cfg = $em + $this->entityManagerDefaults;
+
+			if (isset($cfg['connection']) && is_array($cfg['connection'])) { // process connection sertting
+				$this->processConnection($name, $cfg['connection'] + $this->connectionDefaults);
+				$cfg['connection'] = $name;
+			}
+
+			$this->processEntityManager($name, $cfg);
+		}
+
+		$this->processConsole($this->consoleEntityManager);
+	}
+
+	protected function processFactories()
+	{
+		$builder = $this->getContainerBuilder();
+
+		$this->connectionFactory = $builder->addDefinition($this->prefix('connection'))
 			->setClass('Doctrine\DBAL\Connection')
 			->setParameters(array('config', 'configuration', 'eventManager' => NULL))
 			->setFactory(get_called_class().'::createConnection', array(
 				'%config%', '%eventManager%'
 			));
 
-		// cache
-		$builder->addDefinition($this->prefix('cache'))
-			->setClass('Nella\NetteAddons\Doctrine\Cache', array('@cacheStorage'));
-
-		// annotation reader factory
-		$annotationReaderFactory = $builder->addDefinition($this->prefix('annotationReader'))
+		$this->annotationReaderFactory = $builder->addDefinition($this->prefix('annotationReader'))
 			->setClass('Doctrine\Common\Annotations\CachedReader')
-			->setParameters(array('cache', 'useAnnotationNamespace' => FALSE))
-			->setFactory(get_called_class().'::createAnnotationReader', array('%cache%', '%useAnnotationNamespace%'));
+			->setParameters(array('cache', 'useSimple' => FALSE))
+			->setFactory(get_called_class().'::createAnnotationReader', array('%cache%', '%useSimple%'));
 
-		// metadata driver factory
-		$metadataDriverFactory = $builder->addDefinition($this->prefix('metadataDriver'))
-			->setClass('Nella\NetteAddons\Doctrine\Mapping\Driver\AnnotationDriver', array('%annotationReader%','%entityDirs%'))
+		$this->metadataFactory = $builder->addDefinition($this->prefix('metadataDriver'))
+			->setClass('Nella\NetteAddons\Doctrine\Mapping\Driver\AnnotationDriver', array(
+				'%annotationReader%','%entityDirs%'
+			))
 			->setParameters(array('annotationReader','entityDirs'));
 
-		// entity manager factory
-		$emFactory = $builder->addDefinition($this->prefix('newEntityManager'))
+		$this->entityManagerFactory = $builder->addDefinition($this->prefix('newEntityManager'))
 			->setClass('Doctrine\ORM\EntityManager')
 			->setParameters(array('connection', 'configuration', 'eventManager' => NULL))
 			->setFactory('Doctrine\ORM\EntityManager::create', array(
 				'%connection%', '%configuration%', '%eventManager%'
 			));
+	}
 
-		// process custom doctrine services
-		\Nette\Config\Compiler::parseServices($builder, $config, $this->name);
+	protected function processNestedAccessors()
+	{
+		$builder = $this->getContainerBuilder();
 
-		// connections
 		$builder->addDefinition($this->prefix(static::CONNECTIONS_PREFIX))
 			->setClass('Nette\DI\NestedAccessor', array('@container', $this->prefix(static::CONNECTIONS_PREFIX)));
 
-		foreach ($config['connections'] as $name => $connection) {
-			$cfg = $connection + $this->connectionDefaults;
-			$builder->addDefinition($this->connectionsPrefix($name))
-				->setClass($connectionFactory->class)
-				->setFactory($connectionFactory, array($cfg, $cfg['eventManager']))
-				->setAutowired($cfg['autowired']);
-		}
-
-		// entity managers
 		$builder->addDefinition($this->prefix(static::ENTITY_MANAGERS_PREFIX))
 			->setClass('Nette\DI\NestedAccessor', array('@container', $this->prefix(static::ENTITY_MANAGERS_PREFIX)));
+
 		$builder->addDefinition($this->prefix(static::EVENT_MANAGERS_PREFIX))
 			->setClass('Nette\DI\NestedAccessor', array('@container', $this->prefix(static::EVENT_MANAGERS_PREFIX)));
+
 		$builder->addDefinition($this->prefix(static::CONFIGURATIONS_PREFIX))
 			->setClass('Nette\DI\NestedAccessor', array('@container', $this->prefix(static::CONFIGURATIONS_PREFIX)));
+	}
 
-		foreach ($config['entityManagers'] as $name => $em) {
-			$cfg = $em + $this->entityManagerDefaults;
+	/**
+	 * @param string
+	 * @param array
+	 */
+	protected function processConnection($name, array $config)
+	{
+		$builder = $this->getContainerBuilder();
 
-			// Configuration
-			if (!$builder->hasDefinition($this->configurationsPrefix($name))) {
-				if (!$builder->hasDefinition($this->configurationsPrefix($name.'AnnotationReader'))) {
-					$builder->addDefinition($this->configurationsPrefix($name.'AnnotationReader'))
-						->setClass($annotationReaderFactory->class)
-						->setFactory($annotationReaderFactory, array(
-							$this->prefix('@cache'), $cfg['useAnnotationNamespace']
-						))->setAutowired(FALSE);
-				}
-				if (!$builder->hasDefinition($this->configurationsPrefix($name.'MetadataDriver'))) {
-					$builder->addDefinition($this->configurationsPrefix($name.'MetadataDriver'))
-						->setClass($metadataDriverFactory->class)
-						->setFactory($metadataDriverFactory, array(
-							$this->configurationsPrefix('@'.$name.'AnnotationReader'), $cfg['entityDirs']
-						))->setAutowired(FALSE);
-				}
+		$builder->addDefinition($this->connectionsPrefix($name))
+			->setClass($this->connectionFactory->class)
+			->setFactory($this->connectionFactory, array($config, $config['eventManager']))
+			->setAutowired($config['autowired']);
+	}
 
-				$proxy = array(
-					'dir' => $cfg['proxyDir'],
-					'namespace' => $cfg['proxyNamespace'],
-					'autogenerate' => $cfg['proxyAutogenerate'] !== NULL ?
-						$cfg['proxyAutogenerate'] : $builder->parameters['productionMode'],
-				);
+	/**
+	 * @param string
+	 * @param array
+	 */
+	protected function processEntityManager($name, array $config)
+	{
+		$builder = $this->getContainerBuilder();
 
-				$builder->addDefinition($this->configurationsPrefix($name))
-					->setClass('Doctrine\ORM\Configuration')
-					->setFactory(get_called_class().'::createConfiguration', array(
-						$this->configurationsPrefix('@'.$name.'MetadataDriver'), $cfg['metadataCacheDriver'],
-						$cfg['queryCacheDriver'], $cfg['resultCacheDriver'], $proxy, $cfg['metadataFactory']
+		if ($this->consoleEntityManager && $config['console']) {
+			throw new \Nette\InvalidStateException('Console is allready set');
+		} elseif ($config['console']) {
+			$this->consoleEntityManager = $name;
+		}
+
+		// Configuration
+		if (!$builder->hasDefinition($this->configurationsPrefix($name))) {
+			if (!$builder->hasDefinition($this->configurationsPrefix($name.'AnnotationReader'))) {
+				$builder->addDefinition($this->configurationsPrefix($name.'AnnotationReader'))
+					->setClass($this->annotationReaderFactory->class)
+					->setFactory($this->annotationReaderFactory, array(
+						$this->prefix('@cache'), $config['useAnnotationNamespace']
+					))->setAutowired(FALSE);
+			}
+			if (!$builder->hasDefinition($this->configurationsPrefix($name.'MetadataDriver'))) {
+				$builder->addDefinition($this->configurationsPrefix($name.'MetadataDriver'))
+					->setClass($this->metadataFactory->class)
+					->setFactory($this->metadataFactory, array(
+						$this->configurationsPrefix('@'.$name.'AnnotationReader'), $config['entityDirs']
 					))->setAutowired(FALSE);
 			}
 
-			// Event manager
-			if (!$builder->hasDefinition($this->eventManagersPrefix($name))) {
-				$builder->addDefinition($this->eventManagersPrefix($name))
-					->setClass('Doctrine\Common\EventManager')
-					->setFactory(get_called_class().'::createEventManager', array(
-						$this->connectionsPrefix('@'.$cfg['connection']), '@container'
-					));
-			}
+			$proxy = array(
+				'dir' => $config['proxyDir'],
+				'namespace' => $config['proxyNamespace'],
+				'autogenerate' => $config['proxyAutogenerate'] !== NULL ?
+					$config['proxyAutogenerate'] : $builder->parameters['productionMode'],
+			);
 
-			// Entity manager
-			$builder->addDefinition($this->entityManagersPrefix($name))
-				->setClass($emFactory->class)
-				->setFactory($emFactory, array($this->connectionsPrefix('@'.$cfg['connection']),
-					$this->configurationsPrefix('@'.$name), $this->eventManagersPrefix('@'.$name)
+			$builder->addDefinition($this->configurationsPrefix($name))
+				->setClass('Doctrine\ORM\Configuration')
+				->setFactory(get_called_class().'::createConfiguration', array(
+					$this->configurationsPrefix('@'.$name.'MetadataDriver'), $config['metadataCacheDriver'],
+					$config['queryCacheDriver'], $config['resultCacheDriver'], $proxy, $config['metadataFactory']
+				))->setAutowired(FALSE);
+		}
+
+		// Event manager
+		if (!$builder->hasDefinition($this->eventManagersPrefix($name))) {
+			$builder->addDefinition($this->eventManagersPrefix($name))
+				->setClass('Doctrine\Common\EventManager')
+				->setFactory(get_called_class().'::createEventManager', array(
+					$this->connectionsPrefix('@'.$config['connection']), '@container'
 				));
 		}
 
-		// console commands - DBAL
+		// Entity manager
+		$builder->addDefinition($this->entityManagersPrefix($name))
+			->setClass($this->entityManagerFactory->class)
+			->setFactory($this->entityManagerFactory, array($this->connectionsPrefix('@'.$config['connection']),
+				$this->configurationsPrefix('@'.$name), $this->eventManagersPrefix('@'.$name)
+			));
+	}
+
+	/**
+	 * @param string
+	 */
+	protected function processConsole($entityManager = NULL)
+	{
+		$builder = $this->getContainerBuilder();
+
+		// DBAL
 		$builder->addDefinition($this->prefix('consoleCommandDBALRunSql'))
 			->setClass('Doctrine\DBAL\Tools\Console\Command\RunSqlCommand')
 			->addTag('consoleCommnad')
@@ -217,15 +286,15 @@ class Extension extends \Nette\Config\CompilerExtension
 			->addTag('consoleCommand')
 			->setAutowired(FALSE);
 
-		if ($builder->hasDefinition($this->entityManagersPrefix($config['console']['entityManager']))) {
-			// console helperset
+		if ($entityManager && !$builder->hasDefinition($this->entityManagersPrefix($entityManager))) {
+			throw new \Nette\InvalidStateException("Entity Manager '$entityManager' does not exist");
+		} elseif ($entityManager) {
 			$builder->addDefinition($this->prefix('consoleHelperset'))
 				->setClass('Symfony\Component\Console\Helper\HelperSet')
 				->setFactory(get_called_class().'::createConsoleHelperSet', array(
-					$this->entityManagersPrefix('@'.$config['console']['entityManager']), '@container'
+					$this->entityManagersPrefix('@'.$entityManager), '@container'
 				));
 
-			// console application
 			$builder->addDefinition($this->prefix('console'))
 				->setClass('Symfony\Component\Console\Application')
 				->setFactory(get_called_class().'::createConsole', array('@container'))

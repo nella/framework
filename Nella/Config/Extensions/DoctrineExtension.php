@@ -7,14 +7,14 @@
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
 
-namespace Nella\Doctrine\Config;
+namespace Nella\Config\Extensions;
 
 /**
  * Nella Framework doctrine extension
  *
  * @author	Patrik Votoček
  */
-class Extension extends \Nella\NetteAddons\Doctrine\Config\Extension
+class DoctrineExtension extends \Nella\NetteAddons\Doctrine\Config\Extension
 {
 	/** @var array */
 	public $emDefaults = array(
@@ -32,42 +32,36 @@ class Extension extends \Nella\NetteAddons\Doctrine\Config\Extension
 		parent::loadConfiguration();
 
 		$builder = $this->getContainerBuilder();
-		$config = $this->getConfig();
-
-		/**
-		 *  Add some stuff to Doctrine addon for Nella Framework
-		 */
 
 		// Ignore Testing dir for loading entityes
 		if ($builder->hasDefinition($this->prefix('metadataDriver'))) {
 			$builder->getDefinition($this->prefix('metadataDriver'))
 				->addSetup('addIgnoredDir', array(__DIR__ . "/../../Testing"));
 		}
+	}
 
-		$builder->addDefinition($this->prefix('mediaListener'))
-			->setClass('Nella\Media\Model\Listener')
-			->addTag('doctrineListener')
-			->setAutowired(FALSE);
+	/**
+	 * @param string
+	 * @param array
+	 */
+	protected function processEntityManager($name, array $config)
+	{
+		$cfg = $config + $this->emDefaults;
+		parent::processEntityManager($name, $cfg);
+		$builder = $this->getContainerBuilder();
 
-		// Set default repostitory class
-		if (isset($config['entityManagers'])) {
-			foreach ($config['entityManagers'] as $name => $em) {
-				$cfg = $em + $this->emDefaults;
+		if ($builder->hasDefinition($this->configurationsPrefix($name.'AnnotationReader'))) {
+			$builder->addDefinition($this->configurationsPrefix($name.'DiscriminatorMapDiscovery'))
+				->setClass('Nella\Doctrine\Listeners\DiscriminatorMapDiscovery', array(
+					$builder->getDefinition($this->configurationsPrefix($name.'AnnotationReader'))
+				))
+				->addTag('doctrineListener')
+				->setAutowired(FALSE);
+		}
 
-				if ($builder->hasDefinition($this->configurationsPrefix($name.'AnnotationReader'))) {
-					$builder->addDefinition($this->configurationsPrefix($name.'DiscriminatorMapDiscovery'))
-						->setClass('Nella\Doctrine\Listeners\DiscriminatorMapDiscovery', array(
-							$builder->getDefinition($this->configurationsPrefix($name.'AnnotationReader'))
-						))
-						->addTag('doctrineListener')
-						->setAutowired(FALSE);
-				}
-
-				if ($builder->hasDefinition($this->configurationsPrefix($name))) {
-					$builder->getDefinition($this->configurationsPrefix($name))
-						->addSetup('setDefaultRepositoryClassName', array($cfg['repositoryClass']));
-				}
-			}
+		if ($builder->hasDefinition($this->configurationsPrefix($name))) {
+			$builder->getDefinition($this->configurationsPrefix($name))
+				->addSetup('setDefaultRepositoryClassName', array($cfg['repositoryClass']));
 		}
 	}
 
@@ -78,7 +72,7 @@ class Extension extends \Nella\NetteAddons\Doctrine\Config\Extension
 	 */
 	public static function createAnnotationReader(\Doctrine\Common\Cache\Cache $cache, $useSimple = FALSE)
 	{
-		require_once __DIR__ ."/../Mapping/DiscriminatorEntry.php";
+		require_once __DIR__ ."/../../Doctrine/Mapping/DiscriminatorEntry.php";
 		return parent::createAnnotationReader($cache, $useSimple);
 	}
 }

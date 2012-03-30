@@ -46,24 +46,19 @@ class MigrationsExtension extends \Nette\Config\CompilerExtension
 	 */
 	public function loadConfiguration()
 	{
-		if (!$this->getConfig()) {
+		if (!$this->getConfig()) { // ignore migrations if config section not exist
 			return;
 		}
 
 		$config = $this->getConfig($this->getDefaults());
 		$builder = $this->getContainerBuilder();
-		
+
 		if (!isset($config['connection'])) {
 			throw new \Nette\InvalidStateException('Migration database connection does not set');
 		}
 
-		// console output
-		$builder->addDefinition($this->prefix('consoleOutput'))
-			->setClass('Doctrine\DBAL\Migrations\OutputWriter')
-			->setFactory(get_called_class().'::createConsoleOutput')
-			->setAutowired(FALSE);
+		$this->processConsole();
 
-		// migration configuration
 		$builder->addDefinition($this->prefix('configuration'))
 			->setClass('Doctrine\DBAL\Migrations\Configuration\Configuration', array(
 				$config['connection'], $this->prefix('@consoleOutput')
@@ -72,8 +67,17 @@ class MigrationsExtension extends \Nette\Config\CompilerExtension
 			->addSetup('setMigrationsTableName', array($config['table']))
 			->addSetup('setMigrationsDirectory', array($config['directory']))
 			->addSetup('setMigrationsNamespace', array($config['namespace']));
+	}
 
-		// console commands
+	protected function processConsole()
+	{
+		$builder = $this->getContainerBuilder();
+
+		$builder->addDefinition($this->prefix('consoleOutput'))
+			->setClass('Doctrine\DBAL\Migrations\OutputWriter')
+			->setFactory(get_called_class().'::createConsoleOutput')
+			->setAutowired(FALSE);
+
 		$builder->addDefinition($this->prefix('consoleCommandDiff'))
 			->setClass('Doctrine\DBAL\Migrations\Tools\Console\Command\DiffCommand')
 			->addSetup('setMigrationConfiguration', array($this->prefix('@configuration')))
