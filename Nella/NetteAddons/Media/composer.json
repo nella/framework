@@ -16,12 +16,6 @@
 			"homepage": "http://nella-project.org"
 		}
 	],
-	"repositories": [
-		{
-			"type": "pear",
-			"url": "http://pear.nette.org"
-		}
-	],
 	"autoload": {
 		"psr-0": {
 			"Nella\\NetteAddons\\Media": ""
@@ -30,7 +24,7 @@
 	"target-dir": "Nella/NetteAddons/Media",
 	"require": {
 		"php": ">=5.3.2",
-		"pear-nette/Nette": "2.0.1"
+		"nette/nette": "2.0.*"
 	},
 	"conflict": {
 		"nella/framework": "self.version"

@@ -16,12 +16,6 @@
 			"homepage": "http://nella-project.org"
 		}
 	],
-	"repositories": [
-		{
-			"type": "pear",
-			"url": "http://pear.nette.org"
-		}
-	],
 	"autoload": {
 		"psr-0": { "Nella": "Nella/" }
 	},
@@ -34,7 +28,7 @@
 		"doctrine/migrations": "*",
 		"symfony/console": "2.0.*",
 		"beberlei/DoctrineExtensions": "*",
-		"pear-nette/Nette": "2.0.1"
+		"nette/nette": "2.0.*"
 	},
 	"replace": {
 		"nella/nette-addon-doctrine": "self.version",
