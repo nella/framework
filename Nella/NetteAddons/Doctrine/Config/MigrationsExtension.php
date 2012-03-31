@@ -66,7 +66,8 @@ class MigrationsExtension extends \Nette\Config\CompilerExtension
 			->addSetup('setName', array($config['name']))
 			->addSetup('setMigrationsTableName', array($config['table']))
 			->addSetup('setMigrationsDirectory', array($config['directory']))
-			->addSetup('setMigrationsNamespace', array($config['namespace']));
+			->addSetup('setMigrationsNamespace', array($config['namespace']))
+			->addSetup('registerMigrationsFromDirectory', array($config['directory']));
 	}
 
 	protected function processConsole()
