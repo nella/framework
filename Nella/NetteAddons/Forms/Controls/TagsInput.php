@@ -345,11 +345,11 @@ class TagsInput extends \Nette\Forms\Controls\TextInput
 	/**
 	 * Range validator: is a control's value number in specified range?
 	 *
-	 * @param  \Nette\Forms\Controls\TextBase
+	 * @param  \Nette\Forms\IControl
 	 * @param  array  min and max value pair
 	 * @return bool
 	 */
-	public static function validateRange(TextBase $control, $range)
+	public static function validateRange(IControl $control, $range)
 	{
 		throw new \LogicException(':RANGE validator is not applicable to TagInput.');
 	}
