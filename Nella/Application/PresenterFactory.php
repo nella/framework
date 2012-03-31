@@ -23,15 +23,15 @@ class PresenterFactory extends \Nette\Object implements \Nette\Application\IPres
 
 	/** @var bool */
 	public $useModuleSuffix = TRUE;
-	/** @var Nette\DI\IContainer */
+	/** @var \Nette\DI\Container */
 	private $container;
 	/** @var \SplPriorityQueue */
 	private $namespaces;
 
 	/**
-	 * @param Nette\DI\IContainer
+	 * @param \Nette\DI\Container
 	 */
-	public function __construct(\Nette\DI\IContainer $container)
+	public function __construct(\Nette\DI\Container $container)
 	{
 		$this->container = $container;
 		$this->namespaces = new \SplPriorityQueue;
