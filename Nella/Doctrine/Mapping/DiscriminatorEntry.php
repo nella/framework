@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Nella Framework.
+ * This file is part of the Nella Framework (http://nellafw.org).
  *
  * This file is part of the Kdyby (http://www.kdyby.org)
  *

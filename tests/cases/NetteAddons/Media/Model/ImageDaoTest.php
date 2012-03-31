@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Nella Framework.
+ * This file is part of the Nella Framework (http://nellafw.org).
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
