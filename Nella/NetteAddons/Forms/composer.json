@@ -4,7 +4,7 @@
 	"description": "Forms addon for Nette Framework",
 	"keywords": ["nella", "addon", "nette"],
 	"homepage": "http://nellafw.org",
-	"license": "LGPLv3",
+	"license": ["BSD-3", "GPLv2", "GPLv3"],
 	"authors": [
 		{
 			"name": "Patrik Votoček",

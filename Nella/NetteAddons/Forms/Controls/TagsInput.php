@@ -5,7 +5,7 @@
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  * Copyright (c) 2010, 2011 Mikulas Dite
  *
- * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
+ * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
  */
 
 namespace Nella\NetteAddons\Forms\Controls;

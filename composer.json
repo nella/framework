@@ -4,7 +4,7 @@
 	"description": "Nella Framework",
 	"keywords": ["nella", "framework", "doctrine", "nette"],
 	"homepage": "http://nellafw.org",
-	"license": "LGPLv3",
+	"license": ["BSD-3", "GPLv2", "GPLv3"],
 	"authors": [
 		{
 			"name": "Patrik Votoček",
