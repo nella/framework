@@ -2,7 +2,7 @@
 /**
  * This file is part of the Nella Framework.
  *
- * Copyright (c) 2006, 2011 Patrik Votoček (http://patrik.votocek.cz)
+ * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
@@ -27,7 +27,7 @@ class FileTest extends \Nella\Testing\TestCase
 		$this->dir = $this->getContext()->parameters['tempDir'];
 		$this->storage = new File($this->dir, $this->cache);
 	}
-	
+
 	/**
 	 * @param string
 	 */
@@ -61,12 +61,12 @@ class FileTest extends \Nella\Testing\TestCase
 	public function testSave($image, $format)
 	{
 		$source = $this->getContext()->parameters['fixturesDir'] . '/logo.png';
-		
+
 		$this->storage->save($image, $format, "png", \Nette\Image::fromFile($source));
-		
+
 		$this->assertFileExists($this->dir . '/test-format/test-image.png');
 	}
-	
+
 	/**
 	 * @depends testSave
 	 * @dataProvider dataTest
@@ -74,10 +74,10 @@ class FileTest extends \Nella\Testing\TestCase
 	public function testLoad($image, $format)
 	{
 		$path = $this->storage->load($image, $format, "png");
-		
+
 		$this->assertEquals($this->dir . '/test-format/test-image.png', $path);
 	}
-	
+
 	/**
 	 * @depends testSave
 	 * @dataProvider dataTest
@@ -86,7 +86,7 @@ class FileTest extends \Nella\Testing\TestCase
 	{
 		$this->assertNull($this->storage->load($image, $format, "jpg"));
 	}
-	
+
 	/**
 	 * @depends testSave
 	 */
@@ -97,10 +97,10 @@ class FileTest extends \Nella\Testing\TestCase
 		$image->expects($this->any())->method('getFullSlug')->will($this->returnValue('test-image-invalid'));
 		$format = $this->getMock('Nella\NetteAddons\Media\IImageFormat');
 		$format->expects($this->any())->method('getFullSlug')->will($this->returnValue('test-format'));
-		
+
 		$this->assertNull($this->storage->load($image, $format, "png"));
 	}
-	
+
 	/**
 	 * @depends testSave
 	 */
@@ -111,10 +111,10 @@ class FileTest extends \Nella\Testing\TestCase
 		$image->expects($this->any())->method('getFullSlug')->will($this->returnValue('test-image'));
 		$format = $this->getMock('Nella\NetteAddons\Media\IImageFormat');
 		$format->expects($this->any())->method('getFullSlug')->will($this->returnValue('test-format-invalid'));
-		
+
 		$this->assertNull($this->storage->load($image, $format, "png"));
 	}
-	
+
 	/**
 	 * @depends testLoad
 	 * @dataProvider dataTest
@@ -125,11 +125,11 @@ class FileTest extends \Nella\Testing\TestCase
 		$this->prepareFile($path);
 		$cache = new Cache($this->cache, File::CACHE_NAME);
 		$cache->save('image-test-image', array($path));
-		
+
 		$this->storage->remove($image);
 		$this->assertFileNotExists($path);
 	}
-	
+
 	/**
 	 * @depends testLoad
 	 * @dataProvider dataTest
@@ -138,7 +138,7 @@ class FileTest extends \Nella\Testing\TestCase
 	{
 		$path = $this->dir . '/test-format/test-image.png';
 		$this->prepareFile($path);
-		
+
 		$this->storage->clean($format);
 		$this->assertFileNotExists($path);
 	}

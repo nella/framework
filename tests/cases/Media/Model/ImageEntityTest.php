@@ -2,7 +2,7 @@
 /**
  * This file is part of the Nella Framework.
  *
- * Copyright (c) 2006, 2011 Patrik Votoček (http://patrik.votocek.cz)
+ * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
@@ -19,7 +19,7 @@ class ImageEntityTest extends \Nella\Testing\TestCase
 		parent::setup();
 		$this->image = new \Nella\Media\Model\ImageEntity('foo.bar', 'image/png');
 	}
-	
+
 	public function testInstance()
 	{
 		$this->assertInstanceOf('Nella\NetteAddons\Media\IImage', $this->image, "instance IImage");
@@ -33,14 +33,14 @@ class ImageEntityTest extends \Nella\Testing\TestCase
 		$this->assertEquals('image/png', $this->image->getContentType(), "->getContentType() default value");
 		$this->assertEquals('png', $this->image->getImageType(), "->getImageType() default value");
 	}
-	
+
 	public function dataSettersAndGetters()
 	{
 		return array(
-			array('slug', "logo"), 
+			array('slug', "logo"),
 		);
 	}
-	
+
 	/**
 	 * @dataProvider dataSettersAndGetters
 	 */
@@ -49,18 +49,18 @@ class ImageEntityTest extends \Nella\Testing\TestCase
 		$setter = "set" . ucfirst($method);
 		$getter = "get" . ucfirst($method);
 		$this->image->$setter($value);
-		$this->assertEquals($value, $this->image->$getter(), 
+		$this->assertEquals($value, $this->image->$getter(),
 			"->$getter() equals " . (is_object($value) ? get_class($value) : $value)
 		);
 	}
-	
+
 	/**
 	 * @dataProvider dataSettersAndGetters
 	 */
 	public function testSettersAndGettersProperties($property, $value)
 	{
 		$this->image->$property = $value;
-		$this->assertEquals($value, $this->image->$property, 
+		$this->assertEquals($value, $this->image->$property,
 			"->$property equals " . (is_object($value) ? get_class($value) : $value)
 		);
 	}

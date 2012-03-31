@@ -2,7 +2,7 @@
 /**
  * This file is part of the Nella Framework.
  *
- * Copyright (c) 2006, 2011 Patrik Votoček (http://patrik.votocek.cz)
+ * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
@@ -51,7 +51,7 @@ class Form extends \Nette\Application\UI\Form
 	/**
 	 * This method will be called when the component (or component's parent)
 	 * becomes attached to a monitored object. Do not call this method yourself.
-	 * 
+	 *
 	 * @param \Nette\ComponentModel\IComponent
 	 * @return void
 	 */
@@ -88,7 +88,7 @@ class Form extends \Nette\Application\UI\Form
 
 	/**
 	 * Adds naming container to the form.
-	 * 
+	 *
 	 * @param  string  name
 	 * @return \Nella\NetteAddons\Forms\Container
 	 */

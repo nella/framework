@@ -2,7 +2,7 @@
 /**
  * This file is part of the Nella Framework.
  *
- * Copyright (c) 2006, 2011 Patrik Votoček (http://patrik.votocek.cz)
+ * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
@@ -19,7 +19,7 @@ class FileEntityTest extends \Nella\Testing\TestCase
 		parent::setup();
 		$this->file = new \Nella\Media\Model\FileEntity('foo.bar', 'application/octet-stream');
 	}
-	
+
 	public function testInstance()
 	{
 		$this->assertInstanceOf('Nella\NetteAddons\Media\IFile', $this->file);
@@ -32,14 +32,14 @@ class FileEntityTest extends \Nella\Testing\TestCase
 		$this->assertNull($this->file->getSlug(FALSE), "->getSlug(FALSE) default value");
 		$this->assertEquals('application/octet-stream', $this->file->getContentType(), "->getContentType() default value");
 	}
-	
+
 	public function dataSettersAndGetters()
 	{
 		return array(
-			array('slug', 'logo'), 
+			array('slug', 'logo'),
 		);
 	}
-	
+
 	/**
 	 * @dataProvider dataSettersAndGetters
 	 */
@@ -48,18 +48,18 @@ class FileEntityTest extends \Nella\Testing\TestCase
 		$setter = "set" . ucfirst($method);
 		$getter = "get" . ucfirst($method);
 		$this->file->$setter($value);
-		$this->assertEquals($value, $this->file->$getter(), 
+		$this->assertEquals($value, $this->file->$getter(),
 			"->$getter() equals " . (is_object($value) ? get_class($value) : $value)
 		);
 	}
-	
+
 	/**
 	 * @dataProvider dataSettersAndGetters
 	 */
 	public function testSettersAndGettersProperties($property, $value)
 	{
 		$this->file->$property = $value;
-		$this->assertEquals($value, $this->file->$property, 
+		$this->assertEquals($value, $this->file->$property,
 			"->$property equals " . (is_object($value) ? get_class($value) : $value)
 		);
 	}

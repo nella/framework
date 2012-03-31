@@ -2,7 +2,7 @@
 /**
  * This file is part of the Nella Framework.
  *
- * Copyright (c) 2006, 2011 Patrik Votoček (http://patrik.votocek.cz)
+ * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
@@ -21,13 +21,13 @@ interface IStorage
 	 * @return string full path
 	 */
 	public function load(IFile $file);
-	
+
 	/**
 	 * @param IFile
 	 * @param string temp file full path
 	 */
 	public function save(IFile $file, $from);
-	
+
 	/**
 	 * @param IFile
 	 */

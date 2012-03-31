@@ -2,7 +2,7 @@
 /**
  * This file is part of the Nella Framework.
  *
- * Copyright (c) 2006, 2011 Patrik Votoček (http://patrik.votocek.cz)
+ * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
@@ -20,7 +20,7 @@ class File extends \Nette\Object implements \Nella\NetteAddons\Media\IStorage
 {
 	/** @var string */
 	private $dir;
-	
+
 	/**
 	 * @param string
 	 */
@@ -35,7 +35,7 @@ class File extends \Nette\Object implements \Nella\NetteAddons\Media\IStorage
 		}
 		$this->dir = $dir;
 	}
-	
+
 	/**
 	 * @param IFile
 	 * @return string full path
@@ -45,7 +45,7 @@ class File extends \Nette\Object implements \Nella\NetteAddons\Media\IStorage
 		$path = $this->dir . '/' . $file->getPath();
 		return file_exists($path) ? $path : NULL;
 	}
-	
+
 	/**
 	 * @param IFile
 	 * @param string|\Nette\Http\FileUpload temp file full path ir file upload
@@ -60,7 +60,7 @@ class File extends \Nette\Object implements \Nella\NetteAddons\Media\IStorage
 			@unlink($from);
 		}
 	}
-	
+
 	/**
 	 * @param IFile
 	 */

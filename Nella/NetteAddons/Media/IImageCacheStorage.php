@@ -2,7 +2,7 @@
 /**
  * This file is part of the Nella Framework.
  *
- * Copyright (c) 2006, 2011 Patrik Votoček (http://patrik.votocek.cz)
+ * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
@@ -23,7 +23,7 @@ interface IImageCacheStorage
 	 * @return \Nette\Image|string
 	 */
 	public function load(IImage $image, IImageFormat $format, $type);
-	
+
 	/**
 	 * @param IImage
 	 * @param IImageFormat
@@ -31,12 +31,12 @@ interface IImageCacheStorage
 	 * @param \Nette\Image|string
 	 */
 	public function save(IImage $image, IImageFormat $format, $type, $from);
-	
+
 	/**
 	 * @param IImage
 	 */
 	public function remove(IImage $image);
-	
+
 	/**
 	 * @param IImageFormat|NULL
 	 */

@@ -2,7 +2,7 @@
 /**
  * This file is part of the Nella Framework.
  *
- * Copyright (c) 2006, 2011 Patrik Votoček (http://patrik.votocek.cz)
+ * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
@@ -14,16 +14,16 @@ use DoctrineExtensions\Paginate\Paginate,
 
 /**
  * Query Object
- * 
+ *
  * @author	Patrik Votoček
- * 
+ *
  * @property-read \Nette\Utils\Paginator|NULL $paginator
  */
 class QueryObject extends \Nette\Object implements \Nella\Model\IQueryObject
 {
 	/** @var \Nette\Utils\Paginator */
 	private $paginator;
-	
+
 	/**
 	 * @param \Nette\Utils\Paginator
 	 */
@@ -31,7 +31,7 @@ class QueryObject extends \Nette\Object implements \Nella\Model\IQueryObject
 	{
 		$this->paginator = $paginator;
 	}
-	
+
 	/**
 	 * @return \Nette\Utils\Paginator|NULL
 	 */
@@ -39,7 +39,7 @@ class QueryObject extends \Nette\Object implements \Nella\Model\IQueryObject
 	{
 		return $this->paginator;
 	}
-	
+
 	/**
 	 * @param \Nella\Model\IQueryable
 	 * @return \Doctrine\ORM\Query|Doctrine\CouchDB\View\AbstractQuery
@@ -48,7 +48,7 @@ class QueryObject extends \Nette\Object implements \Nella\Model\IQueryObject
 	{
 		return $broker->createQueryBuilder('qo')->getQuery();
 	}
-	
+
 	/**
 	 * @param IQueryable
 	 * @return int
@@ -57,7 +57,7 @@ class QueryObject extends \Nette\Object implements \Nella\Model\IQueryObject
 	{
 		return Paginate::getTotalQueryResults($this->doCreateQuery($broker));
 	}
-	
+
 	/**
 	 * @param \Nella\Model\IQueryable
 	 * @return \Doctrine\Common\Collections\Collection|array
@@ -65,18 +65,18 @@ class QueryObject extends \Nette\Object implements \Nella\Model\IQueryObject
 	public function fetch(IQueryable $broker)
 	{
 		$query = $this->doCreateQuery($broker);
-		
+
 		if ($this->paginator) { // Paginate
 			$query = Paginate::getPaginateQuery($query, $this->paginator->getOffset(), $this->paginator->getLength());
 		}
-		
+
 		try{
 			return $query->getResult();
 		} catch (\Doctrine\ORM\NoResultException $e) {
 			return array();
 		}
 	}
-	
+
 	/**
 	 * @param \Nella\Model\IQueryable
 	 * @return \Nella\Doctrine\Entity|object|NULL
@@ -84,7 +84,7 @@ class QueryObject extends \Nette\Object implements \Nella\Model\IQueryObject
 	public function fetchOne(IQueryable $broker)
 	{
 		$query = $this->doCreateQuery($broker);
-		
+
 		$query->setMaxResults(1);
 
 		try{

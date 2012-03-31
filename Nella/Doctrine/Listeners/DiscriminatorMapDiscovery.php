@@ -1,14 +1,14 @@
 <?php
 /**
  * This file is part of the Nella Framework.
- * 
+ *
  * This file is part of the Kdyby (http://www.kdyby.org)
  *
- * Copyright (c) 2006, 2011 Patrik Votoček (http://patrik.votocek.cz)
+ * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  * Copyright (c) 2008, 2011 Filip Procházka (filip.prochazka@kdyby.org)
  *
  * @license http://www.kdyby.org/license
- * 
+ *
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
 
@@ -18,9 +18,9 @@ use Nette\Reflection\ClassType;
 
 /**
  * Discriminator map discovery
- * 
+ *
  * Support for defining discriminator maps at Child-level
- * 
+ *
  * @author	Patrik Votoček
  * @author	Filip Procházka
  */

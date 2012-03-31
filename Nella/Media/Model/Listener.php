@@ -2,7 +2,7 @@
 /**
  * This file is part of the Nella Framework.
  *
- * Copyright (c) 2006, 2011 Patrik Votoček (http://patrik.votocek.cz)
+ * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nellacms.com
  */
@@ -25,7 +25,7 @@ class Listener extends \Nette\Object implements \Doctrine\Common\EventSubscriber
 			\Doctrine\ORM\Events::onFlush,
 		);
     }
-    
+
     /**
      * @param \Doctrine\ORM\Event\OnFlushEventArgs
      */
@@ -43,7 +43,7 @@ class Listener extends \Nette\Object implements \Doctrine\Common\EventSubscriber
 			$this->processOnFlush($entity);
         }
     }
-    
+
     /**
      * @param \Nella\Doctrine\Entity
      */

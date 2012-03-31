@@ -2,7 +2,7 @@
 /**
  * This file is part of the Nella Framework.
  *
- * Copyright (c) 2006, 2011 Patrik Votoček (http://patrik.votocek.cz)
+ * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.org
  */
@@ -21,12 +21,12 @@ use Nette\Caching\Cache,
 class File extends \Nette\Object implements \Nella\NetteAddons\Media\IImageCacheStorage
 {
 	const CACHE_NAME = 'Nella.Media.Cache';
-	
+
 	/** @var \Nette\Caching\Cache */
 	private $cache;
 	/** @var string */
 	private $dir;
-	
+
 	/**
 	 * @param string
 	 * @param \Nette\Caching\IStorage
@@ -41,13 +41,13 @@ class File extends \Nette\Object implements \Nella\NetteAddons\Media\IImageCache
 			throw new \Nette\InvalidStateException();
 		}
 		$this->dir = $dir;
-		
+
 		if (!$cacheStorage) {
 			$cacheStorage = new \Nette\Caching\Storages\MemoryStorage;
 		}
 		$this->cache = new Cache($cacheStorage, static::CACHE_NAME);
 	}
-	
+
 	/**
 	 * @param IImage
 	 * @param IImageFormat
@@ -62,7 +62,7 @@ class File extends \Nette\Object implements \Nella\NetteAddons\Media\IImageCache
 		}
 		return NULL;
 	}
-	
+
 	/**
 	 * @param IImage
 	 * @param IImageFormat
@@ -81,13 +81,13 @@ class File extends \Nette\Object implements \Nella\NetteAddons\Media\IImageCache
 		} else {
 			@copy($from, $path);
 		}
-		
+
 		// image files list
 		$files = $this->getCacheImageFiles($image);
 		$files[] = $path;
 		$this->cache->save($this->getCacheImageFilesKey($image), $files);
 	}
-	
+
 	/**
 	 * @param IImage
 	 */
@@ -99,7 +99,7 @@ class File extends \Nette\Object implements \Nella\NetteAddons\Media\IImageCache
 			}
 		}
 	}
-	
+
 	/**
 	 * @param IImageFormat|NULL
 	 */
@@ -111,7 +111,7 @@ class File extends \Nette\Object implements \Nella\NetteAddons\Media\IImageCache
 			$this->cleanDir($this->dir);
 		}
 	}
-	
+
 	/**
 	 * @param IImageFormat
 	 * @return string
@@ -120,7 +120,7 @@ class File extends \Nette\Object implements \Nella\NetteAddons\Media\IImageCache
 	{
 		return $this->dir . "/" . $format->getFullSlug();
 	}
-	
+
 	/**
 	 * @param IImage
 	 * @param IImageFormat
@@ -131,7 +131,7 @@ class File extends \Nette\Object implements \Nella\NetteAddons\Media\IImageCache
 	{
 		return $this->formatFormatPath($format) . "/" . $image->getFullSlug() . "." . $type;
 	}
-	
+
 	/**
 	 * @param IImage
 	 * @return string
@@ -140,7 +140,7 @@ class File extends \Nette\Object implements \Nella\NetteAddons\Media\IImageCache
 	{
 		return 'image-'.$image->getFullSlug();
 	}
-	
+
 	/**
 	 * @param IImage
 	 * @return array
@@ -159,7 +159,7 @@ class File extends \Nette\Object implements \Nella\NetteAddons\Media\IImageCache
 		if (!file_exists($dir)) {
 			return;
 		}
-		
+
 		foreach (\Nette\Utils\Finder::find('*')->in($dir)->childFirst() as $item) {
 			if ($item->isFile()) {
 				@unlink($item->getRealPath());
@@ -167,7 +167,7 @@ class File extends \Nette\Object implements \Nella\NetteAddons\Media\IImageCache
 				@rmdir($item->getRealPath());
 			}
 		}
-		
+
 		if ($with) {
 			@rmdir($dir);
 		}
