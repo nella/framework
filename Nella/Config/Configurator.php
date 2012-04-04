@@ -94,6 +94,7 @@ class Configurator extends \Nette\Config\Configurator
 			->addExtension('nella', new Extensions\NellaExtension)
 			->addExtension('media', new Extensions\MediaExtension)
 			->addExtension('security', new Extensions\SecurityExtension)
+			->addExtension('diagnostics', new \Nella\NetteAddons\Diagnostics\Config\Extension)
 			->addExtension('model', new Extensions\ModelExtension);
 
 		return $compiler;
