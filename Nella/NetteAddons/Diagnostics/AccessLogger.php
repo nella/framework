@@ -36,6 +36,7 @@ class AccessLogger extends \Nette\Object
 		$req = $f->setEncoding('UTF-8')->createHttpRequest();
 		$data = array(
 			'datetime' => date('c'),
+			'ua' => $req->getHeader('user-agent', NULL),
 			'ip' => $req->getRemoteAddress(),
 			'host' => $req->getRemoteHost(),
 			'method' => $req->getMethod(),
