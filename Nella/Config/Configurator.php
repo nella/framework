@@ -30,18 +30,10 @@ class Configurator extends \Nette\Config\Configurator
 	 */
 	protected function getDefaultParameters()
 	{
+		$params = parent::getDefaultParameters();
 		$trace = debug_backtrace(FALSE);
-		return array(
-			'appDir' => isset($trace[2]['file']) ? dirname($trace[2]['file']) : NULL,
-			'wwwDir' => isset($_SERVER['SCRIPT_FILENAME']) ? dirname($_SERVER['SCRIPT_FILENAME']) : NULL,
-			'productionMode' => static::detectProductionMode(),
-			'environment' => static::detectProductionMode() ? self::PRODUCTION : self::DEVELOPMENT,
-			'consoleMode' => PHP_SAPI === 'cli',
-			'container' => array(
-				'class' => 'SystemContainer',
-				'parent' => 'Nette\DI\Container',
-			)
-		);
+		$params['appDir'] = isset($trace[2]['file']) ? dirname($trace[2]['file']) : NULL;
+		return $params;
 	}
 
 	/**
