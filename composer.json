@@ -17,7 +17,7 @@
 		}
 	],
 	"autoload": {
-		"psr-0": { "Nella": "Nella/" }
+		"psr-0": { "Nella": "" }
 	},
 	"config": {
 		"vendor-dir": "vendors"
