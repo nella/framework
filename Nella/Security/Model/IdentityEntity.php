@@ -9,6 +9,8 @@
 
 namespace Nella\Security\Model;
 
+use Doctrine\ORM\Mapping as orm;
+
 /**
  * Indentity
  *
