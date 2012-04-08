@@ -35,6 +35,12 @@ class IdentityEntity extends \Nella\Doctrine\Entity implements \Nella\Security\I
 	 */
 	private $loaded = FALSE;
 
+	public function __construct()
+	{
+		parent::__construct();
+		$this->loaded = TRUE;
+	}
+
 	/**
 	 * Returns a list of roles that the user is a member of
 	 *
@@ -97,8 +103,9 @@ class IdentityEntity extends \Nella\Doctrine\Entity implements \Nella\Security\I
 	public function load(\Doctrine\ORM\EntityManager $em)
 	{
 		if (!$this->loaded) {
-			$em->refresh($this);
-			$this->loaded = TRUE;
+			$entity = $em->find(get_class($this), $this->getId());
+			$entity->loaded = TRUE;
+			return $entity;
 		}
 
 		return $this;

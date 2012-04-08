@@ -43,7 +43,7 @@ class UserStorage extends \Nette\Http\UserStorage
 
 		$identity = $section->identity;
 		if ($identity instanceof ISerializableIdentity && !$identity->isLoaded()) {
-			$identity->load($this->em);
+			$section->identity = $identity->load($this->em);
 		}
 
 		return $section;
