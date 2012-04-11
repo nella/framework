@@ -24,9 +24,18 @@ mv build/build.sh ./
 # Init vendors #
 ################
 
-rm composer.lock
-rm composer.phar
-rm -rf vendors
+if [ -f "composer.lock" ]
+then
+	rm composer.lock
+fi
+if [ -f "composer.phar" ]
+then
+	rm composer.phar
+fi
+if [ -d "vendors" ]
+then
+	rm -rf vendors
+fi
 curl -s http://getcomposer.org/installer | php
 php composer.phar install
 
