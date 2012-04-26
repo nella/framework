@@ -27,7 +27,6 @@
 		"doctrine/orm": ">=2.2.0,<2.2.x-dev",
 		"doctrine/migrations": "*",
 		"symfony/console": ">=2.0.0,<2.0.x-dev",
-		"beberlei/DoctrineExtensions": "*",
 		"nette/nette": "2.0.*"
 	},
 	"replace": {

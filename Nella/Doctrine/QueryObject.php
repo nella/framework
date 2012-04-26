@@ -9,7 +9,7 @@
 
 namespace Nella\Doctrine;
 
-use DoctrineExtensions\Paginate\Paginate,
+use Doctrine\ORM\Tools\Pagination\Paginator,
 	Nella\Model\IQueryable;
 
 /**
@@ -55,7 +55,8 @@ class QueryObject extends \Nette\Object implements \Nella\Model\IQueryObject
 	 */
 	public function count(IQueryable $broker)
 	{
-		return Paginate::getTotalQueryResults($this->doCreateQuery($broker));
+		$tmp = new Paginator($this->doCreateQuery($broker));
+		return count($tmp);
 	}
 
 	/**
@@ -66,11 +67,11 @@ class QueryObject extends \Nette\Object implements \Nella\Model\IQueryObject
 	{
 		$query = $this->doCreateQuery($broker);
 
-		if ($this->paginator) { // Paginate
-			$query = Paginate::getPaginateQuery($query, $this->paginator->getOffset(), $this->paginator->getLength());
-		}
-
 		try{
+			if ($this->paginator) {
+				$query->setFirstResult($this->paginator->getOffset())->setMaxResults($this->paginator->getLength());
+				return new Paginator($query);
+			}
 			return $query->getResult();
 		} catch (\Doctrine\ORM\NoResultException $e) {
 			return array();
