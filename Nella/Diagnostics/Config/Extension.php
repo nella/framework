@@ -27,6 +27,7 @@ class Extension extends \Nette\Config\CompilerExtension
 		'loggerUrl' => 'http://localhost:50921/api/log.json',
 		'accessLoggerUrl' => 'http://localhost:50921/api/access.json',
 		'storage' => 'curl',
+		'callbackPanel' => TRUE,
 	);
 
 	/**
@@ -95,6 +96,10 @@ class Extension extends \Nette\Config\CompilerExtension
 			get_called_class().'::setCallback($this->getService(?), $this->getService(?), $this->getService(?));',
 			array('application', 'httpResponse', $this->prefix('accessLogger'))
 		);
+
+		if ($config['callbackPanel']) {
+			$initialize->addBody('Nella\Diagnostics\CallbackPanel::register(?)', array('$this'));
+		}
 	}
 
 	/**
