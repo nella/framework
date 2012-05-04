@@ -17,6 +17,7 @@ namespace Nella;
 final class Events
 {
 	// configuration events
+	const CREATE_COMPILER = 'Nella\Configurator::createCompiler';
 	const BEFORE_CONTAINER_COMPILE = 'Nella\Configurator::beforeContainerCompile';
 	const AFTER_CONTAINER_COMPILE = 'Nella\Configurator::afterContainerCompile';
 

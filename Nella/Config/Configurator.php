@@ -18,6 +18,9 @@ namespace Nella\Config;
  */
 class Configurator extends \Nette\Config\Configurator
 {
+	/** @var \Nella\Event\IEventDispatcher */
+	private $eventManager;
+
 	public function __construct()
 	{
 		@header('X-Powered-By: Nette Framework with Nella Framework');
@@ -34,6 +37,31 @@ class Configurator extends \Nette\Config\Configurator
 		$trace = debug_backtrace(FALSE);
 		$params['appDir'] = isset($trace[2]['file']) ? dirname($trace[2]['file']) : NULL;
 		return $params;
+	}
+
+	/**
+	 * @return \Nella\Event\IEventDispatcher
+	 */
+	public function getEventManager()
+	{
+		if (!$this->eventManager) {
+			$this->eventManager = new \Nella\Event\EventDispatcher;
+		}
+		return $this->eventManager;
+	}
+
+	/**
+	 * @param \Nella\Event\IEventDispatcher
+	 * @return Configurator
+	 * @throws \Nette\InvalidStateException
+	 */
+	public function setEventManager(\Nella\Event\IEventDispatcher $eventManager)
+	{
+		if ($this->eventManager) {
+			throw new \Nette\InvalidStateException('Event manager already initialized');
+		}
+		$this->eventManager = $eventManager;
+		return $this;
 	}
 
 	/**
@@ -87,8 +115,21 @@ class Configurator extends \Nette\Config\Configurator
 			->addExtension('media', new Extensions\MediaExtension)
 			->addExtension('security', new Extensions\SecurityExtension)
 			->addExtension('diagnostics', new \Nella\NetteAddons\Diagnostics\Config\Extension)
-			->addExtension('model', new Extensions\ModelExtension);
+			->addExtension('model', new Extensions\ModelExtension)
+			->addExtension('event', new Extensions\EventExtension($this->getEventManager()));
+
+		$this->eventManager->dispatchEvent(\Nella\Events::CREATE_COMPILER, new \Nella\Event\Args\Compiler($compiler));
 
 		return $compiler;
+	}
+
+	/**
+	 * @return \SystemContainer
+	 */
+	public function createContainer()
+	{
+		$container = parent::createContainer();
+		$container->addService('event.manager', $this->getEventManager());
+		return $container;
 	}
 }
