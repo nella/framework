@@ -20,7 +20,9 @@ class NellaExtension extends \Nette\Config\CompilerExtension
 {
 	/** @var array */
 	public $defaults = array(
-		'namespaces' => array(),
+		'namespaces' => array(
+			'App' => 9,
+		),
 		'template' => array(
 			'dirs' => array(
 				'%appDir%' => 2,

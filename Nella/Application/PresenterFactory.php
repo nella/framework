@@ -18,8 +18,7 @@ use Nette\Utils\Strings;
  */
 class PresenterFactory extends \Nette\Object implements \Nette\Application\IPresenterFactory
 {
-	const DEFAULT_NAMESPACE = 'App',
-		MODULE_SUFFIX = 'Module';
+	const MODULE_SUFFIX = 'Module';
 
 	/** @var bool */
 	public $useModuleSuffix = TRUE;
@@ -35,7 +34,6 @@ class PresenterFactory extends \Nette\Object implements \Nette\Application\IPres
 	{
 		$this->container = $container;
 		$this->namespaces = new \SplPriorityQueue;
-		$this->namespaces->insert(static::DEFAULT_NAMESPACE, 2);
 	}
 
 	/**

@@ -18,6 +18,7 @@ class PresenterFactoryTest extends \Nella\Testing\TestCase
 	{
 		parent::setup();
 		$this->loader = new \Nella\Application\PresenterFactory($this->getContext());
+		$this->loader->addNamespace('App', 2);
 		$this->loader->addNamespace('Nella');
 		$this->loader->useModuleSuffix = FALSE;
 	}
