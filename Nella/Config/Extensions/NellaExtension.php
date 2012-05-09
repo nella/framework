@@ -20,6 +20,7 @@ class NellaExtension extends \Nette\Config\CompilerExtension
 {
 	/** @var array */
 	public $defaults = array(
+		'useModuleSuffix' => TRUE,
 		'namespaces' => array(
 			'App' => 9,
 		),
@@ -39,6 +40,7 @@ class NellaExtension extends \Nette\Config\CompilerExtension
 		if ($builder->hasDefinition('nette.presenterFactory')) {
 			$def = $builder->getDefinition('nette.presenterFactory');
 			$def->setClass('Nella\Application\PresenterFactory', array("@container"));
+			$def->addSetup('$useModuleSuffix', array($config['useModuleSuffix']));
 
 			foreach ($config['namespaces'] as $namespace => $priority) {
 				if (\Nette\Utils\Validators::isNumericInt($namespace)) {
@@ -51,6 +53,7 @@ class NellaExtension extends \Nette\Config\CompilerExtension
 
 		$def = $builder->addDefinition($this->prefix('templateFilesFormatter'));
 		$def->setClass('Nella\Templating\TemplateFilesFormatter');
+		$def->addSetup('$useModuleSuffix', array($config['useModuleSuffix']));
 		foreach ($config['template']['dirs'] as $dir => $priority) {
 			if (\Nette\Utils\Validators::isNumericInt($dir)) {
 				$def->addSetup('addDir', array($priority));
