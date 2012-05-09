@@ -35,17 +35,17 @@ class SecurityExtension extends \Nette\Config\CompilerExtension
 			$builder->removeDefinition('nette.userStorage');
 		}
 		$builder->addDefinition($this->prefix('userStorage'))
-			->setClass('Nella\Security\UserStorage', array('@session', $this->prefix('entityManager')));
+			->setClass('Nella\Security\UserStorage', array('@session', $this->prefix('@entityManager')));
 
 		$credentialsRepository = $builder->addDefinition($this->prefix('credentialsRepository'))
 			->setClass('Nella\Doctrine\Repository')
-			->setFactory($this->prefix('entityManager').'->getRepository(?)', array(
+			->setFactory($this->prefix('@entityManager::getRepository'), array(
 				'Nella\Security\Model\CredentialsEntity'
 			));
 
 		$credentialsDao = $builder->addDefinition($this->prefix('credentialsDao'))
 			->setClass('Nella\Security\Model\CredentialsDao', array(
-				$this->prefix('entityManager'), $credentialsRepository
+				$this->prefix('@entityManager'), $credentialsRepository
 			));
 
 
