@@ -22,8 +22,16 @@ use Doctrine\ORM\Mapping as orm;
  * @property-read array $roles
  * @property string $displayName
  */
-class IdentityEntity extends \Nella\Doctrine\Entity implements \Nella\Security\ISerializableIdentity
+class IdentityEntity extends \Nette\Object implements \Nella\Security\ISerializableIdentity
 {
+	/**
+	 * @orm\id
+	 * @orm\generatedValue
+	 * @orm\column(type="integer")
+	 * @var int
+	 */
+	private $id;
+
 	/**
 	 * @orm\column
 	 * @var string
@@ -37,8 +45,25 @@ class IdentityEntity extends \Nella\Doctrine\Entity implements \Nella\Security\I
 
 	public function __construct()
 	{
-		parent::__construct();
 		$this->loaded = TRUE;
+	}
+
+	/**
+	 * @param string
+	 * @return string
+	 */
+	protected static function normalizeString($s)
+	{
+		$s = trim($s);
+		return $s === "" ? NULL : $s;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getId()
+	{
+		return $this->id;
 	}
 
 	/**
