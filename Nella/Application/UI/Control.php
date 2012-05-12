@@ -14,7 +14,7 @@ namespace Nella\Application\UI;
  *
  * @author	Patrik Votoček
  */
-abstract class control extends \Nette\Application\UI\Control
+abstract class Control extends \Nette\Application\UI\Control
 {
 	/** @var \Nella\Templating\ITemplateFilesFormatter */
 	private $templateFilesFormatter;
