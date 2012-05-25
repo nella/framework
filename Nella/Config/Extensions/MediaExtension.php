@@ -77,7 +77,7 @@ class MediaExtension extends \Nella\NetteAddons\Media\Config\Extension
 			$builder->removeDefinition($this->prefix('fileDao'));
 		}
 		$builder->addDefinition($this->prefix('fileDao'))
-			->setClass('Nella\Media\Model\FileDao', array($this->prefix('entityManager'), $this->prefix('@fileRepository')))
+			->setClass('Nella\Media\Model\FileDao', array($this->prefix('@entityManager'), $this->prefix('@fileRepository')))
 			->addSetup('setStorage', array($this->prefix('@fileStorage')))
 			->setAutowired(FALSE);
 
@@ -115,7 +115,7 @@ class MediaExtension extends \Nella\NetteAddons\Media\Config\Extension
 			$builder->removeDefinition($this->prefix('imageDao'));
 		}
 		$builder->addDefinition($this->prefix('imageDao'))
-			->setClass('Nella\Media\Model\ImageDao', array($this->prefix('entityManager'), $this->prefix('@imageRepository')))
+			->setClass('Nella\Media\Model\ImageDao', array($this->prefix('@entityManager'), $this->prefix('@imageRepository')))
 			->addSetup('setStorage', array($this->prefix('@imageStorage')))
 			->addSetup('setCacheStorage', array($this->prefix('@imageCacheStorage')))
 			->setAutowired(FALSE);
@@ -124,7 +124,7 @@ class MediaExtension extends \Nella\NetteAddons\Media\Config\Extension
 			$builder->removeDefinition($this->prefix('imageFormatDao'));
 		}
 		$builder->addDefinition($this->prefix('imageFormatDao'))
-			->setClass('Nella\Media\Model\ImageFormatDao', array($this->prefix('entityManager'), $this->prefix('@imageFormatRepository')))
+			->setClass('Nella\Media\Model\ImageFormatDao', array($this->prefix('@entityManager'), $this->prefix('@imageFormatRepository')))
 			->addSetup('setCacheStorage', array($this->prefix('@imageCacheStorage')))
 			->setAutowired(FALSE);
 
