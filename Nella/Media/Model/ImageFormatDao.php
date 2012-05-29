@@ -35,9 +35,9 @@ class ImageFormatDao extends \Nella\Doctrine\Dao implements \Nella\NetteAddons\M
 	 * @param string
 	 * @return \Nella\Media\Model\ImageFormatEntity|NULL
 	 */
-	public function findOneByFullSlug($slug)
+	public function findOneByFullSlug($fullSlug)
 	{
-		list($id, $fullSlug) = explode('-', $slug, 2);
+		list($id, $slug) = explode('-', $fullSlug, 2);
 		$entity = $this->repository->find($id);
 		if ($entity && $entity->getFullSlug() == $fullSlug) {
 			return $entity;
