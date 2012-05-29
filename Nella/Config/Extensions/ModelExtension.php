@@ -83,8 +83,8 @@ class ModelExtension extends \Nette\Config\CompilerExtension
 			$def->setClass('Nella\Doctrine\Dao')
 				->setFactory(get_called_class()."::factory", $params);
 			if (isset($data['setup'])) {
-				foreach ($data['setup'] as $target => $args) {
-					$def->addSetup($target, $args);
+				foreach ($data['setup'] as $setup) {
+					$def->addSetup($setup->value, $setup->attributes);
 				}
 			}
 		} elseif (is_string($data) && \Nette\Utils\Strings::startsWith($data, '@')) {
