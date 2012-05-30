@@ -19,7 +19,7 @@ $params = array(
 );
 
 require_once $params['libsDir'] . "/nette/nette/Nette/loader.php";
-require_once $params['libsDir'] . "/.composer/autoload.php";
+require_once $params['libsDir'] . "/autoload.php";
 require_once __DIR__ . "/../Nella/loader.php";
 Nella\SplClassLoader::getInstance()
     ->addNamespaceAlias('NellaTests', __DIR__ . '/cases')
