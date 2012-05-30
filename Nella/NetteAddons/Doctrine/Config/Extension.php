@@ -219,7 +219,7 @@ class Extension extends \Nette\Config\CompilerExtension
 				'dir' => $config['proxyDir'],
 				'namespace' => $config['proxyNamespace'],
 				'autogenerate' => $config['proxyAutogenerate'] !== NULL ?
-					$config['proxyAutogenerate'] : $builder->parameters['productionMode'],
+					$config['proxyAutogenerate'] : $builder->parameters['debugMode'],
 			);
 
 			$builder->addDefinition($this->configurationsPrefix($name))
