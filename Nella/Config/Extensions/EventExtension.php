@@ -63,7 +63,7 @@ class EventExtension extends \Nette\Config\CompilerExtension
 	{
 		$application->onStartup[] = function(Application $application) use($eventManager) {
 			$eventManager->dispatchEvent(
-				\Nella\Events::APPLICATION_ERROR, new Args\Application($application)
+				\Nella\Events::APPLICATION_STARTUP, new Args\Application($application)
 			);
 		};
 
@@ -75,19 +75,19 @@ class EventExtension extends \Nette\Config\CompilerExtension
 
 		$application->onRequest[] = function(Application $application, \Nette\Application\Request $request) use($eventManager) {
 			$eventManager->dispatchEvent(
-				\Nella\Events::APPLICATION_ERROR, new Args\ApplicationRequest($application, $request)
+				\Nella\Events::APPLICATION_REQUEST, new Args\ApplicationRequest($application, $request)
 			);
 		};
 
 		$application->onResponse[] = function(Application $application, \Nette\Application\IResponse $response) use($eventManager) {
 			$eventManager->dispatchEvent(
-				\Nella\Events::APPLICATION_ERROR, new Args\ApplicationResponse($application, $response)
+				\Nella\Events::APPLICATION_RESPONSE, new Args\ApplicationResponse($application, $response)
 			);
 		};
 
 		$application->onShutdown[] = function(Application $application, \Exception $exception = NULL) use($eventManager) {
 			$eventManager->dispatchEvent(
-				\Nella\Events::APPLICATION_ERROR, new Args\ApplicationShutdown($application, $exception)
+				\Nella\Events::APPLICATION_SHUTDOWN, new Args\ApplicationShutdown($application, $exception)
 			);
 		};
 	}
