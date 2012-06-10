@@ -20,8 +20,8 @@ class Extension extends \Nette\Config\CompilerExtension
 {
 	/** @var array */
 	public $defaults = array(
-		'loggerUrl' => 'http://localhost:50921/api/log/index.json',
-		'accessLoggerUrl' => 'http://localhost:50921/api/access/index.json',
+		'loggerUrl' => 'http://localhost:50921/api/log.json',
+		'accessLoggerUrl' => 'http://localhost:50921/api/access.json',
 	);
 
 	/**
@@ -34,13 +34,13 @@ class Extension extends \Nette\Config\CompilerExtension
 		$config = $this->getConfig($this->defaults);
 		$builder = $this->getContainerBuilder();
 
-		if (!isset($config['appId']) || !isset($config['key'])) {
+		if (!isset($config['appId']) || !isset($config['appSecret'])) {
 			return;
 		}
 
 		$builder->addDefinition($this->prefix('accessStorage'))
 			->setClass('Nella\NetteAddons\Diagnostics\LoggerStorages\Http', array(
-				$config['appId'], $config['key'], $config['accessLoggerUrl']
+				$config['appId'], $config['appSecret'], $config['accessLoggerUrl']
 			));
 		$builder->addDefinition($this->prefix('accessLogger'))
 			->setClass('Nella\NetteAddons\Diagnostics\AccessLogger', array($this->prefix('@accessStorage')));
@@ -64,14 +64,16 @@ class Extension extends \Nette\Config\CompilerExtension
 	public function afterCompile(\Nette\Utils\PhpGenerator\ClassType $class)
 	{
 		$config = $this->getConfig($this->defaults);
-		if (!isset($config['appId']) || !isset($config['key'])) {
+		if (!isset($config['appId']) || !isset($config['appSecret'])) {
 			return;
 		}
+
+		$password = isset($config['password']) ? $config['password'] : FALSE;
 
 		$initialize = $class->methods['initialize'];
 
 		$initialize->addBody('\Nella\NetteAddons\Diagnostics\Logger::register(?, ?, ?);', array(
-			$config['appId'], $config['key'], $config['loggerUrl']
+			$config['appId'], $config['appSecret'], $password, $config['loggerUrl']
 		));
 
 		$initialize->addBody(get_called_class().'::setCallback($this->getService(?), $this->getService(?), $this->getService(?));', array(

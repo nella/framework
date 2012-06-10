@@ -10,7 +10,7 @@
 namespace Nella\NetteAddons\Diagnostics\LoggerStorages;
 
 /**
- * Remote logger storage
+ * Http logger storage
  *
  * @author	Patrik Votoček
  */
@@ -21,22 +21,22 @@ class Http extends \Nette\Object implements \Nella\NetteAddons\Diagnostics\ILogg
 	/** @var string */
 	private $appId;
 	/** @var string */
-	private $key;
+	private $appSecret;
 
 	/**
 	 * @param string
 	 * @param string
 	 * @param string
 	 */
-	public function __construct($appId, $key, $url)
+	public function __construct($appId, $appSecret, $url)
 	{
 		if (!extension_loaded('curl') && (function_exists('ini_get') && !ini_get('allow_url_fopen'))) {
-			throw new \Nette\InvalidStateException('Missing cURL extension or allow_url_fopen ON');
+			throw new \	InvalidStateException('Missing cURL extension or allow_url_fopen ON');
 		}
 
 		$this->url = $url;
 		$this->appId = $appId;
-		$this->key = $key;
+		$this->appSecret = $appSecret;
 	}
 
 	/**
@@ -44,13 +44,15 @@ class Http extends \Nette\Object implements \Nella\NetteAddons\Diagnostics\ILogg
 	 */
 	public function save(array $data)
 	{
-		$data = $data + array('app' => $this->appId, 'key' => $this->key);
-
+		$headers = array(
+			'appId' => "X-LoggerAuth-AppId: {$this->appId}",
+			'appSecret' => "X-LoggerAuth-AppSecret: {$this->appSecret}",
+		);
 		if (function_exists('ini_get') && ini_get('allow_url_fopen')) {
 			$req = @stream_context_create(array(
 				'http' => array(
-					'header' => 'Content-Type: application/x-www-form-urlencoded',
-					'method' => 'PUT',
+					'header' => "Content-Type: application/x-www-form-urlencoded\r\n".implode("\r\n", $headers),
+					'method' => 'POST',
 					'content' => http_build_query($data),
 				)
 			));
@@ -60,9 +62,10 @@ class Http extends \Nette\Object implements \Nella\NetteAddons\Diagnostics\ILogg
 			$ch = curl_init();
 
 			curl_setopt($ch, CURLOPT_URL, $this->url);
+			curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 			curl_setopt($ch, CURLOPT_NOBODY, TRUE);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-			curl_setopt($ch, CURLOPT_PUT, TRUE);
+			curl_setopt($ch, CURLOPT_POST, TRUE);
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 			curl_setopt($ch, CURLOPT_TIMEOUT_MS, 500);
 

@@ -36,7 +36,7 @@ class Logger extends \Nette\Diagnostics\Logger
 	 */
 	public function log($message, $priority = self::INFO)
 	{
-		$data = array('priority' => $priority, 'ip' => $_SERVER['SERVER_ADDR']);
+		$data = array('type' => $priority, 'ip' => $_SERVER['SERVER_ADDR']);
 
 		if (is_array($message)) {
 			$data['datetime'] = $this->datetimeToIso($message[0]);
@@ -78,25 +78,32 @@ class Logger extends \Nette\Diagnostics\Logger
 	/**
 	 * @param string
 	 * @param string
+	 * @param string|bool password for log file downloader
 	 * @param string
 	 */
-	public static function register($appId, $key, $url = 'http://localhost:50921/api/log/index.json')
+	public static function register($appId, $appSecret, $password = FALSE, $url = 'http://localhost:50921/api/log.json')
 	{
-		$qs = "__logger=get&id=$appId&key=$key&file=";
-		if (isset($_SERVER['QUERY_STRING']) && Strings::startsWith($_SERVER['QUERY_STRING'], $qs)) {
-			$path = Strings::substring($_SERVER['QUERY_STRING'], Strings::length($qs));
-			if (strpos($path, '/') || strpos($path, '\\')) {
-				exit;
+		if (isset($_GET['__getfile'])) {
+			@header('X-Frame-Options: ');
+			$data = json_decode(base64_decode($_GET['__getfile']), TRUE);
+			if ($password === FALSE) {
+				die('No password set');
+			} elseif (!array_key_exists('password', $data) || !array_key_exists('path', $data)) {
+				die('Missing data');
+			} elseif ($data['appid'] != $appId || $data['appsecret'] != $appSecret || $data['password'] != $password) {
+				die('Invalid credentials');
+			} elseif (!file_exists($data['path'])) {
+				die('Invalid file');
+			} elseif (strncmp(realpath($data['path']), realpath(Debugger::$logger->directory), strlen(realpath(Debugger::$logger->directory))) !== 0) {
+				die('Path is not valid log dir');
 			}
-			$path = Debugger::$logDirectory . '/' . $path;
-			if (!file_exists($path)) {
-				die('error');
-			}
-			echo file_get_contents($path);
+
+			echo file_get_contents($data['path']);
+
 			exit;
 		}
 
-		$storage = new LoggerStorages\Http($appId, $key, $url);
+		$storage = new LoggerStorages\Http($appId, $appSecret, $url);
 		$logger = new static($storage);
 		$logger->directory = & Debugger::$logger->directory;
 		$logger->email = & Debugger::$logger->email;
