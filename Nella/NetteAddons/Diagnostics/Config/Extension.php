@@ -72,7 +72,7 @@ class Extension extends \Nette\Config\CompilerExtension
 
 		$initialize = $class->methods['initialize'];
 
-		$initialize->addBody('\Nella\NetteAddons\Diagnostics\Logger::register(?, ?, ?);', array(
+		$initialize->addBody('\Nella\NetteAddons\Diagnostics\Logger::register(?, ?, ?, ?);', array(
 			$config['appId'], $config['appSecret'], $password, $config['loggerUrl']
 		));
 
