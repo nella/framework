@@ -1,0 +1,32 @@
+{
+	"name": "nella/nette-addon-diagnostics",
+	"type": "nette-addon",
+	"description": "Remote diagnostics for Nette Framework",
+	"keywords": ["nella", "addon", "nette"],
+	"homepage": "http://nellafw.org",
+	"license": ["BSD-3", "GPLv2", "GPLv3"],
+	"authors": [
+		{
+			"name": "Patrik Votoček",
+			"email": "patrik@votocek.cz",
+			"homepage": "http://patrik.votocek.cz"
+		},
+		{
+			"name": "Nella Project",
+			"homepage": "http://nella-project.org"
+		}
+	],
+	"autoload": {
+		"psr-0": {
+			"Nella\\NetteAddons\\Diagnostics": ""
+		}
+	},
+	"target-dir": "Nella/NetteAddons/Diagnostics",
+	"require": {
+		"php": ">=5.3.2",
+		"nette/nette": "2.0.*"
+	},
+	"conflict": {
+		"nella/framework": "self.version"
+	}
+}
