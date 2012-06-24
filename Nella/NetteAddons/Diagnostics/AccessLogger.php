@@ -32,12 +32,19 @@ class AccessLogger extends \Nette\Object
 	 */
 	public function log(\Nette\Http\Response $res)
 	{
+		$ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : NULL;
+		if (isset($_SERVER['HTTP_X_REAL_IP'])) {
+			$ip = $_SERVER['HTTP_X_REAL_IP'];
+		} elseif (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+			$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+		}
+
 		$f = new \Nette\Http\RequestFactory;
 		$req = $f->setEncoding('UTF-8')->createHttpRequest();
 		$data = array(
 			'datetime' => date('c'),
 			'ua' => isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : NULL,
-			'ip' => isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : NULL,
+			'ip' => $ip,
 			'host' => isset($_SERVER['REMOTE_HOST']) ? $_SERVER['REMOTE_HOST'] : NULL,
 			'method' => isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : NULL,
 			'url' => (isset($_SERVER['HTTPS']) && strcasecmp($_SERVER['HTTPS'], 'off') ? 'https://' : 'http://')
