@@ -9,7 +9,8 @@
 
 namespace Nella\Doctrine;
 
-use Nella\Model\IQueryObject;
+use Nella\Model\IQueryObject,
+	Nette\ObjectMixin;
 
 /**
  * Basic entity repository
