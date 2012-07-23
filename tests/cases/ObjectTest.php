@@ -53,6 +53,18 @@ class ObjectTest extends \Nella\Testing\TestCase
 		$this->assertEquals('test2', $this->obj1->getterVar1(), 'Cls1::$var1 - setter');
 	}
 	
+	public function testCls1EmptyString1()
+	{
+		$this->obj1->var1 = '';
+		$this->assertNull($this->obj1->getterVar1(), 'Cls1::$var1 - set');
+	}
+	
+	public function testCls1EmptyString2()
+	{	
+		$this->obj1->setVar1('');
+		$this->assertNull($this->obj1->getterVar1(), 'Cls1::$var1 - setter');
+	}
+	
 	public function testCls1Getter()
 	{
 		$this->assertTrue(isset($this->obj1->var2), 'Cls1::$var2 - isset');

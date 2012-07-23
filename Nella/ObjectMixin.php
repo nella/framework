@@ -159,6 +159,10 @@ class ObjectMixin extends \Nette\Object
 	private static function setter($_this, Property $ref, $value, MemberAccessException $e)
 	{
 		$ref->setAccessible(TRUE);
+		if (is_string($value)) {
+			$tmp = trim($value);
+			$value = $tmp == '' ? NULL : $tmp;
+		}
 		static::validateValue($ref, $value);
 		$ref->setValue($_this, $value);
 		return $_this;
