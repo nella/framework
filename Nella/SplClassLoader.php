@@ -21,28 +21,21 @@ final class SplClassLoader extends \Nette\Loaders\AutoLoader
 	/** @var SplClassLoader */
 	private static $instance;
 	/** @var array */
-	private $map;
+	private $map = array();
 
 	/**
 	 * @param array
 	 */
 	protected function __construct(array $map = array('Nella' => __DIR__))
 	{
-		$this->map = $map;
+		foreach ($map as $namespace => $path) {
+			$this->addNamespaceAlias($namespace, $path);
+		}
 	}
 
 	/**
-	 * @param string
-	 * @param string
-	 */
-	public function addNamespaceAlias($namespace, $dir)
-	{
-		$this->map[$namespace] = $dir;
-		return $this;
-	}
-
-	/**
-	 * Returns singleton instance with lazy instantiation.
+	 * Returns singleton instance with lazy instantiation
+	 *
 	 * @param array
 	 * @return SplClassLoader
 	 */
@@ -55,26 +48,50 @@ final class SplClassLoader extends \Nette\Loaders\AutoLoader
 	}
 
 	/**
-	 * Handles autoloading of classes or interfaces.
-	 * @param  string
-	 * @return void
+	 * @param string
+	 * @param string
 	 */
-	public function tryLoad($type)
+	public function addNamespaceAlias($namespace, $path)
 	{
-		$mapper = function ($namespace) use ($type) { // find namespace in map
-			return Strings::startsWith(strtolower($type), strtolower($namespace)) ? $namespace : NULL;
-		};
-		$namespace = array_filter(array_keys($this->map), $mapper);
-		sort($namespace);
-		if (count($namespace)) { // is in map?
-			$namespace = end($namespace);
-			$type = substr($type, Strings::length($namespace) + (Strings::endsWith($namespace, '\\') ? 0 : 1)); // remove namespace
-			$path = $this->map[$namespace] . "/"; // map dir
-			$path .= str_replace('\\', DIRECTORY_SEPARATOR, $type); // class to file in map
-			$path .= ".php";
+		$this->map[$namespace] = realpath($path);
+		return $this;
+	}
 
-			if (file_exists($path)) {
-				\Nette\Utils\LimitedScope::load($path);
+	/**
+	 * Handles autoloading of classes or interfaces
+	 *
+	 * @param  string
+	 */
+	public function tryLoad($class)
+	{
+		$path = $this->formatFilePath($class);
+		if ($path !== NULL && file_exists($path)) {
+			\Nette\Utils\LimitedScope::load($path);
+		}
+	}
+
+	/**
+	* @param string
+	* @return string|NULL
+	*/
+	protected function formatFilePath($class)
+	{
+		if (Strings::startsWith($class, '\\')) {
+			$class = Strings::substring($class, 1);
+		}
+
+		foreach ($this->map as $prefix => $dir) {
+			if (empty($prefix) || Strings::startsWith($class, $prefix . '\\')) {
+				$file = $class . '.php'; // non namespace class
+				if (Strings::contains($class, '\\')) {
+					$part = Strings::substring($class, Strings::length($prefix)); // remove $prefix from full class
+					$file = str_replace('\\', DIRECTORY_SEPARATOR, $part) . '.php'; // convert part of full class to relative path
+				}
+
+				$path = $dir . DIRECTORY_SEPARATOR . $file;
+				if (file_exists($path)) {
+					return $path;
+				}
 			}
 		}
 	}
