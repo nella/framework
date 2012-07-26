@@ -35,18 +35,18 @@ class AnnotationDriver extends \Doctrine\ORM\Mapping\Driver\AnnotationDriver
 	 */
 	public function getAllClassNames()
 	{
-		if ($this->_classNames !== null) {
-			return $this->_classNames;
+		if ($this->classNames !== null) {
+			return $this->classNames;
 		}
 
-		if (!$this->_paths) {
+		if (!$this->paths) {
 			throw \Doctrine\ORM\Mapping\MappingException::pathRequired();
 		}
 
 		$classes = array();
 		$includedFiles = array();
 
-		foreach ($this->_paths as $path) {
+		foreach ($this->paths as $path) {
 			if (!is_dir($path)) {
 				throw \Doctrine\ORM\Mapping\MappingException::fileMappingDriversRequireConfiguredDirectoryPath($path);
 			}
@@ -54,7 +54,7 @@ class AnnotationDriver extends \Doctrine\ORM\Mapping\Driver\AnnotationDriver
 			$iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path), \RecursiveIteratorIterator::LEAVES_ONLY);
 
 			foreach ($iterator as $file) {
-				if (($fileName = $file->getBasename($this->_fileExtension)) == $file->getBasename()) {
+				if (($fileName = $file->getBasename($this->fileExtension)) == $file->getBasename()) {
 					continue;
 				}
 
@@ -79,7 +79,7 @@ class AnnotationDriver extends \Doctrine\ORM\Mapping\Driver\AnnotationDriver
 			}
 		}
 
-		$this->_classNames = $classes;
+		$this->classNames = $classes;
 
 		return $classes;
 	}

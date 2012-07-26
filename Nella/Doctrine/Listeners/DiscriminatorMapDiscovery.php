@@ -71,11 +71,11 @@ class DiscriminatorMapDiscovery extends \Nette\Object implements \Doctrine\Commo
 	}
 
 	/**
-	 * @param \Doctrine\ORM\Mapping\Driver\Driver
+	 * @param \Doctrine\Common\Persistence\Mapping\Driver\MappingDriver
 	 * @param string
 	 * @return array
 	 */
-	private function getChildClasses(\Doctrine\ORM\Mapping\Driver\Driver $driver, $currentClass)
+	private function getChildClasses(\Doctrine\Common\Persistence\Mapping\Driver\MappingDriver $driver, $currentClass)
 	{
 		$classes = array();
 		foreach ($driver->getAllClassNames() as $className) {

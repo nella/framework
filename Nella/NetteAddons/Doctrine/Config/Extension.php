@@ -402,7 +402,7 @@ class Extension extends \Nette\Config\CompilerExtension
 	}
 
 	/**
-	 * @param \Doctrine\ORM\Mapping\Driver\Driver
+	 * @param \Doctrine\Common\Persistence\Mapping\Driver\MappingDriver
 	 * @param \Doctrine\Common\Cache\Cache
 	 * @param \Doctrine\Common\Cache\Cache
 	 * @param \Doctrine\Common\Cache\Cache
@@ -410,7 +410,7 @@ class Extension extends \Nette\Config\CompilerExtension
 	 * @param string
 	 * @return \Doctrine\ORM\Configuration
 	 */
-	public static function createConfiguration(\Doctrine\ORM\Mapping\Driver\Driver $metadataDriver,
+	public static function createConfiguration(\Doctrine\Common\Persistence\Mapping\Driver\MappingDriver $metadataDriver,
 		Cache $metadataCache = NULL, Cache $queryCache = NULL, Cache $resultCache = NULL, array $proxy,
 		$metadataFactoryClass = NULL)
 	{
