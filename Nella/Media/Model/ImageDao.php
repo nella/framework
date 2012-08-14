@@ -16,10 +16,19 @@ use Doctrine\ORM\Mapping as orm;
  *
  * @author	Patrik Votoček
  */
-class ImageDao extends FileDao implements \Nella\NetteAddons\Media\Model\IImageDao
+class ImageDao extends BaseDao implements \Nella\NetteAddons\Media\Model\IImageDao
 {
 	/** @var \Nella\NetteAddons\Media\IImageCacheStorage */
 	protected $cacheStorage;
+	
+	/**
+	 * @param string
+	 * @return \Nella\Media\Model\ImageEntity|NULL
+	 */
+	public function findOneByFullSlug($fullSlug)
+	{
+		return parent::findOneByFullSlug($fullSlug);
+	}
 
 	/**
 	 * @param \Nella\NetteAddons\Media\IImageCacheStorage

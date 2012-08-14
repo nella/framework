@@ -16,69 +16,14 @@ use Doctrine\ORM\Mapping as orm;
  *
  * @author	Patrik Votoček
  */
-class FileDao extends \Nella\Doctrine\Dao implements \Nella\NetteAddons\Media\Model\IFileDao
+class FileDao extends BaseDao implements \Nella\NetteAddons\Media\Model\IFileDao
 {
-	/** @var \Nella\NetteAddons\Media\IStorage */
-	protected $storage;
-
-	/**
-	 * @param \Nella\NetteAddons\Media\IStorage
-	 * @return ImageDao
-	 */
-	public function setStorage(\Nella\NetteAddons\Media\IStorage $storage)
-	{
-		$this->storage = $storage;
-		return $this;
-	}
-
 	/**
 	 * @param string
 	 * @return \Nella\Media\Model\FileEntity|NULL
 	 */
 	public function findOneByFullSlug($fullSlug)
 	{
-		list($id, $slug) = explode('-', $fullSlug, 2);
-		$entity = $this->repository->find($id);
-		if ($entity && $entity->getFullSlug() == $fullSlug) {
-			return $entity;
-		}
-
-		return NULL;
-	}
-
-
-	/**
-	 * @param object
-	 * @param bool
-	 * @param string|\Nette\Http\FileUpload
-	 */
-	public function save($entity, $withoutFlush = self::FLUSH, $originalPath = NULL)
-	{
-		if ($entity->id === NULL && $this->storage) {
-			if (!$originalPath) {
-				throw new \Nette\InvalidStateException('Source path must be defined');
-			}
-			$storage = $this->storage;
-			$entity->onFlush[] = function($entity) use($storage, $originalPath) {
-				$storage->save($entity, $originalPath);
-			};
-		}
-
-		return parent::save($entity, $withoutFlush);
-	}
-
-	/**
-	 * @param object
-	 * @param bool
-	 */
-	public function remove($entity, $withoutFlush = self::FLUSH)
-	{
-		if ($entity->id !== NULL && $this->storage) {
-			$storage = $this->storage;
-			$entity->onFlush[] = function($entity) use($storage) {
-				$storage->remove($entity);
-			};
-		}
-		parent::remove($entity, $withoutFlush);
+		return parent::findOneByFullSlug($fullSlug);
 	}
 }
