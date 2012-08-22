@@ -85,7 +85,7 @@ abstract class Form extends \Nella\NetteAddons\Forms\Form
 		if ($presenter instanceof \Nette\Application\UI\Presenter) {
 			if (!$presenter instanceof Presenter) {
 				throw new \Nette\InvalidStateException(
-					"Nella\\Application\\UI\\Control supports only Nella\\Application\\UI\\Presenter '".get_class($presenter)."' given"
+					"Nella\\Application\\UI\\Form supports only Nella\\Application\\UI\\Presenter '".get_class($presenter)."' given"
 				);
 			}
 			$this->templateFilesFormatter = $presenter->getTemplateFilesFormatter();
