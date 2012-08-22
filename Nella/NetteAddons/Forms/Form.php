@@ -16,76 +16,6 @@ namespace Nella\NetteAddons\Forms;
  */
 class Form extends \Nette\Application\UI\Form
 {
-	/** @var array|\Nette\Application\UI\Link */
-	private $onSuccessRedirect;
-
-	/**
-	 * @param string|\Nette\Application\UI\Link
-	 * @param array
-	 * @return Form
-	 */
-	public function onSuccessRedirect($redirect, array $args = array())
-	{
-		if ($redirect instanceof \Nette\Application\UI\Link) {
-			$this->onSuccessRedirect = $redirect;
-		} else {
-			$this->onSuccessRedirect = array($redirect, $args);
-		}
-
-		return $this;
-	}
-
-	/**
-	 * @internal
-	 * @return array
-	 */
-	public function getOnSuccessRedirect()
-	{
-		if ($this->onSuccessRedirect instanceof \Nette\Application\UI\Link) {
-			return array($this->onSuccessRedirect->getDestination(), $this->onSuccessRedirect->getParameters());
-		} else {
-			return $this->onSuccessRedirect;
-		}
-	}
-
-	/**
-	 * This method will be called when the component (or component's parent)
-	 * becomes attached to a monitored object. Do not call this method yourself.
-	 *
-	 * @param \Nette\ComponentModel\IComponent
-	 * @return void
-	 */
-	protected function attached($presenter)
-	{
-		parent::attached($presenter);
-
-		if ($presenter instanceof \Nette\Application\UI\Presenter) {
-			$this->beforeSetup();
-			$this->setup();
-			$this->afterSetup();
-		}
-	}
-
-	protected function beforeSetup()
-	{
-		// Make some stuff before setup
-	}
-
-	protected function setup()
-	{
-		// Setup columns
-	}
-
-	protected function afterSetup()
-	{
-		$this->onSuccess[] = function(Form $form) {
-			$args = $form->getOnSuccessRedirect();
-			if ($form->isValid() && !empty($args)) {
-				callback($form->getPresenter(TRUE), 'redirect')->invokeArgs($args);
-			}
-		};
-	}
-
 	/**
 	 * Adds naming container to the form.
 	 *
@@ -286,21 +216,5 @@ class Form extends \Nette\Application\UI\Form
 			$control->setSuggestCallback($suggestCallback);
 		}
 		return $control;
-	}
-
-	/**
-	 * @param array
-	 * @throws \Nette\InvalidStateException
-	 */
-	public function processErrors(array $errors)
-	{
-		foreach ($errors as $name => $messages) {
-			if (!isset($this[$name])) {
-				throw new \Nette\InvalidStateException("Invalid value '$name' with messages '" . implode("', '", $messages) . "'");
-			}
-			foreach ($messages as $error) {
-				$this[$name]->addError($error);
-			}
-		}
 	}
 }
