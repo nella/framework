@@ -11,6 +11,7 @@ BUILD_TOOLS_REPO="git://github.com/nella/framework-build-tools.git"
 ########################
 
 git clone $BUILD_TOOLS_REPO build
+cd build && git submodule update --init && cd ..
 
 ####################
 # Move build files #
