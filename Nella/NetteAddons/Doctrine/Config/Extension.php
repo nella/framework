@@ -364,6 +364,7 @@ class Extension extends \Nette\Config\CompilerExtension
 		}
 
 		$cfg = new \Doctrine\DBAL\Configuration;
+		$panel = NULL;
 		if (isset($config['debugger']) && $config['debugger'] === TRUE) {
 			$panel = new \Nella\NetteAddons\Doctrine\Diagnostics\ConnectionPanel;
 			if (Debugger::$bar) {
@@ -376,7 +377,13 @@ class Extension extends \Nette\Config\CompilerExtension
 			$cfg->setSQLLogger($config['debugger']);
 		}
 
-		return \Doctrine\DBAL\DriverManager::getConnection($config, $cfg, $evm);
+		$connection = \Doctrine\DBAL\DriverManager::getConnection($config, $cfg, $evm);
+
+		if ($panel && $panel->doExplains) {
+			$panel->setConnection($connection);
+		}
+
+		return $connection;
 	}
 
 	/**
