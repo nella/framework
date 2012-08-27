@@ -4,7 +4,8 @@
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
- * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
+ * For the full copyright and license information,
+ * please view the file LICENSE.txt that was distributed with this source code.
  */
 
 namespace Nella\NetteAddons\Doctrine;
@@ -27,7 +28,7 @@ class Cache extends \Doctrine\Common\Cache\CacheProvider
 	 * @param \Nette\Caching\IStorage
 	 * @param string
 	 */
-	public function  __construct(\Nette\Caching\IStorage $cacheStorage, $name = self::CACHE_NAMESPACE)
+	public function __construct(\Nette\Caching\IStorage $cacheStorage, $name = self::CACHE_NAMESPACE)
 	{
 		$this->storage = new NCache($cacheStorage, $name);
 	}
@@ -62,7 +63,7 @@ class Cache extends \Doctrine\Common\Cache\CacheProvider
 	 * @param int	The lifetime. If != false, sets a specific lifetime for this cache entry (null => infinite lifeTime).
 	 * @return boolean	TRUE if the entry was successfully stored in the cache, FALSE otherwise.
 	 */
-	protected function doSave($id, $data, $lifeTime = false)
+	protected function doSave($id, $data, $lifeTime = FALSE)
 	{
 		$files = array();
 		if ($data instanceof \Doctrine\ORM\Mapping\ClassMetadata) {
@@ -122,3 +123,4 @@ class Cache extends \Doctrine\Common\Cache\CacheProvider
 		return NULL; // @TODO
 	}
 }
+

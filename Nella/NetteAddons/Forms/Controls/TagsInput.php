@@ -5,7 +5,8 @@
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  * Copyright (c) 2010, 2011 Mikulas Dite
  *
- * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
+ * For the full copyright and license information,
+ * please view the file LICENSE.txt that was distributed with this source code.
  */
 
 namespace Nella\NetteAddons\Forms\Controls;
@@ -106,7 +107,7 @@ class TagsInput extends \Nette\Forms\Controls\TextInput
 		if ($this->suggestCallback !== NULL) {
 			$form = $this->getForm();
 			if (!$form || !$form instanceof Form) {
-				throw new InvalidStateException("TagInput supports only Nette\\Application\\UI\\Form.");
+				throw new \Nette\InvalidStateException('TagInput supports only Nette\Application\UI\Form.');
 			}
 			$control->attrs['data-nella-tag-suggest'] = $form->getPresenter()->link($this->renderName, array('word_filter' => '%filter%'));
 		}
@@ -138,7 +139,7 @@ class TagsInput extends \Nette\Forms\Controls\TextInput
 	public function setDefaultValue($value)
 	{
 		if (!is_array($value)) {
-			throw new \Nette\InvalidArgumentException("Invalid argument type passed to " . __METHOD__ . ", expected array.");
+			throw new \Nette\InvalidArgumentException('Invalid argument type passed to ' . __METHOD__ . ', expected array.');
 		}
 		parent::setDefaultValue(implode($this->joiner, $value));
 		return $this;
@@ -150,8 +151,9 @@ class TagsInput extends \Nette\Forms\Controls\TextInput
 	 */
 	public function setPayloadLimit($limit)
 	{
-		if ($limit < 0)
-			throw new \Nette\InvalidArgumentException("Invalid limit, expected positive integer.");
+		if ($limit < 0) {
+			throw new \Nette\InvalidArgumentException('Invalid limit, expected positive integer.');
+		}
 
 		$this->payloadLimit = $limit;
 		return $this;
@@ -169,8 +171,9 @@ class TagsInput extends \Nette\Forms\Controls\TextInput
 	{
 		switch ($operation) {
 			case Form::EQUAL:
-				if (!is_array($arg))
+				if (!is_array($arg)) {
 					throw new \Nette\InvalidArgumentException(__METHOD__ . '(' . $operation . ') must be compared to array.');
+				}
 		}
 
 		return parent::addRule($operation, $message, $arg);
@@ -376,10 +379,15 @@ class TagsInput extends \Nette\Forms\Controls\TextInput
 		foreach ($control->getValue() as $tag) {
 			$found = FALSE;
 			foreach ($control->suggestCallback->invoke($tag, 1) as $suggest) {
-				if ($tag === $suggest) return TRUE;
+				if ($tag === $suggest) {
+					return TRUE;
+				}
 			}
-			if (!$found) return FALSE;
+			if (!$found) {
+				return FALSE;
+			}
 		}
 		return TRUE;
 	}
 }
+

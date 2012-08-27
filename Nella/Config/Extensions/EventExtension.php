@@ -4,13 +4,17 @@
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
- * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
+ * For the full copyright and license information,
+ * please view the file LICENSE.txt that was distributed with this source code.
  */
 
 namespace Nella\Config\Extensions;
 
 use Nette\Application\Application,
-	Nella\Event\Args;
+	Nella\Event\Args,
+	Nette\Application\Request,
+	Nette\Application\IResponse,
+	Nella\Events;
 
 /**
  * Event config compiler extension
@@ -33,7 +37,7 @@ class EventExtension extends \Nette\Config\CompilerExtension
 	public function beforeCompile()
 	{
 		$this->eventManager->dispatchEvent(
-			\Nella\Events::BEFORE_CONTAINER_COMPILE,
+			Events::BEFORE_CONTAINER_COMPILE,
 			new \Nella\Event\Args\CompilerBefore($this->compiler, $this->getContainerBuilder())
 		);
 	}
@@ -51,7 +55,7 @@ class EventExtension extends \Nette\Config\CompilerExtension
 	public function afterCompile(\Nette\Utils\PhpGenerator\ClassType $class)
 	{
 		$this->eventManager->dispatchEvent(
-			\Nella\Events::BEFORE_CONTAINER_COMPILE, new \Nella\Event\Args\CompilerAfter($this->compiler, $class)
+			Events::BEFORE_CONTAINER_COMPILE, new \Nella\Event\Args\CompilerAfter($this->compiler, $class)
 		);
 	}
 
@@ -59,36 +63,27 @@ class EventExtension extends \Nette\Config\CompilerExtension
 	 * @param \Nette\Application\Application
 	 * @param \Nella\Event\IEventDispatcher
 	 */
-	public static function setupApplication(Application $application, \Nella\Event\IEventDispatcher $eventManager)
+	public static function setupApplication(Application $application, \Nella\Event\IEventDispatcher $evm)
 	{
-		$application->onStartup[] = function(Application $application) use($eventManager) {
-			$eventManager->dispatchEvent(
-				\Nella\Events::APPLICATION_STARTUP, new Args\Application($application)
-			);
+		$application->onStartup[] = function (Application $application) use ($evm) {
+			$evm->dispatchEvent(\Nella\Events::APPLICATION_STARTUP, new Args\Application($application));
 		};
 
-		$application->onError[] = function(Application $application, \Exception $exception) use($eventManager) {
-			$eventManager->dispatchEvent(
-				\Nella\Events::APPLICATION_ERROR, new Args\ApplicationError($application, $exception)
-			);
+		$application->onError[] = function (Application $application, \Exception $exception) use ($evm) {
+			$evm->dispatchEvent(Events::APPLICATION_ERROR, new Args\ApplicationError($application, $exception));
 		};
 
-		$application->onRequest[] = function(Application $application, \Nette\Application\Request $request) use($eventManager) {
-			$eventManager->dispatchEvent(
-				\Nella\Events::APPLICATION_REQUEST, new Args\ApplicationRequest($application, $request)
-			);
+		$application->onRequest[] = function (Application $application, Request $request) use ($evm) {
+			$evm->dispatchEvent(Events::APPLICATION_REQUEST, new Args\ApplicationRequest($application, $request));
 		};
 
-		$application->onResponse[] = function(Application $application, \Nette\Application\IResponse $response) use($eventManager) {
-			$eventManager->dispatchEvent(
-				\Nella\Events::APPLICATION_RESPONSE, new Args\ApplicationResponse($application, $response)
-			);
+		$application->onResponse[] = function (Application $application, IResponse $response) use ($evm) {
+			$evm->dispatchEvent(Events::APPLICATION_RESPONSE, new Args\ApplicationResponse($application, $response));
 		};
 
-		$application->onShutdown[] = function(Application $application, \Exception $exception = NULL) use($eventManager) {
-			$eventManager->dispatchEvent(
-				\Nella\Events::APPLICATION_SHUTDOWN, new Args\ApplicationShutdown($application, $exception)
-			);
+		$application->onShutdown[] = function (Application $application, \Exception $exception = NULL) use ($evm) {
+			$evm->dispatchEvent(Events::APPLICATION_SHUTDOWN, new Args\ApplicationShutdown($application, $exception));
 		};
 	}
 }
+

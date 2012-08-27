@@ -4,7 +4,8 @@
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
- * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
+ * For the full copyright and license information,
+ * please view the file LICENSE.txt that was distributed with this source code.
  */
 
 namespace Nella\Doctrine;
@@ -67,7 +68,7 @@ class QueryObject extends \Nette\Object implements \Nella\Model\IQueryObject
 	{
 		$query = $this->doCreateQuery($broker);
 
-		try{
+		try {
 			if ($this->paginator) {
 				$query->setFirstResult($this->paginator->getOffset())->setMaxResults($this->paginator->getLength());
 				return new Paginator($query);
@@ -88,10 +89,11 @@ class QueryObject extends \Nette\Object implements \Nella\Model\IQueryObject
 
 		$query->setMaxResults(1);
 
-		try{
+		try {
 			return $query->getSingleResult();
 		} catch (\Doctrine\ORM\NoResultException $e) {
 			return NULL;
 		}
 	}
 }
+

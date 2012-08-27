@@ -4,7 +4,8 @@
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
- * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
+ * For the full copyright and license information,
+ * please view the file LICENSE.txt that was distributed with this source code.
  */
 
 namespace Nella\NetteAddons\Media\Routes;
@@ -30,9 +31,9 @@ class FileRoute extends \Nette\Application\Routers\Route
 	 * @param \Nella\Addons\Media\IFilePresenterCallback
 	 * @param string
 	 */
-	public function __construct($mask, \Nella\NetteAddons\Media\Model\IFileDao $model, \Nella\NetteAddons\Media\IFilePresenterCallback $callback, $fullSlugMask = "<file>_<ext>")
+	public function __construct($mask, \Nella\NetteAddons\Media\Model\IFileDao $model, \Nella\NetteAddons\Media\IFilePresenterCallback $callback, $fullSlugMask = '<file>_<ext>')
 	{
-		$this->route = new \Nette\Application\Routers\Route($mask, function($file, $ext) use($model, $callback, $fullSlugMask) {
+		$this->route = new \Nette\Application\Routers\Route($mask, function ($file, $ext) use ($model, $callback, $fullSlugMask) {
 			$fullSlug = str_replace(array('<file>', '<ext>'), array($file, $ext), $fullSlugMask);
 			$fileEntity = $model->findOneByFullSlug($fullSlug);
 
@@ -75,3 +76,4 @@ class FileRoute extends \Nette\Application\Routers\Route
 		return $url;
 	}
 }
+

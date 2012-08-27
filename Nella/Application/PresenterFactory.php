@@ -4,7 +4,8 @@
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
- * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
+ * For the full copyright and license information,
+ * please view the file LICENSE.txt that was distributed with this source code.
  */
 
 namespace Nella\Application;
@@ -81,7 +82,9 @@ class PresenterFactory extends \Nette\Object implements \Nette\Application\IPres
 
 		if (!class_exists($class)) {
 			$class = $this->formatPresenterClass($name, reset($namespaces));
-			throw new \Nette\Application\InvalidPresenterException("Cannot load presenter '$name', class '$class' was not found.");
+			throw new \Nette\Application\InvalidPresenterException(
+				"Cannot load presenter '$name', class '$class' was not found."
+			);
 		}
 
 		return $class;
@@ -97,7 +100,9 @@ class PresenterFactory extends \Nette\Object implements \Nette\Application\IPres
 	public function getPresenterClass(& $name)
 	{
 		if (!is_string($name) || !preg_match("#^[a-zA-Z\x7f-\xff][a-zA-Z0-9\x7f-\xff:]*$#", $name)) {
-			throw new \Nette\Application\InvalidPresenterException("Presenter name must be an alphanumeric string, '$name' is invalid.");
+			throw new \Nette\Application\InvalidPresenterException(
+				"Presenter name must be an alphanumeric string, '$name' is invalid."
+			);
 		}
 
 		$class = $this->formatPresenterClasses($name);
@@ -105,16 +110,22 @@ class PresenterFactory extends \Nette\Object implements \Nette\Application\IPres
 		$class = $reflection->getName();
 
 		if (!$reflection->implementsInterface('Nette\Application\IPresenter')) {
-			throw new \Nette\Application\InvalidPresenterException("Cannot load presenter '$name', class '$class' is not Nette\\Application\\IPresenter implementor.");
+			throw new \Nette\Application\InvalidPresenterException(
+				"Cannot load presenter '$name', class '$class' is not Nette\\Application\\IPresenter implementor."
+			);
 		}
 		if ($reflection->isAbstract()) {
-			throw new \Nette\Application\InvalidPresenterException("Cannot load presenter '$name', class '$class' is abstract.");
+			throw new \Nette\Application\InvalidPresenterException(
+				"Cannot load presenter '$name', class '$class' is abstract."
+			);
 		}
 
 		// canonicalize presenter name
 		$realName = $this->unformatPresenterClass($class);
 		if ($name !== $realName) {
-			throw new \Nette\Application\InvalidPresenterException("Cannot load presenter '$name', case mismatch. Real name is '$realName'.");
+			throw new \Nette\Application\InvalidPresenterException(
+				"Cannot load presenter '$name', case mismatch. Real name is '$realName'."
+			);
 		}
 
 		return $class;
@@ -134,7 +145,9 @@ class PresenterFactory extends \Nette\Object implements \Nette\Application\IPres
 			return 'NetteModule\MicroPresenter';
 		}
 
-		return $namespace . "\\" . str_replace(':', ($this->useModuleSuffix ? self::MODULE_SUFFIX : "")."\\", $presenter.'Presenter');
+		$class = $presenter . 'Presenter';
+		$moduleNamespace = str_replace(':', ($this->useModuleSuffix ? self::MODULE_SUFFIX : '') . '\\', $class);
+		return $namespace . '\\' . $moduleNamespace;
 	}
 
 	/**
@@ -149,11 +162,11 @@ class PresenterFactory extends \Nette\Object implements \Nette\Application\IPres
 			return 'Nette:Micro';
 		}
 
-		$active = "";
+		$active = '';
 		$namespaces = clone $this->namespaces;
 		foreach ($namespaces as $namespace) {
 			if (Strings::startsWith($class, $namespace)) {
-				$current = $namespace . "\\";
+				$current = $namespace . '\\';
 				if (!$active || strlen($active) < strlen($current)) {
 					$active = $current;
 				}
@@ -161,10 +174,12 @@ class PresenterFactory extends \Nette\Object implements \Nette\Application\IPres
 		}
 
 		$class = Strings::startsWith('\\', $class) ? substr($class, 1) : $class;
+		$moduleSuffix = $this->useModuleSuffix ? self::MODULE_SUFFIX : '';
 		if (strlen($active)) {
-			return str_replace(($this->useModuleSuffix ? self::MODULE_SUFFIX : "")."\\", ':', substr($class, strlen($active), -9));
+			return str_replace($moduleSuffix . '\\', ':', substr($class, strlen($active), -9));
 		} else {
-			return str_replace(($this->useModuleSuffix ? self::MODULE_SUFFIX : "")."\\", ':', substr($class, 0, -9));
+			return str_replace($moduleSuffix . '\\', ':', substr($class, 0, -9));
 		}
 	}
 }
+

@@ -4,7 +4,8 @@
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
- * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
+ * For the full copyright and license information,
+ * please view the file LICENSE.txt that was distributed with this source code.
  */
 
 namespace Nella\Config\Extensions;
@@ -39,14 +40,14 @@ class SecurityExtension extends \Nette\Config\CompilerExtension
 
 		$credentialsRepository = $builder->addDefinition($this->prefix('credentialsRepository'))
 			->setClass('Nella\Doctrine\Repository')
-			->setFactory($this->prefix('@entityManager::getRepository'), array(
-				'Nella\Security\Model\CredentialsEntity'
-			));
+			->setFactory(
+				$this->prefix('@entityManager::getRepository'), array('Nella\Security\Model\CredentialsEntity')
+			);
 
 		$credentialsDao = $builder->addDefinition($this->prefix('credentialsDao'))
-			->setClass('Nella\Security\Model\CredentialsDao', array(
-				$this->prefix('@entityManager'), $credentialsRepository
-			));
+			->setClass(
+				'Nella\Security\Model\CredentialsDao', array($this->prefix('@entityManager'), $credentialsRepository)
+			);
 
 
 		if ($builder->hasDefinition('nette.authenticator')) {
@@ -56,3 +57,4 @@ class SecurityExtension extends \Nette\Config\CompilerExtension
 			->setClass('Nella\Security\Authenticator', array($credentialsDao));
 	}
 }
+

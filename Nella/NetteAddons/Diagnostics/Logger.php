@@ -4,7 +4,8 @@
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
- * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
+ * For the full copyright and license information,
+ * please view the file LICENSE.txt that was distributed with this source code.
  */
 
 namespace Nella\NetteAddons\Diagnostics;
@@ -83,6 +84,7 @@ class Logger extends \Nette\Diagnostics\Logger
 	 */
 	public static function register($appId, $appSecret, $password = FALSE, $url = 'http://localhost:50921/api/log.json')
 	{
+		$dir = Debugger::$logger->directory;
 		if (isset($_GET['__getfile'])) {
 			@header('X-Frame-Options: ');
 			$data = json_decode(base64_decode($_GET['__getfile']), TRUE);
@@ -94,7 +96,7 @@ class Logger extends \Nette\Diagnostics\Logger
 				die('Invalid credentials');
 			} elseif (!file_exists($data['path'])) {
 				die('Invalid file');
-			} elseif (strncmp(realpath($data['path']), realpath(Debugger::$logger->directory), strlen(realpath(Debugger::$logger->directory))) !== 0) {
+			} elseif (strncmp(realpath($data['path']), realpath($dir), strlen(realpath($dir))) !== 0) {
 				die('Path is not valid log dir');
 			}
 
@@ -113,3 +115,4 @@ class Logger extends \Nette\Diagnostics\Logger
 		Debugger::$logger = $logger;
 	}
 }
+

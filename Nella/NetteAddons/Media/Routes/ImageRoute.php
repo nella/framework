@@ -4,7 +4,8 @@
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
- * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
+ * For the full copyright and license information,
+ * please view the file LICENSE.txt that was distributed with this source code.
  */
 
 namespace Nella\NetteAddons\Media\Routes;
@@ -31,7 +32,7 @@ class ImageRoute extends \Nette\Object implements \Nette\Application\IRouter
 	 */
 	public function __construct($mask, \Nella\NetteAddons\Media\Model\IImageDao $imageModel, \Nella\NetteAddons\Media\Model\IImageFormatDao $formatModel, \Nella\NetteAddons\Media\IImagePresenterCallback $callback, $imageMask = '<image>_<type>')
 	{
-		$this->route = new \Nette\Application\Routers\Route($mask, function($image, $format, $type) use($imageModel, $formatModel, $callback, $imageMask) {
+		$this->route = new \Nette\Application\Routers\Route($mask, function ($image, $format, $type) use ($imageModel, $formatModel, $callback, $imageMask) {
 			$formatEntity = $formatModel->findOneByFullSlug($format);
 
 			if (!$formatEntity) {
@@ -80,3 +81,4 @@ class ImageRoute extends \Nette\Object implements \Nette\Application\IRouter
 		return $url;
 	}
 }
+

@@ -4,7 +4,8 @@
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
- * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
+ * For the full copyright and license information,
+ * please view the file LICENSE.txt that was distributed with this source code.
  */
 
 namespace Nella\Config;
@@ -24,7 +25,7 @@ class Configurator extends \Nette\Config\Configurator
 	public function __construct()
 	{
 		@header('X-Powered-By: Nette Framework with Nella Framework');
-		require_once __DIR__ . "/../shortcuts.php";
+		require_once __DIR__ . '/../shortcuts.php';
 		parent::__construct();
 	}
 
@@ -133,3 +134,4 @@ class Configurator extends \Nette\Config\Configurator
 		return $container;
 	}
 }
+

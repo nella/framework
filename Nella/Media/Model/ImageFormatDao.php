@@ -4,7 +4,8 @@
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
- * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
+ * For the full copyright and license information,
+ * please view the file LICENSE.txt that was distributed with this source code.
  */
 
 namespace Nella\Media\Model;
@@ -56,7 +57,7 @@ class ImageFormatDao extends \Nella\Doctrine\Dao implements \Nella\NetteAddons\M
 	{
 		if ($entity instanceof \Nella\NetteAddons\Media\IImageFormat && $entity->id !== NULL && $this->cacheStorage) {
 			$cacheStorage = $this->cacheStorage;
-			$entity->onFlush[] = function($entity) use($cacheStorage) {
+			$entity->onFlush[] = function ($entity) use ($cacheStorage) {
 				$cacheStorage->clean($entity);
 			};
 		}
@@ -72,7 +73,7 @@ class ImageFormatDao extends \Nella\Doctrine\Dao implements \Nella\NetteAddons\M
 	{
 		if ($entity instanceof \Nella\NetteAddons\Media\IImageFormat && $entity->id !== NULL && $this->cacheStorage) {
 			$cacheStorage = $this->cacheStorage;
-			$entity->onFlush[] = function($entity) use($cacheStorage) {
+			$entity->onFlush[] = function ($entity) use ($cacheStorage) {
 				$cacheStorage->clean($entity);
 			};
 		}
@@ -80,3 +81,4 @@ class ImageFormatDao extends \Nella\Doctrine\Dao implements \Nella\NetteAddons\M
 		return parent::remove($entity, $withoutFlush);
 	}
 }
+

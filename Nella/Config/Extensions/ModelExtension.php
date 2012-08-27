@@ -4,10 +4,13 @@
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
- * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
+ * For the full copyright and license information,
+ * please view the file LICENSE.txt that was distributed with this source code.
  */
 
 namespace Nella\Config\Extensions;
+
+use Doctrine\ORM\EntityManager;
 
 /**
  * Model extension
@@ -23,9 +26,9 @@ class ModelExtension extends \Nette\Config\CompilerExtension
 	/** @var array */
 	public $defaults = array(
 		self::SERVICES_KEY => array(
-			'media.file' => "@media.fileDao",
-			'media.image' => "@media.imageDao",
-			'media.imageFormat' => "@media.imageFormatDao",
+			'media.file' => '@media.fileDao',
+			'media.image' => '@media.imageDao',
+			'media.imageFormat' => '@media.imageFormatDao',
 		)
 	);
 
@@ -81,7 +84,7 @@ class ModelExtension extends \Nette\Config\CompilerExtension
 
 			$def = $builder->addDefinition($this->prefix($fullname));
 			$def->setClass('Nella\Doctrine\Dao')
-				->setFactory(get_called_class()."::factory", $params);
+				->setFactory(get_called_class().'::factory', $params);
 			if (isset($data['setup'])) {
 				foreach ($data['setup'] as $setup) {
 					$def->addSetup($setup->value, $setup->attributes);
@@ -92,8 +95,8 @@ class ModelExtension extends \Nette\Config\CompilerExtension
 		} elseif (is_string($data) && class_exists($data)) {
 			$builder->addDefinition($this->prefix($fullname))
 				->setClass('Nella\Doctrine\Dao')
-				->setFactory(get_called_class()."::factory", array($this->prefix('@entityManager'), $data));
-		} else { // really?
+				->setFactory(get_called_class().'::factory', array($this->prefix('@entityManager'), $data));
+		} else {
 			$builder->addDefinition($this->prefix($fullname))
 				->setClass('Nella\Doctrine\Dao')
 				->setFactory($data);
@@ -107,13 +110,14 @@ class ModelExtension extends \Nette\Config\CompilerExtension
 	 * @param string
 	 * @return object
 	 */
-	public static function factory(\Doctrine\ORM\EntityManager $em, $entityClassName, $service = NULL, $class = 'Nella\Doctrine\Dao')
+	public static function factory(EntityManager $em, $entity, $service = NULL, $class = 'Nella\Doctrine\Dao')
 	{
 		$ref = \Nette\Reflection\ClassType::from($class);
 		return $ref->newInstanceArgs(array(
 			'em' => $em,
-			'repository' => $em->getRepository($entityClassName),
+			'repository' => $em->getRepository($entity),
 			'service' => $service,
 		));
 	}
 }
+

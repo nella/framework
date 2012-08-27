@@ -4,12 +4,14 @@
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
- * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
+ * For the full copyright and license information,
+ * please view the file LICENSE.txt that was distributed with this source code.
  */
 
 namespace Nella\NetteAddons\Doctrine\Config;
 
 use Nette\Config\Configurator,
+	Nette\Config\Compiler,
 	Nette\DI\ContainerBuilder,
 	Doctrine\Common\Cache\Cache,
 	Nette\Framework,
@@ -395,7 +397,7 @@ class Extension extends \Nette\Config\CompilerExtension
 	{
 		\Doctrine\Common\Annotations\AnnotationRegistry::registerFile(
 			dirname(\Nette\Reflection\ClassType::from('Doctrine\ORM\Version')->getFileName()).
-				"/Mapping/Driver/DoctrineAnnotations.php"
+				'/Mapping/Driver/DoctrineAnnotations.php'
 		);
 
 		if ($useSimple) {
@@ -485,11 +487,11 @@ class Extension extends \Nette\Config\CompilerExtension
 	public static function createConsole(Container $container, \Symfony\Component\Console\Helper\HelperSet $helperSet)
 	{
 		$app = new \Symfony\Component\Console\Application(
-			Framework::NAME . " Command Line Interface", Framework::VERSION
+			Framework::NAME . ' Command Line Interface', Framework::VERSION
 		);
 		if (class_exists('Nella\Framework')) {
 			$app = new \Symfony\Component\Console\Application(
-				\Nella\Framework::NAME . " Command Line Interface", \Nella\Framework::VERSION
+				\Nella\Framework::NAME . ' Command Line Interface', \Nella\Framework::VERSION
 			);
 		}
 
@@ -514,8 +516,9 @@ class Extension extends \Nette\Config\CompilerExtension
 	public static function register(Configurator $configurator, $name = 'doctrine')
 	{
 		$class = get_called_class();
-		$configurator->onCompile[] = function(Configurator $configurator, \Nette\Config\Compiler $compiler) use($class, $name) {
+		$configurator->onCompile[] = function (Configurator $configurator, Compiler $compiler) use ($class, $name) {
 			$compiler->addExtension($name, new $class);
 		};
 	}
 }
+

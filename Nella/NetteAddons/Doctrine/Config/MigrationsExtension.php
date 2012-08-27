@@ -4,13 +4,15 @@
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
- * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
+ * For the full copyright and license information,
+ * please view the file LICENSE.txt that was distributed with this source code.
  */
 
 namespace Nella\NetteAddons\Doctrine\Config;
 
 use Nette\Config\Configurator,
-	Nette\DI\ContainerBuilder;
+	Nette\DI\ContainerBuilder,
+	Nette\Config\Compiler;
 
 /**
  * Doctrine migration Nella Framework services.
@@ -26,15 +28,15 @@ class MigrationsExtension extends \Nette\Config\CompilerExtension
 	 */
 	private function getDefaults()
 	{
-		$name = \Nette\Framework::NAME . " DB Migrations";
+		$name = \Nette\Framework::NAME . ' DB Migrations';
 		if (class_exists('Nella\Framework')) {
-			$name = \Nella\Framework::NAME . " DB Migrations";
+			$name = \Nella\Framework::NAME . ' DB Migrations';
 		}
 
 		return array(
 			'name' => $name,
-			'table' => "db_version",
-			'directory' => "%appDir%/migrations",
+			'table' => 'db_version',
+			'directory' => '%appDir%/migrations',
 			'namespace' => 'App\Model\Migrations',
 		);
 	}
@@ -117,7 +119,7 @@ class MigrationsExtension extends \Nette\Config\CompilerExtension
 	public static function createConsoleOutput()
 	{
 		$output = new \Symfony\Component\Console\Output\ConsoleOutput;
-		return new \Doctrine\DBAL\Migrations\OutputWriter(function($message) use($output) {
+		return new \Doctrine\DBAL\Migrations\OutputWriter(function ($message) use ($output) {
 			$output->write($message, TRUE);
 		});
 	}
@@ -131,8 +133,9 @@ class MigrationsExtension extends \Nette\Config\CompilerExtension
 	public static function register(Configurator $configurator, $name = 'migrations')
 	{
 		$class = get_called_class();
-		$configurator->onCompile[] = function(Configurator $configurator, \Nette\Config\Compiler $compiler) use($class, $name) {
+		$configurator->onCompile[] = function (Configurator $configurator, Compiler $compiler) use ($class, $name) {
 			$compiler->addExtension($name, new $class);
 		};
 	}
 }
+

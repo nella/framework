@@ -4,7 +4,8 @@
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
- * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
+ * For the full copyright and license information,
+ * please view the file LICENSE.txt that was distributed with this source code.
  */
 
 namespace Nella\Config\Extensions;
@@ -28,7 +29,7 @@ class DoctrineExtension extends \Nella\NetteAddons\Doctrine\Config\Extension
 	 */
 	public function loadConfiguration()
 	{
-		$this->entityManagerDefaults['entityDirs'][] = realpath(__DIR__ . "/../..");
+		$this->entityManagerDefaults['entityDirs'][] = realpath(__DIR__ . '/../..');
 		parent::loadConfiguration();
 
 		$builder = $this->getContainerBuilder();
@@ -36,7 +37,7 @@ class DoctrineExtension extends \Nella\NetteAddons\Doctrine\Config\Extension
 		// Ignore Testing dir for loading entityes
 		if ($builder->hasDefinition($this->prefix('metadataDriver'))) {
 			$builder->getDefinition($this->prefix('metadataDriver'))
-				->addSetup('addIgnoredDir', array(__DIR__ . "/../../Testing"));
+				->addSetup('addIgnoredDir', array(__DIR__ . '/../../Testing'));
 		}
 	}
 
@@ -72,7 +73,8 @@ class DoctrineExtension extends \Nella\NetteAddons\Doctrine\Config\Extension
 	 */
 	public static function createAnnotationReader(\Doctrine\Common\Cache\Cache $cache, $useSimple = FALSE)
 	{
-		require_once __DIR__ ."/../../Doctrine/Mapping/DiscriminatorEntry.php";
+		require_once __DIR__ .'/../../Doctrine/Mapping/DiscriminatorEntry.php';
 		return parent::createAnnotationReader($cache, $useSimple);
 	}
 }
+

@@ -4,7 +4,8 @@
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
- * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
+ * For the full copyright and license information,
+ * please view the file LICENSE.txt that was distributed with this source code.
  */
 
 namespace Nella\NetteAddons\Forms;
@@ -41,7 +42,7 @@ class Container extends \Nette\Forms\Container
 	public function addEmail($name, $label = NULL, $cols = NULL, $maxLength = NULL)
 	{
 		$item = $this->addText($name, $label, $cols, $maxLength);
-		$item->setAttribute('type', "email")->addCondition(Form::FILLED)->addRule(Form::EMAIL);
+		$item->setAttribute('type', 'email')->addCondition(Form::FILLED)->addRule(Form::EMAIL);
 		return $item;
 	}
 
@@ -57,7 +58,7 @@ class Container extends \Nette\Forms\Container
 	public function addUrl($name, $label = NULL, $cols = NULL, $maxLength = NULL)
 	{
 		$item = $this->addText($name, $label, $cols, $maxLength);
-		$item->setAttribute('type', "url")->addCondition(Form::FILLED)->addRule(Form::URL);
+		$item->setAttribute('type', 'url')->addCondition(Form::FILLED)->addRule(Form::URL);
 		return $item;
 	}
 
@@ -74,7 +75,7 @@ class Container extends \Nette\Forms\Container
 	public function addNumber($name, $label = NULL, $step = 1, $min = NULL, $max = NULL)
 	{
 		$item = $this->addText($name, $label);
-		$item->setAttribute('step', $step)->setAttribute('type', "number")
+		$item->setAttribute('step', $step)->setAttribute('type', 'number')
 			->addCondition(Form::FILLED)->addRule(Form::NUMERIC);
 		$range = array(NULL, NULL);
 		if ($min !== NULL) {
@@ -105,7 +106,7 @@ class Container extends \Nette\Forms\Container
 	public function addRange($name, $label = NULL, $step = 1, $min = NULL, $max = NULL)
 	{
 		$item = $this->addNumber($name, $label, $step, $min, $max);
-		return $item->setAttribute('type', "range");
+		return $item->setAttribute('type', 'range');
 	}
 
 	/**
@@ -159,7 +160,7 @@ class Container extends \Nette\Forms\Container
 	public function addSearch($name, $label = NULL, $cols = NULL, $maxLength = NULL)
 	{
 		$item = $this->addText($name, $label, $cols, $maxLength);
-		return $item->setAttribute('type', "search");
+		return $item->setAttribute('type', 'search');
 	}
 
 	/**
@@ -174,7 +175,7 @@ class Container extends \Nette\Forms\Container
 	public function addEditor($name, $label = NULL, $cols = NULL, $rows = NULL)
 	{
 		$item = $this->addTextArea($name, $label, $cols, $rows);
-		return $item->setAttribute('data-nella-editor', "data-nella-editor");
+		return $item->setAttribute('data-nella-editor', 'data-nella-editor');
 	}
 
 	/**
@@ -218,3 +219,4 @@ class Container extends \Nette\Forms\Container
 		return $control;
 	}
 }
+

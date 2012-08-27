@@ -4,7 +4,8 @@
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
- * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
+ * For the full copyright and license information,
+ * please view the file LICENSE.txt that was distributed with this source code.
  */
 
 namespace Nella\NetteAddons\Media\ImageCacheStorages;
@@ -118,7 +119,7 @@ class File extends \Nette\Object implements \Nella\NetteAddons\Media\IImageCache
 	 */
 	protected function formatFormatPath(IImageFormat $format)
 	{
-		return $this->dir . "/" . $format->getFullSlug();
+		return $this->dir . '/' . $format->getFullSlug();
 	}
 
 	/**
@@ -129,7 +130,7 @@ class File extends \Nette\Object implements \Nella\NetteAddons\Media\IImageCache
 	 */
 	protected function formatPath(IImage $image, IImageFormat $format, $type)
 	{
-		return $this->formatFormatPath($format) . "/" . $image->getFullSlug() . "." . $type;
+		return $this->formatFormatPath($format) . '/' . $image->getFullSlug() . '.' . $type;
 	}
 
 	/**
@@ -173,3 +174,4 @@ class File extends \Nette\Object implements \Nella\NetteAddons\Media\IImageCache
 		}
 	}
 }
+

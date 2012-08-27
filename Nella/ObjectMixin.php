@@ -4,7 +4,8 @@
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
- * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
+ * For the full copyright and license information,
+ * please view the file LICENSE.txt that was distributed with this source code.
  */
 
 namespace Nella;
@@ -25,10 +26,10 @@ class ObjectMixin extends \Nette\Object
 	private static $properties = array();
 	/** @var array */
 	private static $basicTypes = array(
-		"string", "integer", "int", "boolean", "bool", "float", "double", "object", 
-		"mixed", "resource", "void", "callback", "false", "true", "callable"
+		'string', 'integer', 'int', 'boolean', 'bool', 'float', 'double', 'object',
+		'mixed', 'resource', 'void', 'callback', 'false', 'true', 'callable'
 	);
-	
+
 	/**
 	 * @param string
 	 */
@@ -70,7 +71,7 @@ class ObjectMixin extends \Nette\Object
 			}
 		}
 	}
-	
+
 	/**
 	 * @param string
 	 * @param string
@@ -85,15 +86,15 @@ class ObjectMixin extends \Nette\Object
 		if (!isset(static::$properties[$class])) {
 			static::parse($class);
 		}
-		$metadata = static::$properties[$class];
-		
-		if (!isset($metadata[$name]) || !in_array($metadata[$name]['mode'], array($mode, 'all')) || !$ref->hasProperty($name)) {
+
+		$meta = static::$properties[$class];
+		if (!isset($meta[$name]) || !in_array($meta[$name]['mode'], array($mode, 'all')) || !$ref->hasProperty($name)) {
 			throw $e;
 		}
-		
+
 		return $ref->getProperty($name);
 	}
-	
+
 	/**
 	 * @param \Nette\Reflection\Property
 	 * @param mixed
@@ -103,7 +104,7 @@ class ObjectMixin extends \Nette\Object
 	{
 		$classRef = $ref->getDeclaringClass();
 		$metadata = static::$properties[$classRef->getName()][$ref->getName()];
-		
+
 		$failed = TRUE;
 		foreach ($metadata['types'] as $type) {
 			if (in_array($type, static::$basicTypes)) { // basic
@@ -116,7 +117,7 @@ class ObjectMixin extends \Nette\Object
 				$failed = FALSE;
 			}
 		}
-		
+
 		if ($failed) {
 			$trace = debug_backtrace();
 			$type = is_object($value) ? ('instance of ' . get_class($value)) : gettype($value);
@@ -132,7 +133,7 @@ class ObjectMixin extends \Nette\Object
 			);
 		}
 	}
-	
+
 	/**
 	 * @param object
 	 * @param \Nette\Reflection\Property
@@ -147,7 +148,7 @@ class ObjectMixin extends \Nette\Object
 		$value = $ref->getValue($_this);
 		return $value;
 	}
-	
+
 	/**
 	 * @param object
 	 * @param \Nette\Reflection\Property
@@ -167,10 +168,10 @@ class ObjectMixin extends \Nette\Object
 		$ref->setValue($_this, $value);
 		return $_this;
 	}
-	
+
 	/**
 	 * Call to undefined method
-	 * 
+	 *
 	 * @param  object
 	 * @param  string  method name
 	 * @param  array   arguments
@@ -199,10 +200,10 @@ class ObjectMixin extends \Nette\Object
 			}
 		}
 	}
-	
+
 	/**
 	 * Returns property value
-	 * 
+	 *
 	 * @param  object
 	 * @param  string  property name
 	 * @return mixed   property value
@@ -218,10 +219,10 @@ class ObjectMixin extends \Nette\Object
 			return static::getter($_this, $ref, $e);
 		}
 	}
-	
+
 	/**
 	 * Sets value of a property
-	 * 
+	 *
 	 * @param  object
 	 * @param  string  property name
 	 * @param  mixed   property value
@@ -238,10 +239,10 @@ class ObjectMixin extends \Nette\Object
 			return static::setter($_this, $ref, $value, $e);
 		}
 	}
-	
+
 	/**
 	 * Is property defined?
-	 * 
+	 *
 	 * @param  object
 	 * @param  string  property name
 	 * @return bool
@@ -256,7 +257,8 @@ class ObjectMixin extends \Nette\Object
 			if (!isset(static::$properties[$class])) {
 				static::parse($class);
 			}
-			if (!isset(static::$properties[$class][$name]) || !in_array(static::$properties[$class][$name]['mode'], array('read', 'all'))) {
+			$properties = static::$properties[$class];
+			if (!isset($properties[$name]) || !in_array($properties[$name]['mode'], array('read', 'all'))) {
 				return FALSE;
 			} else {
 				return TRUE;

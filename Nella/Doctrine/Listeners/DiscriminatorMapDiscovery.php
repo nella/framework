@@ -9,7 +9,8 @@
  *
  * @license http://www.kdyby.org/license
  *
- * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
+ * For the full copyright and license information,
+ * please view the file LICENSE.txt that was distributed with this source code.
  */
 
 namespace Nella\Doctrine\Listeners;
@@ -99,3 +100,4 @@ class DiscriminatorMapDiscovery extends \Nette\Object implements \Doctrine\Commo
 		) ? : NULL;
 	}
 }
+

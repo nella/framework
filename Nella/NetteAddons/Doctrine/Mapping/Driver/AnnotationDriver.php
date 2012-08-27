@@ -4,7 +4,8 @@
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
- * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
+ * For the full copyright and license information,
+ * please view the file LICENSE.txt that was distributed with this source code.
  */
 
 namespace Nella\NetteAddons\Doctrine\Mapping\Driver;
@@ -35,7 +36,7 @@ class AnnotationDriver extends \Doctrine\ORM\Mapping\Driver\AnnotationDriver
 	 */
 	public function getAllClassNames()
 	{
-		if ($this->classNames !== null) {
+		if ($this->classNames !== NULL) {
 			return $this->classNames;
 		}
 
@@ -51,7 +52,9 @@ class AnnotationDriver extends \Doctrine\ORM\Mapping\Driver\AnnotationDriver
 				throw \Doctrine\ORM\Mapping\MappingException::fileMappingDriversRequireConfiguredDirectoryPath($path);
 			}
 
-			$iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path), \RecursiveIteratorIterator::LEAVES_ONLY);
+			$iterator = new \RecursiveIteratorIterator(
+				new \RecursiveDirectoryIterator($path), \RecursiveIteratorIterator::LEAVES_ONLY
+			);
 
 			foreach ($iterator as $file) {
 				if (($fileName = $file->getBasename($this->fileExtension)) == $file->getBasename()) {
@@ -84,3 +87,4 @@ class AnnotationDriver extends \Doctrine\ORM\Mapping\Driver\AnnotationDriver
 		return $classes;
 	}
 }
+

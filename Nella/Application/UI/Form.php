@@ -4,7 +4,8 @@
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
- * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
+ * For the full copyright and license information,
+ * please view the file LICENSE.txt that was distributed with this source code.
  */
 
 namespace Nella\Application\UI;
@@ -85,7 +86,8 @@ abstract class Form extends \Nella\NetteAddons\Forms\Form
 		if ($presenter instanceof \Nette\Application\UI\Presenter) {
 			if (!$presenter instanceof Presenter) {
 				throw new \Nette\InvalidStateException(
-					"Nella\\Application\\UI\\Form supports only Nella\\Application\\UI\\Presenter '".get_class($presenter)."' given"
+					'Nella\Application\UI\Form supports only Nella\Application\UI\Presenter'
+					 . " '".get_class($presenter)."' given"
 				);
 			}
 			$this->templateFilesFormatter = $presenter->getTemplateFilesFormatter();
@@ -115,7 +117,7 @@ abstract class Form extends \Nella\NetteAddons\Forms\Form
 	public function formatTemplateFiles($method)
 	{
 		if (!$this->templateFilesFormatter) {
-			throw new \Nette\InvalidStateException("Control does not attached to presenter");
+			throw new \Nette\InvalidStateException('Control does not attached to presenter');
 		}
 
 		$view = $this->methodToView($method);
@@ -138,7 +140,7 @@ abstract class Form extends \Nella\NetteAddons\Forms\Form
 			}
 		}
 
-		throw new \Nette\InvalidStateException("No template files found");
+		throw new \Nette\InvalidStateException('No template files found');
 	}
 
 	/**
@@ -168,3 +170,4 @@ abstract class Form extends \Nella\NetteAddons\Forms\Form
 		echo call_user_func_array(array($this->getRenderer(), 'render'), $args);
 	}
 }
+

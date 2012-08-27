@@ -4,7 +4,8 @@
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
- * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
+ * For the full copyright and license information,
+ * please view the file LICENSE.txt that was distributed with this source code.
  */
 
 namespace Nella\Config\Extensions;
@@ -39,7 +40,7 @@ class NellaExtension extends \Nette\Config\CompilerExtension
 
 		if ($builder->hasDefinition('nette.presenterFactory')) {
 			$def = $builder->getDefinition('nette.presenterFactory');
-			$def->setClass('Nella\Application\PresenterFactory', array("@container"));
+			$def->setClass('Nella\Application\PresenterFactory', array('@container'));
 			$def->addSetup('$useModuleSuffix', array($config['useModuleSuffix']));
 
 			foreach ($config['namespaces'] as $namespace => $priority) {
@@ -83,3 +84,4 @@ class NellaExtension extends \Nette\Config\CompilerExtension
 		}
 	}
 }
+

@@ -4,7 +4,8 @@
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
- * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
+ * For the full copyright and license information,
+ * please view the file LICENSE.txt that was distributed with this source code.
  */
 
 namespace Nella\NetteAddons\Forms;
@@ -26,10 +27,11 @@ class MultiplerContainer extends Container
 	public function addRemoveContainerButton($caption, $cleanUpGroups = FALSE)
 	{
 		$button = $this->addSubmit(self::REMOVE_CONTAINER_BUTTON_ID, $caption)->setValidationScope(FALSE);
-		$button->onClick[] = function(\Nette\Forms\Controls\SubmitButton $button) use($cleanUpGroups) {
+		$button->onClick[] = function (\Nette\Forms\Controls\SubmitButton $button) use ($cleanUpGroups) {
 			$container = $button->getParent();
 			$container->getParent()->remove($container, $cleanUpGroups);
 		};
 		return $button;
 	}
 }
+

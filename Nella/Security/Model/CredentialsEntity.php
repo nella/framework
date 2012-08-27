@@ -4,7 +4,8 @@
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
- * This source file is subject to the GNU Lesser General Public License. For more information please see http://nellacms.com
+ * For the full copyright and license information,
+ * please view the file LICENSE.txt that was distributed with this source code.
  */
 
 namespace Nella\Security\Model;
@@ -26,7 +27,7 @@ use Doctrine\ORM\Mapping as orm;
  */
 class CredentialsEntity extends \Nella\Doctrine\Entity
 {
-	const PASSWORD_DELIMITER = "$";
+	const PASSWORD_DELIMITER = '$';
 
 	/**
 	 * @orm\oneToOne(targetEntity="IdentityEntity", fetch="EAGER")
@@ -124,7 +125,7 @@ class CredentialsEntity extends \Nella\Doctrine\Entity
 	 * @param string
 	 * @return IdentityEntity
 	 */
-	public function setPassword($password, $algo = "sha256")
+	public function setPassword($password, $algo = 'sha256')
 	{
 		$salt = \Nette\Utils\Strings::random();
 
@@ -149,3 +150,4 @@ class CredentialsEntity extends \Nella\Doctrine\Entity
 		return FALSE;
 	}
 }
+

@@ -4,7 +4,8 @@
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
- * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
+ * For the full copyright and license information,
+ * please view the file LICENSE.txt that was distributed with this source code.
  */
 
 namespace Nella\NetteAddons\Media\Latte;
@@ -52,7 +53,7 @@ class MediaMacros extends \Nette\Latte\Macros\MacroSet
 		$me->addMacro('file', array($me, 'macroFile'));
 
 		// n:fhref
-		$me->addMacro('fhref', NULL, NULL, function(MacroNode $node, PhpWriter $writer) use ($me) {
+		$me->addMacro('fhref', NULL, NULL, function (MacroNode $node, PhpWriter $writer) use ($me) {
 			return ' ?> href="<?php ' . $me->macroFile($node, $writer) . ' ?>"<?php ';
 		});
 
@@ -62,12 +63,12 @@ class MediaMacros extends \Nette\Latte\Macros\MacroSet
 		$me->addMacro('img', array($me, 'macroImage'));
 
 		// n:src
-		$me->addMacro('src', NULL, NULL, function(MacroNode $node, PhpWriter $writer) use ($me) {
+		$me->addMacro('src', NULL, NULL, function (MacroNode $node, PhpWriter $writer) use ($me) {
 			return ' ?> src="<?php ' . $me->macroImage($node, $writer) . ' ?>"<?php ';
 		});
 
 		// n:ihref
-		$me->addMacro('ihref', NULL, NULL, function(MacroNode $node, PhpWriter $writer) use ($me) {
+		$me->addMacro('ihref', NULL, NULL, function (MacroNode $node, PhpWriter $writer) use ($me) {
 			return ' ?> href="<?php ' . $me->macroImage($node, $writer) . ' ?>"<?php ';
 		});
 	}
@@ -86,7 +87,7 @@ class MediaMacros extends \Nette\Latte\Macros\MacroSet
 		$data = explode(',', $node->args);
 
 		if (count($data) < 1) {
-			throw new \Nette\Latte\ParseException("Invalid arguments count for file macro");
+			throw new \Nette\Latte\ParseException('Invalid arguments count for file macro');
 		}
 
 		foreach ($data as &$value) {
@@ -96,14 +97,15 @@ class MediaMacros extends \Nette\Latte\Macros\MacroSet
 		list($file) = $data;
 		if (!isset($data[1])) {
 			if (!\Nette\Utils\Strings::startsWith($file, '$')) {
-				throw new \Nette\Latte\ParseException("Invalid arguments for file macro");
+				throw new \Nette\Latte\ParseException('Invalid arguments for file macro');
 			}
 
-			$data[1] = $writer->formatWord($file) . " instanceof \\Nella\\NetteAddons\\Media\\IFile ? pathinfo({$file}->getPath(), PATHINFO_EXTENSION) : NULL";
+			$data[1] = $writer->formatWord($file) . ' instanceof \Nella\NetteAddons\Media\IFile ? '
+				. "pathinfo({$file}->getPath(), PATHINFO_EXTENSION) : NULL";
 		}
 
 		return $writer->write("echo %escape(\$_presenter->link(':Nette:Micro:', array('file'=>"
-				. $writer->formatWord($file) . ",'ext'=>" . $writer->formatWord($data[1]) . ")))");
+				. $writer->formatWord($file) . ",'ext'=>" . $writer->formatWord($data[1]) . ')))');
 	}
 
 	/**
@@ -122,7 +124,7 @@ class MediaMacros extends \Nette\Latte\Macros\MacroSet
 		$data = explode(',', $node->args);
 
 		if (count($data) < 2) {
-			throw new \Nette\Latte\ParseException("Invalid arguments count for image macro");
+			throw new \Nette\Latte\ParseException('Invalid arguments count for image macro');
 		}
 
 		foreach ($data as &$value) {
@@ -133,12 +135,14 @@ class MediaMacros extends \Nette\Latte\Macros\MacroSet
 		if (!isset($data[2])) {
 			$data[2] = "'jpg'";
 			if (\Nette\Utils\Strings::startsWith($image, '$')) {
-				$data[2] = $writer->formatWord($image) . " instanceof \\Nella\\NetteAddons\\Media\\IImage ? {$image}->getImageType() : 'jpg'";
+				$data[2] = $writer->formatWord($image) . ' instanceof \Nella\NetteAddons\Media\IImage ? '
+					. "{$image}->getImageType() : 'jpg'";
 			}
 		}
 
 		return $writer->write("echo %escape(\$_presenter->link(':Nette:Micro:', array('image'=>"
 			 . $writer->formatWord($image) . ",'format'=>" . $writer->formatWord($format) . ",'type'=>"
-			 . $writer->formatWord($data[2]) . ")))");
+			 . $writer->formatWord($data[2]) . ')))');
 	}
 }
+

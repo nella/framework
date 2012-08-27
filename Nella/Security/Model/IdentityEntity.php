@@ -4,7 +4,8 @@
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
- * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
+ * For the full copyright and license information,
+ * please view the file LICENSE.txt that was distributed with this source code.
  */
 
 namespace Nella\Security\Model;
@@ -52,10 +53,10 @@ class IdentityEntity extends \Nette\Object implements \Nella\Security\ISerializa
 	 * @param string
 	 * @return string
 	 */
-	protected static function normalizeString($s)
+	protected static function normalizeString($input)
 	{
-		$s = trim($s);
-		return $s === "" ? NULL : $s;
+		$input = trim($input);
+		return $input === '' ? NULL : $input;
 	}
 
 	/**
@@ -144,3 +145,4 @@ class IdentityEntity extends \Nette\Object implements \Nella\Security\ISerializa
 		return $this->getDisplayName();
 	}
 }
+

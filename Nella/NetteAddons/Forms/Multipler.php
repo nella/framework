@@ -4,7 +4,8 @@
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
- * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
+ * For the full copyright and license information,
+ * please view the file LICENSE.txt that was distributed with this source code.
  */
 
 namespace Nella\NetteAddons\Forms;
@@ -99,7 +100,7 @@ class Multipler extends Container
 	 */
 	public function setValues($values, $erase = FALSE)
 	{
-		foreach($values as $key => $value) {
+		foreach ($values as $key => $value) {
 			if (is_array($value)) { // TODO: better subcontainer detection
 				$this->getComponent($key);
 			}
@@ -169,7 +170,7 @@ class Multipler extends Container
 	public function addAddContainerButton($caption = NULL)
 	{
 		$button = $this->addSubmit(self::ADD_CONTAINER_BUTTON_ID, $caption)->setValidationScope(FALSE);
-		$button->onClick[] = function(\Nette\Forms\Controls\SubmitButton $button) {
+		$button->onClick[] = function (\Nette\Forms\Controls\SubmitButton $button) {
 			$button->getParent()->createOne();
 		};
 
@@ -255,7 +256,7 @@ class Multipler extends Container
 	private function idsToString(array $ids)
 	{
 		if (empty($ids)) {
-			return "";
+			return '';
 		}
 
 		return implode(self::CONTAINERS_KEYS_SEPARATOR, $ids);
@@ -374,3 +375,4 @@ class Multipler extends Container
 		}
 	}
 }
+

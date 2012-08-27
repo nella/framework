@@ -4,7 +4,8 @@
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
- * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
+ * For the full copyright and license information,
+ * please view the file LICENSE.txt that was distributed with this source code.
  */
 
 namespace Nella\Latte\Macros;
@@ -41,7 +42,7 @@ class UIMacros extends \Nette\Latte\Macros\MacroSet
 		$me = new static($compiler);
 
 		// n:phref
-		$me->addMacro('phref', NULL, NULL, function(MacroNode $node, PhpWriter $writer) use ($me) {
+		$me->addMacro('phref', NULL, NULL, function (MacroNode $node, PhpWriter $writer) use ($me) {
 			return ' ?> href="<?php ' . $me->macroPresenterLink($node, $writer) . ' ?>"<?php ';
 		});
 	}
@@ -54,3 +55,4 @@ class UIMacros extends \Nette\Latte\Macros\MacroSet
 		return $writer->write('echo %escape($_presenter->link(%node.word, %node.array?))');
 	}
 }
+

@@ -4,7 +4,8 @@
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
- * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
+ * For the full copyright and license information,
+ * please view the file LICENSE.txt that was distributed with this source code.
  */
 
 namespace Nella\Media\Model;
@@ -59,7 +60,7 @@ abstract class BaseDao extends \Nella\Doctrine\Dao
 				throw new \Nette\InvalidStateException('Source path must be defined');
 			}
 			$storage = $this->storage;
-			$entity->onFlush[] = function($entity) use($storage, $originalPath) {
+			$entity->onFlush[] = function ($entity) use ($storage, $originalPath) {
 				$storage->save($entity, $originalPath);
 			};
 		}
@@ -75,10 +76,11 @@ abstract class BaseDao extends \Nella\Doctrine\Dao
 	{
 		if ($entity->id !== NULL && $this->storage) {
 			$storage = $this->storage;
-			$entity->onFlush[] = function($entity) use($storage) {
+			$entity->onFlush[] = function ($entity) use ($storage) {
 				$storage->remove($entity);
 			};
 		}
 		parent::remove($entity, $withoutFlush);
 	}
 }
+

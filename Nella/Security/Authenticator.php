@@ -4,7 +4,8 @@
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
- * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
+ * For the full copyright and license information,
+ * please view the file LICENSE.txt that was distributed with this source code.
  */
 
 namespace Nella\Security;
@@ -41,13 +42,16 @@ class Authenticator extends \Nette\Object implements \Nette\Security\IAuthentica
 		$entity = $this->model->findOneByEmailOrUsername($username);
 
 		if (empty($entity)) {
-			throw new \Nette\Security\AuthenticationException("User with this username or email is not registered", self::IDENTITY_NOT_FOUND);
+			throw new \Nette\Security\AuthenticationException(
+				'User with this username or email is not registered', self::IDENTITY_NOT_FOUND
+			);
 		}
 
 		if ($entity->verifyPassword($password) == FALSE) {
-			throw new \Nette\Security\AuthenticationException("Invalid password", self::INVALID_CREDENTIAL);
+			throw new \Nette\Security\AuthenticationException('Invalid password', self::INVALID_CREDENTIAL);
 		}
 
 		return $entity->identity;
 	}
 }
+

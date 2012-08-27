@@ -4,7 +4,8 @@
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
- * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
+ * For the full copyright and license information,
+ * please view the file LICENSE.txt that was distributed with this source code.
  */
 
 namespace Nella\Application\UI;
@@ -27,7 +28,8 @@ abstract class Control extends \Nette\Application\UI\Control
 		if ($presenter instanceof \Nette\Application\UI\Presenter) {
 			if (!$presenter instanceof Presenter) {
 				throw new \Nette\InvalidStateException(
-					"Nella\\Application\\UI\\Control supports only Nella\\Application\\UI\\Presenter '".get_class($presenter)."' given"
+					'Nella\Application\UI\Control supports only Nella\Application\UI\Presenter'
+					 . " '".get_class($presenter)."' given"
 				);
 			}
 			$this->templateFilesFormatter = $presenter->getTemplateFilesFormatter();
@@ -57,7 +59,7 @@ abstract class Control extends \Nette\Application\UI\Control
 	public function formatTemplateFiles($method)
 	{
 		if (!$this->templateFilesFormatter) {
-			throw new \Nette\InvalidStateException("Control does not attached to presenter");
+			throw new \Nette\InvalidStateException('Control does not attached to presenter');
 		}
 
 		$view = $this->methodToView($method);
@@ -95,3 +97,4 @@ abstract class Control extends \Nette\Application\UI\Control
 		$this->template->render();
 	}
 }
+

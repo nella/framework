@@ -4,7 +4,8 @@
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
- * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
+ * For the full copyright and license information,
+ * please view the file LICENSE.txt that was distributed with this source code.
  */
 
 namespace Nella\Templating\Diagnostics;
@@ -32,7 +33,7 @@ class FilesPanel extends \Nette\Object implements \Nette\Diagnostics\IBarPanel, 
 	 *
 	 * @return string
 	 */
-	function getTab()
+	public function getTab()
 	{
 		return '<span title="Templates">'
 				. '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsSAAALEgHS3X78AAAAB3RJTUUH1ggZDQos1T0RfAAAAB10RVh0Q29tbWVudABDcmVhdGVkIHdpdGggVGhlIEdJTVDvZCVuAAABoklEQVQ4y4WSz2saURDHP89u3NRG8JCcgqbaJNCfJDmF9tJDQv+fHkqhZ0GE/DMhoRU95NBriVbyS9vE9NJYdQUXRGV504PdZTfr2oGB9+a9+c5n5j3F1N4Uivmv/N/2P374VAlFC8W8dLtd6XQ6AbdtWxzHkfF4LI7jyOcvx9L80Tjw58b8m36/j2VZWD2LXq9HrV7lttXi7LzOwB6wv/eOZrPxvlDM74UERMRzjaBFyK7lWF5ZZjgcYsZNBvaA3d3XAGU3z/ATiBYEjQggwvXNT16+eIVpLnJa/cZkMmE0GgXaDwho+ZeMoBRkszm01qTTGSzLwjAesGg+5Hu9NnsGXhtac9f+DaK4bFwQX4iTTC5hGAskEoloAlcABetPNhHRpFcziAiPEksApFIpIl9Bpvy023copbhpXQNw1biM/BgzW9hY3wQg+zgHQCa95onPFQD402kTi03DLoGIRFKEBNzqfoJ5FLGo6n6CeRTebaVUoPp9ApfivnnPePurxfbWTuDw/OKMZ0+fh2KzBE7KldLbcqUUqnB0fDhrdifu4i+3M+KsEqll2AAAAABJRU5ErkJggg%3D%3D" />'
@@ -44,12 +45,12 @@ class FilesPanel extends \Nette\Object implements \Nette\Diagnostics\IBarPanel, 
 	 *
 	 * @return string
 	 */
-	function getPanel()
+	public function getPanel()
 	{
 		$files = $this->files;
 		ob_start();
 		require __DIR__ . '/templates/FilesPanel.panel.phtml';
 		return ob_get_clean();
 	}
-
 }
+

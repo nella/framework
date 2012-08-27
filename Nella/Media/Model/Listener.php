@@ -4,7 +4,8 @@
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
- * This source file is subject to the GNU Lesser General Public License. For more information please see http://nellacms.com
+ * For the full copyright and license information,
+ * please view the file LICENSE.txt that was distributed with this source code.
  */
 
 namespace Nella\Media\Model;
@@ -24,7 +25,7 @@ class Listener extends \Nette\Object implements \Doctrine\Common\EventSubscriber
 		return array(
 			\Doctrine\ORM\Events::onFlush,
 		);
-    }
+	}
 
     /**
      * @param \Doctrine\ORM\Event\OnFlushEventArgs
@@ -33,13 +34,13 @@ class Listener extends \Nette\Object implements \Doctrine\Common\EventSubscriber
     {
     	$uow = $args->getEntityManager()->getUnitOfWork();
 
-        foreach ($uow->getScheduledEntityInsertions() AS $entity) {
+        foreach ($uow->getScheduledEntityInsertions() as $entity) {
 			$this->processOnFlush($entity);
         }
-        foreach ($uow->getScheduledEntityUpdates() AS $entity) {
+        foreach ($uow->getScheduledEntityUpdates() as $entity) {
 			$this->processOnFlush($entity);
         }
-        foreach ($uow->getScheduledEntityDeletions() AS $entity) {
+        foreach ($uow->getScheduledEntityDeletions() as $entity) {
 			$this->processOnFlush($entity);
         }
     }
@@ -52,5 +53,6 @@ class Listener extends \Nette\Object implements \Doctrine\Common\EventSubscriber
     	if ($entity instanceof BaseFileEntity || $entity instanceof ImageFormatEntity) {
 			$entity->onFlush($entity);
 		}
-    }
+	}
 }
+

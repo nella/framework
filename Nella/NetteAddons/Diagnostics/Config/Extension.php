@@ -4,12 +4,14 @@
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
- * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
+ * For the full copyright and license information,
+ * please view the file LICENSE.txt that was distributed with this source code.
  */
 
 namespace Nella\NetteAddons\Diagnostics\Config;
 
-use Nette\Config\Configurator;
+use Nette\Config\Configurator,
+	Nette\Config\Compiler ;
 
 /**
  * Diagnostics services
@@ -53,7 +55,7 @@ class Extension extends \Nette\Config\CompilerExtension
 	 */
 	public static function setCallback(\Nette\Application\Application $application, \Nette\Http\Response $res, \Nella\NetteAddons\Diagnostics\AccessLogger $logger)
 	{
-		$application->onShutdown[] = function(\Nette\Application\Application $application) use($logger, $res) {
+		$application->onShutdown[] = function (\Nette\Application\Application $application) use ($logger, $res) {
 			$logger->log($res);
 		};
 	}
@@ -76,9 +78,10 @@ class Extension extends \Nette\Config\CompilerExtension
 			$config['appId'], $config['appSecret'], $password, $config['loggerUrl']
 		));
 
-		$initialize->addBody(get_called_class().'::setCallback($this->getService(?), $this->getService(?), $this->getService(?));', array(
-			'application', 'httpResponse', $this->prefix('accessLogger')
-		));
+		$initialize->addBody(
+			get_called_class().'::setCallback($this->getService(?), $this->getService(?), $this->getService(?));',
+			array('application', 'httpResponse', $this->prefix('accessLogger'))
+		);
 	}
 
 	/**
@@ -90,8 +93,9 @@ class Extension extends \Nette\Config\CompilerExtension
 	public static function register(Configurator $configurator, $name = 'diagnostics')
 	{
 		$class = get_called_class();
-		$configurator->onCompile[] = function(Configurator $configurator, \Nette\Config\Compiler $compiler) use($class, $name) {
+		$configurator->onCompile[] = function (Configurator $configurator, Compiler $compiler) use ($class, $name) {
 			$compiler->addExtension($name, new $class);
 		};
 	}
 }
+
