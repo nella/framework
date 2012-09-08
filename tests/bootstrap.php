@@ -13,7 +13,7 @@ use Nette\Diagnostics\Debugger;
 $params = array(
 	'appDir' => __DIR__,
 	'wwwDir' => __DIR__,
-	'libsDir' => __DIR__ . "/../vendors",
+	'libsDir' => __DIR__ . "/../vendor",
 	'tempDir' => __DIR__ . "/temp",
 	'fixturesDir' => __DIR__ . "/fixtures"
 );

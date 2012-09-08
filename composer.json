@@ -19,9 +19,6 @@
 	"autoload": {
 		"psr-0": { "Nella": "" }
 	},
-	"config": {
-		"vendor-dir": "vendors"
-	},
 	"require": {
 		"php": ">=5.3.2",
 		"doctrine/common": "2.3.*@beta",
