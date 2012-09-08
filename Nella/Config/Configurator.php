@@ -22,24 +22,6 @@ class Configurator extends \Nette\Config\Configurator
 	/** @var \Nella\Event\IEventDispatcher */
 	private $eventManager;
 
-	public function __construct()
-	{
-		@header('X-Powered-By: Nette Framework with Nella Framework');
-		require_once __DIR__ . '/../shortcuts.php';
-		parent::__construct();
-	}
-
-	/**
-	 * @return array
-	 */
-	protected function getDefaultParameters()
-	{
-		$params = parent::getDefaultParameters();
-		$trace = debug_backtrace(FALSE);
-		$params['appDir'] = isset($trace[2]['file']) ? dirname($trace[2]['file']) : NULL;
-		return $params;
-	}
-
 	/**
 	 * @return \Nella\Event\IEventDispatcher
 	 */

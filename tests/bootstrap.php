@@ -21,9 +21,7 @@ $params = array(
 require_once $params['libsDir'] . "/autoload.php";
 require_once __DIR__ . "/../Nella/loader.php";
 Nella\SplClassLoader::getInstance()
-    ->addNamespaceAlias('NellaTests', __DIR__ . '/cases')
-    ->addNamespaceAlias('Doctrine', $params['libsDir'] . "/Doctrine")
-	->addNamespaceAlias('Symfony', $params['libsDir'] . "/Symfony");
+    ->addNamespaceAlias('NellaTests', __DIR__ . '/cases');
 
 // Setup Nette profiler
 //Debugger::$browser = '';
@@ -31,7 +29,7 @@ Debugger::$strictMode = TRUE;
 Debugger::enable(Debugger::DEVELOPMENT, __DIR__ . "/temp/log");
 
 // Init DI Container
-$configurator = new \Nette\Config\Configurator;
+$configurator = new Nette\Config\Configurator;
 $configurator->addParameters($params);
 $configurator->setTempDirectory($params['tempDir']);
 
@@ -41,4 +39,4 @@ $container = $configurator->createContainer();
 require_once __DIR__ . "/mocks/EntityManagerMock.php";
 require_once __DIR__ . "/mocks/UserStorage.php";
 
-\Nette\Environment::setContext($container);
+Nette\Environment::setContext($container);

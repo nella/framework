@@ -4,7 +4,7 @@
 	"description": "Nella Framework",
 	"keywords": ["nella", "framework", "doctrine", "nette"],
 	"homepage": "http://nellafw.org",
-	"license": ["BSD-3", "GPLv2", "GPLv3"],
+	"license": ["BSD-3-Clause", "GPL-2.0+"],
 	"authors": [
 		{
 			"name": "Patrik Votoček",
@@ -17,16 +17,17 @@
 		}
 	],
 	"autoload": {
-		"psr-0": { "Nella": "" }
+		"psr-0": { "Nella": "./" },
+		"files": ["Nella/shortcuts.php"]
 	},
 	"require": {
 		"php": ">=5.3.2",
-		"doctrine/common": "2.3.*@beta",
-		"doctrine/dbal": "2.3.*@beta",
-		"doctrine/orm": "2.3.*@beta",
+		"doctrine/common": "2.3.*@rc",
+		"doctrine/dbal": "2.3.*@rc",
+		"doctrine/orm": "2.3.*@rc",
 		"doctrine/migrations": "@dev",
 		"symfony/console": "2.0.*",
-		"nette/nette": "2.0.*"
+		"nette/nette": ">=2.0.5"
 	},
 	"require-dev": {
 		"nella/testing": "dev-master"
