@@ -14,7 +14,9 @@ class SplClassLoaderTest extends \Nella\Testing\TestCase
 	public function setup()
 	{
 		parent::setup();
-		\Nella\SplClassLoader::getInstance()->addNamespaceAlias('NellaTests\SplClassLoader', __DIR__ . "/../fixtures");
+		\Nella\SplClassLoader::getInstance()
+			->addNamespaceAlias('NellaTests\SplClassLoader', __DIR__ . "/../fixtures")
+			->register();
 	}
 
 	public function testLoadClass()

@@ -20,7 +20,8 @@ $params = array(
 
 require_once $params['libsDir'] . "/autoload.php";
 Nella\SplClassLoader::getInstance()
-    ->addNamespaceAlias('NellaTests', __DIR__ . '/cases');
+    ->addNamespaceAlias('NellaTests', __DIR__ . '/cases')
+    ->register();
 
 // Setup Nette profiler
 //Debugger::$browser = '';
