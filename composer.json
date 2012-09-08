@@ -31,6 +31,9 @@
 		"symfony/console": "2.0.*",
 		"nette/nette": "2.0.*"
 	},
+	"require-dev": {
+		"nella/testing": "dev-master"
+	},
 	"replace": {
 		"nella/nette-addon-doctrine": "self.version",
 		"nella/nette-addon-media": "self.version",
