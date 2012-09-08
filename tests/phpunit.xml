@@ -4,8 +4,7 @@
 		<whitelist>
 			<directory suffix=".php">../Nella</directory>
 			<exclude>
-				<directory suffix=".php">../Nella/Diagnostics</directory>
-				<directory suffix=".php">../Nella/Testing</directory>
+				<directory suffix=".php">../Nella/NetteAddons/Diagnostics</directory>
 				<file>../Nella/shortcuts.php</file>
 				<file>../Nella/loader.php</file>
 				<file>../Nella/Framework.php</file>
