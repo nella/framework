@@ -10,6 +10,10 @@ BUILD_TOOLS_REPO="git://github.com/nella/framework-build-tools.git"
 # Download build tools #
 ########################
 
+if [ -d "build" ]
+then
+	rm -rf build
+fi
 git clone $BUILD_TOOLS_REPO build
 cd build && git submodule update --init && cd ..
 
@@ -33,10 +37,10 @@ if [ -f "composer.phar" ]
 then
 	rm composer.phar
 fi
-if [ -d "vendors" ]
+if [ -d "vendor" ]
 then
-	rm -rf vendors
+	rm -rf vendor
 fi
 curl -s http://getcomposer.org/installer | php
-php composer.phar install
+php composer.phar install --dev
 
