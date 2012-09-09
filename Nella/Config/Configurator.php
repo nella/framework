@@ -89,6 +89,10 @@ class Configurator extends \Nette\Config\Configurator
 		$nette = new \Nette\Config\Extensions\NetteExtension;
 		$nette->defaults['container']['debugger'] = TRUE;
 
+		$console = new \Nella\Console\Config\Extension;
+		$console->defaults['name'] = \Nella\Framework::NAME;
+		$console->defaults['version'] = \Nella\Framework::VERSION;
+
 		$compiler->addExtension('php', new \Nette\Config\Extensions\PhpExtension)
 			->addExtension('constants', new \Nette\Config\Extensions\ConstantsExtension)
 			->addExtension('nette', $nette)
@@ -99,7 +103,8 @@ class Configurator extends \Nette\Config\Configurator
 			->addExtension('security', new Extensions\SecurityExtension)
 			->addExtension('diagnostics', new \Nella\NetteAddons\Diagnostics\Config\Extension)
 			->addExtension('model', new Extensions\ModelExtension)
-			->addExtension('event', new Extensions\EventExtension($this->getEventManager()));
+			->addExtension('event', new Extensions\EventExtension($this->getEventManager()))
+			->addExtension(\Nella\Console\Config\Extension::DEFAULT_EXTENSION_NAME, $console);
 
 		$this->eventManager->dispatchEvent(\Nella\Events::CREATE_COMPILER, new \Nella\Event\Args\Compiler($compiler));
 
