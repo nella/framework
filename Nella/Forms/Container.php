@@ -8,24 +8,24 @@
  * please view the file LICENSE.txt that was distributed with this source code.
  */
 
-namespace Nella\NetteAddons\Forms;
+namespace Nella\Forms;
 
 /**
- * Nella forms
+ * Nella forms container
  *
  * @author	Patrik Votoček
  */
-class Form extends \Nette\Application\UI\Form
+class Container extends \Nette\Forms\Container
 {
 	/**
 	 * Adds naming container to the form.
-	 *
 	 * @param  string  name
-	 * @return \Nella\NetteAddons\Forms\Container
+	 * @return Container
 	 */
 	public function addContainer($name)
 	{
-		$control = new \Nella\NetteAddons\Forms\Container;
+		$class = get_called_class();
+		$control = new $class;
 		$control->currentGroup = $this->currentGroup;
 		return $this[$name] = $control;
 	}
@@ -42,7 +42,7 @@ class Form extends \Nette\Application\UI\Form
 	public function addEmail($name, $label = NULL, $cols = NULL, $maxLength = NULL)
 	{
 		$item = $this->addText($name, $label, $cols, $maxLength);
-		$item->setAttribute('type', 'email')->addCondition(self::FILLED)->addRule(self::EMAIL);
+		$item->setAttribute('type', 'email')->addCondition(Form::FILLED)->addRule(Form::EMAIL);
 		return $item;
 	}
 
@@ -58,7 +58,7 @@ class Form extends \Nette\Application\UI\Form
 	public function addUrl($name, $label = NULL, $cols = NULL, $maxLength = NULL)
 	{
 		$item = $this->addText($name, $label, $cols, $maxLength);
-		$item->setAttribute('type', 'url')->addCondition(self::FILLED)->addRule(self::URL);
+		$item->setAttribute('type', 'url')->addCondition(Form::FILLED)->addRule(Form::URL);
 		return $item;
 	}
 
@@ -76,7 +76,7 @@ class Form extends \Nette\Application\UI\Form
 	{
 		$item = $this->addText($name, $label);
 		$item->setAttribute('step', $step)->setAttribute('type', 'number')
-			->addCondition(self::FILLED)->addRule(self::NUMERIC);
+			->addCondition(Form::FILLED)->addRule(Form::NUMERIC);
 		$range = array(NULL, NULL);
 		if ($min !== NULL) {
 			$item->setAttribute('min', $min);
@@ -87,7 +87,7 @@ class Form extends \Nette\Application\UI\Form
 			$range[1] = $max;
 		}
 		if ($range != array(NULL, NULL)) {
-			$item->addCondition(self::FILLED)->addRule(self::RANGE, NULL, $range);
+			$item->addCondition(Form::FILLED)->addRule(Form::RANGE, NULL, $range);
 		}
 
 		return $item;

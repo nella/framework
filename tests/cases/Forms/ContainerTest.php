@@ -7,23 +7,30 @@
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
  */
 
-namespace NellaTests\NetteAddons\Forms;
+namespace NellaTests\Forms;
 
-use Nella\NetteAddons\Forms\Form,
+use Nella\Forms\Container,
+	Nella\Forms\Form,
 	Nette\Forms\Rule;
 
-class FormTest extends \Nella\Testing\TestCase
+class ContainerTest extends \Nella\Testing\TestCase
 {
-	/** @var Nella\NetteAddons\Forms\Form */
-	private $form;
+	/** @var Nella\Form\Container */
+	private $container;
 
 	public function setup()
 	{
-		$this->form = new Form;
+		$form = new Form;
+		$form['test'] = $this->container = new Container;
+	}
+
+	public function testInstance()
+	{
+		$this->assertInstanceOf('Nette\Forms\Container', $this->container);
 	}
 
 	/**
-	 * @param \Nette\Forms\IFormControl
+	 * @param Nette\Forms\IFormControl
 	 * @param int
 	 * @param bool
 	 */
@@ -51,15 +58,15 @@ class FormTest extends \Nella\Testing\TestCase
 
 	public function testContainer()
 	{
-		$cont = $this->form->addContainer('foo');
+		$cont = $this->container->addContainer('foo');
 
-		$this->assertInstanceOf('Nella\NetteAddons\Forms\Container', $cont, 'is Nella\NetteAddons\Forms\Container');
-		$this->assertSame($this->form['foo'], $cont, "is registered container same as created");
+		$this->assertInstanceOf('Nella\Forms\Container', $cont, 'is Nella\Forms\Container');
+		$this->assertSame($this->container['foo'], $cont, "is registered container same as created");
 	}
 
 	public function testEmail()
 	{
-		$item = $this->form->addEmail('email', "E-mail");
+		$item = $this->container->addEmail('email', "E-mail");
 
 		$this->assertInstanceOf('Nette\Forms\Controls\TextInput', $item, 'is Nette\Forms\Controls\TextInput');
 		$this->assertEquals('email', $item->control->type, "email type");
@@ -68,7 +75,7 @@ class FormTest extends \Nella\Testing\TestCase
 
 	public function testUrl()
 	{
-		$item = $this->form->addUrl('url', "URL");
+		$item = $this->container->addUrl('url', "URL");
 
 		$this->assertInstanceOf('Nette\Forms\Controls\TextInput', $item, 'is Nette\Forms\Controls\TextInput');
 		$this->assertEquals("url", $item->control->type, "url type");
@@ -77,7 +84,7 @@ class FormTest extends \Nella\Testing\TestCase
 
 	public function testNumber()
 	{
-		$item = $this->form->addNumber('number', "Number", 2, 0, 20);
+		$item = $this->container->addNumber('number', "Number", 2, 0, 20);
 
 		$this->assertInstanceOf('Nette\Forms\Controls\TextInput', $item, 'is Nette\Forms\Controls\TextInput');
 		$this->assertEquals("number", $item->control->type, "number type");
@@ -90,7 +97,7 @@ class FormTest extends \Nella\Testing\TestCase
 
 	public function testRange()
 	{
-		$item = $this->form->addRange('range', "Range", 2, 0, 20);
+		$item = $this->container->addRange('range', "Range", 2, 0, 20);
 
 		$this->assertInstanceOf('Nette\Forms\Controls\TextInput', $item, 'is Nette\Forms\Controls\TextInput');
 		$this->assertEquals("range", $item->control->type, "range type");
@@ -103,31 +110,31 @@ class FormTest extends \Nella\Testing\TestCase
 
 	public function testDate()
 	{
-		$item = $this->form->addDate('date', "Date");
+		$item = $this->container->addDate('date', "Date");
 
-		$this->assertInstanceOf('Nella\NetteAddons\Forms\Controls\Date', $item, 'is Nella\NetteAddons\Forms\Controls\Date');
+		$this->assertInstanceOf('Nella\Forms\Controls\Date', $item, 'is Nella\Forms\Controls\Date');
 		$this->assertEquals("date", $item->control->type, "date type");
 	}
 
 	public function testDateTime()
 	{
-		$item = $this->form->addDateTime('datetime', "Datetime");
+		$item = $this->container->addDateTime('datetime', "Datetime");
 
-		$this->assertInstanceOf('Nella\NetteAddons\Forms\Controls\DateTime', $item, 'is Nella\NetteAddons\Forms\Controls\DateTime');
+		$this->assertInstanceOf('Nella\Forms\Controls\DateTime', $item, 'is Nella\Forms\Controls\DateTime');
 		$this->assertEquals("datetime", $item->control->type, "datetime type");
 	}
 
 	public function testTime()
 	{
-		$item = $this->form->addTime('time', "Time");
+		$item = $this->container->addTime('time', "Time");
 
-		$this->assertInstanceOf('Nella\NetteAddons\Forms\Controls\Time', $item, 'is Nella\NetteAddons\Forms\Controls\Time');
+		$this->assertInstanceOf('Nella\Forms\Controls\Time', $item, 'is Nella\Forms\Controls\Time');
 		$this->assertEquals("time", $item->control->type, "time type");
 	}
 
 	public function testSearch()
 	{
-		$item = $this->form->addSearch('search', "Search");
+		$item = $this->container->addSearch('search', "Search");
 
 		$this->assertInstanceOf('Nette\Forms\Controls\TextInput', $item, 'is Nette\Forms\Controls\TextInput');
 		$this->assertEquals("search", $item->control->type, "search type");
@@ -135,7 +142,7 @@ class FormTest extends \Nella\Testing\TestCase
 
 	public function testEditor()
 	{
-		$item = $this->form->addEditor('editor', "Editor");
+		$item = $this->container->addEditor('editor', "Editor");
 
 		$this->assertInstanceOf('Nette\Forms\Controls\TextArea', $item, 'is Nette\Forms\Controls\TextArea');
 		$this->assertTrue((bool) $item->control->{'data-nella-editor'}, "editor data attribute");
@@ -143,15 +150,15 @@ class FormTest extends \Nella\Testing\TestCase
 
 	public function testDynamic()
 	{
-		$item = $this->form->addDynamic('dyn', function($container) {});
+		$item = $this->container->addDynamic('dyn', function($container) {});
 
-		$this->assertInstanceOf('Nella\NetteAddons\Forms\Multipler', $item, 'is Nella\NetteAddons\Forms\Multipler');
+		$this->assertInstanceOf('Nella\Forms\Multipler', $item, 'is Nella\Forms\Multipler');
 	}
 
 	public function testTags()
 	{
-		$item = $this->form->addTags('tags', "Tags");
+		$item = $this->container->addTags('tags', "Tags");
 
-		$this->assertInstanceOf('Nella\NetteAddons\Forms\Controls\TagsInput', $item, 'is Nella\NetteAddons\Forms\Controls\TagsInput');
+		$this->assertInstanceOf('Nella\Forms\Controls\TagsInput', $item, 'is Nella\Forms\Controls\TagsInput');
 	}
 }

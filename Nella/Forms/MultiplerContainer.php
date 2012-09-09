@@ -8,7 +8,7 @@
  * please view the file LICENSE.txt that was distributed with this source code.
  */
 
-namespace Nella\NetteAddons\Forms;
+namespace Nella\Forms;
 
 /**
  * Multipler item container

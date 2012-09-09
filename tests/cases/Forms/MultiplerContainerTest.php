@@ -7,13 +7,13 @@
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
  */
 
-namespace NellaTests\NetteAddons\Forms;
+namespace NellaTests\Forms;
 
-use Nella\NetteAddons\Forms\MultiplerContainer;
+use Nella\Forms\MultiplerContainer;
 
 class MultiplerContainerTest extends \Nella\Testing\TestCase
 {
-	/** @var \Nella\NetteAddons\Forms\MultiplerContainer */
+	/** @var \Nella\Forms\MultiplerContainer */
 	private $container;
 
 	public function setup()
@@ -24,7 +24,7 @@ class MultiplerContainerTest extends \Nella\Testing\TestCase
 	public function testInstance()
 	{
 		$this->assertInstanceOf('Nette\Forms\Container', $this->container, 'is Nette\Forms\Container instance');
-		$this->assertInstanceOf('Nella\NetteAddons\Forms\Container', $this->container, 'is Nella\NetteAddons\Forms\Container instance');
+		$this->assertInstanceOf('Nella\Forms\Container', $this->container, 'is Nella\Forms\Container instance');
 	}
 
 	public function testAddRemoveContainerButton()

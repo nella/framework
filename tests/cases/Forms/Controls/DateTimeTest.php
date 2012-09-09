@@ -7,22 +7,22 @@
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
  */
 
-namespace NellaTests\NetteAddons\Forms\Controls;
+namespace NellaTests\Forms\Controls;
 
-class TimeTest extends \Nella\Testing\TestCase
+class DateTimeTest extends \Nella\Testing\TestCase
 {
-	/** @var \Nella\NetteAddons\Forms\Controls\Time */
+	/** @var \Nella\Forms\Controls\DateTime */
 	private $item;
 
 	public function setup()
 	{
-		$form = new \Nella\NetteAddons\Forms\Form;
-		$form['foo'] = $this->item = new \Nella\NetteAddons\Forms\Controls\Time("foo");
+		$form = new \Nella\Forms\Form;
+		$form['foo'] = $this->item = new \Nella\Forms\Controls\DateTime("foo");
 	}
 
 	public function testType()
 	{
-		$this->assertEquals("time", $this->item->control->type, "time type");
+		$this->assertEquals("datetime", $this->item->control->type, "datetime type");
 	}
 
 	public function testValues()
@@ -31,7 +31,7 @@ class TimeTest extends \Nella\Testing\TestCase
 		$this->assertNull($this->item->getValue(), "is default NULL");
 		$this->item->setValue($dt);
 		$this->assertInstanceOf('DateTime', $this->item->getValue(), "test value getter returns DateTime object");
-		$this->assertEquals($dt->format("H:i"), $this->item->getValue()->format("H:i"), "test value getter (previous set with setter)");
+		$this->assertEquals($dt->format("Y-m-d H:i"), $this->item->getValue()->format("Y-m-d H:i"), "test value getter (previous set with setter)");
 		$this->item->value = NULL;
 		$this->assertNull($this->item->value, "test value property getter (previous set with property setter)");
 	}

@@ -7,17 +7,17 @@
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
  */
 
-namespace NellaTests\NetteAddons\Forms\Controls;
+namespace NellaTests\Forms\Controls;
 
 class DateTest extends \Nella\Testing\TestCase
 {
-	/** @var \Nella\NetteAddons\Forms\Controls\Date */
+	/** @var \Nella\Forms\Controls\Date */
 	private $item;
 
 	public function setup()
 	{
-		$form = new \Nella\NetteAddons\Forms\Form;
-		$form['foo'] = $this->item = new \Nella\NetteAddons\Forms\Controls\Date("foo");
+		$form = new \Nella\Forms\Form;
+		$form['foo'] = $this->item = new \Nella\Forms\Controls\Date("foo");
 	}
 
 	public function testType()

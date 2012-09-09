@@ -8,17 +8,17 @@
  * please view the file LICENSE.txt that was distributed with this source code.
  */
 
-namespace Nella\NetteAddons\Forms\Controls;
+namespace Nella\Forms\Controls;
 
 /**
- * Form date field item
+ * Form time field item
  *
  * @author	Patrik Votoček
  */
-class Date extends BaseDateTime
+class Time extends BaseDateTime
 {
 	/** @var string */
-	public static $format = 'Y-n-j';
+	public static $format = 'G:i';
 
 	/**
 	 * @param string  control name
@@ -29,8 +29,8 @@ class Date extends BaseDateTime
 	public function __construct($label = NULL, $cols = NULL, $maxLength = NULL)
 	{
 		parent::__construct($label, $cols, $maxLength);
-		$this->control->type = 'date';
-		$this->control->data('nella-forms-date', static::$format);
+		$this->control->type = 'time';
+		$this->control->data('nella-forms-time', static::$format);
 	}
 }
 

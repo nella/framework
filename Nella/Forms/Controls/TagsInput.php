@@ -9,7 +9,7 @@
  * please view the file LICENSE.txt that was distributed with this source code.
  */
 
-namespace Nella\NetteAddons\Forms\Controls;
+namespace Nella\Forms\Controls;
 
 use Nette\Forms\Form,
 	Nette\Forms\Rules,

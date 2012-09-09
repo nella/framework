@@ -7,18 +7,18 @@
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
  */
 
-namespace NellaTests\NetteAddons\Forms;
+namespace NellaTests\Forms;
 
-use Nella\NetteAddons\Forms\Multipler;
+use Nella\Forms\Multipler;
 
 class MultiplerTest extends \Nella\Testing\FormTestCase
 {
-	/** @var \Nella\NetteAddons\Forms\Multipler */
+	/** @var \Nella\Forms\Multipler */
 	protected $multipler;
 
 	public function setup()
 	{
-		$form = new \Nella\NetteAddons\Forms\Form;
+		$form = new \Nella\Forms\Form;
 
 		$form['test'] = $this->multipler = new Multipler(function($container) {
 			$container->addText('foo', "Foo");
@@ -28,13 +28,13 @@ class MultiplerTest extends \Nella\Testing\FormTestCase
 
 	public function testInstance()
 	{
-		$this->assertInstanceOf('Nella\NetteAddons\Forms\Container', $this->multipler);
+		$this->assertInstanceOf('Nella\Forms\Container', $this->multipler);
 	}
 
 	public function testOneContainer()
 	{
 		$cont = $this->multipler[0];
-		$this->assertInstanceOf('Nella\NetteAddons\Forms\MultiplerContainer', $cont, 'is Nella\NetteAddons\Forms\MultiplerContainer');
+		$this->assertInstanceOf('Nella\Forms\MultiplerContainer', $cont, 'is Nella\Forms\MultiplerContainer');
 		$this->assertInstanceOf('Nette\Forms\IControl', $cont['foo'], 'has Nette\Forms\IControl');
 	}
 
@@ -55,7 +55,7 @@ class MultiplerTest extends \Nella\Testing\FormTestCase
 	public function testAttachInvalidForm()
 	{
 		$form = new \Nette\Forms\Form;
-		$form['dyn'] = new \Nella\NetteAddons\Forms\Multipler(function($container) {
+		$form['dyn'] = new \Nella\Forms\Multipler(function($container) {
 			$container->addText('foo', "Foo");
 		});
 	}
@@ -117,12 +117,12 @@ class MultiplerTest extends \Nella\Testing\FormTestCase
 	{
 		$container = $this->multipler[1];
 
-		$containers = $this->multipler->getComponents(FALSE, 'Nella\NetteAddons\Forms\MultiplerContainer');
+		$containers = $this->multipler->getComponents(FALSE, 'Nella\Forms\MultiplerContainer');
 		$this->assertEquals(1, count($containers), "is container exist");
 
 		$this->multipler->remove($container);
 
-		$containers = $this->multipler->getComponents(FALSE, 'Nella\NetteAddons\Forms\MultiplerContainer');
+		$containers = $this->multipler->getComponents(FALSE, 'Nella\Forms\MultiplerContainer');
 		$this->assertEquals(0, count($containers), "is container removed");
 	}
 
@@ -131,7 +131,7 @@ class MultiplerTest extends \Nella\Testing\FormTestCase
 	 */
 	public function testRemoveNonExistContainer()
 	{
-		$container = new \Nella\NetteAddons\Forms\MultiplerContainer(NULL, 'test');
+		$container = new \Nella\Forms\MultiplerContainer(NULL, 'test');
 		$this->multipler->remove($container);
 	}
 
@@ -156,7 +156,7 @@ class MultiplerTest extends \Nella\Testing\FormTestCase
 			)
 		));
 
-		$containers = $this->multipler->getComponents(FALSE, 'Nella\NetteAddons\Forms\MultiplerContainer');
+		$containers = $this->multipler->getComponents(FALSE, 'Nella\Forms\MultiplerContainer');
 		$this->assertEquals(2, count($containers), "now is 2 containers");
 	}
 
@@ -168,12 +168,12 @@ class MultiplerTest extends \Nella\Testing\FormTestCase
 			'test' => array(
 				Multipler::CONTAINERS_KEYS_ID => "1",
 				1 => array(
-					\Nella\NetteAddons\Forms\MultiplerContainer::REMOVE_CONTAINER_BUTTON_ID => "Remove container"
+					\Nella\Forms\MultiplerContainer::REMOVE_CONTAINER_BUTTON_ID => "Remove container"
 				)
 			)
 		));
 
-		$containers = $this->multipler->getComponents(FALSE, 'Nella\NetteAddons\Forms\MultiplerContainer');
+		$containers = $this->multipler->getComponents(FALSE, 'Nella\Forms\MultiplerContainer');
 		$this->assertEquals(0, count($containers), "now is 0 containers");
 	}
 }
