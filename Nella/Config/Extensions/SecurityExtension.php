@@ -44,9 +44,9 @@ class SecurityExtension extends \Nette\Config\CompilerExtension
 				$this->prefix('@entityManager::getRepository'), array('Nella\Security\Model\CredentialsEntity')
 			);
 
-		$credentialsDao = $builder->addDefinition($this->prefix('credentialsDao'))
+		$credentialsFacade = $builder->addDefinition($this->prefix('credentialsFacade'))
 			->setClass(
-				'Nella\Security\Model\CredentialsDao', array($this->prefix('@entityManager'), $credentialsRepository)
+				'Nella\Security\Model\CredentialsFacade', array($this->prefix('@entityManager'), $credentialsRepository)
 			);
 
 
@@ -54,7 +54,7 @@ class SecurityExtension extends \Nette\Config\CompilerExtension
 			$builder->getDefinition('nette.authenticator')->setAutowired(FALSE);
 		}
 		$builder->addDefinition($this->prefix('authenticator'))
-			->setClass('Nella\Security\Authenticator', array($credentialsDao));
+			->setClass('Nella\Security\Authenticator', array($credentialsFacade));
 	}
 }
 

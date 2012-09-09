@@ -93,14 +93,14 @@ class Extension extends \Nette\Config\CompilerExtension
 				$this->prefix('@fileStorage')
 			));
 
-		$builder->addDefinition($this->prefix('fileDao'))
-			->setClass('Nella\Media\Model\FileDao')
+		$builder->addDefinition($this->prefix('fileFacade'))
+			->setClass('Nella\Media\Model\FileFacade')
 			->setAutowired(FALSE);
 
 		if ($routeMask) {
 			$builder->addDefinition($this->prefix('fileRoute'))
 				->setClass('Nella\Media\Routes\FileRoute', array(
-					$routeMask, $this->prefix('@fileDao'), $this->prefix('@filePresenterCallback')
+					$routeMask, $this->prefix('@fileFacade'), $this->prefix('@filePresenterCallback')
 				))
 				->setAutowired(FALSE);
 		}
@@ -128,18 +128,18 @@ class Extension extends \Nette\Config\CompilerExtension
 				$this->prefix('@imageStorage'), $this->prefix('@imageCacheStorage')
 			));
 
-		$builder->addDefinition($this->prefix('imageDao'))
-			->setClass('Nella\Media\Model\ImageDao')
+		$builder->addDefinition($this->prefix('imageFacade'))
+			->setClass('Nella\Media\Model\ImageFacade')
 			->setAutowired(FALSE);
 
-		$builder->addDefinition($this->prefix('imageFormatDao'))
-			->setClass('Nella\Media\Model\ImageFormatDao', array($formats))
+		$builder->addDefinition($this->prefix('imageFormatFacade'))
+			->setClass('Nella\Media\Model\ImageFormatFacade', array($formats))
 			->setAutowired(FALSE);
 
 		if ($routeMask) {
 			$builder->addDefinition($this->prefix('imageRoute'))
 				->setClass('Nella\Media\Routes\ImageRoute', array(
-					$routeMask, $this->prefix('@imageDao'), $this->prefix('@imageFormatDao'),
+					$routeMask, $this->prefix('@imageFacade'), $this->prefix('@imageFormatFacade'),
 					$this->prefix('@imagePresenterCallback')
 				))
 				->setAutowired(FALSE);

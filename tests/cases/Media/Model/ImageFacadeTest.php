@@ -9,26 +9,26 @@
 
 namespace NellaTests\Media\Model;
 
-class FileDaoTest extends \Nella\Testing\TestCase
+class ImageFacadeTest extends \Nella\Testing\TestCase
 {
 	const SLUG = 'logo_png';
-	/** @var \Nella\Media\Model\FileDao */
+	/** @var \Nella\Media\Model\ImageFacade */
 	private $model;
 
 	public function setup()
 	{
-		$this->model = new \Nella\Media\Model\FileDao;
+		$this->model = new \Nella\Media\Model\ImageFacade;
 	}
 
 	public function testInstanceOf()
 	{
-		$this->assertInstanceOf('Nella\Media\Model\IFileDao', $this->model);
+		$this->assertInstanceOf('Nella\Media\Model\IImageDao', $this->model);
 	}
 
 	public function testFindOneByFullSlug()
 	{
-		$file = $this->model->findOneByFullSlug(self::SLUG);
-		$this->assertInstanceOf('Nella\Media\IFile', $file);
-		$this->assertEquals('logo', $file->getFullSlug());
+		$image = $this->model->findOneByFullSlug(self::SLUG);
+		$this->assertInstanceOf('Nella\Media\IImage', $image);
+		$this->assertEquals('logo', $image->getFullSlug());
 	}
 }

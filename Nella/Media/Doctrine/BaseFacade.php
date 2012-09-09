@@ -13,18 +13,18 @@ namespace Nella\Media\Doctrine;
 use Doctrine\ORM\Mapping as orm;
 
 /**
- * Base file / image DAO
+ * Base file / image facade
  *
  * @author	Patrik Votoček
  */
-abstract class BaseDao extends \Nella\Model\Facade
+abstract class BaseFacade extends \Nella\Model\Facade
 {
 	/** @var \Nella\Media\IStorage */
 	protected $storage;
 
 	/**
 	 * @param \Nella\Media\IStorage
-	 * @return ImageDao
+	 * @return ImageFacade
 	 */
 	public function setStorage(\Nella\Media\IStorage $storage)
 	{

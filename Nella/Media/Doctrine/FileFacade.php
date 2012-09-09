@@ -13,11 +13,11 @@ namespace Nella\Media\Doctrine;
 use Doctrine\ORM\Mapping as orm;
 
 /**
- * File DAO
+ * File facade
  *
  * @author	Patrik Votoček
  */
-class FileDao extends BaseDao implements \Nella\Media\Model\IFileDao
+class FileFacade extends BaseFacade implements \Nella\Media\Model\IFileDao
 {
 	/**
 	 * @param string

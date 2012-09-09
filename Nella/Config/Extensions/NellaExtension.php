@@ -13,7 +13,7 @@ namespace Nella\Config\Extensions;
 /**
  * Nella Framework extension
  *
- * Registering default dao services
+ * Registering default facade services
  *
  * @author	Patrik Votoček
  */

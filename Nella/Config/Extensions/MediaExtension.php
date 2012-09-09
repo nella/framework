@@ -74,11 +74,11 @@ class MediaExtension extends \Nella\Media\Config\Extension
 			->setFactory($this->prefix('@entityManager::getRepository'), array('Nella\Media\Doctrine\FileEntity'))
 			->setAutowired(FALSE);
 
-		if ($builder->hasDefinition($this->prefix('fileDao'))) {
-			$builder->removeDefinition($this->prefix('fileDao'));
+		if ($builder->hasDefinition($this->prefix('fileFacade'))) {
+			$builder->removeDefinition($this->prefix('fileFacade'));
 		}
-		$builder->addDefinition($this->prefix('fileDao'))
-			->setClass('Nella\Media\Doctrine\FileDao', array(
+		$builder->addDefinition($this->prefix('fileFacade'))
+			->setClass('Nella\Media\Doctrine\FileFacade', array(
 				$this->prefix('@entityManager'), $this->prefix('@fileRepository')
 			))
 			->addSetup('setStorage', array($this->prefix('@fileStorage')))
@@ -87,7 +87,7 @@ class MediaExtension extends \Nella\Media\Config\Extension
 		if ($routeMask) {
 			$builder->getDefinition($this->prefix('fileRoute'))
 				->setClass('Nella\Media\Routes\FileRoute', array(
-					$routeMask, $this->prefix('@fileDao'), $this->prefix('@filePresenterCallback'), '<file>'
+					$routeMask, $this->prefix('@fileFacade'), $this->prefix('@filePresenterCallback'), '<file>'
 				));
 		}
 	}
@@ -114,22 +114,22 @@ class MediaExtension extends \Nella\Media\Config\Extension
 			->setFactory($this->prefix('@entityManager::getRepository'), array('Nella\Media\Doctrine\ImageFormatEntity'))
 			->setAutowired(FALSE);
 
-		if ($builder->hasDefinition($this->prefix('imageDao'))) {
-			$builder->removeDefinition($this->prefix('imageDao'));
+		if ($builder->hasDefinition($this->prefix('imageFacade'))) {
+			$builder->removeDefinition($this->prefix('imageFacade'));
 		}
-		$builder->addDefinition($this->prefix('imageDao'))
-			->setClass('Nella\Media\Doctrine\ImageDao', array(
+		$builder->addDefinition($this->prefix('imageFacade'))
+			->setClass('Nella\Media\Doctrine\ImageFacade', array(
 				$this->prefix('@entityManager'), $this->prefix('@imageRepository')
 			))
 			->addSetup('setStorage', array($this->prefix('@imageStorage')))
 			->addSetup('setCacheStorage', array($this->prefix('@imageCacheStorage')))
 			->setAutowired(FALSE);
 
-		if ($builder->hasDefinition($this->prefix('imageFormatDao'))) {
-			$builder->removeDefinition($this->prefix('imageFormatDao'));
+		if ($builder->hasDefinition($this->prefix('imageFormatFacade'))) {
+			$builder->removeDefinition($this->prefix('imageFormatFacade'));
 		}
-		$builder->addDefinition($this->prefix('imageFormatDao'))
-			->setClass('Nella\Media\Doctrine\ImageFormatDao', array(
+		$builder->addDefinition($this->prefix('imageFormatFacade'))
+			->setClass('Nella\Media\Doctrine\ImageFormatFacade', array(
 				$this->prefix('@entityManager'), $this->prefix('@imageFormatRepository')
 			))
 			->addSetup('setCacheStorage', array($this->prefix('@imageCacheStorage')))
@@ -139,8 +139,8 @@ class MediaExtension extends \Nella\Media\Config\Extension
 			$builder->getDefinition($this->prefix('imageRoute'))
 				->setClass('Nella\Media\Routes\ImageRoute', array(
 					$routeMask,
-					$this->prefix('@imageDao'),
-					$this->prefix('@imageFormatDao'),
+					$this->prefix('@imageFacade'),
+					$this->prefix('@imageFormatFacade'),
 					$this->prefix('@imagePresenterCallback'),
 					'<image>'
 				));

@@ -11,15 +11,15 @@
 namespace Nella\Media\Model;
 
 /**
- * File dao
+ * Image Facade
  *
  * @author	Patrik Votoček
  */
-class FileDao extends \Nette\Object implements IFileDao
+class ImageFacade extends \Nette\Object implements IImageDao
 {
 	/**
 	 * @param string
-	 * @return \Nella\Media\File|NULL
+	 * @return \Nella\Media\Image|NULL
 	 */
 	public function findOneByFullSlug($slug)
 	{
@@ -30,7 +30,7 @@ class FileDao extends \Nette\Object implements IFileDao
 		$path = substr_replace($slug, '.', $pos, 1);
 
 		try {
-			return new File($path);
+			return new Image($path);
 		} catch (\Nette\InvalidArgumentException $e) {
 			return NULL;
 		}

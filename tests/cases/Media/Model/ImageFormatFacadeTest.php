@@ -9,15 +9,15 @@
 
 namespace NellaTests\Media\Model;
 
-class ImageFormatDaoTest extends \Nella\Testing\TestCase
+class ImageFormatFacadeTest extends \Nella\Testing\TestCase
 {
 	const SLUG = 'default';
-	/** @var \Nella\Media\Model\ImageFormatDao */
+	/** @var \Nella\Media\Model\ImageFormatFacade */
 	private $model;
 
 	public function setup()
 	{
-		$this->model = new \Nella\Media\Model\ImageFormatDao(array(
+		$this->model = new \Nella\Media\Model\ImageFormatFacade(array(
 			self::SLUG => array(
 				'width' => 800,
 				'height' => 600,

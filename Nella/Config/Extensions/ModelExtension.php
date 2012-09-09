@@ -15,7 +15,7 @@ use Doctrine\ORM\EntityManager;
 /**
  * Model extension
  *
- * Registering default dao services
+ * Registering default facade services
  *
  * @author	Patrik Votoček
  */
@@ -26,9 +26,9 @@ class ModelExtension extends \Nette\Config\CompilerExtension
 	/** @var array */
 	public $defaults = array(
 		self::SERVICES_KEY => array(
-			'media.file' => '@media.fileDao',
-			'media.image' => '@media.imageDao',
-			'media.imageFormat' => '@media.imageFormatDao',
+			'media.file' => '@media.fileFacade',
+			'media.image' => '@media.imageFacade',
+			'media.imageFormat' => '@media.imageFormatFacade',
 		)
 	);
 
@@ -83,7 +83,7 @@ class ModelExtension extends \Nette\Config\CompilerExtension
 			}
 
 			$def = $builder->addDefinition($this->prefix($fullname));
-			$def->setClass('Nella\Doctrine\Dao')
+			$def->setClass('Nella\Doctrine\Facade')
 				->setFactory(get_called_class().'::factory', $params);
 			if (isset($data['setup'])) {
 				foreach ($data['setup'] as $setup) {
@@ -91,14 +91,14 @@ class ModelExtension extends \Nette\Config\CompilerExtension
 				}
 			}
 		} elseif (is_string($data) && \Nette\Utils\Strings::startsWith($data, '@')) {
-			$builder->addDefinition($this->prefix($fullname))->setClass('Nella\Doctrine\Dao')->setFactory($data);
+			$builder->addDefinition($this->prefix($fullname))->setClass('Nella\Doctrine\Facade')->setFactory($data);
 		} elseif (is_string($data) && class_exists($data)) {
 			$builder->addDefinition($this->prefix($fullname))
-				->setClass('Nella\Doctrine\Dao')
+				->setClass('Nella\Doctrine\Facade')
 				->setFactory(get_called_class().'::factory', array($this->prefix('@entityManager'), $data));
 		} else {
 			$builder->addDefinition($this->prefix($fullname))
-				->setClass('Nella\Doctrine\Dao')
+				->setClass('Nella\Doctrine\Facade')
 				->setFactory($data);
 		}
 	}
@@ -110,7 +110,7 @@ class ModelExtension extends \Nette\Config\CompilerExtension
 	 * @param string
 	 * @return object
 	 */
-	public static function factory(EntityManager $em, $entity, $service = NULL, $class = 'Nella\Doctrine\Dao')
+	public static function factory(EntityManager $em, $entity, $service = NULL, $class = 'Nella\Doctrine\Facade')
 	{
 		$ref = \Nette\Reflection\ClassType::from($class);
 		return $ref->newInstanceArgs(array(

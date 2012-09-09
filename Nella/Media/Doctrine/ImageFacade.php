@@ -13,11 +13,11 @@ namespace Nella\Media\Doctrine;
 use Doctrine\ORM\Mapping as orm;
 
 /**
- * Image DAO
+ * Image facade
  *
  * @author	Patrik Votoček
  */
-class ImageDao extends BaseDao implements \Nella\Media\Model\IImageDao
+class ImageFacade extends BaseFacade implements \Nella\Media\Model\IImageDao
 {
 	/** @var \Nella\Media\IImageCacheStorage */
 	protected $cacheStorage;
@@ -33,7 +33,7 @@ class ImageDao extends BaseDao implements \Nella\Media\Model\IImageDao
 
 	/**
 	 * @param \Nella\Media\IImageCacheStorage
-	 * @return ImageDao
+	 * @return ImageFacade
 	 */
 	public function setCacheStorage(\Nella\Media\IImageCacheStorage $cacheStorage)
 	{

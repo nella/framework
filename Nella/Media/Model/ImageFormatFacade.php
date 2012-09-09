@@ -11,11 +11,11 @@
 namespace Nella\Media\Model;
 
 /**
- * Image format dao
+ * Image format Facade
  *
  * @author	Patrik Votoček
  */
-class ImageFormatDao extends \Nette\Object implements IImageFormatDao
+class ImageFormatFacade extends \Nette\Object implements IImageFormatDao
 {
 	/** @var array */
 	private $formats;
@@ -33,7 +33,7 @@ class ImageFormatDao extends \Nette\Object implements IImageFormatDao
 
 	/**
 	 * @param array
-	 * @return ImageFormatDao
+	 * @return ImageFormatFacade
 	 */
 	public function addFormat(array $format)
 	{

@@ -11,11 +11,11 @@
 namespace Nella\Security\Model;
 
 /**
- * Credetioals DAO
+ * Credetioals Facade
  *
  * @author    Patrik Votoček
  */
-class CredentialsDao extends \Nella\Model\Facade
+class CredentialsFacade extends \Nella\Model\Facade
 {
 	/**
 	 * @param array
