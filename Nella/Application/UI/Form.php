@@ -17,7 +17,7 @@ namespace Nella\Application\UI;
  *
  * @property-read \Nette\Templating\ITemplate $template
  */
-abstract class Form extends \Nella\NetteAddons\Forms\Form
+abstract class Form extends \Nella\Forms\Form
 {
 	const USE_DEFAULT_RENDERER = 1,
 		THROW_EXCEPTION = 2;

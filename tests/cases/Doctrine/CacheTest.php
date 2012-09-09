@@ -11,7 +11,7 @@ namespace NellaTests\Doctrine;
 
 class CacheTest extends \Nella\Testing\TestCase
 {
-	/** @var \Nella\NetteAddons\Doctine\Cache */
+	/** @var \Nella\Doctine\Cache */
 	private $cache;
 
 	public function setup()

@@ -109,7 +109,7 @@ class Configurator extends \Nette\Config\Configurator
 			->addExtension('nella', new Extensions\NellaExtension)
 			->addExtension(\Nella\Media\Config\Extension::DEFAULT_EXTENSION_NAME, $media)
 			->addExtension('security', new Extensions\SecurityExtension)
-			->addExtension('diagnostics', new \Nella\NetteAddons\Diagnostics\Config\Extension)
+			->addExtension('diagnostics', new \Nella\Diagnostics\Config\Extension)
 			->addExtension('model', new Extensions\ModelExtension)
 			->addExtension('event', new Extensions\EventExtension($this->getEventManager()))
 			->addExtension(\Nella\Console\Config\Extension::DEFAULT_EXTENSION_NAME, $console);
