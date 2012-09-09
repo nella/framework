@@ -116,6 +116,10 @@ class Extension extends \Nette\Config\CompilerExtension
 					$config['annotationCacheDriver'], $config['useSimleAnnotation']
 				));
 
+			$builder->addDefinition('discriminatorDiscovery')
+				->setClass('Nella\Doctrine\Listeners\DiscriminatorMapDiscovery', array($reader))
+				->addTag(static::EVENT_TAG_NAME);
+
 			$metadataDriver->setClass('Doctrine\ORM\Mapping\Driver\AnnotationDriver', array($reader, $config['entityDirs']));
 		} else {
 			$metadataDriver->setClass('Doctrine\Common\Persistence\Mapping\Driver\MappingDriver')
@@ -273,6 +277,7 @@ class Extension extends \Nette\Config\CompilerExtension
 			dirname(\Nette\Reflection\ClassType::from('Doctrine\ORM\Version')->getFileName()).
 				'/Mapping/Driver/DoctrineAnnotations.php'
 		);
+		\Doctrine\Common\Annotations\AnnotationRegistry::registerFile(__DIR__ . '/../Mapping/DiscriminatorEntry.php');
 
 		if ($useSimple) {
 			$reader = new \Doctrine\Common\Annotations\SimpleAnnotationReader;
