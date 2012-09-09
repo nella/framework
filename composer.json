@@ -36,6 +36,7 @@
 		"nella/console": "self.version",
 		"nella/doctrine": "self.version",
 		"nella/diagnostics": "self.version",
-		"nella/forms": "self.version"
+		"nella/forms": "self.version",
+		"nella/media": "self.version"
 	}
 }
