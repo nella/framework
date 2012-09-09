@@ -8,7 +8,7 @@
  * please view the file LICENSE.txt that was distributed with this source code.
  */
 
-namespace Nella\NetteAddons\Diagnostics;
+namespace Nella\Diagnostics;
 
 /**
  * Remote access logger

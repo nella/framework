@@ -8,14 +8,14 @@
  * please view the file LICENSE.txt that was distributed with this source code.
  */
 
-namespace Nella\NetteAddons\Diagnostics\LoggerStorages;
+namespace Nella\Diagnostics\LoggerStorages;
 
 /**
  * Http logger storage
  *
  * @author	Patrik Votoček
  */
-class Http extends \Nette\Object implements \Nella\NetteAddons\Diagnostics\ILoggerStorage
+class Http extends \Nette\Object implements \Nella\Diagnostics\ILoggerStorage
 {
 	/** @var string */
 	private $url;

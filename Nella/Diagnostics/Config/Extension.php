@@ -8,7 +8,7 @@
  * please view the file LICENSE.txt that was distributed with this source code.
  */
 
-namespace Nella\NetteAddons\Diagnostics\Config;
+namespace Nella\Diagnostics\Config;
 
 use Nette\Config\Configurator,
 	Nette\Config\Compiler ;
@@ -20,6 +20,8 @@ use Nette\Config\Configurator,
  */
 class Extension extends \Nette\Config\CompilerExtension
 {
+	const DEFAULT_EXTENSION_NAME = 'diagnostics';
+
 	/** @var array */
 	public $defaults = array(
 		'loggerUrl' => 'http://localhost:50921/api/log.json',
@@ -41,19 +43,19 @@ class Extension extends \Nette\Config\CompilerExtension
 		}
 
 		$builder->addDefinition($this->prefix('accessStorage'))
-			->setClass('Nella\NetteAddons\Diagnostics\LoggerStorages\Http', array(
+			->setClass('Nella\Diagnostics\LoggerStorages\Http', array(
 				$config['appId'], $config['appSecret'], $config['accessLoggerUrl']
 			));
 		$builder->addDefinition($this->prefix('accessLogger'))
-			->setClass('Nella\NetteAddons\Diagnostics\AccessLogger', array($this->prefix('@accessStorage')));
+			->setClass('Nella\Diagnostics\AccessLogger', array($this->prefix('@accessStorage')));
 	}
 
 	/**
 	 * @param \Nette\Application\Application
 	 * @param \Nette\Http\Response
-	 * @param \Nella\NetteAddons\Diagnostics\AccessLogger
+	 * @param \Nella\Diagnostics\AccessLogger
 	 */
-	public static function setCallback(\Nette\Application\Application $application, \Nette\Http\Response $res, \Nella\NetteAddons\Diagnostics\AccessLogger $logger)
+	public static function setCallback(\Nette\Application\Application $application, \Nette\Http\Response $res, \Nella\Diagnostics\AccessLogger $logger)
 	{
 		$application->onShutdown[] = function (\Nette\Application\Application $application) use ($logger, $res) {
 			$logger->log($res);
@@ -74,7 +76,7 @@ class Extension extends \Nette\Config\CompilerExtension
 
 		$initialize = $class->methods['initialize'];
 
-		$initialize->addBody('\Nella\NetteAddons\Diagnostics\Logger::register(?, ?, ?, ?);', array(
+		$initialize->addBody('\Nella\Diagnostics\Logger::register(?, ?, ?, ?);', array(
 			$config['appId'], $config['appSecret'], $password, $config['loggerUrl']
 		));
 
@@ -90,7 +92,7 @@ class Extension extends \Nette\Config\CompilerExtension
 	 * @param \Nette\Config\Configurator
 	 * @param string
 	 */
-	public static function register(Configurator $configurator, $name = 'diagnostics')
+	public static function register(Configurator $configurator, $name = self::DEFAULT_EXTENSION_NAME)
 	{
 		$class = get_called_class();
 		$configurator->onCompile[] = function (Configurator $configurator, Compiler $compiler) use ($class, $name) {
