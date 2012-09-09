@@ -1,0 +1,42 @@
+{
+	"name": "nella/doctrine",
+	"type": "nette-addon",
+	"description": "Doctrine 2 ORM and Migrations addon for Nette Framework",
+	"keywords": ["doctrine", "nette", "orm", "migrations", "nella", "addon"],
+	"homepage": "http://nellafw.org",
+	"license": ["BSD-3-Clause", "GPL-2.0+"],
+	"authors": [
+		{
+			"name": "Patrik Votoček",
+			"email": "patrik@votocek.cz",
+			"homepage": "http://patrik.votocek.cz",
+			"role": "Developer"
+		},
+		{
+			"name": "Nella Project",
+			"homepage": "http://nella-project.org"
+		}
+	],
+	"support":{
+		"issues":"https://github.com/nella/framework/issues",
+		"source":"https://github.com/nella/framework/tree/master/Nella/Doctrine"
+    },
+	"autoload": {
+		"psr-0": {
+			"Nella\\Doctrine": "./"
+		}
+	},
+	"target-dir": "Nella/Doctrine",
+	"require": {
+		"php": ">=5.3.2",
+		"nette/nette": "2.0.*",
+		"doctrine/orm": "2.3.*@rc",
+		"doctrine/dbal": "2.3.*@rc",
+		"doctrine/common": "2.3.*@rc"
+	},
+	"suggest": {
+		"nella/console": "Need for console support",
+		"doctrine/migrations": "Need for migrations support",
+		"nella/gedmo": "Integrate Doctrine Gedmo extension to Nette Framework"
+	}
+}
