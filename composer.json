@@ -30,7 +30,7 @@
 		"nette/nette": ">=2.0.5"
 	},
 	"require-dev": {
-		"nella/testing": "dev-master"
+		"nella/testing": "@dev"
 	},
 	"replace": {
 		"nella/nette-addon-doctrine": "self.version",
