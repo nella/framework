@@ -98,6 +98,8 @@ class Configurator extends \Nette\Config\Configurator
 		$doctrine->defaults['repositoryClass'] = 'Nella\Model\Repository';
 		$migrations = new \Nella\Doctrine\Config\MigrationsExtension;
 		$migrations->defaultName = \Nella\Framework::NAME . ' DB Migrations';
+		$media = new \Nella\Media\Config\Extension;
+		$media->defaults['entityManager'] = '@' . \Nella\Doctrine\Config\Extension::DEFAULT_EXTENSION_NAME . '.entityManager';
 
 		$compiler->addExtension('php', new \Nette\Config\Extensions\PhpExtension)
 			->addExtension('constants', new \Nette\Config\Extensions\ConstantsExtension)
@@ -105,7 +107,7 @@ class Configurator extends \Nette\Config\Configurator
 			->addExtension(\Nella\Doctrine\Config\Extension::DEFAULT_EXTENSION_NAME, $doctrine)
 			->addExtension(\Nella\Doctrine\Config\MigrationsExtension::DEFAULT_EXTENSION_NAME, $migrations)
 			->addExtension('nella', new Extensions\NellaExtension)
-			->addExtension('media', new Extensions\MediaExtension)
+			->addExtension(\Nella\Media\Config\Extension::DEFAULT_EXTENSION_NAME, $media)
 			->addExtension('security', new Extensions\SecurityExtension)
 			->addExtension('diagnostics', new \Nella\NetteAddons\Diagnostics\Config\Extension)
 			->addExtension('model', new Extensions\ModelExtension)

@@ -21,7 +21,8 @@ use Nette\Config\Configurator,
  */
 class Extension extends \Nette\Config\CompilerExtension
 {
-	const SERVICES_KEY = 'services';
+	const DEFAULT_EXTENSION_NAME = 'media',
+		SERVICES_KEY = 'services';
 
 	/** @var array */
 	public $defaults = array(
@@ -52,11 +53,60 @@ class Extension extends \Nette\Config\CompilerExtension
 		$config = $this->getConfig($this->defaults);
 		$builder = $this->getContainerBuilder();
 
-		$this->processFile($config['fileStorageDir'], isset($config['fileRoute']) ? $config['fileRoute'] : NULL);
-		$this->processImage(
-			$config['imageStorageDir'], $config['imagePath'], $config['formats'],
-			isset($config['imageRoute']) ? $config['imageRoute'] : NULL
-		);
+		$cache = $builder->addDefinition($this->prefix('cache'))
+			->setClass('Nette\Caching\IStorage')
+			->setFactory('@cacheStorage');
+
+		// Basic file
+		$fileStorage = $builder->addDefinition($this->prefix('fileStorage'))
+			->setClass('Nella\Media\Storages\File', array($config['fileStorageDir']))
+			->setAutowired(FALSE);
+
+		$fileCallback = $builder->addDefinition($this->prefix('filePresenterCallback'))
+			->setClass('Nella\Media\Callbacks\FilePresenterCallback', array($fileStorage));
+
+		// Basic image
+		$imageStorage = $builder->addDefinition($this->prefix('imageStorage'))
+			->setClass('Nella\Media\Storages\File', array($config['imageStorageDir']))
+			->setAutowired(FALSE);
+
+		$imageCacheStorage = $builder->addDefinition($this->prefix('imageCacheStorage'))
+			->setClass('Nella\Media\ImageCacheStorages\File', array($config['imagePath'], $cache));
+
+		$imageCallback = $builder->addDefinition($this->prefix('imagePresenterCallback'))
+			->setClass('Nella\Media\Callbacks\ImagePresenterCallback', array($imageStorage, $imageCacheStorage));
+
+		if (!isset($config['entityManager'])) {
+			$em = $builder->addDefinition($this->prefix('entityManager'))
+				->setFactory($config['entityManager'])
+				->setAutowired(FALSE);
+
+			$listener = $builder->addDefinition($this->prefix('listener'))
+				->setClass('Nella\Media\Doctrine\Listener')
+				->setAutowired(FALSE);
+
+			if (class_exists('Nella\Doctrine\Config\Extension')) {
+				$listener->addTag(\Nella\Doctrine\Config\Extension::EVENT_TAG_NAME);
+			} else {
+				$em->addSetup(get_called_class().'::setupListener', array('@self', $listener));
+			}
+
+			$fileFacade = $this->processFileDoctrine('entityManager', $fileStorage);
+			$imageFacade = $this->processImageDoctrine('entityManager', $imageStorage, $imageCacheStorage);
+			$imageFormatFacade = $this->processImageFormatDoctrine('entityManager', $imageCacheStorage);
+		} else {
+			$fileFacade = $builder->addDefinition($this->prefix('fileFacade'))
+				->setClass('Nella\Media\Model\FileFacade')
+				->setAutowired(FALSE);
+
+			$imageFacade = $builder->addDefinition($this->prefix('imageFacade'))
+				->setClass('Nella\Media\Model\ImageFacade')
+				->setAutowired(FALSE);
+
+			$imageFormatFacade = $builder->addDefinition($this->prefix('imageFormatFacade'))
+				->setClass('Nella\Media\Model\ImageFormatFacade', array($config['formats']))
+				->setAutowired(FALSE);
+		}
 
 		foreach ($config[self::SERVICES_KEY] as $name => $def) {
 			if ($this->hasDefinition($this->prefix($name))) {
@@ -73,77 +123,84 @@ class Extension extends \Nette\Config\CompilerExtension
 				->addSetup('Nella\Media\Latte\MediaMacros::factory', array('@self'));
 		}
 
+		if (isset($config['fileRoute'])) {
+			$builder->addDefinition($this->prefix('fileRoute'))
+				->setClass('Nella\Media\Routes\FileRoute', array($config['fileRoute'], $fileFacade, $fileCallback))
+				->setAutowired(FALSE);
+		}
+
+		if (isset($config['imageRoute'])) {
+			$builder->addDefinition($this->prefix('imageRoute'))
+				->setClass('Nella\Media\Routes\ImageRoute', array(
+					$config['imageRoute'], $imageFacade, $imageFormatFacade, $imageCallback
+				))
+				->setAutowired(FALSE);
+		}
+
 		$this->registerRoutes();
 	}
 
 	/**
 	 * @param string
-	 * @param string|NULL
+	 * @param \Nette\DI\ServiceDefinition|string
+	 * @return \Nette\DI\ServiceDefinition|string
 	 */
-	protected function processFile($storageDir, $routeMask = NULL)
+	protected function processFileDoctrine($entitManager, $storage)
 	{
 		$builder = $this->getContainerBuilder();
 
-		$builder->addDefinition($this->prefix('fileStorage'))
-			->setClass('Nella\Media\Storages\File', array($storageDir))
+		$repository = $builder->addDefinition($this->prefix('fileRepository'))
+			->setClass('Nella\Doctrine\Repository')
+			->setFactory($this->prefix("$entityManager::getRepository"), array('Nella\Media\Doctrine\FileEntity'))
 			->setAutowired(FALSE);
 
-		$builder->addDefinition($this->prefix('filePresenterCallback'))
-			->setClass('Nella\Media\Callbacks\FilePresenterCallback', array(
-				$this->prefix('@fileStorage')
-			));
-
-		$builder->addDefinition($this->prefix('fileFacade'))
-			->setClass('Nella\Media\Model\FileFacade')
+		return $builder->addDefinition($this->prefix('fileFacade'))
+			->setClass('Nella\Media\Doctrine\FileFacade', array($entitManager, $repository))
+			->addSetup('setStorage', array($storage))
 			->setAutowired(FALSE);
-
-		if ($routeMask) {
-			$builder->addDefinition($this->prefix('fileRoute'))
-				->setClass('Nella\Media\Routes\FileRoute', array(
-					$routeMask, $this->prefix('@fileFacade'), $this->prefix('@filePresenterCallback')
-				))
-				->setAutowired(FALSE);
-		}
 	}
 
 	/**
 	 * @param string
-	 * @param string
-	 * @param array
-	 * @param string|NULL
+	 * @param \Nette\DI\ServiceDefinition|string
+	 * @param \Nette\DI\ServiceDefinition|string
+	 * @return \Nette\DI\ServiceDefinition|string
 	 */
-	protected function processImage($storageDir, $path, array $formats, $routeMask = NULL)
+	protected function processImageDoctrine($entitManager, $storage, $cacheStorage)
 	{
 		$builder = $this->getContainerBuilder();
 
-		$builder->addDefinition($this->prefix('imageStorage'))
-			->setClass('Nella\Media\Storages\File', array($storageDir))
+		$repository = $builder->addDefinition($this->prefix('imageRepository'))
+			->setClass('Nella\Doctrine\Repository')
+			->setFactory($this->prefix("$entityManager::getRepository"), array('Nella\Media\Doctrine\ImageEntity'))
 			->setAutowired(FALSE);
 
-		$builder->addDefinition($this->prefix('imageCacheStorage'))
-			->setClass('Nella\Media\ImageCacheStorages\File', array($path, '@cacheStorage'));
-
-		$builder->addDefinition($this->prefix('imagePresenterCallback'))
-			->setClass('Nella\Media\Callbacks\ImagePresenterCallback', array(
-				$this->prefix('@imageStorage'), $this->prefix('@imageCacheStorage')
-			));
-
-		$builder->addDefinition($this->prefix('imageFacade'))
-			->setClass('Nella\Media\Model\ImageFacade')
+		return $builder->addDefinition($this->prefix('imageFacade'))
+			->setClass('Nella\Media\Doctrine\ImageFacade', array($entitManager, $repository))
+			->addSetup('setStorage', array($storage))
+			->addSetup('setCacheStorage', array($cacheStorage))
 			->setAutowired(FALSE);
 
-		$builder->addDefinition($this->prefix('imageFormatFacade'))
-			->setClass('Nella\Media\Model\ImageFormatFacade', array($formats))
+	}
+
+	/**
+	 * @param string
+	 * @param \Nette\DI\ServiceDefinition|string
+	 * @return \Nette\DI\ServiceDefinition|string
+	 */
+	protected function processImageFormatDoctrine($entitManager, $cacheStorage)
+	{
+		$builder = $this->getContainerBuilder();
+
+		$repository = $builder->addDefinition($this->prefix('imageFormatRepository'))
+			->setClass('Nella\Doctrine\Repository')
+			->setFactory($this->prefix("$entityManager::getRepository"), array('Nella\Media\Doctrine\ImageFormatEntity'))
 			->setAutowired(FALSE);
 
-		if ($routeMask) {
-			$builder->addDefinition($this->prefix('imageRoute'))
-				->setClass('Nella\Media\Routes\ImageRoute', array(
-					$routeMask, $this->prefix('@imageFacade'), $this->prefix('@imageFormatFacade'),
-					$this->prefix('@imagePresenterCallback')
-				))
-				->setAutowired(FALSE);
-		}
+		return $builder->addDefinition($this->prefix('imageFormatFacade'))
+			->setClass('Nella\Media\Doctrine\ImageFormatFacade', array($entitManager, $repository))
+			->addSetup('setCacheStorage', array($cacheStorage))
+			->setAutowired(FALSE);
 	}
 
 	protected function registerRoutes()
@@ -163,12 +220,22 @@ class Extension extends \Nette\Config\CompilerExtension
 	}
 
 	/**
+	 * @param \Doctrine\ORM\EntityManager
+	 * @param \Nella\Media\Doctrine\Listener
+	 */
+	public static function setupListener(\Doctrine\ORM\EntityManager $entityManager, \Nella\Media\Doctrine\Listener $listener)
+	{
+		$evm = $entityManager->getEventManager();
+		$evm->addEventSubscriber($listener);
+	}
+
+	/**
 	 * Register extension to compiler.
 	 *
 	 * @param \Nette\Config\Configurator
 	 * @param string
 	 */
-	public static function register(Configurator $configurator, $name = 'media')
+	public static function register(Configurator $configurator, $name = self::DEFAULT_EXTENSION_NAME)
 	{
 		$class = get_called_class();
 		$configurator->onCompile[] = function (Configurator $configurator, Compiler $compiler) use ($class, $name) {
