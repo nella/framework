@@ -36,6 +36,7 @@
 		"nella/nette-addon-media": "self.version",
 		"nella/console": "self.version",
 		"nella/doctrine": "self.version",
-		"nella/diagnostics": "self.version"
+		"nella/diagnostics": "self.version",
+		"nella/forms": "self.version"
 	}
 }
