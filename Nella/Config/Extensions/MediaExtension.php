@@ -18,7 +18,7 @@ use Nette\Config\Configurator,
  *
  * @author	Patrik Votoček
  */
-class MediaExtension extends \Nella\NetteAddons\Media\Config\Extension
+class MediaExtension extends \Nella\Media\Config\Extension
 {
 	/** @var array */
 	public $defaults = array(
@@ -52,7 +52,7 @@ class MediaExtension extends \Nella\NetteAddons\Media\Config\Extension
 			->setAutowired(FALSE);
 
 		$builder->addDefinition($this->prefix('listener'))
-			->setClass('Nella\Media\Model\Listener')
+			->setClass('Nella\Media\Doctrine\Listener')
 			->addTag('doctrineListener')
 			->setAutowired(FALSE);
 
@@ -71,14 +71,14 @@ class MediaExtension extends \Nella\NetteAddons\Media\Config\Extension
 
 		$builder->addDefinition($this->prefix('fileRepository'))
 			->setClass('Nella\Doctrine\Repository')
-			->setFactory($this->prefix('@entityManager::getRepository'), array('Nella\Media\Model\FileEntity'))
+			->setFactory($this->prefix('@entityManager::getRepository'), array('Nella\Media\Doctrine\FileEntity'))
 			->setAutowired(FALSE);
 
 		if ($builder->hasDefinition($this->prefix('fileDao'))) {
 			$builder->removeDefinition($this->prefix('fileDao'));
 		}
 		$builder->addDefinition($this->prefix('fileDao'))
-			->setClass('Nella\Media\Model\FileDao', array(
+			->setClass('Nella\Media\Doctrine\FileDao', array(
 				$this->prefix('@entityManager'), $this->prefix('@fileRepository')
 			))
 			->addSetup('setStorage', array($this->prefix('@fileStorage')))
@@ -86,7 +86,7 @@ class MediaExtension extends \Nella\NetteAddons\Media\Config\Extension
 
 		if ($routeMask) {
 			$builder->getDefinition($this->prefix('fileRoute'))
-				->setClass('Nella\NetteAddons\Media\Routes\FileRoute', array(
+				->setClass('Nella\Media\Routes\FileRoute', array(
 					$routeMask, $this->prefix('@fileDao'), $this->prefix('@filePresenterCallback'), '<file>'
 				));
 		}
@@ -106,19 +106,19 @@ class MediaExtension extends \Nella\NetteAddons\Media\Config\Extension
 
 		$builder->addDefinition($this->prefix('imageRepository'))
 			->setClass('Nella\Doctrine\Repository')
-			->setFactory($this->prefix('@entityManager::getRepository'), array('Nella\Media\Model\ImageEntity'))
+			->setFactory($this->prefix('@entityManager::getRepository'), array('Nella\Media\Doctrine\ImageEntity'))
 			->setAutowired(FALSE);
 
 		$builder->addDefinition($this->prefix('imageFormatRepository'))
 			->setClass('Nella\Doctrine\Repository')
-			->setFactory($this->prefix('@entityManager::getRepository'), array('Nella\Media\Model\ImageFormatEntity'))
+			->setFactory($this->prefix('@entityManager::getRepository'), array('Nella\Media\Doctrine\ImageFormatEntity'))
 			->setAutowired(FALSE);
 
 		if ($builder->hasDefinition($this->prefix('imageDao'))) {
 			$builder->removeDefinition($this->prefix('imageDao'));
 		}
 		$builder->addDefinition($this->prefix('imageDao'))
-			->setClass('Nella\Media\Model\ImageDao', array(
+			->setClass('Nella\Media\Doctrine\ImageDao', array(
 				$this->prefix('@entityManager'), $this->prefix('@imageRepository')
 			))
 			->addSetup('setStorage', array($this->prefix('@imageStorage')))
@@ -129,7 +129,7 @@ class MediaExtension extends \Nella\NetteAddons\Media\Config\Extension
 			$builder->removeDefinition($this->prefix('imageFormatDao'));
 		}
 		$builder->addDefinition($this->prefix('imageFormatDao'))
-			->setClass('Nella\Media\Model\ImageFormatDao', array(
+			->setClass('Nella\Media\Doctrine\ImageFormatDao', array(
 				$this->prefix('@entityManager'), $this->prefix('@imageFormatRepository')
 			))
 			->addSetup('setCacheStorage', array($this->prefix('@imageCacheStorage')))
@@ -137,7 +137,7 @@ class MediaExtension extends \Nella\NetteAddons\Media\Config\Extension
 
 		if ($routeMask) {
 			$builder->getDefinition($this->prefix('imageRoute'))
-				->setClass('Nella\NetteAddons\Media\Routes\ImageRoute', array(
+				->setClass('Nella\Media\Routes\ImageRoute', array(
 					$routeMask,
 					$this->prefix('@imageDao'),
 					$this->prefix('@imageFormatDao'),

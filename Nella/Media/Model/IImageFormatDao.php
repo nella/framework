@@ -11,29 +11,16 @@
 namespace Nella\Media\Model;
 
 /**
- * Image dao
+ * File dao interface
  *
  * @author	Patrik Votoček
  */
-class ImageDao extends \Nette\Object implements IImageDao
+interface IImageFormatDao
 {
 	/**
 	 * @param string
-	 * @return \Nella\Media\Image|NULL
+	 * @return \Nella\Media\IImageFormat|NULL
 	 */
-	public function findOneByFullSlug($slug)
-	{
-		if (($pos = strrpos($slug, '_')) === FALSE) {
-			return NULL;
-		}
-
-		$path = substr_replace($slug, '.', $pos, 1);
-
-		try {
-			return new Image($path);
-		} catch (\Nette\InvalidArgumentException $e) {
-			return NULL;
-		}
-	}
+	public function findOneByFullSlug($slug);
 }
 
