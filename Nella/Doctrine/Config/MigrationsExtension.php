@@ -8,9 +8,10 @@
  * please view the file LICENSE.txt that was distributed with this source code.
  */
 
-namespace Nella\NetteAddons\Doctrine\Config;
+namespace Nella\Doctrine\Config;
 
-use Nette\Config\Configurator,
+use Nella\Console\Config\Extension as CExtension,
+	Nette\Config\Configurator,
 	Nette\DI\ContainerBuilder,
 	Nette\Config\Compiler;
 
@@ -23,21 +24,22 @@ use Nette\Config\Configurator,
  */
 class MigrationsExtension extends \Nette\Config\CompilerExtension
 {
+	const DEFAULT_EXTENSION_NAME = 'migrations';
+
+	public $defaultName = NULL;
+
 	/**
 	 * @return array
 	 */
 	private function getDefaults()
 	{
-		$name = \Nette\Framework::NAME . ' DB Migrations';
-		if (class_exists('Nella\Framework')) {
-			$name = \Nella\Framework::NAME . ' DB Migrations';
-		}
-
 		return array(
-			'name' => $name,
+			'name' => $this->defaultName ?: \Nette\Framework::NAME . ' DB Migrations',
+			'connection' => '@' . Extension::DEFAULT_EXTENSION_NAME . '.connection',
 			'table' => 'db_version',
 			'directory' => '%appDir%/migrations',
 			'namespace' => 'App\Model\Migrations',
+			'console' => TRUE,
 		);
 	}
 
@@ -55,13 +57,7 @@ class MigrationsExtension extends \Nette\Config\CompilerExtension
 		$config = $this->getConfig($this->getDefaults());
 		$builder = $this->getContainerBuilder();
 
-		if (!isset($config['connection'])) {
-			throw new \Nette\InvalidStateException('Migration database connection does not set');
-		}
-
-		$this->processConsole();
-
-		$builder->addDefinition($this->prefix('configuration'))
+		$configuration = $builder->addDefinition($this->prefix('configuration'))
 			->setClass('Doctrine\DBAL\Migrations\Configuration\Configuration', array(
 				$config['connection'], $this->prefix('@consoleOutput')
 			))
@@ -70,10 +66,21 @@ class MigrationsExtension extends \Nette\Config\CompilerExtension
 			->addSetup('setMigrationsDirectory', array($config['directory']))
 			->addSetup('setMigrationsNamespace', array($config['namespace']))
 			->addSetup('registerMigrationsFromDirectory', array($config['directory']));
+
+		if ($config['console']) {
+			$this->processConsole($configuration);
+		}
 	}
 
-	protected function processConsole()
+	/**
+	 * @param \Nette\DI\ServiceDefinition|string
+	 */
+	protected function processConsole($configuration)
 	{
+		if (!class_exists('Nella\Console\Config\Extension')) {
+			throw new \Nette\InvalidStateException('Missing console extension');
+		}
+
 		$builder = $this->getContainerBuilder();
 
 		$builder->addDefinition($this->prefix('consoleOutput'))
@@ -83,38 +90,38 @@ class MigrationsExtension extends \Nette\Config\CompilerExtension
 
 		$builder->addDefinition($this->prefix('consoleCommandDiff'))
 			->setClass('Doctrine\DBAL\Migrations\Tools\Console\Command\DiffCommand')
-			->addSetup('setMigrationConfiguration', array($this->prefix('@configuration')))
-			->addTag('consoleCommand')
+			->addSetup('setMigrationConfiguration', array($configuration))
+			->addTag(CExtension::COMMAND_TAG_NAME)
 			->setAutowired(FALSE);
 		$builder->addDefinition($this->prefix('consoleCommandExecute'))
 			->setClass('Doctrine\DBAL\Migrations\Tools\Console\Command\ExecuteCommand')
-			->addSetup('setMigrationConfiguration', array($this->prefix('@configuration')))
-			->addTag('consoleCommand')
+			->addSetup('setMigrationConfiguration', array($configuration))
+			->addTag(CExtension::COMMAND_TAG_NAME)
 			->setAutowired(FALSE);
 		$builder->addDefinition($this->prefix('consoleCommandGenerate'))
 			->setClass('Doctrine\DBAL\Migrations\Tools\Console\Command\GenerateCommand')
-			->addSetup('setMigrationConfiguration', array($this->prefix('@configuration')))
-			->addTag('consoleCommand')
+			->addSetup('setMigrationConfiguration', array($configuration))
+			->addTag(CExtension::COMMAND_TAG_NAME)
 			->setAutowired(FALSE);
 		$builder->addDefinition($this->prefix('consoleCommandMigrate'))
 			->setClass('Doctrine\DBAL\Migrations\Tools\Console\Command\MigrateCommand')
-			->addSetup('setMigrationConfiguration', array($this->prefix('@configuration')))
-			->addTag('consoleCommand')
+			->addSetup('setMigrationConfiguration', array($configuration))
+			->addTag(CExtension::COMMAND_TAG_NAME)
 			->setAutowired(FALSE);
 		$builder->addDefinition($this->prefix('consoleCommandStatus'))
 			->setClass('Doctrine\DBAL\Migrations\Tools\Console\Command\StatusCommand')
-			->addSetup('setMigrationConfiguration', array($this->prefix('@configuration')))
-			->addTag('consoleCommand')
+			->addSetup('setMigrationConfiguration', array($configuration))
+			->addTag(CExtension::COMMAND_TAG_NAME)
 			->setAutowired(FALSE);
 		$builder->addDefinition($this->prefix('consoleCommandVersion'))
 			->setClass('Doctrine\DBAL\Migrations\Tools\Console\Command\VersionCommand')
-			->addSetup('setMigrationConfiguration', array($this->prefix('@configuration')))
-			->addTag('consoleCommand')
+			->addSetup('setMigrationConfiguration', array($configuration))
+			->addTag(CExtension::COMMAND_TAG_NAME)
 			->setAutowired(FALSE);
 	}
 
 	/**
-	 * @return \Symfony\Component\Console\Output\ConsoleOutput
+	 * @return \Doctrine\DBAL\Migrations\OutputWriter
 	 */
 	public static function createConsoleOutput()
 	{
@@ -130,7 +137,7 @@ class MigrationsExtension extends \Nette\Config\CompilerExtension
 	 * @param \Nette\Config\Configurator
 	 * @param string
 	 */
-	public static function register(Configurator $configurator, $name = 'migrations')
+	public static function register(Configurator $configurator, $name = self::DEFAULT_EXTENSION_NAME)
 	{
 		$class = get_called_class();
 		$configurator->onCompile[] = function (Configurator $configurator, Compiler $compiler) use ($class, $name) {

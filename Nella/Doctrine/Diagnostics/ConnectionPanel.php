@@ -4,14 +4,14 @@
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
- * For the full copyright and license information, 
+ * For the full copyright and license information,
  * please view the file LICENSE.txt that was distributed with this source code.
  */
 
-namespace Nella\NetteAddons\Doctrine\Diagnostics;
+namespace Nella\Doctrine\Diagnostics;
 
-use Nette\Diagnostics\Debugger;
-use Nette\Utils\Strings;
+use Nette\Diagnostics\Debugger,
+	Nette\Utils\Strings;
 
 /**
  * Debug panel for Doctrine

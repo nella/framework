@@ -4,7 +4,7 @@
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
- * For the full copyright and license information, 
+ * For the full copyright and license information,
  * please view the file LICENSE.txt that was distributed with this source code.
  */
 
@@ -15,7 +15,7 @@ namespace Nella\Security\Model;
  *
  * @author    Patrik Votoček
  */
-class CredentialsDao extends \Nella\Doctrine\Dao
+class CredentialsDao extends \Nella\Model\Facade
 {
 	/**
 	 * @param array

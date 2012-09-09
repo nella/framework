@@ -7,13 +7,13 @@
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nellacms.com
  */
 
-namespace NellaTests\Doctrine;
+namespace NellaTests\Model;
 
-use Nella\Doctrine\QueryObject;
+use Nella\Model\QueryObject;
 
 class QueryObjectTest extends \Nella\Testing\TestCase
 {
-	/** @var \Nella\Doctrine\IQueryObject */
+	/** @var \Nella\Model\IQueryObject */
 	private $query;
 
 	public function setup()

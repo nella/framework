@@ -4,49 +4,21 @@
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
- * For the full copyright and license information, 
+ * For the full copyright and license information,
  * please view the file LICENSE.txt that was distributed with this source code.
  */
 
 namespace Nella\Doctrine;
 
-use Nella\Model\IQueryObject,
-	Nette\ObjectMixin;
+use Nette\ObjectMixin;
 
 /**
  * Basic entity repository
  *
  * @author	Patrik Votoček
  */
-class Repository extends \Doctrine\ORM\EntityRepository implements \Nella\Model\IQueryable, \Nella\Model\IQueryExecutor
+class Repository extends \Doctrine\ORM\EntityRepository
 {
-	/**
-	 * @param \Nella\Model\IQueryObject
-	 * @return int
-	 */
-	public function count(IQueryObject $queryObject)
-	{
-		return $queryObject->count($this);
-	}
-
-	/**
-	 * @param \Nella\Model\IQueryObject
-	 * @return array
-	 */
-	public function fetch(IQueryObject $queryObject)
-	{
-		return $queryObject->fetch($this);
-	}
-
-	/**
-	 * @param \Nella\Model\IQueryObject
-	 * @return object|NULL
-	 */
-	public function fetchOne(IQueryObject $queryObject)
-	{
-		return $queryObject->fetchOne($this);
-	}
-
 	/**
 	 * Reindex result by key
 	 *

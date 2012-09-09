@@ -4,18 +4,18 @@
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
- * For the full copyright and license information, 
+ * For the full copyright and license information,
  * please view the file LICENSE.txt that was distributed with this source code.
  */
 
-namespace Nella\Doctrine;
+namespace Nella\Model;
 
 /**
- * Basic domain access object
+ * Basic model facade
  *
  * @author	Patrik Votoček
  */
-class Dao extends \Nette\Object implements \Nella\Model\IDao, \Nella\Model\IObjectFactory
+class Facade extends \Nette\Object implements IDao, IObjectFactory
 {
 	/** @var \Doctrine\ORM\EntityManager */
 	protected $em;

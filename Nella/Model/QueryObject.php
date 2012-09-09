@@ -8,7 +8,7 @@
  * please view the file LICENSE.txt that was distributed with this source code.
  */
 
-namespace Nella\Doctrine;
+namespace Nella\Model;
 
 use Doctrine\ORM\Tools\Pagination\Paginator,
 	Nella\Model\IQueryable;
@@ -20,7 +20,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator,
  *
  * @property-read \Nette\Utils\Paginator|NULL $paginator
  */
-class QueryObject extends \Nette\Object implements \Nella\Model\IQueryObject
+class QueryObject extends \Nette\Object implements IQueryObject
 {
 	/** @var \Nette\Utils\Paginator */
 	private $paginator;

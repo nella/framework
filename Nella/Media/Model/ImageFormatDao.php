@@ -17,7 +17,7 @@ use Doctrine\ORM\Mapping as orm;
  *
  * @author	Patrik Votoček
  */
-class ImageFormatDao extends \Nella\Doctrine\Dao implements \Nella\NetteAddons\Media\Model\IImageFormatDao
+class ImageFormatDao extends \Nella\Model\Facade implements \Nella\NetteAddons\Media\Model\IImageFormatDao
 {
 	/** @var \Nella\NetteAddons\Media\IImageCacheStorage */
 	protected $cacheStorage;

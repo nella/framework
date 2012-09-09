@@ -8,7 +8,7 @@
  * please view the file LICENSE.txt that was distributed with this source code.
  */
 
-namespace Nella\NetteAddons\Doctrine;
+namespace Nella\Doctrine;
 
 use Nette\Caching\Cache as NCache;
 
@@ -21,6 +21,7 @@ class Cache extends \Doctrine\Common\Cache\CacheProvider
 {
 	const CACHE_TAG = 'doctrine',
 		CACHE_NAMESPACE = 'Nella.Doctrine';
+
 	/** @var \Nette\Caching\Cache */
 	private $storage = array();
 

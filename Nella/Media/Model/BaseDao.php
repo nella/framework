@@ -17,7 +17,7 @@ use Doctrine\ORM\Mapping as orm;
  *
  * @author	Patrik Votoček
  */
-abstract class BaseDao extends \Nella\Doctrine\Dao
+abstract class BaseDao extends \Nella\Model\Facade
 {
 	/** @var \Nella\NetteAddons\Media\IStorage */
 	protected $storage;

@@ -92,12 +92,18 @@ class Configurator extends \Nette\Config\Configurator
 		$console = new \Nella\Console\Config\Extension;
 		$console->defaults['name'] = \Nella\Framework::NAME;
 		$console->defaults['version'] = \Nella\Framework::VERSION;
+		$doctrine = new \Nella\Doctrine\Config\Extension;
+		$doctrine->defaults['entityDirs'][] = __DIR__ . '/../';
+		$doctrine->defaults['console'] = TRUE;
+		$doctrine->defaults['repositoryClass'] = 'Nella\Model\Repository';
+		$migrations = new \Nella\Doctrine\Config\MigrationsExtension;
+		$migrations->defaultName = \Nella\Framework::NAME . ' DB Migrations';
 
 		$compiler->addExtension('php', new \Nette\Config\Extensions\PhpExtension)
 			->addExtension('constants', new \Nette\Config\Extensions\ConstantsExtension)
 			->addExtension('nette', $nette)
-			->addExtension('doctrine', new Extensions\DoctrineExtension)
-			->addExtension('migrations', new \Nella\NetteAddons\Doctrine\Config\MigrationsExtension)
+			->addExtension(\Nella\Doctrine\Config\Extension::DEFAULT_EXTENSION_NAME, $doctrine)
+			->addExtension(\Nella\Doctrine\Config\MigrationsExtension::DEFAULT_EXTENSION_NAME, $migrations)
 			->addExtension('nella', new Extensions\NellaExtension)
 			->addExtension('media', new Extensions\MediaExtension)
 			->addExtension('security', new Extensions\SecurityExtension)

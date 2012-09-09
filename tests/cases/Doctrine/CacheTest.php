@@ -7,7 +7,7 @@
  * This source file is subject to the GNU Lesser General Public License. For more information please see http://nellacms.com
  */
 
-namespace NellaTests\NetteAddons\Doctrine;
+namespace NellaTests\Doctrine;
 
 class CacheTest extends \Nella\Testing\TestCase
 {
@@ -17,7 +17,7 @@ class CacheTest extends \Nella\Testing\TestCase
 	public function setup()
 	{
 		parent::setup();
-		$this->cache = new \Nella\NetteAddons\Doctrine\Cache(new \Nette\Caching\Storages\MemoryStorage);
+		$this->cache = new \Nella\Doctrine\Cache(new \Nette\Caching\Storages\MemoryStorage);
 	}
 
 	public function testDefault()
