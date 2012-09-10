@@ -44,7 +44,7 @@ class TagsInput extends \Nette\Forms\Controls\TextInput
 
 	/**
 	 * @param string regex
-	 * @return TagInput provides fluent interface
+	 * @return TagInput
 	 */
 	public function setDelimiter($delimiter)
 	{
@@ -54,7 +54,7 @@ class TagsInput extends \Nette\Forms\Controls\TextInput
 
 	/**
 	 * @param string
-	 * @return TagInput provides fluent interface
+	 * @return TagInput
 	 */
 	public function setJoiner($joiner)
 	{
@@ -93,7 +93,6 @@ class TagsInput extends \Nette\Forms\Controls\TextInput
 	 */
 	public function getControl()
 	{
-		$container = Html::el('div');
 		$control = parent::getControl();
 
 		if ($this->delimiter !== NULL && Strings::trim($this->delimiter) !== '') {
@@ -111,17 +110,15 @@ class TagsInput extends \Nette\Forms\Controls\TextInput
 			}
 			$control->attrs['data-nella-tag-suggest'] = $form->getPresenter()->link($this->renderName, array('word_filter' => '%filter%'));
 		}
-		$container->add($control);
-		$container->add(Html::el('script')->setHtml('TagInput.create("#frm' . $this->form->name . '-' . $this->name . '");'));
 
-		return $container;
+		return $control;
 	}
 
 	/**
 	 * Sets control's value.
 	 *
-	 * @param  string
-	 * @return TagInput  provides a fluent interface
+	 * @param  string|array
+	 * @return TagInput
 	 */
 	public function setValue($value)
 	{
@@ -134,20 +131,20 @@ class TagsInput extends \Nette\Forms\Controls\TextInput
 
 	/**
 	 * @param array
-	 * @return TagInput provides fluent interface
+	 * @return TagInput
 	 */
 	public function setDefaultValue($value)
 	{
 		if (!is_array($value)) {
-			throw new \Nette\InvalidArgumentException('Invalid argument type passed to ' . __METHOD__ . ', expected array.');
+			$value = explode(trim($this->joiner), $value);
 		}
 		parent::setDefaultValue(implode($this->joiner, $value));
 		return $this;
 	}
 
 	/**
-	 * @param int $limit
-	 * @return TagInput provides fluent interface
+	 * @param int
+	 * @return TagInput
 	 */
 	public function setPayloadLimit($limit)
 	{
@@ -165,7 +162,7 @@ class TagsInput extends \Nette\Forms\Controls\TextInput
 	 * @param  mixed	  rule type
 	 * @param  string	 message to display for invalid data
 	 * @param  mixed	  optional rule arguments
-	 * @return TagInput  provides a fluent interface
+	 * @return TagInput
 	 */
 	public function addRule($operation, $message = NULL, $arg = NULL)
 	{
@@ -181,7 +178,7 @@ class TagsInput extends \Nette\Forms\Controls\TextInput
 
 	/**
 	 * @param array
-	 * @return TagInput provides fluent interface
+	 * @return TagInput
 	 */
 	public function setSuggestCallback($suggest)
 	{
