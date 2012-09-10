@@ -38,5 +38,6 @@ $container = $configurator->createContainer();
 
 require_once __DIR__ . "/mocks/EntityManagerMock.php";
 require_once __DIR__ . "/mocks/UserStorage.php";
+require_once __DIR__ . "/mocks/LocalizationStorage.php";
 
 Nette\Environment::setContext($container);
