@@ -22,33 +22,31 @@ use Nette\Diagnostics\Debugger,
  */
 class ConnectionPanel extends \Nette\Object implements \Nette\Diagnostics\IBarPanel, \Doctrine\DBAL\Logging\SQLLogger
 {
+	const SQL = 0,
+		PARAMS = 1,
+		TYPES = 2,
+		TIME = 3,
+		EXPLAIN = 4;
+
 	/** @var bool whether to do explain queries for selects or not */
 	public $doExplains = TRUE;
-
 	/** @var bool */
 	private $explainRunning = FALSE;
-
 	/** @var \Doctrine\DBAL\Connection|NULL */
 	private $connection;
-
 	/** @var int logged time */
 	public $totalTime = 0;
-
-	const SQL = 0;
-	const PARAMS = 1;
-	const TYPES = 2;
-	const TIME = 3;
-	const EXPLAIN = 4;
-
 	/** @var array */
 	public $queries = array();
 
 	/**
-	 * @param \Doctrine\DBAL\Connection $connection
+	 * @param \Doctrine\DBAL\Connection
+	 * @return ConnectionPanel
 	 */
 	public function setConnection(\Doctrine\DBAL\Connection $connection)
 	{
 		$this->connection = $connection;
+		return $this;
 	}
 
 	/**
@@ -126,25 +124,33 @@ class ConnectionPanel extends \Nette\Object implements \Nette\Diagnostics\IBarPa
 	protected function processQuery(array $query)
 	{
 		$s = '<tr>';
-		$s .= '<td>' . sprintf('%0.3f', $query[self::TIME] * 1000) . '</td>';
-		$s .= '<td class="nette-Doctrine2Panel-sql" style="min-width: 400px">' . \Nette\Database\Helpers::dumpSql($query[self::SQL]) . '</td>';
-		$s .= '<td>' . \Nette\Diagnostics\Helpers::clickableDump($query[self::PARAMS], TRUE) . '</td>';
+		$s .= '<td>' . sprintf('%0.3f', $query[self::TIME] * 1000);
 
-		if ($this->doExplains) {
-			$s .= '<td>';
-
-			if ($query[self::EXPLAIN]) {
-				$s .= '<table>';
-				$s .= '<tr><th>' . implode('</th><th>', array_keys($query[self::EXPLAIN][0])) . '</th></tr>';
-				foreach ($query[self::EXPLAIN] as $row) {
-					$s .= '<tr><td>' . implode('</td><td>', $row) . '</td></tr>';
-				}
-				$s .='</table>';
-			}
-
-			$s .= '</td>';
+		if ($this->doExplains && isset($query[self::EXPLAIN])) {
+			static $counter;
+			$counter++;
+			$s .= "<br /><a href='#' class='nette-toggler' rel='#nette-Doctrine2Panel-row-$counter'>explain&nbsp;&#x25ba;</a>";
 		}
 
+		$s .= '</td>';
+		$s .= '<td class="nette-Doctrine2Panel-sql" style="min-width: 400px">' . \Nette\Database\Helpers::dumpSql($query[self::SQL]);
+		if ($this->doExplains && isset($query[self::EXPLAIN])) {
+			$s .= "<table id='nette-Doctrine2Panel-row-$counter' class='nette-collapsed'><tr>";
+			foreach ($query[self::EXPLAIN][0] as $col => $foo) {
+				$s .= '<th>' . htmlSpecialChars($col) . '</th>';
+			}
+			$s .= '</tr>';
+			foreach ($query[self::EXPLAIN] as $row) {
+				$s .= '<tr>';
+				foreach ($row as $col) {
+					$s .= '<td>' . htmlSpecialChars($col) . '</td>';
+				}
+				$s .= '</tr>';
+			}
+			$s .= '</table>';
+		}
+		$s .= '</td>';
+		$s .= '<td>' . \Nette\Diagnostics\Helpers::clickableDump($query[self::PARAMS], TRUE) . '</td>';
 		$s .= '</tr>';
 
 		return $s;
@@ -188,7 +194,7 @@ class ConnectionPanel extends \Nette\Object implements \Nette\Diagnostics\IBarPa
 				'<h1>Queries: ' . count($this->queries) . ($this->totalTime ? ', time: ' . sprintf('%0.3f', $this->totalTime * 1000) . ' ms' : '') . '</h1>
 			<div class="nette-inner nette-Doctrine2Panel">
 			<table>
-			<tr><th>Time&nbsp;ms</th><th>SQL</th><th>Params</th>' . ($this->doExplains ? '<th>Explain</th>' : '') . '</tr>' . $s . '
+			<tr><th>Time&nbsp;ms</th><th>SQL</th><th>Params</th></tr>' . $s . '
 			</table>
 			</div>';
 	}
