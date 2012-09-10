@@ -19,22 +19,13 @@ use Nette\Diagnostics\Helpers;
 	<h1>Template Files</h1>
 
 	<div class="nette-inner">
-		<table>
-			<thead>
-				<tr>
-					<th>Input</th>
-					<th>Files</th>
-				</tr>
-			</thead>
-			<tbody>
-				<?php foreach ($files as $input => $list): ?>
-				<tr>
-					<td><?php echo htmlspecialchars($input); ?></td>
-					<td><?php echo nl2br(htmlspecialchars(implode(" \n", $list))); ?></td>
-				</tr>
-				<?php endforeach ?>
-			</tbody>
-		</table>
+		<?php foreach ($files as $input => $list): ?>
+		<h2><a href='#' class='nette-toggler' rel='#nette-TemplateFilesPanel-row-<?php echo md5($input); ?>'><?php echo htmlspecialchars($input); ?></a></h2>
+
+		<div id='nette-TemplateFilesPanel-row-<?php echo md5($input); ?>'>
+			<?php echo nl2br(htmlspecialchars(implode(" \n", $list))); ?>
+		</div>
+		<?php endforeach ?>
 	</div>
 </div>
 
