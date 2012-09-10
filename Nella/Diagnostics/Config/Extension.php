@@ -26,6 +26,7 @@ class Extension extends \Nette\Config\CompilerExtension
 	public $defaults = array(
 		'loggerUrl' => 'http://localhost:50921/api/log.json',
 		'accessLoggerUrl' => 'http://localhost:50921/api/access.json',
+		'storage' => 'curl',
 	);
 
 	/**
@@ -42,8 +43,18 @@ class Extension extends \Nette\Config\CompilerExtension
 			return;
 		}
 
+		switch($config['storage']) {
+			case 'curl':
+				$storageClass = 'Nella\Diagnostics\LoggerStorages\Curl';
+				break;
+			default:
+				$storageClass = 'Nella\Diagnostics\LoggerStorages\Http';
+				break;
+		}
+
+
 		$builder->addDefinition($this->prefix('accessStorage'))
-			->setClass('Nella\Diagnostics\LoggerStorages\Http', array(
+			->setClass($storageClass, array(
 				$config['appId'], $config['appSecret'], $config['accessLoggerUrl']
 			));
 		$builder->addDefinition($this->prefix('accessLogger'))
