@@ -96,11 +96,11 @@ class GettextBinary extends \Nette\Object implements \Nella\Localization\IStorag
 	 */
 	protected function getPath($lang, $module = NULL)
 	{
-		return str_replace(
-			array('%baseDir%', '%module%', '%lang%'),
-			array($this->baseDir, $module, $lang),
-			$this->fileMask
-		);
+		$fileMask = $this->fileMask;
+		if ($module === NULL || trim($module) === '') {
+			$fileMask = str_replace('%module%/', '', $fileMask);
+		}
+		return str_replace(array('%baseDir%', '%module%', '%lang%'), array($this->baseDir, $module, $lang), $fileMask);
 	}
 
 	/**
