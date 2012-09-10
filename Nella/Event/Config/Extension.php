@@ -8,9 +8,11 @@
  * please view the file LICENSE.txt that was distributed with this source code.
  */
 
-namespace Nella\Config\Extensions;
+namespace Nella\Event\Config;
 
-use Nette\Application\Application,
+use Nette\Config\Compiler,
+	Nette\Config\Configurator,
+	Nette\Application\Application,
 	Nella\Event\Args,
 	Nette\Application\Request,
 	Nette\Application\IResponse,
@@ -21,42 +23,18 @@ use Nette\Application\Application,
  *
  * @author    Patrik Votoček
  */
-class EventExtension extends \Nette\Config\CompilerExtension
+class Extension extends \Nette\Config\CompilerExtension
 {
-	/** @var \Nella\Event\IEventDispatcher */
-	private $eventManager;
-
-	/**
-	 * @param \Nella\Event\IEventDispatcher
-	 */
-	public function __construct(\Nella\Event\IEventDispatcher $eventManager)
-	{
-		$this->eventManager = $eventManager;
-	}
-
-	public function beforeCompile()
-	{
-		$this->eventManager->dispatchEvent(
-			Events::BEFORE_CONTAINER_COMPILE,
-			new \Nella\Event\Args\CompilerBefore($this->compiler, $this->getContainerBuilder())
-		);
-	}
+	const DEFAULT_EXTENSION_NAME = 'event';
 
 	public function loadConfiguration()
 	{
 		$builder = $this->getContainerBuilder();
 
-		$builder->addDefinition($this->prefix('manager'))
-			->setClass(get_class($this->eventManager));
+		$evm = $builder->addDefinition($this->prefix('manager'))
+			->setClass('Nella\Event\EventDispatcher');
 		$builder->getDefinition('application')
-			->addSetup(get_called_class() . '::setupApplication', array('@self', $this->prefix('@manager')));
-	}
-
-	public function afterCompile(\Nette\Utils\PhpGenerator\ClassType $class)
-	{
-		$this->eventManager->dispatchEvent(
-			Events::BEFORE_CONTAINER_COMPILE, new \Nella\Event\Args\CompilerAfter($this->compiler, $class)
-		);
+			->addSetup(get_called_class() . '::setupApplication', array('@self', $evm));
 	}
 
 	/**
@@ -83,6 +61,20 @@ class EventExtension extends \Nette\Config\CompilerExtension
 
 		$application->onShutdown[] = function (Application $application, \Exception $exception = NULL) use ($evm) {
 			$evm->dispatchEvent(Events::APPLICATION_SHUTDOWN, new Args\ApplicationShutdown($application, $exception));
+		};
+	}
+
+	/**
+	 * Register extension to compiler.
+	 *
+	 * @param \Nette\Config\Configurator
+	 * @param string
+	 */
+	public static function register(Configurator $configurator, $name = self::DEFAULT_EXTENSION_NAME)
+	{
+		$class = get_called_class();
+		$configurator->onCompile[] = function (Configurator $configurator, Compiler $compiler) use ($class, $name) {
+			$compiler->addExtension($name, new $class);
 		};
 	}
 }

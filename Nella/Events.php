@@ -4,7 +4,7 @@
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
- * For the full copyright and license information, 
+ * For the full copyright and license information,
  * please view the file LICENSE.txt that was distributed with this source code.
  */
 
@@ -17,11 +17,6 @@ namespace Nella;
  */
 final class Events
 {
-	// configuration events
-	const CREATE_COMPILER = 'Nella\Configurator::createCompiler';
-	const BEFORE_CONTAINER_COMPILE = 'Nella\Configurator::beforeContainerCompile';
-	const AFTER_CONTAINER_COMPILE = 'Nella\Configurator::afterContainerCompile';
-
 	// Application events
 	const APPLICATION_STARTUP = 'Nella\Application::startup';
 	const APPLICATION_REQUEST = 'Nella\Application::request';
