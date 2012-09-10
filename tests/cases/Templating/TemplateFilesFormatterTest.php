@@ -223,10 +223,16 @@ class TemplateFilesFormatterTest extends \Nella\Testing\TestCase
 			array(
 				'App\Foo', "bar",
 				array(
+					__DIR__ . "/templates/Foo/bar.latte",
+					__DIR__ . "/templates/Foo.bar.latte",
+					__DIR__ . "/templates/Foo/@global.latte",
 					__DIR__ . "/Foo/bar.latte",
 					__DIR__ . "/Foo.bar.latte",
 					__DIR__ . "/Foo/@global.latte",
 					__DIR__ . "/@global.latte",
+					__DIR__ . "/Nella/templates/Foo/bar.latte",
+					__DIR__ . "/Nella/templates/Foo.bar.latte",
+					__DIR__ . "/Nella/templates/Foo/@global.latte",
 					__DIR__ . "/Nella/Foo/bar.latte",
 					__DIR__ . "/Nella/Foo.bar.latte",
 					__DIR__ . "/Nella/Foo/@global.latte",
@@ -236,10 +242,16 @@ class TemplateFilesFormatterTest extends \Nella\Testing\TestCase
 			array(
 				'App\Foo\Bar', "baz",
 				array(
+					__DIR__ . "/Foo/templates/Bar/baz.latte",
+					__DIR__ . "/Foo/templates/Bar.baz.latte",
+					__DIR__ . "/Foo/templates/Bar/@global.latte",
 					__DIR__ . "/Foo/Bar/baz.latte",
 					__DIR__ . "/Foo/Bar.baz.latte",
 					__DIR__ . "/Foo/Bar/@global.latte",
 					__DIR__ . "/Foo/@global.latte",
+					__DIR__ . "/Nella/Foo/templates/Bar/baz.latte",
+					__DIR__ . "/Nella/Foo/templates/Bar.baz.latte",
+					__DIR__ . "/Nella/Foo/templates/Bar/@global.latte",
 					__DIR__ . "/Nella/Foo/Bar/baz.latte",
 					__DIR__ . "/Nella/Foo/Bar.baz.latte",
 					__DIR__ . "/Nella/Foo/Bar/@global.latte",

@@ -185,6 +185,15 @@ class TemplateFilesFormatter extends \Nette\Object implements ITemplateFilesForm
 
 		$generator = function ($dir) use ($name, $path, $subPath, $view) {
 			$files = array();
+
+			if ($view) {
+				$files[] = $dir . '/' .$path . "templates/$subPath/$view.latte";
+				$files[] = $dir . '/' .$path . "templates/$subPath.$view.latte";
+			} else {
+				$files[] = $dir . '/' .$path . "templates/$subPath.latte";
+			}
+			$files[] = $dir . '/' .$path . "templates/$subPath/@global.latte";
+
 			if ($view) {
 				$files[] = $dir . '/' .$path . "$subPath/$view.latte";
 				$files[] = $dir . '/' .$path . "$subPath.$view.latte";
