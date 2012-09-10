@@ -30,7 +30,7 @@ abstract class SecuredPresenter extends Presenter
 	{
 		parent::checkRequirements($element);
 		if (!$this->getUser()->isLoggedIn()) {
-			$this->redirect($this->loginLink, array('backlink' => $this->getApplication()->storeRequest()));
+			$this->redirect($this->loginLink, array('backlink' => $this->storeRequest()));
 		}
 	}
 
