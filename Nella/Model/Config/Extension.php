@@ -8,9 +8,12 @@
  * please view the file LICENSE.txt that was distributed with this source code.
  */
 
-namespace Nella\Config\Extensions;
+namespace Nella\Model\Config;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManager,
+	Nette\Config\Compiler,
+	Nette\Config\Configurator,
+	Nette\Utils\Strings;
 
 /**
  * Model extension
@@ -19,9 +22,10 @@ use Doctrine\ORM\EntityManager;
  *
  * @author	Patrik Votoček
  */
-class ModelExtension extends \Nette\Config\CompilerExtension
+class Extension extends \Nette\Config\CompilerExtension
 {
-	const SERVICES_KEY = 'services';
+	const DEFAULT_EXTENSION_NAME = 'model',
+		SERVICES_KEY = 'services';
 
 	/** @var array */
 	public $defaults = array(
@@ -41,19 +45,15 @@ class ModelExtension extends \Nette\Config\CompilerExtension
 			throw new \Nette\InvalidStateException('Model extension entity manager not set');
 		}
 
-		$builder->addDefinition($this->prefix('entityManager'))
-			->setClass('Doctrine\ORM\EntityManager')
-			->setFactory($config['entityManager'])
-			->setAutowired(FALSE);
-		unset($config['entityManager']);
-
 		foreach ($config[self::SERVICES_KEY] as $name => $def) {
 			\Nette\Config\Compiler::parseService($builder->addDefinition($this->prefix($name)), $def, FALSE);
 		}
 		unset($config[self::SERVICES_KEY]);
 
+		$entityManager = Strings::startsWith($config['entityManager'], '@')
+			? $config['entityManager'] : ('@' . $config['entityManager']);
 		foreach ($config as $name => $data) {
-			$this->setupItem($builder, $name, $data);
+			$this->setupItem($entityManager, $name, $data);
 		}
 	}
 
@@ -63,18 +63,20 @@ class ModelExtension extends \Nette\Config\CompilerExtension
 	 * @param mixed
 	 * @param string|NULL
 	 */
-	protected function setupItem(\Nette\DI\ContainerBuilder $builder, $name, $data, $parent = NULL)
+	protected function setupItem($entityManager, $name, $data, $parent = NULL)
 	{
+		$builder = $this->getContainerBuilder();
+
 		$fullname = $parent ? ("$parent.$name") : $name;
 
 		if (is_array($data) && !isset($data['entity'])) {
 			$builder->addDefinition($this->prefix($fullname))
 				->setClass('Nette\DI\NestedAccessor', array('@container', $this->prefix($fullname)));
 			foreach ($data as $name => $item) {
-				$this->setupItem($builder, $name, $item, $fullname);
+				$this->setupItem($entityManager, $name, $item, $fullname);
 			}
 		} elseif (is_array($data) && isset($data['entity'])) {
-			$params = array($this->prefix('@entityManager'), $data['entity'], NULL);
+			$params = array($entityManager, $data['entity'], NULL);
 			if (isset($data['service'])) {
 				$params[2] = $data['service'];
 			}
@@ -83,7 +85,7 @@ class ModelExtension extends \Nette\Config\CompilerExtension
 			}
 
 			$def = $builder->addDefinition($this->prefix($fullname));
-			$def->setClass('Nella\Doctrine\Facade')
+			$def->setClass('Nella\Model\Facade')
 				->setFactory(get_called_class().'::factory', $params);
 			if (isset($data['setup'])) {
 				foreach ($data['setup'] as $setup) {
@@ -91,14 +93,14 @@ class ModelExtension extends \Nette\Config\CompilerExtension
 				}
 			}
 		} elseif (is_string($data) && \Nette\Utils\Strings::startsWith($data, '@')) {
-			$builder->addDefinition($this->prefix($fullname))->setClass('Nella\Doctrine\Facade')->setFactory($data);
+			$builder->addDefinition($this->prefix($fullname))->setClass('Nella\Model\Facade')->setFactory($data);
 		} elseif (is_string($data) && class_exists($data)) {
 			$builder->addDefinition($this->prefix($fullname))
-				->setClass('Nella\Doctrine\Facade')
-				->setFactory(get_called_class().'::factory', array($this->prefix('@entityManager'), $data));
+				->setClass('Nella\Model\Facade')
+				->setFactory(get_called_class().'::factory', array($entityManager, $data));
 		} else {
 			$builder->addDefinition($this->prefix($fullname))
-				->setClass('Nella\Doctrine\Facade')
+				->setClass('Nella\Model\Facade')
 				->setFactory($data);
 		}
 	}
@@ -110,7 +112,7 @@ class ModelExtension extends \Nette\Config\CompilerExtension
 	 * @param string
 	 * @return object
 	 */
-	public static function factory(EntityManager $em, $entity, $service = NULL, $class = 'Nella\Doctrine\Facade')
+	public static function factory(EntityManager $em, $entity, $service = NULL, $class = 'Nella\Model\Facade')
 	{
 		$ref = \Nette\Reflection\ClassType::from($class);
 		return $ref->newInstanceArgs(array(
@@ -118,6 +120,20 @@ class ModelExtension extends \Nette\Config\CompilerExtension
 			'repository' => $em->getRepository($entity),
 			'service' => $service,
 		));
+	}
+
+	/**
+	 * Register extension to compiler.
+	 *
+	 * @param \Nette\Config\Configurator
+	 * @param string
+	 */
+	public static function register(Configurator $configurator, $name = self::DEFAULT_EXTENSION_NAME)
+	{
+		$class = get_called_class();
+		$configurator->onCompile[] = function (Configurator $configurator, Compiler $compiler) use ($class, $name) {
+			$compiler->addExtension($name, new $class);
+		};
 	}
 }
 

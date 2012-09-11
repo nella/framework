@@ -27,7 +27,8 @@ class Extension extends \Nette\Config\CompilerExtension
 	/** @var array */
 	public $defaults = array(
 		'storage' => array(
-			'class' => 'Nella\Localization\Storages\GettextBinary(%appDir%)',
+			'class' => 'Nella\Localization\Storages\GettextBinary',
+			'arguments' => array('%appDir%'),
 		),
 		'modules' => array(NULL),
 	);
@@ -37,7 +38,7 @@ class Extension extends \Nette\Config\CompilerExtension
 		$config = $this->getConfig($this->defaults);
 		$builder = $this->getContainerBuilder();
 
-		if ($config['storage'] == NULL) {
+		if ($config['dummy'] == TRUE) {
 			$builder->addDefinition($this->prefix('translator'))
 				->setClass('Nella\Localization\DummyTranslator');
 			return;
@@ -49,7 +50,7 @@ class Extension extends \Nette\Config\CompilerExtension
 		$translator = $builder->addDefinition($this->prefix('translator'))
 			->setClass('Nella\Localization\Translator', array($storage));
 
-		foreach ($this->config['modules'] as $module) {
+		foreach ($config['modules'] as $module) {
 			$translator->addSetup('addModule', array($module));
 		}
 	}

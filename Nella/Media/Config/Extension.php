@@ -12,7 +12,8 @@ namespace Nella\Media\Config;
 
 use Nette\Config\Configurator,
 	Nette\Config\Compiler,
-	Nette\DI\ContainerBuilder;
+	Nette\DI\ContainerBuilder,
+	Nette\Utils\Strings;
 
 /**
  * Doctrine Nella Framework services.
@@ -53,10 +54,6 @@ class Extension extends \Nette\Config\CompilerExtension
 		$config = $this->getConfig($this->defaults);
 		$builder = $this->getContainerBuilder();
 
-		$cache = $builder->addDefinition($this->prefix('cache'))
-			->setClass('Nette\Caching\IStorage')
-			->setFactory('@cacheStorage');
-
 		// Basic file
 		$fileStorage = $builder->addDefinition($this->prefix('fileStorage'))
 			->setClass('Nella\Media\Storages\File', array($config['fileStorageDir']))
@@ -71,29 +68,25 @@ class Extension extends \Nette\Config\CompilerExtension
 			->setAutowired(FALSE);
 
 		$imageCacheStorage = $builder->addDefinition($this->prefix('imageCacheStorage'))
-			->setClass('Nella\Media\ImageCacheStorages\File', array($config['imagePath'], $cache));
+			->setClass('Nella\Media\ImageCacheStorages\File', array($config['imagePath'], '@cacheStorage'));
 
 		$imageCallback = $builder->addDefinition($this->prefix('imagePresenterCallback'))
 			->setClass('Nella\Media\Callbacks\ImagePresenterCallback', array($imageStorage, $imageCacheStorage));
 
-		if (!isset($config['entityManager'])) {
-			$em = $builder->addDefinition($this->prefix('entityManager'))
-				->setFactory($config['entityManager'])
-				->setAutowired(FALSE);
-
-			$listener = $builder->addDefinition($this->prefix('listener'))
-				->setClass('Nella\Media\Doctrine\Listener')
-				->setAutowired(FALSE);
-
+		if (isset($config['entityManager'])) {
 			if (class_exists('Nella\Doctrine\Config\Extension')) {
-				$listener->addTag(\Nella\Doctrine\Config\Extension::EVENT_TAG_NAME);
-			} else {
-				$em->addSetup(get_called_class().'::setupListener', array('@self', $listener));
+				$listener = $builder->addDefinition($this->prefix('listener'))
+					->setClass('Nella\Media\Doctrine\Listener')
+					->setAutowired(FALSE)
+					->addTag(\Nella\Doctrine\Config\Extension::EVENT_TAG_NAME);
 			}
 
-			$fileFacade = $this->processFileDoctrine('entityManager', $fileStorage);
-			$imageFacade = $this->processImageDoctrine('entityManager', $imageStorage, $imageCacheStorage);
-			$imageFormatFacade = $this->processImageFormatDoctrine('entityManager', $imageCacheStorage);
+			$config['entityManager'] = Strings::startsWith($config['entityManager'], '@')
+				? $config['entityManager'] : ('@' . $config['entityManager']);
+
+			$fileFacade = $this->processFileDoctrine($config['entityManager'], $fileStorage);
+			$imageFacade = $this->processImageDoctrine($config['entityManager'], $imageStorage, $imageCacheStorage);
+			$imageFormatFacade = $this->processImageFormatDoctrine($config['entityManager'], $imageCacheStorage);
 		} else {
 			$fileFacade = $builder->addDefinition($this->prefix('fileFacade'))
 				->setClass('Nella\Media\Model\FileFacade')
@@ -140,22 +133,40 @@ class Extension extends \Nette\Config\CompilerExtension
 		$this->registerRoutes();
 	}
 
+	public function beforeCompile()
+	{
+		$config = $this->getConfig($this->defaults);
+		$builder = $this->getContainerBuilder();
+
+		if (!class_exists('Nella\Doctrine\Config\Extension')) {
+			$listener = $builder->addDefinition($this->prefix('listener'))
+				->setClass('Nella\Media\Doctrine\Listener')
+				->setAutowired(FALSE);
+
+			$config['entityManager'] = Strings::startsWith($config['entityManager'], '@')
+				? Strings::substring($config['entityManager'], 1) : $config['entityManager'];
+
+			$builder->getDefinition($config['entityManager'])
+				->addSetup(get_called_class().'::setupListener', array('@self', $listener));
+		}
+	}
+
 	/**
 	 * @param string
 	 * @param \Nette\DI\ServiceDefinition|string
 	 * @return \Nette\DI\ServiceDefinition|string
 	 */
-	protected function processFileDoctrine($entitManager, $storage)
+	protected function processFileDoctrine($entityManager, $storage)
 	{
 		$builder = $this->getContainerBuilder();
 
 		$repository = $builder->addDefinition($this->prefix('fileRepository'))
 			->setClass('Nella\Doctrine\Repository')
-			->setFactory($this->prefix("$entityManager::getRepository"), array('Nella\Media\Doctrine\FileEntity'))
+			->setFactory("$entityManager::getRepository", array('Nella\Media\Doctrine\FileEntity'))
 			->setAutowired(FALSE);
 
 		return $builder->addDefinition($this->prefix('fileFacade'))
-			->setClass('Nella\Media\Doctrine\FileFacade', array($entitManager, $repository))
+			->setClass('Nella\Media\Doctrine\FileFacade', array($entityManager, $repository))
 			->addSetup('setStorage', array($storage))
 			->setAutowired(FALSE);
 	}
@@ -166,17 +177,17 @@ class Extension extends \Nette\Config\CompilerExtension
 	 * @param \Nette\DI\ServiceDefinition|string
 	 * @return \Nette\DI\ServiceDefinition|string
 	 */
-	protected function processImageDoctrine($entitManager, $storage, $cacheStorage)
+	protected function processImageDoctrine($entityManager, $storage, $cacheStorage)
 	{
 		$builder = $this->getContainerBuilder();
 
 		$repository = $builder->addDefinition($this->prefix('imageRepository'))
 			->setClass('Nella\Doctrine\Repository')
-			->setFactory($this->prefix("$entityManager::getRepository"), array('Nella\Media\Doctrine\ImageEntity'))
+			->setFactory("$entityManager::getRepository", array('Nella\Media\Doctrine\ImageEntity'))
 			->setAutowired(FALSE);
 
 		return $builder->addDefinition($this->prefix('imageFacade'))
-			->setClass('Nella\Media\Doctrine\ImageFacade', array($entitManager, $repository))
+			->setClass('Nella\Media\Doctrine\ImageFacade', array($entityManager, $repository))
 			->addSetup('setStorage', array($storage))
 			->addSetup('setCacheStorage', array($cacheStorage))
 			->setAutowired(FALSE);
@@ -188,17 +199,17 @@ class Extension extends \Nette\Config\CompilerExtension
 	 * @param \Nette\DI\ServiceDefinition|string
 	 * @return \Nette\DI\ServiceDefinition|string
 	 */
-	protected function processImageFormatDoctrine($entitManager, $cacheStorage)
+	protected function processImageFormatDoctrine($entityManager, $cacheStorage)
 	{
 		$builder = $this->getContainerBuilder();
 
 		$repository = $builder->addDefinition($this->prefix('imageFormatRepository'))
 			->setClass('Nella\Doctrine\Repository')
-			->setFactory($this->prefix("$entityManager::getRepository"), array('Nella\Media\Doctrine\ImageFormatEntity'))
+			->setFactory("$entityManager::getRepository", array('Nella\Media\Doctrine\ImageFormatEntity'))
 			->setAutowired(FALSE);
 
 		return $builder->addDefinition($this->prefix('imageFormatFacade'))
-			->setClass('Nella\Media\Doctrine\ImageFormatFacade', array($entitManager, $repository))
+			->setClass('Nella\Media\Doctrine\ImageFormatFacade', array($entityManager, $repository))
 			->addSetup('setCacheStorage', array($cacheStorage))
 			->setAutowired(FALSE);
 	}

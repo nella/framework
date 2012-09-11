@@ -60,5 +60,23 @@ class ExtensionTest extends \Nella\Testing\TestCase
 		$this->assertInstanceOf('Doctrine\Common\Annotations\Reader', $reader, 'interface');
 		$this->assertInstanceOf('Doctrine\Common\Annotations\CachedReader', $reader, 'instance');
 	}
+
+	public function testRegister()
+	{
+		$configurator = new ConfiguratorMock;
+		Extension::register($configurator);
+		$compiler = $configurator->createCompilerMock();
+		$configurator->onCompile($configurator, $compiler);
+
+		$this->assertInstanceOf('Nella\Doctrine\Config\Extension', $compiler->extensions[Extension::DEFAULT_EXTENSION_NAME]);
+	}
+}
+
+class ConfiguratorMock extends \Nette\Config\Configurator
+{
+	public function createCompilerMock()
+	{
+		return $this->createCompiler();
+	}
 }
 

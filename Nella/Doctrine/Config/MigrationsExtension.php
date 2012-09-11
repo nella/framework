@@ -13,7 +13,8 @@ namespace Nella\Doctrine\Config;
 use Nella\Console\Config\Extension as CExtension,
 	Nette\Config\Configurator,
 	Nette\DI\ContainerBuilder,
-	Nette\Config\Compiler;
+	Nette\Config\Compiler,
+	Nette\Utils\Strings;
 
 /**
  * Doctrine migration Nella Framework services.
@@ -57,9 +58,17 @@ class MigrationsExtension extends \Nette\Config\CompilerExtension
 		$config = $this->getConfig($this->getDefaults());
 		$builder = $this->getContainerBuilder();
 
+		$connection = Strings::startsWith($config['connection'], '@')
+			? $config['connection'] : ('@' . $config['connection']);
+
+		$consoleOutput = $builder->addDefinition($this->prefix('consoleOutput'))
+			->setClass('Doctrine\DBAL\Migrations\OutputWriter')
+			->setFactory(get_called_class().'::createConsoleOutput')
+			->setAutowired(FALSE);
+
 		$configuration = $builder->addDefinition($this->prefix('configuration'))
 			->setClass('Doctrine\DBAL\Migrations\Configuration\Configuration', array(
-				$config['connection'], $this->prefix('@consoleOutput')
+				$connection, $consoleOutput
 			))
 			->addSetup('setName', array($config['name']))
 			->addSetup('setMigrationsTableName', array($config['table']))
@@ -67,7 +76,7 @@ class MigrationsExtension extends \Nette\Config\CompilerExtension
 			->addSetup('setMigrationsNamespace', array($config['namespace']))
 			->addSetup('registerMigrationsFromDirectory', array($config['directory']));
 
-		if ($config['console']) {
+		if (isset($config['console']) && $config['console']) {
 			$this->processConsole($configuration);
 		}
 	}
@@ -82,11 +91,6 @@ class MigrationsExtension extends \Nette\Config\CompilerExtension
 		}
 
 		$builder = $this->getContainerBuilder();
-
-		$builder->addDefinition($this->prefix('consoleOutput'))
-			->setClass('Doctrine\DBAL\Migrations\OutputWriter')
-			->setFactory(get_called_class().'::createConsoleOutput')
-			->setAutowired(FALSE);
 
 		$builder->addDefinition($this->prefix('consoleCommandDiff'))
 			->setClass('Doctrine\DBAL\Migrations\Tools\Console\Command\DiffCommand')

@@ -60,9 +60,9 @@ class Extension extends \Nette\Config\CompilerExtension
 	{
 		if (!class_exists('Doctrine\ORM\Version')) {
 			throw new \Nette\InvalidStateException('Doctrine ORM does not exists');
-		} elseif (\Doctrine\ORM\Version::compare('2.3.0') > 0) {
+		} elseif (\Doctrine\ORM\Version::compare('2.3.0-RC3') > 0) {
 			throw new \Nette\InvalidStateException(
-				'Doctrine version ' . \Doctrine\ORM\Version::VERSION . ' not supported (support only for 2.2+)'
+				'Doctrine version ' . \Doctrine\ORM\Version::VERSION . ' not supported (support only for 2.3+)'
 			);
 		}
 	}
@@ -112,7 +112,7 @@ class Extension extends \Nette\Config\CompilerExtension
 
 			$reader = $builder->addDefinition($this->prefix('annotationReader'))
 				->setClass('Doctrine\Common\Annotations\Reader')
-				->setFactory(get_called_class().'::createConnection', array(
+				->setFactory(get_called_class().'::createAnnotationReader', array(
 					$config['annotationCacheDriver'], $config['useSimleAnnotation']
 				));
 
@@ -132,7 +132,7 @@ class Extension extends \Nette\Config\CompilerExtension
 			->addSetup('setDefaultRepositoryClassName', array($config['repositoryClass']))
 			->addSetup('setProxyDir', array($config['proxy']['dir']))
 			->addSetup('setProxyNamespace', array($config['proxy']['namespace']))
-			->addSetup('', array($config['proxy']['autogenerate']));
+			->addSetup('setAutoGenerateProxyClasses', array($config['proxy']['autogenerate']));
 
 		if ($config['metadataCacheDriver']) {
 			$configuration->addSetup('setMetadataCacheImpl', array(
@@ -154,7 +154,7 @@ class Extension extends \Nette\Config\CompilerExtension
 			->setClass('Doctrine\ORM\EntityManager')
 			->setFactory('Doctrine\ORM\EntityManager::create', array($connection, $configuration, $evm));
 
-		if ($config['console']) {
+		if (isset($config['console']) && $config['console']) {
 			$this->processConsole($entityManager, $connection);
 		}
 	}

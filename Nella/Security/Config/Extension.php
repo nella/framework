@@ -8,15 +8,20 @@
  * please view the file LICENSE.txt that was distributed with this source code.
  */
 
-namespace Nella\Config\Extensions;
+namespace Nella\Security\Config;
+
+use Nette\Config\Compiler,
+	Nette\Config\Configurator;
 
 /**
  * Security extension
  *
  * @author    Patrik Votoček
  */
-class SecurityExtension extends \Nette\Config\CompilerExtension
+class Extension extends \Nette\Config\CompilerExtension
 {
+	const DEFAULT_EXTENSION_NAME = 'security';
+
 	public function loadConfiguration()
 	{
 		$config = $this->getConfig();
@@ -55,6 +60,20 @@ class SecurityExtension extends \Nette\Config\CompilerExtension
 		}
 		$builder->addDefinition($this->prefix('authenticator'))
 			->setClass('Nella\Security\Authenticator', array($credentialsFacade));
+	}
+
+	/**
+	 * Register extension to compiler.
+	 *
+	 * @param \Nette\Config\Configurator
+	 * @param string
+	 */
+	public static function register(Configurator $configurator, $name = self::DEFAULT_EXTENSION_NAME)
+	{
+		$class = get_called_class();
+		$configurator->onCompile[] = function (Configurator $configurator, Compiler $compiler) use ($class, $name) {
+			$compiler->addExtension($name, new $class);
+		};
 	}
 }
 

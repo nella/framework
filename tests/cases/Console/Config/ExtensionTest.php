@@ -88,5 +88,23 @@ class ExtensionTest extends \Nella\Testing\TestCase
 		$this->assertInstanceOf('Symfony\Component\Console\Command\Command', $application->get('foo'), 'instance');
 		$this->assertSame($cmd, $application->get('foo'), 'foo command same as test service');
 	}
+
+	public function testRegister()
+	{
+		$configurator = new ConfiguratorMock;
+		Extension::register($configurator);
+		$compiler = $configurator->createCompilerMock();
+		$configurator->onCompile($configurator, $compiler);
+
+		$this->assertInstanceOf('Nella\Console\Config\Extension', $compiler->extensions[Extension::DEFAULT_EXTENSION_NAME]);
+	}
+}
+
+class ConfiguratorMock extends \Nette\Config\Configurator
+{
+	public function createCompilerMock()
+	{
+		return $this->createCompiler();
+	}
 }
 

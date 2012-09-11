@@ -10,6 +10,9 @@
 
 namespace Nella\Config\Extensions;
 
+use Nette\Config\Compiler,
+	Nette\Config\Configurator;
+
 /**
  * Nella Framework extension
  *
@@ -19,6 +22,8 @@ namespace Nella\Config\Extensions;
  */
 class NellaExtension extends \Nette\Config\CompilerExtension
 {
+	const DEFAULT_EXTENSION_NAME = 'nella';
+
 	/** @var array */
 	public $defaults = array(
 		'useModuleSuffix' => TRUE,
@@ -73,6 +78,20 @@ class NellaExtension extends \Nette\Config\CompilerExtension
 			$builder->getDefinition('nette.latte')
 				->addSetup('Nella\Latte\Macros\UIMacros::factory', array('@self'));
 		}
+	}
+
+	/**
+	 * Register extension to compiler.
+	 *
+	 * @param \Nette\Config\Configurator
+	 * @param string
+	 */
+	public static function register(Configurator $configurator, $name = self::DEFAULT_EXTENSION_NAME)
+	{
+		$class = get_called_class();
+		$configurator->onCompile[] = function (Configurator $configurator, Compiler $compiler) use ($class, $name) {
+			$compiler->addExtension($name, new $class);
+		};
 	}
 }
 

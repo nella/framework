@@ -56,11 +56,13 @@ class Extension extends \Nette\Config\CompilerExtension
 		switch ($config['route']) {
 			case 'normal':
 				$builder->addDefinition($this->prefix('route'))
-					->setClass('Nella\Console\Router', array($application));
+					->setClass('Nella\Console\Router', array($application))
+					->setAutowired(FALSE);
 				break;
 			case 'lazy':
 				$builder->addDefinition($this->prefix('route'))
-					->setClass('Nella\Console\LazyRouter', array('@container'));
+					->setClass('Nella\Console\LazyRouter', array('@container'))
+					->setAutowired(FALSE);
 				break;
 		}
 
