@@ -5,21 +5,18 @@
 ##########
 
 BUILD_TOOLS_REPO="git://github.com/nella/framework-build-tools.git"
+BUILD_TOOLS_DIR="build-tools"
 
 ########################
 # Download build tools #
 ########################
 
-if [ -d "build" ]
+if [ -d "$BUILD_TOOLS_DIR" ]
 then
-	rm -rf build
+	rm -rf $BUILD_TOOLS_DIR
 fi
 
-####################
-# Move build files #
-####################
-
-mv build/build.sh ./
+git clone $BUILD_TOOLS_REPO $BUILD_TOOLS_DIR
 
 ################
 # Init vendors #
@@ -38,5 +35,5 @@ then
 	rm -rf vendor
 fi
 curl -s http://getcomposer.org/installer | php
-php composer.phar install --dev
+php composer.phar install
 
