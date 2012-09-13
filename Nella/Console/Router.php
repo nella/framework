@@ -22,7 +22,7 @@ use Nette\Application\Request;
 class Router extends \Nette\Object implements \Nette\Application\IRouter
 {
 	/** @var \Nette\Callback */
-	private $callback;
+	protected $callback;
 
 	/**
 	 * @param \Symfony\Component\Console\Application

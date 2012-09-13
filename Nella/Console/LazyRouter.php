@@ -19,9 +19,6 @@ namespace Nella\Console;
  */
 class LazyRouter extends Router
 {
-	/** @var \Nette\Callback */
-	private $callback;
-
 	/**
 	 * @param \Nette\DI\Container
 	 */
