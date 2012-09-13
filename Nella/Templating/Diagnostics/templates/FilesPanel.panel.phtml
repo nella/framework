@@ -22,7 +22,7 @@ use Nette\Diagnostics\Helpers;
 		<?php foreach ($files as $input => $list): ?>
 		<h2><a href='#' class='nette-toggler' rel='#nette-TemplateFilesPanel-row-<?php echo md5($input); ?>'><?php echo htmlspecialchars($input); ?></a></h2>
 
-		<div id='nette-TemplateFilesPanel-row-<?php echo md5($input); ?>'>
+		<div id='nette-TemplateFilesPanel-row-<?php echo md5($input); ?>' class='nette-collapsed'>
 			<?php echo nl2br(htmlspecialchars(implode(" \n", $list))); ?>
 		</div>
 		<?php endforeach ?>
