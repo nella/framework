@@ -17,19 +17,17 @@ use Nette\Http\Url;
  *
  * @author	Pavel Kučera
  * @author	Patrik Votoček
- *
- * @property-write \Nella\Doctrine\Container
  */
 class FileRoute extends \Nette\Application\Routers\Route
 {
-	/** @var \Nette\Application\Routes\Route */
+	/** @var \Nette\Application\Routers\Route */
 	private $route;
 
 	/**
 	 * @param string example '/some/<file>.<ext>'
 	 * @param \Nella\Media\Model\IFileDao
-	 * @param \Nella\Addons\Media\IFilePresenterCallback
-	 * @param string
+	 * @param \Nella\Media\IFilePresenterCallback
+	 * @param string example '<file>_<ext>'
 	 */
 	public function __construct($mask, \Nella\Media\Model\IFileDao $model, \Nella\Media\IFilePresenterCallback $callback, $fullSlugMask = '<file>_<ext>')
 	{

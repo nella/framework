@@ -21,14 +21,15 @@ use Nette\Utils\Strings,
  */
 class ImageRoute extends \Nette\Object implements \Nette\Application\IRouter
 {
-	/** @var string */
+	/** @var \Nette\Application\Routers\Route */
 	private $route;
 
 	/**
 	 * @param string example '/images/<format>/<image>.<type>'
-	 * @param \Nella\Addons\Media\IImagePresenterCallback
-	 * @param \Nette\DI\Container
-	 * @param string
+	 * @param \Nette\Media\Model\IImageDao
+	 * @param \Nette\Media\Model\IImageFormatDao
+	 * @param \Nella\Media\IImagePresenterCallback
+	 * @param string example '<image>_<type>'
 	 */
 	public function __construct($mask, \Nella\Media\Model\IImageDao $imageModel, \Nella\Media\Model\IImageFormatDao $formatModel, \Nella\Media\IImagePresenterCallback $callback, $imageMask = '<image>_<type>')
 	{

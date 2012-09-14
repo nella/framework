@@ -117,16 +117,26 @@ class Extension extends \Nette\Config\CompilerExtension
 		}
 
 		if (isset($config['fileRoute'])) {
+			$arguments = array($config['fileRoute'], $fileFacade, $fileCallback);
+			if (isset($config['fileMask'])) {
+				$arguments[] = $config['fileMask'];
+			} elseif (isset($config['entityManager'])) {
+				$arguments[] = '<file>';
+			}
 			$builder->addDefinition($this->prefix('fileRoute'))
-				->setClass('Nella\Media\Routes\FileRoute', array($config['fileRoute'], $fileFacade, $fileCallback))
+				->setClass('Nella\Media\Routes\FileRoute', $arguments)
 				->setAutowired(FALSE);
 		}
 
 		if (isset($config['imageRoute'])) {
+			$arguments = array($config['imageRoute'], $imageFacade, $imageFormatFacade, $imageCallback);
+			if (isset($config['imageMask'])) {
+				$arguments[] = $config['imageMask'];
+			} elseif (isset($config['entityManager'])) {
+				$arguments[] = '<image>';
+			}
 			$builder->addDefinition($this->prefix('imageRoute'))
-				->setClass('Nella\Media\Routes\ImageRoute', array(
-					$config['imageRoute'], $imageFacade, $imageFormatFacade, $imageCallback
-				))
+				->setClass('Nella\Media\Routes\ImageRoute', $arguments)
 				->setAutowired(FALSE);
 		}
 
