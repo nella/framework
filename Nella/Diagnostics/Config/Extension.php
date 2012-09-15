@@ -80,13 +80,17 @@ class Extension extends \Nette\Config\CompilerExtension
 	public function afterCompile(\Nette\Utils\PhpGenerator\ClassType $class)
 	{
 		$config = $this->getConfig($this->defaults);
+		$initialize = $class->methods['initialize'];
+
+		if ($config['callbackPanel']) {
+			$initialize->addBody('Nella\Diagnostics\CallbackPanel::register($this);');
+		}
+
 		if (!isset($config['appId']) || !isset($config['appSecret'])) {
 			return;
 		}
 
 		$password = isset($config['password']) ? $config['password'] : FALSE;
-
-		$initialize = $class->methods['initialize'];
 
 		$initialize->addBody('\Nella\Diagnostics\Logger::register(?, ?, ?, ?);', array(
 			$config['appId'], $config['appSecret'], $password, $config['loggerUrl']
@@ -96,10 +100,6 @@ class Extension extends \Nette\Config\CompilerExtension
 			get_called_class().'::setCallback($this->getService(?), $this->getService(?), $this->getService(?));',
 			array('application', 'httpResponse', $this->prefix('accessLogger'))
 		);
-
-		if ($config['callbackPanel']) {
-			$initialize->addBody('Nella\Diagnostics\CallbackPanel::register(?)', array('$this'));
-		}
 	}
 
 	/**
