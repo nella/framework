@@ -19,7 +19,7 @@ final class Framework
 {
 	/**Nella Framework version identification */
 	const NAME = 'Nella Framework',
-		VERSION = '2.0-dev';
+		VERSION = '2.0-beta1';
 
 	/**
 	 * Static class - cannot be instantiated.
