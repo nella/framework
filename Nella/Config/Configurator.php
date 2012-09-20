@@ -63,7 +63,7 @@ class Configurator extends \Nette\Config\Configurator
 	}
 
 	/**
-	 * @return Compiler
+	 * @return \Nette\Config\Compiler
 	 */
 	protected function createCompiler()
 	{
