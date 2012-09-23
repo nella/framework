@@ -11,8 +11,12 @@
 namespace Nella\Media\ImageCacheStorages;
 
 use Nette\Caching\Cache,
+	Nette\Caching\IStorage,
+	Nette\Caching\Storages\MemoryStorage,
 	Nella\Media\IImage,
-	Nella\Media\IImageFormat;
+	Nella\Media\IImageFormat,
+	Nette\Image,
+	Nette\Utils\Finder;
 
 /**
  * File image cache storage
@@ -32,7 +36,7 @@ class File extends \Nette\Object implements \Nella\Media\IImageCacheStorage
 	 * @param string
 	 * @param \Nette\Caching\IStorage
 	 */
-	public function __construct($dir, \Nette\Caching\IStorage $cacheStorage = NULL)
+	public function __construct($dir, IStorage $cacheStorage = NULL)
 	{
 		if (!file_exists($dir)) {
 			if (!@mkdir($dir, 0777, TRUE)) {
@@ -44,7 +48,7 @@ class File extends \Nette\Object implements \Nella\Media\IImageCacheStorage
 		$this->dir = $dir;
 
 		if (!$cacheStorage) {
-			$cacheStorage = new \Nette\Caching\Storages\MemoryStorage;
+			$cacheStorage = new MemoryStorage;
 		}
 		$this->cache = new Cache($cacheStorage, static::CACHE_NAME);
 	}
@@ -77,7 +81,7 @@ class File extends \Nette\Object implements \Nella\Media\IImageCacheStorage
 		if (!file_exists($dir)) {
 			@mkdir($dir, 0777, TRUE);
 		}
-		if ($from instanceof \Nette\Image) {
+		if ($from instanceof Image) {
 			$from->save($path);
 		} else {
 			@copy($from, $path);
@@ -161,7 +165,7 @@ class File extends \Nette\Object implements \Nella\Media\IImageCacheStorage
 			return;
 		}
 
-		foreach (\Nette\Utils\Finder::find('*')->in($dir)->childFirst() as $item) {
+		foreach (Finder::find('*')->in($dir)->childFirst() as $item) {
 			if ($item->isFile()) {
 				@unlink($item->getRealPath());
 			} elseif ($item->isDir()) {

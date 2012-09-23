@@ -10,7 +10,8 @@
 
 namespace Nella\Media\Doctrine;
 
-use Doctrine\ORM\Mapping as orm;
+use Doctrine\ORM\Mapping as orm,
+	Nella\Media\Helper;
 
 /**
  * Image resoucre entity
@@ -33,7 +34,7 @@ class ImageEntity extends BaseFileEntity implements \Nella\Media\IImage
 	 */
 	public function getImageType()
 	{
-		$ext = \Nella\Media\Helper::mimeTypeToExt($this->getContentType());
+		$ext = Helper::mimeTypeToExt($this->getContentType());
 		return in_array($ext, array('png', 'jpg', 'gif')) ? $ext : 'jpg';
 	}
 }

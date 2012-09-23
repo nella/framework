@@ -28,7 +28,7 @@ interface IEventDispatcher
 	 * @param callable event listener
 	 * @throws \Nette\InvalidArgumentException
 	 */
-	public function addEventListener($event, /*callable *5.4*/ $listener);
+	public function addEventListener($event, $listener);
 
 	/**
 	 * @param string event name
@@ -51,7 +51,7 @@ interface IEventDispatcher
 	 * @param string event name
 	 * @param callable event listener
 	 */
-	public function removeEventListener($event, /*callable *5.4*/ $listener);
+	public function removeEventListener($event, $listener);
 
 	/**
 	 * @param IEventSubscriber event subscriber

@@ -10,7 +10,10 @@
 
 namespace Nella\Application;
 
-use Nette\Utils\Strings;
+use Nette\DI\Container,
+	Nette\Reflection\ClassType,
+	Nette\Application\UI\Presenter,
+	Nette\Utils\Strings;
 
 /**
  * Nella presenter factory
@@ -31,7 +34,7 @@ class PresenterFactory extends \Nette\Object implements \Nette\Application\IPres
 	/**
 	 * @param \Nette\DI\Container
 	 */
-	public function __construct(\Nette\DI\Container $container)
+	public function __construct(Container $container)
 	{
 		$this->container = $container;
 		$this->namespaces = new \SplPriorityQueue;
@@ -51,7 +54,7 @@ class PresenterFactory extends \Nette\Object implements \Nette\Application\IPres
 	/**
 	 * Create new presenter instance.
 	 * @param  string  presenter name
-	 * @return IPresenter
+	 * @return \Nette\Application\IPresenter
 	 */
 	public function createPresenter($name)
 	{
@@ -66,8 +69,9 @@ class PresenterFactory extends \Nette\Object implements \Nette\Application\IPres
 			}
 		}
 
-		if ($presenter instanceof UI\Presenter && $presenter->invalidLinkMode === NULL) {
-			$presenter->invalidLinkMode = $this->container->parameters['debugMode'] ? UI\Presenter::INVALID_LINK_WARNING : UI\Presenter::INVALID_LINK_SILENT;
+		if ($presenter instanceof Presenter && $presenter->invalidLinkMode === NULL) {
+			$presenter->invalidLinkMode = $this->container->parameters['debugMode']
+				? Presenter::INVALID_LINK_WARNING : Presenter::INVALID_LINK_SILENT;
 		}
 		return $presenter;
 	}
@@ -116,7 +120,7 @@ class PresenterFactory extends \Nette\Object implements \Nette\Application\IPres
 		}
 
 		$class = $this->formatPresenterClasses($name);
-		$reflection = \Nette\Reflection\ClassType::from($class);
+		$reflection = ClassType::from($class);
 		$class = $reflection->getName();
 
 		if (!$reflection->implementsInterface('Nette\Application\IPresenter')) {

@@ -10,6 +10,8 @@
 
 namespace Nella\Media\Model;
 
+use Nella\Media\IImage;
+
 /**
  * Media image format entity
  *
@@ -57,7 +59,7 @@ class ImageFormat extends \Nette\Object implements \Nella\Media\IImageFormat
 	 * @param int
 	 * @param int
 	 */
-	public function setWatermark(\Nella\Media\IImage $image, $position = self::POSITION_CENTER, $opacity = 0)
+	public function setWatermark(IImage $image, $position = self::POSITION_CENTER, $opacity = 0)
 	{
 		$this->watermark = $image;
 		$this->watermarkOpacity = $opacity;

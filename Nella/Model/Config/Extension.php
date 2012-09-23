@@ -46,7 +46,7 @@ class Extension extends \Nette\Config\CompilerExtension
 		}
 
 		foreach ($config[self::SERVICES_KEY] as $name => $def) {
-			\Nette\Config\Compiler::parseService($builder->addDefinition($this->prefix($name)), $def, FALSE);
+			Compiler::parseService($builder->addDefinition($this->prefix($name)), $def, FALSE);
 		}
 		unset($config[self::SERVICES_KEY]);
 

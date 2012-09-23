@@ -10,6 +10,8 @@
 
 namespace Nella\Forms\Controls;
 
+use DateTime;
+
 /**
  * Form date field item
  *
@@ -28,8 +30,8 @@ abstract class BaseDateTime extends \Nette\Forms\Controls\TextInput
 	public function getValue()
 	{
 		$value = parent::getValue();
-		$value = \DateTime::createFromFormat(static::$format, $value);
-		$err = \DateTime::getLastErrors();
+		$value = DateTime::createFromFormat(static::$format, $value);
+		$err = DateTime::getLastErrors();
 		if ($err['error_count']) {
 			$value = FALSE;
 		}
@@ -40,10 +42,10 @@ abstract class BaseDateTime extends \Nette\Forms\Controls\TextInput
 	 * @param \DateTime
 	 * @return BaseDateTime
 	 */
-	public function setValue($value = NULL)
+	public function setValue($value)
 	{
 		try {
-			if ($value instanceof \DateTime) {
+			if ($value instanceof DateTime) {
 				return parent::setValue($value->format(static::$format));
 			} else {
 				return parent::setValue($value);
@@ -59,8 +61,8 @@ abstract class BaseDateTime extends \Nette\Forms\Controls\TextInput
 	 */
 	public static function validateValid(\Nette\Forms\IControl $control)
 	{
-		$value = $this->getValue();
-		return (is_null($value) || $value instanceof \DateTime);
+		$value = $control->getValue();
+		return (is_null($value) || $value instanceof DateTime);
 	}
 
 	/**

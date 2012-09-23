@@ -10,6 +10,13 @@
 
 namespace Nella\Forms;
 
+use Nette\Forms\Form as NForm,
+	Nette\Application\UI\Form as UIForm,
+	Nette\Application\UI\Presenter,
+	Nette\Forms\Controls\SubmitButton,
+	Nette\Utils\Arrays,
+	Nette\Reflection\ClassType;
+
 /**
  * Form multipler container
  *
@@ -51,13 +58,13 @@ class Multipler extends Container
 	{
 		parent::attached($obj);
 
-		if ($obj instanceof \Nette\Forms\Form) {
-			if (!$obj instanceof \Nette\Application\UI\Form) {
+		if ($obj instanceof NForm) {
+			if (!$obj instanceof UIForm) {
 				throw new \Nette\InvalidStateException('Form multipler support only Nette\Application\UI\Form');
 			}
 		}
 
-		if (!$obj instanceof \Nette\Application\UI\Presenter) {
+		if (!$obj instanceof Presenter) {
 			return;
 		}
 
@@ -170,7 +177,7 @@ class Multipler extends Container
 	public function addAddContainerButton($caption = NULL)
 	{
 		$button = $this->addSubmit(self::ADD_CONTAINER_BUTTON_ID, $caption)->setValidationScope(FALSE);
-		$button->onClick[] = function (\Nette\Forms\Controls\SubmitButton $button) {
+		$button->onClick[] = function (SubmitButton $button) {
 			$button->getParent()->createOne();
 		};
 
@@ -181,7 +188,7 @@ class Multipler extends Container
 	 * Returns the values submitted by the form.
 	 *
 	 * @param  bool  return values as an array?
-	 * @return Nette\ArrayHash|array
+	 * @return \Nette\ArrayHash|array
 	 */
 	public function getValues($asArray = FALSE)
 	{
@@ -228,14 +235,14 @@ class Multipler extends Container
 			return;
 		}
 
-		$isPost = $form->getMethod() === \Nette\Forms\Form::POST;
+		$isPost = $form->getMethod() === Form::POST;
 		$request = $presenter->getRequest();
 		if ($request->isMethod('forward') || $request->isMethod('post') !== $isPost) {
 			return;
 		}
 
 		if ($isPost) {
-			$data =  \Nette\Utils\Arrays::mergeTree($request->getPost(), $request->getFiles());
+			$data =  Arrays::mergeTree($request->getPost(), $request->getFiles());
 		} else {
 			$data = $request->getParameters();
 		}
@@ -339,7 +346,7 @@ class Multipler extends Container
 		$components = $container->getComponents(TRUE);
 
 		// reflection is required to hack form groups
-		$groupRefl = \Nette\Reflection\ClassType::from('Nette\Forms\ControlGroup');
+		$groupRefl = ClassType::from('Nette\Forms\ControlGroup');
 		$controlsProperty = $groupRefl->getProperty('controls');
 		$controlsProperty->setAccessible(TRUE);
 

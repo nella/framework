@@ -10,6 +10,11 @@
 
 namespace Nella\Media\Responses;
 
+use Nette\Image,
+	Nette\Http\IRequest,
+	Nette\Http\IResponse,
+	Nette\Utils\MimeTypeDetector;
+
 /**
  * Image response
  *
@@ -28,7 +33,7 @@ class ImageResponse extends \Nette\Object implements \Nette\Application\IRespons
 	 */
 	public function __construct($image)
 	{
-		if (!$image instanceof \Nette\Image && !file_exists($image)) {
+		if (!$image instanceof Image && !file_exists($image)) {
 			throw new \Nette\InvalidArgumentException('Image must be Nette\Image or file path');
 		}
 
@@ -39,14 +44,14 @@ class ImageResponse extends \Nette\Object implements \Nette\Application\IRespons
 	 * @param \Nette\Http\IRequest
 	 * @param \Nette\Http\IResponse
 	 */
-	public function send(\Nette\Http\IRequest $httpRequest, \Nette\Http\IResponse $httpResponse)
+	public function send(IRequest $httpRequest, IResponse $httpResponse)
 	{
 		if ($this->image instanceof \Nette\Image) {
 			$this->image->send();
 			return;
 		}
 
-		$httpResponse->setContentType(\Nette\Utils\MimeTypeDetector::fromFile($this->image));
+		$httpResponse->setContentType(MimeTypeDetector::fromFile($this->image));
 
 		$filesize = $length = filesize($this->image);
 		$handle = fopen($this->image, 'r');

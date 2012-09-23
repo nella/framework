@@ -13,7 +13,9 @@ namespace Nella\Media\Config;
 use Nette\Config\Configurator,
 	Nette\Config\Compiler,
 	Nette\DI\ContainerBuilder,
-	Nette\Utils\Strings;
+	Nette\Utils\Strings,
+	Doctrine\ORM\EntityManager,
+	Nella\Media\Doctrine\Listener;
 
 /**
  * Doctrine Nella Framework services.
@@ -244,7 +246,7 @@ class Extension extends \Nette\Config\CompilerExtension
 	 * @param \Doctrine\ORM\EntityManager
 	 * @param \Nella\Media\Doctrine\Listener
 	 */
-	public static function setupListener(\Doctrine\ORM\EntityManager $entityManager, \Nella\Media\Doctrine\Listener $listener)
+	public static function setupListener(EntityManager $entityManager, Listener $listener)
 	{
 		$evm = $entityManager->getEventManager();
 		$evm->addEventSubscriber($listener);

@@ -12,7 +12,9 @@ namespace Nella\Media\Callbacks;
 
 use Nette\Image,
 	Nella\Media\IImage,
-	Nella\Media\IImageFormat;
+	Nella\Media\IImageFormat,
+	Nella\Media\IStorage,
+	Nella\Media\IImageCacheStorage;
 
 /**
  * Image presenter callback (convert request to response)
@@ -30,7 +32,7 @@ class ImagePresenterCallback extends \Nette\Object implements \Nella\Media\IImag
 	 * @param \Nella\Media\IStorage
 	 * @param \Nella\Media\IImageCacheStorage
 	 */
-	public function __construct(\Nella\Media\IStorage $storage, \Nella\Media\IImageCacheStorage $cacheStorage)
+	public function __construct(IStorage $storage, IImageCacheStorage $cacheStorage)
 	{
 		$this->storage = $storage;
 		$this->cacheStorage = $cacheStorage;

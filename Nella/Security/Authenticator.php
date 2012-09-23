@@ -17,13 +17,13 @@ namespace Nella\Security;
  */
 class Authenticator extends \Nette\Object implements \Nette\Security\IAuthenticator
 {
-	/** @var \Nella\Security\Model\CredentialsFacade */
+	/** @var Model\CredentialsFacade */
 	private $model;
 
 	/**
-	 * @param \Nella\Security\Model\CredentialsFacade
+	 * @param Model\CredentialsFacade
 	 */
-	public function __construct(\Nella\Security\Model\CredentialsFacade $model)
+	public function __construct(Model\CredentialsFacade $model)
 	{
 		$this->model = $model;
 	}

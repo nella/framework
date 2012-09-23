@@ -10,6 +10,9 @@
 
 namespace Nella\Security;
 
+use Nette\Http\Session,
+	Doctrine\ORM\EntityManager;
+
 /**
  * User strorage
  *
@@ -24,7 +27,7 @@ class UserStorage extends \Nette\Http\UserStorage
 	 * @param \Nette\Http\Session
 	 * @param \Doctrine\ORM\EntityManager
 	 */
-	public function __construct(\Nette\Http\Session $sessionHandler, \Doctrine\ORM\EntityManager $em)
+	public function __construct(Session $sessionHandler, EntityManager $em)
 	{
 		parent::__construct($sessionHandler);
 		$this->em = $em;

@@ -10,6 +10,9 @@
 
 namespace Nella\Event\Args;
 
+use Nette\Application\Application as NApplication,
+	Nette\Application\Request;
+
 /**
  * Application request args
  * 
@@ -26,7 +29,7 @@ class ApplicationRequest extends Application
 	 * @param \Nette\Appliaction\Application
 	 * @param \Nette\Application\Request
 	 */
-	public function __construct(\Nette\Application\Application $application, \Nette\Application\Request $request)
+	public function __construct(NApplication $application, Request $request)
 	{
 		parent::__construct($application);
 		$this->request = $request;

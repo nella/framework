@@ -10,7 +10,8 @@
 
 namespace Nella\Media\Doctrine;
 
-use Doctrine\ORM\Mapping as orm;
+use Doctrine\ORM\Mapping as orm,
+	DateTime;
 
 /**
  * Base file resource entity
@@ -55,7 +56,7 @@ abstract class BaseFileEntity extends \Nella\Doctrine\Entity implements \Nella\M
 	public function __construct($path, $contentType)
 	{
 		parent::__construct();
-		$this->uploaded = new \DateTime;
+		$this->uploaded = new DateTime;
 		$this->path = static::normalizeString($path);
 		$this->contentType = static::normalizeString($contentType);
 	}

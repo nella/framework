@@ -10,6 +10,8 @@
 
 namespace Nella\Localization;
 
+use ArrayIterator;
+
 /**
  * Dictionary
  *
@@ -127,7 +129,7 @@ class Dictionary extends \Nette\Object implements \IteratorAggregate, \Serializa
 	 */
 	public function getIterator()
 	{
-		return new \ArrayIterator($this->dictionary);
+		return new ArrayIterator($this->dictionary);
 	}
 
 	/**

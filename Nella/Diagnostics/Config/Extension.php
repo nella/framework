@@ -11,7 +11,11 @@
 namespace Nella\Diagnostics\Config;
 
 use Nette\Config\Configurator,
-	Nette\Config\Compiler ;
+	Nette\Config\Compiler,
+	Nette\Application\Application,
+	Nette\Http\Response,
+	Nella\Diagnostics\AccessLogger,
+	Nette\Utils\PhpGenerator\ClassType;
 
 /**
  * Diagnostics services
@@ -67,9 +71,9 @@ class Extension extends \Nette\Config\CompilerExtension
 	 * @param \Nette\Http\Response
 	 * @param \Nella\Diagnostics\AccessLogger
 	 */
-	public static function setCallback(\Nette\Application\Application $application, \Nette\Http\Response $res, \Nella\Diagnostics\AccessLogger $logger)
+	public static function setCallback(Application $application, Response $res, AccessLogger $logger)
 	{
-		$application->onShutdown[] = function (\Nette\Application\Application $application) use ($logger, $res) {
+		$application->onShutdown[] = function (Application $application) use ($logger, $res) {
 			$logger->log($res);
 		};
 	}
@@ -77,7 +81,7 @@ class Extension extends \Nette\Config\CompilerExtension
 	/**
 	 * @param \Nette\Utils\PhpGenerator\ClassType
 	 */
-	public function afterCompile(\Nette\Utils\PhpGenerator\ClassType $class)
+	public function afterCompile(ClassType $class)
 	{
 		$config = $this->getConfig($this->defaults);
 		$initialize = $class->methods['initialize'];

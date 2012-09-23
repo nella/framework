@@ -10,7 +10,8 @@
 
 namespace Nella\Media\Doctrine;
 
-use Doctrine\ORM\Mapping as orm;
+use Doctrine\ORM\Mapping as orm,
+	Nella\Media\IImage;
 
 /**
  * Resource image format entity
@@ -172,7 +173,7 @@ class ImageFormatEntity extends \Nella\Doctrine\Entity implements \Nella\Media\I
 	 * @param ImageEntity
 	 * @return ImageFormatEntity
 	 */
-	public function setWatermark(\Nella\Media\IImage $watermark = NULL)
+	public function setWatermark(IImage $watermark = NULL)
 	{
 		$this->watermark = $watermark;
 		return $this;

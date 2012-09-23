@@ -10,7 +10,8 @@
 
 namespace Nella\Media\Doctrine;
 
-use Doctrine\ORM\Mapping as orm;
+use Doctrine\ORM\Mapping as orm,
+	Nella\Media\IStorage;
 
 /**
  * Base file / image facade
@@ -26,7 +27,7 @@ abstract class BaseFacade extends \Nella\Model\Facade
 	 * @param \Nella\Media\IStorage
 	 * @return ImageFacade
 	 */
-	public function setStorage(\Nella\Media\IStorage $storage)
+	public function setStorage(IStorage $storage)
 	{
 		$this->storage = $storage;
 		return $this;
@@ -34,7 +35,7 @@ abstract class BaseFacade extends \Nella\Model\Facade
 
 	/**
 	 * @param string
-	 * @return \Nella\Media\Doctrine\FileEntity|\Nella\Media\Doctrine\ImageEntity|NULL
+	 * @return FileEntity|ImageEntity|NULL
 	 */
 	public function findOneByFullSlug($fullSlug)
 	{

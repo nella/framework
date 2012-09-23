@@ -10,6 +10,8 @@
 
 namespace Nella\Event\Args;
 
+use Nette\Application\Application as NApplication;
+
 /**
  * General Application event args
  * 
@@ -25,7 +27,7 @@ class Application extends \Nella\Event\EventArgs
 	/**
 	 * @param \Nette\Application\Application
 	 */
-	public function __construct(\Nette\Application\Application $application)
+	public function __construct(NApplication $application)
 	{
 		$this->application = $application;
 	}

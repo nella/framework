@@ -10,7 +10,8 @@
 
 namespace Nella\Security\Model;
 
-use Doctrine\ORM\Mapping as orm;
+use Doctrine\ORM\Mapping as orm,
+	Doctrine\ORM\EntityManager;
 
 /**
  * Indentity
@@ -126,7 +127,7 @@ class IdentityEntity extends \Nette\Object implements \Nella\Security\ISerializa
 	 * @param \Doctrine\ORM\EntityManager
 	 * @return IdentityEntity
 	 */
-	public function load(\Doctrine\ORM\EntityManager $em)
+	public function load(EntityManager $em)
 	{
 		if (!$this->loaded) {
 			$entity = $em->find(get_class($this), $this->getId());

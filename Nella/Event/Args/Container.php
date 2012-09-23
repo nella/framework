@@ -10,6 +10,8 @@
 
 namespace Nella\Event\Args;
 
+use Nette\DI\Container as NContainer;
+
 /**
  * General Container event args
  * 
@@ -25,7 +27,7 @@ class Container extends \Nella\Event\EventArgs
 	/**
 	 * @param \Nette\DI\Container
 	 */
-	public function __construct(\Nette\DI\Container $container)
+	public function __construct(NContainer $container)
 	{
 		$this->container = $container;
 	}

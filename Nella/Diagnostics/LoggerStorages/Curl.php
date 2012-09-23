@@ -32,7 +32,7 @@ class Curl extends \Nette\Object implements \Nella\Diagnostics\ILoggerStorage
 	public function __construct($appId, $appSecret, $url)
 	{
 		if (!extension_loaded('curl')) {
-			throw new \	InvalidStateException('Missing cURL extension');
+			throw new \Nette\InvalidStateException('Missing cURL extension');
 		}
 
 		$this->url = $url;

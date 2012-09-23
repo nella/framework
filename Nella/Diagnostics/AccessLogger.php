@@ -10,6 +10,9 @@
 
 namespace Nella\Diagnostics;
 
+use Nette\Http\Response,
+	Nette\Http\RequestFactory;
+
 /**
  * Remote access logger
  *
@@ -31,7 +34,7 @@ class AccessLogger extends \Nette\Object
 	/**
 	 * @param \Nette\Http\Response
 	 */
-	public function log(\Nette\Http\Response $res)
+	public function log(Response $res)
 	{
 		$ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : NULL;
 		if (isset($_SERVER['HTTP_X_REAL_IP'])) {
@@ -40,7 +43,7 @@ class AccessLogger extends \Nette\Object
 			$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
 		}
 
-		$f = new \Nette\Http\RequestFactory;
+		$f = new RequestFactory;
 		$req = $f->setEncoding('UTF-8')->createHttpRequest();
 		$data = array(
 			'datetime' => date('c'),

@@ -13,7 +13,9 @@ namespace Nella\Console\Config;
 use Nette\DI\Container,
 	Nette\Config\Compiler,
 	Nette\Config\Configurator,
-	Symfony\Component\Console\Helper\HelperSet;
+	Symfony\Component\Console\Helper\HelperSet,
+	Symfony\Component\Console\Helper\DialogHelper,
+	Symfony\Component\Console\Application;
 
 /**
  * Console compiler extension
@@ -78,8 +80,8 @@ class Extension extends \Nette\Config\CompilerExtension
 	 */
 	public static function createHelperSet(Container $container)
 	{
-		$helperSet = new \Symfony\Component\Console\Helper\HelperSet;
-		$helperSet->set(new \Symfony\Component\Console\Helper\DialogHelper, 'dialog');
+		$helperSet = new HelperSet;
+		$helperSet->set(new DialogHelper, 'dialog');
 
 		foreach ($container->findByTag(static::HELPER_TAG_NAME) as $name => $value) {
 			$helperSet->set($container->getService($name), $value);
@@ -98,7 +100,7 @@ class Extension extends \Nette\Config\CompilerExtension
 	 */
 	public static function createApplication($name, $version, HelperSet $helperSet, $exceptions = FALSE, Container $container)
 	{
-		$application = new \Symfony\Component\Console\Application($name, $version);
+		$application = new Application($name, $version);
 		$application->setCatchExceptions($exceptions);
 		$application->setHelperSet($helperSet);
 

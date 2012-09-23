@@ -10,6 +10,8 @@
 
 namespace Nella\Model;
 
+use Doctrine\ORM\EntityManager;
+
 /**
  * Basic model facade
  *
@@ -26,7 +28,7 @@ class Facade extends \Nette\Object implements IDao, IObjectFactory
 	 * @param \Doctrine\ORM\EntityManager
 	 * @param Repository
 	 */
-	public function __construct(\Doctrine\ORM\EntityManager $em, Repository $repository)
+	public function __construct(EntityManager $em, Repository $repository)
 	{
 		$this->em = $em;
 		$this->repository = $repository;

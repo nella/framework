@@ -10,6 +10,8 @@
 
 namespace Nella\Console;
 
+use Nette\DI\Container;
+
 /**
  * Lazy application inicialization router
  *
@@ -22,7 +24,7 @@ class LazyRouter extends Router
 	/**
 	 * @param \Nette\DI\Container
 	 */
-	public function __construct(\Nette\DI\Container $container, $serviceName = NULL)
+	public function __construct(Container $container, $serviceName = NULL)
 	{
 		if (!$serviceName) {
 			$class = 'Symfony\Component\Console\Application';

@@ -10,7 +10,9 @@
 
 namespace Nella\Media\Doctrine;
 
-use Doctrine\ORM\Mapping as orm;
+use Doctrine\ORM\Mapping as orm,
+	Nella\Media\IImageCacheStorage,
+	Nella\Media\IImageFormat;
 
 /**
  * Image format facade
@@ -26,7 +28,7 @@ class ImageFormatFacade extends \Nella\Model\Facade implements \Nella\Media\Mode
 	 * @param \Nella\Media\IImageCacheStorage
 	 * @return ImageFormatFacade
 	 */
-	public function setCacheStorage(\Nella\Media\IImageCacheStorage $cacheStorage)
+	public function setCacheStorage(IImageCacheStorage $cacheStorage)
 	{
 		$this->cacheStorage = $cacheStorage;
 		return $this;
@@ -55,7 +57,7 @@ class ImageFormatFacade extends \Nella\Model\Facade implements \Nella\Media\Mode
 	 */
 	public function save($entity, $withoutFlush = self::FLUSH, $originalPath = NULL)
 	{
-		if ($entity instanceof \Nella\Media\IImageFormat && $entity->id !== NULL && $this->cacheStorage) {
+		if ($entity instanceof IImageFormat && $entity->id !== NULL && $this->cacheStorage) {
 			$cacheStorage = $this->cacheStorage;
 			$entity->onFlush[] = function ($entity) use ($cacheStorage) {
 				$cacheStorage->clean($entity);
@@ -71,7 +73,7 @@ class ImageFormatFacade extends \Nella\Model\Facade implements \Nella\Media\Mode
 	 */
 	public function remove($entity, $withoutFlush = self::FLUSH)
 	{
-		if ($entity instanceof \Nella\Media\IImageFormat && $entity->id !== NULL && $this->cacheStorage) {
+		if ($entity instanceof IImageFormat && $entity->id !== NULL && $this->cacheStorage) {
 			$cacheStorage = $this->cacheStorage;
 			$entity->onFlush[] = function ($entity) use ($cacheStorage) {
 				$cacheStorage->clean($entity);

@@ -10,7 +10,8 @@
 
 namespace Nella\Security\Model;
 
-use Doctrine\ORM\Mapping as orm;
+use Doctrine\ORM\Mapping as orm,
+	Nette\Utils\Strings;
 
 /**
  * Identity credentials entity
@@ -127,7 +128,7 @@ class CredentialsEntity extends \Nella\Doctrine\Entity
 	 */
 	public function setPassword($password, $algo = 'sha256')
 	{
-		$salt = \Nette\Utils\Strings::random();
+		$salt = Strings::random();
 
 		$this->password = $algo . self::PASSWORD_DELIMITER;
 		$this->password .= $salt . self::PASSWORD_DELIMITER;

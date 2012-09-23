@@ -10,7 +10,10 @@
 
 namespace Nella\Doctrine;
 
-use Nette\Caching\Cache as NCache;
+use Nette\Caching\Cache as NCache,
+	Nette\Caching\IStorage,
+	Doctrine\ORM\Mapping\ClassMetadata,
+	Nette\Reflection\ClassType;
 
 /**
  * Nette cache driver for doctrine
@@ -29,7 +32,7 @@ class Cache extends \Doctrine\Common\Cache\CacheProvider
 	 * @param \Nette\Caching\IStorage
 	 * @param string
 	 */
-	public function __construct(\Nette\Caching\IStorage $cacheStorage, $name = self::CACHE_NAMESPACE)
+	public function __construct(IStorage $cacheStorage, $name = self::CACHE_NAMESPACE)
 	{
 		$this->storage = new NCache($cacheStorage, $name);
 	}
@@ -67,11 +70,11 @@ class Cache extends \Doctrine\Common\Cache\CacheProvider
 	protected function doSave($id, $data, $lifeTime = FALSE)
 	{
 		$files = array();
-		if ($data instanceof \Doctrine\ORM\Mapping\ClassMetadata) {
-			$ref = \Nette\Reflection\ClassType::from($data->name);
+		if ($data instanceof ClassMetadata) {
+			$ref = ClassType::from($data->name);
 			$files[] = $ref->getFileName();
 			foreach ($data->parentClasses as $class) {
-				$ref = \Nette\Reflection\ClassType::from($class);
+				$ref = ClassType::from($class);
 				$files[] = $ref->getFileName();
 			}
 		}

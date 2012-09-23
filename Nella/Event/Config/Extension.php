@@ -16,7 +16,8 @@ use Nette\Config\Compiler,
 	Nella\Event\Args,
 	Nette\Application\Request,
 	Nette\Application\IResponse,
-	Nella\Events;
+	Nella\Events,
+	Nella\Event\IEventDispatcher;
 
 /**
  * Event config compiler extension
@@ -41,10 +42,10 @@ class Extension extends \Nette\Config\CompilerExtension
 	 * @param \Nette\Application\Application
 	 * @param \Nella\Event\IEventDispatcher
 	 */
-	public static function setupApplication(Application $application, \Nella\Event\IEventDispatcher $evm)
+	public static function setupApplication(Application $application, IEventDispatcher $evm)
 	{
 		$application->onStartup[] = function (Application $application) use ($evm) {
-			$evm->dispatchEvent(\Nella\Events::APPLICATION_STARTUP, new Args\Application($application));
+			$evm->dispatchEvent(Events::APPLICATION_STARTUP, new Args\Application($application));
 		};
 
 		$application->onError[] = function (Application $application, \Exception $exception) use ($evm) {

@@ -11,7 +11,10 @@
 namespace Nella\Media\Latte;
 
 use Nette\Latte\MacroNode,
-	Nette\Latte\PhpWriter;
+	Nette\Latte\PhpWriter,
+	Nette\Latte\Engine,
+	Nette\Latte\Compiler,
+	Nette\Utils\Strings;
 
 /**
  * Media macros
@@ -37,7 +40,7 @@ class MediaMacros extends \Nette\Latte\Macros\MacroSet
 	 * @param \Nette\Latte\Engine
 	 * @return \Nette\Latte\Macros\MacroSet
 	 */
-	public static function factory(\Nette\Latte\Engine $engine)
+	public static function factory(Engine $engine)
 	{
 		return static::install($engine->getCompiler());
 	}
@@ -45,7 +48,7 @@ class MediaMacros extends \Nette\Latte\Macros\MacroSet
 	/**
 	 * @param \Nette\Latte\Compiler
 	 */
-	public static function install(\Nette\Latte\Compiler $compiler)
+	public static function install(Compiler $compiler)
 	{
 		$me = parent::install($compiler);
 
@@ -80,6 +83,7 @@ class MediaMacros extends \Nette\Latte\Macros\MacroSet
 	 * @param string
 	 * @param mixed
 	 * @return string
+	 * @throws \Nette\Latte\CompileException
 	 */
 	public function macroFile(MacroNode $node, $writer)
 	{
@@ -87,7 +91,7 @@ class MediaMacros extends \Nette\Latte\Macros\MacroSet
 		$data = explode(',', $node->args);
 
 		if (count($data) < 1) {
-			throw new \Nette\Latte\ParseException('Invalid arguments count for file macro');
+			throw new \Nette\Latte\CompileException('Invalid arguments count for file macro');
 		}
 
 		foreach ($data as &$value) {
@@ -96,8 +100,8 @@ class MediaMacros extends \Nette\Latte\Macros\MacroSet
 
 		list($file) = $data;
 		if (!isset($data[1])) {
-			if (!\Nette\Utils\Strings::startsWith($file, '$')) {
-				throw new \Nette\Latte\ParseException('Invalid arguments for file macro');
+			if (!Strings::startsWith($file, '$')) {
+				throw new \Nette\Latte\CompileException('Invalid arguments for file macro');
 			}
 
 			$data[1] = $writer->formatWord($file) . ' instanceof \Nella\Media\IFile ? '
@@ -117,14 +121,14 @@ class MediaMacros extends \Nette\Latte\Macros\MacroSet
 	 * @param string
 	 * @param mixed
 	 * @return string
-	 * @throws \Nette\Latte\ParseException
+	 * @throws \Nette\Latte\CompileException
 	 */
 	public function macroImage(MacroNode $node, $writer)
 	{
 		$data = explode(',', $node->args);
 
 		if (count($data) < 2) {
-			throw new \Nette\Latte\ParseException('Invalid arguments count for image macro');
+			throw new \Nette\Latte\CompileException('Invalid arguments count for image macro');
 		}
 
 		foreach ($data as &$value) {
@@ -134,7 +138,7 @@ class MediaMacros extends \Nette\Latte\Macros\MacroSet
 		list($image, $format) = $data;
 		if (!isset($data[2])) {
 			$data[2] = "'jpg'";
-			if (\Nette\Utils\Strings::startsWith($image, '$')) {
+			if (Strings::startsWith($image, '$')) {
 				$data[2] = $writer->formatWord($image) . ' instanceof \Nella\Media\IImage ? '
 					. "{$image}->getImageType() : 'jpg'";
 			}

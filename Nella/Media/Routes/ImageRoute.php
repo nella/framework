@@ -11,7 +11,13 @@
 namespace Nella\Media\Routes;
 
 use Nette\Utils\Strings,
-	Nette\Http\Url;
+	Nette\Http\Url,
+	Nella\Media\Model\IImageDao,
+	Nella\Media\Model\IImageFormatDao,
+	Nella\Media\IImagePresenterCallback,
+	Nette\Application\Routers\Route,
+	Nette\Http\IRequest,
+	Nette\Application\Request;
 
 /**
  * Image route
@@ -31,9 +37,9 @@ class ImageRoute extends \Nette\Object implements \Nette\Application\IRouter
 	 * @param \Nella\Media\IImagePresenterCallback
 	 * @param string example '<image>_<type>'
 	 */
-	public function __construct($mask, \Nella\Media\Model\IImageDao $imageModel, \Nella\Media\Model\IImageFormatDao $formatModel, \Nella\Media\IImagePresenterCallback $callback, $imageMask = '<image>_<type>')
+	public function __construct($mask, IImageDao $imageModel, IImageFormatDao $formatModel, IImagePresenterCallback $callback, $imageMask = '<image>_<type>')
 	{
-		$this->route = new \Nette\Application\Routers\Route($mask, function ($image, $format, $type) use ($imageModel, $formatModel, $callback, $imageMask) {
+		$this->route = new Route($mask, function ($image, $format, $type) use ($imageModel, $formatModel, $callback, $imageMask) {
 			$formatEntity = $formatModel->findOneByFullSlug($format);
 
 			if (!$formatEntity) {
@@ -58,7 +64,7 @@ class ImageRoute extends \Nette\Object implements \Nette\Application\IRouter
 	 * @return \Nette\Application\Request|NULL
 	 * @throws \Nette\InvalidStateException
 	 */
-	public function match(\Nette\Http\IRequest $httpRequest)
+	public function match(IRequest $httpRequest)
 	{
 		return $this->route->match($httpRequest);
 	}
@@ -70,7 +76,7 @@ class ImageRoute extends \Nette\Object implements \Nette\Application\IRouter
 	 * @param  \Nette\Http\Url referential URI
 	 * @return string|NULL
 	 */
-	public function constructUrl(\Nette\Application\Request $appRequest, Url $refUrl)
+	public function constructUrl(Request $appRequest, Url $refUrl)
 	{
 		$url = $this->route->constructUrl($appRequest, $refUrl);
 		if ($url != NULL) {

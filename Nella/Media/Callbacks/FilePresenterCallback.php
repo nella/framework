@@ -10,6 +10,10 @@
 
 namespace Nella\Media\Callbacks;
 
+use Nella\Media\IStorage,
+	Nella\Media\IFile,
+	Nette\Application\Responses\FileResponse;
+
 /**
  * File presenter callback (convert request to response)
  *
@@ -23,7 +27,7 @@ class FilePresenterCallback extends \Nette\Object implements \Nella\Media\IFileP
 	/**
 	 * @param \Nella\Media\IStorage
 	 */
-	public function __construct(\Nella\Media\IStorage $storage)
+	public function __construct(IStorage $storage)
 	{
 		$this->storage = $storage;
 	}
@@ -32,14 +36,14 @@ class FilePresenterCallback extends \Nette\Object implements \Nella\Media\IFileP
 	 * @param \Nella\Media\IFile
 	 * @return \Nette\Application\Responses\FileResponse
 	 */
-	public function __invoke(\Nella\Media\IFile $file)
+	public function __invoke(IFile $file)
 	{
 		$path = $this->storage->load($file);
 		if (!$path) {
 			throw new \Nette\Application\BadRequestException('File not found', 404);
 		}
 
-		return new \Nette\Application\Responses\FileResponse($path, pathinfo($path, PATHINFO_BASENAME), $file->getContentType());
+		return new FileResponse($path, pathinfo($path, PATHINFO_BASENAME), $file->getContentType());
 	}
 }
 

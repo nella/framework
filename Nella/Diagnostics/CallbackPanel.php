@@ -10,6 +10,9 @@
 
 namespace Nella\Diagnostics;
 
+use Nette\DI\Container,
+	Nette\Diagnostics\Debugger;
+
 /**
  * Callback panel for nette debug bar
  *
@@ -31,7 +34,7 @@ final class CallbackPanel extends \Nette\Object implements \Nette\Diagnostics\IB
 	 * @param \Nette\DI\Container
 	 * @param array[]|array
 	 */
-	public function __construct(\Nette\DI\Container $container, array $callbacks = array())
+	public function __construct(Container $container, array $callbacks = array())
 	{
 		if (static::$registered) {
 			 throw new \Nette\InvalidStateException("Callback panel is already registered");
@@ -126,8 +129,8 @@ final class CallbackPanel extends \Nette\Object implements \Nette\Diagnostics\IB
 	 */
 	public static function register(\Nette\DI\Container $container, array $callbacks = array())
 	{
-		if (\Nette\Diagnostics\Debugger::$bar) {
-			\Nette\Diagnostics\Debugger::$bar->addPanel(new static($container, $callbacks));
+		if (Debugger::$bar) {
+			Debugger::$bar->addPanel(new static($container, $callbacks));
 		}
 	}
 }

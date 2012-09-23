@@ -11,6 +11,7 @@
 namespace Nella\Model;
 
 use Doctrine\ORM\Tools\Pagination\Paginator,
+	Nette\Utils\Paginator as NPaginator,
 	Nella\Model\IQueryable;
 
 /**
@@ -28,7 +29,7 @@ class QueryObject extends \Nette\Object implements IQueryObject
 	/**
 	 * @param \Nette\Utils\Paginator
 	 */
-	public function __construct(\Nette\Utils\Paginator $paginator = NULL)
+	public function __construct(NPaginator $paginator = NULL)
 	{
 		$this->paginator = $paginator;
 	}

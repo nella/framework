@@ -15,9 +15,17 @@ use Nella\Console\Config\Extension as CExtension,
 	Nette\Config\Compiler,
 	Nette\Config\Configurator,
 	Nette\DI\Container,
+	Nette\Reflection\ClassType,
 	Doctrine\Common\Cache\Cache,
 	Doctrine\Common\EventManager,
-	Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
+	Doctrine\DBAL\Configuration,
+	Nella\Doctrine\Diagnostics\ConnectionPanel,
+	Doctrine\DBAL\DriverManager,
+	Doctrine\DBAL\Event\Listeners\MysqlSessionInit,
+	Doctrine\Common\Annotations\AnnotationRegistry,
+	Doctrine\Common\Annotations\SimpleAnnotationReader,
+	Doctrine\Common\Annotations\AnnotationReader,
+	Doctrine\Common\Annotations\CachedReader;
 
 /**
  * Doctrine Nella Framework services.
@@ -233,13 +241,13 @@ class Extension extends \Nette\Config\CompilerExtension
 	 * @param \Doctrine\Common\EventManager|NULL
 	 * @return \Doctrine\DBAL\Connection
 	 */
-	public static function createConnection(array $params, \Doctrine\Common\EventManager $evm)
+	public static function createConnection(array $params, EventManager $evm)
 	{
 		$panel = NULL;
-		$config = new \Doctrine\DBAL\Configuration;
+		$config = new Configuration;
 
 		if (isset($params['debugger']) && $params['debugger'] === TRUE) {
-			$panel = new \Nella\Doctrine\Diagnostics\ConnectionPanel;
+			$panel = new ConnectionPanel;
 			if (Debugger::$bar) {
 				Debugger::$bar->addPanel($panel);
 			}
@@ -250,11 +258,11 @@ class Extension extends \Nette\Config\CompilerExtension
 		}
 
 		$cfg = $params['connection'];
-		$connection = \Doctrine\DBAL\DriverManager::getConnection($cfg, $config, $evm);
+		$connection = DriverManager::getConnection($cfg, $config, $evm);
 
 		if ($connection->getDatabasePlatform()->getName() == 'mysql' && isset($cfg['charset'])) {
 			$evm->addEventSubscriber(
-				new \Doctrine\DBAL\Event\Listeners\MysqlSessionInit($cfg['charset'], $cfg['collation'])
+				new MysqlSessionInit($cfg['charset'], $cfg['collation'])
 			);
 		}
 
@@ -273,24 +281,23 @@ class Extension extends \Nette\Config\CompilerExtension
 	public static function createAnnotationReader(Cache $cache = NULL, $useSimple = FALSE)
 	{
 		// force load doctrine annotations
-		\Doctrine\Common\Annotations\AnnotationRegistry::registerFile(
-			dirname(\Nette\Reflection\ClassType::from('Doctrine\ORM\Version')->getFileName()).
-				'/Mapping/Driver/DoctrineAnnotations.php'
+		AnnotationRegistry::registerFile(
+			dirname(ClassType::from('Doctrine\ORM\Version')->getFileName()) . '/Mapping/Driver/DoctrineAnnotations.php'
 		);
-		\Doctrine\Common\Annotations\AnnotationRegistry::registerFile(__DIR__ . '/../Mapping/DiscriminatorEntry.php');
+		AnnotationRegistry::registerFile(__DIR__ . '/../Mapping/DiscriminatorEntry.php');
 
 		if ($useSimple) {
-			$reader = new \Doctrine\Common\Annotations\SimpleAnnotationReader;
+			$reader = new SimpleAnnotationReader;
 			$reader->addNamespace('Doctrine\ORM\Mapping');
 		} else {
-			$reader = new \Doctrine\Common\Annotations\AnnotationReader;
+			$reader = new AnnotationReader;
 		}
 
 		if (!$cache) {
 			return $reader;
 		}
 
-		return new \Doctrine\Common\Annotations\CachedReader($reader, $cache);
+		return new CachedReader($reader, $cache);
 	}
 
 	/**

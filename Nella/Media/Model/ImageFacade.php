@@ -19,7 +19,7 @@ class ImageFacade extends \Nette\Object implements IImageDao
 {
 	/**
 	 * @param string
-	 * @return \Nella\Media\Image|NULL
+	 * @return Image|NULL
 	 */
 	public function findOneByFullSlug($slug)
 	{

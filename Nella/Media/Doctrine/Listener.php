@@ -10,6 +10,9 @@
 
 namespace Nella\Media\Doctrine;
 
+use Doctrine\ORM\Events,
+	Doctrine\ORM\Event\OnFlushEventArgs;
+
 /**
  * Media listener
  *
@@ -23,14 +26,14 @@ class Listener extends \Nette\Object implements \Doctrine\Common\EventSubscriber
 	public function getSubscribedEvents()
 	{
 		return array(
-			\Doctrine\ORM\Events::onFlush,
+			Events::onFlush,
 		);
 	}
 
     /**
      * @param \Doctrine\ORM\Event\OnFlushEventArgs
      */
-    public function onFlush(\Doctrine\ORM\Event\OnFlushEventArgs $args)
+    public function onFlush(OnFlushEventArgs $args)
     {
     	$uow = $args->getEntityManager()->getUnitOfWork();
 

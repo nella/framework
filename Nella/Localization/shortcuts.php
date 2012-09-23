@@ -8,6 +8,8 @@
  * please view the file LICENSE.txt that was distributed with this source code.
  */
 
+use Nette\Environment;
+
 /**
  * Translates the given string.
  *
@@ -16,7 +18,7 @@
  */
 function __($message, $count = NULL)
 {
-	$translator = \Nette\Environment::getContext()->getByType('Nette\Localization\ITranslator');
+	$translator = Environment::getContext()->getByType('Nette\Localization\ITranslator');
 	return callback($translator, 'translate')->invokeArgs(func_get_args());
 }
 

@@ -10,6 +10,8 @@
 
 namespace Nella\Event\Args;
 
+use Nette\Application\Application as NApplication;
+
 /**
  * Application shutdown event args
  * 
@@ -26,7 +28,7 @@ class ApplicationShutdown extends Application
 	 * @param \Nette\Application\Application
 	 * @param \Exception
 	 */
-	public function __construct(\Nette\Application\Application $application, \Exception $exception = NULL)
+	public function __construct(NApplication $application, \Exception $exception = NULL)
 	{
 		parent::__construct($application);
 		$this->exception = $exception;

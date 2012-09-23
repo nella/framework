@@ -10,7 +10,10 @@
 
 namespace Nella\Console;
 
-use Nette\Application\Request;
+use Nette\Application\Request,
+	Nette\Http\IRequest,
+	Nette\Http\Url,
+	Symfony\Component\Console\Application;
 
 /**
  * Console router
@@ -27,7 +30,7 @@ class Router extends \Nette\Object implements \Nette\Application\IRouter
 	/**
 	 * @param \Symfony\Component\Console\Application
 	 */
-	public function __construct(\Symfony\Component\Console\Application $console)
+	public function __construct(Application $console)
 	{
 		$this->callback = callback(function () use ($console) {
 			$console->run();
@@ -40,7 +43,7 @@ class Router extends \Nette\Object implements \Nette\Application\IRouter
 	 * @param  \Nette\Http\IRequest
 	 * @return \Nette\Application\Request|NULL
 	 */
-	public function match(\Nette\Http\IRequest $httpRequest)
+	public function match(IRequest $httpRequest)
 	{
 		if (PHP_SAPI !== 'cli') {
 			return NULL;
@@ -56,7 +59,7 @@ class Router extends \Nette\Object implements \Nette\Application\IRouter
 	 * @param  \Nette\Http\Url
 	 * @return NULL
 	 */
-	public function constructUrl(Request $appRequest, \Nette\Http\Url $refUrl)
+	public function constructUrl(Request $appRequest, Url $refUrl)
 	{
 		return NULL;
 	}

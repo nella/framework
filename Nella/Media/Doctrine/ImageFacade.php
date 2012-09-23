@@ -10,7 +10,8 @@
 
 namespace Nella\Media\Doctrine;
 
-use Doctrine\ORM\Mapping as orm;
+use Doctrine\ORM\Mapping as orm,
+	Nella\Media\IImageCacheStorage;
 
 /**
  * Image facade
@@ -35,7 +36,7 @@ class ImageFacade extends BaseFacade implements \Nella\Media\Model\IImageDao
 	 * @param \Nella\Media\IImageCacheStorage
 	 * @return ImageFacade
 	 */
-	public function setCacheStorage(\Nella\Media\IImageCacheStorage $cacheStorage)
+	public function setCacheStorage(IImageCacheStorage $cacheStorage)
 	{
 		$this->cacheStorage = $cacheStorage;
 		return $this;

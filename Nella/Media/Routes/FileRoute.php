@@ -10,7 +10,12 @@
 
 namespace Nella\Media\Routes;
 
-use Nette\Http\Url;
+use Nette\Http\Url,
+	Nella\Media\Model\IFileDao,
+	Nella\Media\IFilePresenterCallback,
+	Nette\Application\Routers\Route,
+	Nette\Http\IRequest,
+	Nette\Application\Request;
 
 /**
  * File route
@@ -29,9 +34,9 @@ class FileRoute extends \Nette\Application\Routers\Route
 	 * @param \Nella\Media\IFilePresenterCallback
 	 * @param string example '<file>_<ext>'
 	 */
-	public function __construct($mask, \Nella\Media\Model\IFileDao $model, \Nella\Media\IFilePresenterCallback $callback, $fullSlugMask = '<file>_<ext>')
+	public function __construct($mask, IFileDao $model, IFilePresenterCallback $callback, $fullSlugMask = '<file>_<ext>')
 	{
-		$this->route = new \Nette\Application\Routers\Route($mask, function ($file, $ext) use ($model, $callback, $fullSlugMask) {
+		$this->route = new Route($mask, function ($file, $ext) use ($model, $callback, $fullSlugMask) {
 			$fullSlug = str_replace(array('<file>', '<ext>'), array($file, $ext), $fullSlugMask);
 			$fileEntity = $model->findOneByFullSlug($fullSlug);
 
@@ -50,7 +55,7 @@ class FileRoute extends \Nette\Application\Routers\Route
 	 * @return \Nette\Application\Request|NULL
 	 * @throws \Nette\InvalidStateException
 	 */
-	public function match(\Nette\Http\IRequest $httpRequest)
+	public function match(IRequest $httpRequest)
 	{
 		return $this->route->match($httpRequest);
 	}
@@ -62,7 +67,7 @@ class FileRoute extends \Nette\Application\Routers\Route
 	 * @param  \Nette\Http\Url referential URI
 	 * @return string|NULL
 	 */
-	public function constructUrl(\Nette\Application\Request $appRequest, Url $refUrl)
+	public function constructUrl(Request $appRequest, Url $refUrl)
 	{
 		$url = $this->route->constructUrl($appRequest, $refUrl);
 		if ($url != NULL) {

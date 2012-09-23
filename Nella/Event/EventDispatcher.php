@@ -11,7 +11,7 @@
 namespace Nella\Event;
 
 /**
- * CMS Event Dispatcher
+ * Event Dispatcher
  * Holds all informations about currently registered
  * event listeners or subscribers
  *
@@ -45,22 +45,20 @@ final class EventDispatcher extends \Nette\Object implements IEventDispatcher
 		}
 
 		foreach ($this->listeners[$event] as $listener) {
-			//$listener($args); // PHP 5.4
 			call_user_func($listener, $args);
 		}
 	}
 
 	/**
 	 * @param string
-	 * @param array|\Closure|\Nette\Callback
+	 * @param callable
 	 */
-	public function addEventListener($event, /*callable *5.4*/ $listener)
+	public function addEventListener($event, $listener)
 	{
 		if (!isset($this->listeners[$event])) {
 			$this->listeners[$event] = array();
 		}
 
-		//FIXME: remove for 5.4
 		if (!is_callable($listener)) {
 			throw new \InvalidArgumentException('Listener must be callable.');
 		}
@@ -106,9 +104,9 @@ final class EventDispatcher extends \Nette\Object implements IEventDispatcher
 
 	/**
 	 * @param string
-	 * @param array|\Closure|\Nette\Callback
+	 * @param callable
 	 */
-	public function removeEventListener($event, /*callable *5.4*/ $listener)
+	public function removeEventListener($event, $listener)
 	{
 		if (empty($this->listeners[$event])) {
 			return;

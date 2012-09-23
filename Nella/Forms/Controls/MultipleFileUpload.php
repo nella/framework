@@ -13,7 +13,10 @@ namespace Nella\Forms\Controls;
 use Nette\Application\UI\Form,
 	Nette\Http\FileUpload,
 	Nette\Utils\Finder,
-	Nette\Utils\Strings;
+	Nette\Utils\Strings,
+	Nette\Http\IRequest,
+	Nette\Diagnostics\Debugger,
+	Nette\Utils\Html;
 
 /**
  * Text box and browse button that allow users to select a multiple files to upload to the server.
@@ -35,7 +38,7 @@ class MultipleFileUpload extends \Nette\Forms\Controls\BaseControl
 	 * @param int
 	 * @throws \Nette\InvalidStateException
 	 */
-	public static function register(\Nette\Http\IRequest $httpRequest, $storageDir, $detector = NULL, $expire = 3600)
+	public static function register(IRequest $httpRequest, $storageDir, $detector = NULL, $expire = 3600)
 	{
 		if (static::$detector) {
 			throw new \Nette\InvalidStateException('Multiple file uploader allready registered');
@@ -44,7 +47,7 @@ class MultipleFileUpload extends \Nette\Forms\Controls\BaseControl
 		}
 
 		static::$storageDir = $storageDir;
-		static::$detector = callback($detector ?: function (\Nette\Http\IRequest $httpRequest) {
+		static::$detector = callback($detector ?: function (IRequest $httpRequest) {
 			if ($httpRequest->getHeader('X-Nella-MFU-Token') && $httpRequest->getHeader('X-Uploader')) {
 				return $httpRequest->getHeader('X-Nella-MFU-Token');
 			}
@@ -65,7 +68,7 @@ class MultipleFileUpload extends \Nette\Forms\Controls\BaseControl
 			}
 
 			echo '{success:true}';
-			\Nette\Diagnostics\Debugger::$bar = NULL;
+			Debugger::$bar = NULL;
 			exit;
 		}
 
@@ -122,7 +125,7 @@ class MultipleFileUpload extends \Nette\Forms\Controls\BaseControl
 			$control->data('nella-mfu-token', $token);
 		}
 
-		$control .= \Nette\Utils\Html::el('input')
+		$control .= Html::el('input')
 			->type('hidden')
 			->name($this->name . static::MULTIPLE_FILE_UPLOAD_KEY)
 			->value($token);
@@ -222,7 +225,7 @@ class MultipleFileUpload extends \Nette\Forms\Controls\BaseControl
 	public static function validateMimeType(MultipleFileUpload $control, $mimeType)
 	{
 		return (bool) count(array_filter(
-			$control->getValue(), function ($file) {
+			$control->getValue(), function ($file) use ($mimeType) {
 				if ($file instanceof FileUpload) {
 					$type = strtolower($file->getContentType());
 					$mimeTypes = is_array($mimeType) ? $mimeType : explode(',', $mimeType);

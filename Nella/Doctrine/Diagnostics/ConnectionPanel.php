@@ -11,7 +11,9 @@
 namespace Nella\Doctrine\Diagnostics;
 
 use Nette\Diagnostics\Debugger,
-	Nette\Utils\Strings;
+	Nette\Utils\Strings,
+	Doctrine\DBAL\Connection,
+	Nette\Database\Helpers;
 
 /**
  * Debug panel for Doctrine
@@ -43,7 +45,7 @@ class ConnectionPanel extends \Nette\Object implements \Nette\Diagnostics\IBarPa
 	 * @param \Doctrine\DBAL\Connection
 	 * @return ConnectionPanel
 	 */
-	public function setConnection(\Doctrine\DBAL\Connection $connection)
+	public function setConnection(Connection $connection)
 	{
 		$this->connection = $connection;
 		return $this;
@@ -133,7 +135,7 @@ class ConnectionPanel extends \Nette\Object implements \Nette\Diagnostics\IBarPa
 		}
 
 		$s .= '</td>';
-		$s .= '<td class="nette-Doctrine2Panel-sql" style="min-width: 400px">' . \Nette\Database\Helpers::dumpSql($query[self::SQL]);
+		$s .= '<td class="nette-Doctrine2Panel-sql" style="min-width: 400px">' . Helpers::dumpSql($query[self::SQL]);
 		if ($this->doExplains && isset($query[self::EXPLAIN])) {
 			$s .= "<table id='nette-Doctrine2Panel-row-$counter' class='nette-collapsed'><tr>";
 			foreach ($query[self::EXPLAIN][0] as $col => $foo) {
@@ -150,7 +152,7 @@ class ConnectionPanel extends \Nette\Object implements \Nette\Diagnostics\IBarPa
 			$s .= '</table>';
 		}
 		$s .= '</td>';
-		$s .= '<td>' . \Nette\Diagnostics\Helpers::clickableDump($query[self::PARAMS], TRUE) . '</td>';
+		$s .= '<td>' . Helpers::clickableDump($query[self::PARAMS], TRUE) . '</td>';
 		$s .= '</tr>';
 
 		return $s;

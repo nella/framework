@@ -10,6 +10,8 @@
 
 namespace Nella\Media\Model;
 
+use Nella\Media\IImageFormat;
+
 /**
  * Image format Facade
  *
@@ -54,15 +56,15 @@ class ImageFormatFacade extends \Nette\Object implements IImageFormatDao
 		);
 
 		if (isset($format['watermark'])) {
-			$def['watermark'] = $foramt['watermark'];
+			$def['watermark'] = $format['watermark'];
 			$def['watermarkOpacity'] = 0;
-			$def['watermarkPosition'] = \Nella\Media\IImageFormat::POSITION_CENTER;
+			$def['watermarkPosition'] = IImageFormat::POSITION_CENTER;
 		}
 		if (isset($format['watermarkOpacity'])) {
-			$def['watermarkOpacity'] = $foramt['watermarkOpacity'];
+			$def['watermarkOpacity'] = $format['watermarkOpacity'];
 		}
 		if (isset($format['watermarkPosition'])) {
-			$def['watermarkPosition'] = $foramt['watermarkPosition'];
+			$def['watermarkPosition'] = $format['watermarkPosition'];
 		}
 
 		$this->formats[$format['slug']] = $def;
@@ -71,7 +73,7 @@ class ImageFormatFacade extends \Nette\Object implements IImageFormatDao
 
 	/**
 	 * @param string
-	 * @return \Nella\Media\ImageFormat|NULL
+	 * @return ImageFormat|NULL
 	 */
 	public function findOneByFullSlug($slug)
 	{

@@ -32,7 +32,7 @@ class Http extends \Nette\Object implements \Nella\Diagnostics\ILoggerStorage
 	public function __construct($appId, $appSecret, $url)
 	{
 		if (function_exists('ini_get') && !ini_get('allow_url_fopen')) {
-			throw new \	InvalidStateException('allow_url_fopen is not allowed');
+			throw new \Nette\InvalidStateException('allow_url_fopen is not allowed');
 		}
 
 		$this->url = $url;

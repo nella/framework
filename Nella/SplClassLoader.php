@@ -10,7 +10,8 @@
 
 namespace Nella;
 
-use Nette\Utils\Strings;
+use Nette\Utils\Strings,
+	Nette\Utils\LimitedScope;
 
 /**
  * PSR-0 class & interface auto loader.
@@ -67,7 +68,7 @@ final class SplClassLoader extends \Nette\Loaders\AutoLoader
 	{
 		$path = $this->formatFilePath($class);
 		if ($path !== NULL && file_exists($path)) {
-			\Nette\Utils\LimitedScope::load($path);
+			LimitedScope::load($path);
 		}
 	}
 

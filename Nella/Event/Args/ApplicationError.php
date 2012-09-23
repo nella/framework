@@ -10,6 +10,8 @@
 
 namespace Nella\Event\Args;
 
+use Nette\Application\Application as NApplication;
+
 /**
  * Application error event args
  * 
@@ -26,7 +28,7 @@ class ApplicationError extends Application
 	 * @param \Nette\Application\Application
 	 * @param \Exception
 	 */
-	public function __construct(\Nette\Application\Application $application, \Exception $exception)
+	public function __construct(NApplication $application, \Exception $exception)
 	{
 		parent::__construct($application);
 		$this->exception = $exception;

@@ -10,6 +10,9 @@
 
 namespace Nella\Media\Model;
 
+use Nette\Utils\Strings,
+	Nella\Media\Helper;
+
 /**
  * Image media type entity
  *
@@ -23,7 +26,7 @@ class Image extends File implements \Nella\Media\IImage
 	public function __construct($path)
 	{
 		parent::__construct($path);
-		if (!\Nette\Utils\Strings::startsWith($this->getContentType(), 'image/')) {
+		if (!Strings::startsWith($this->getContentType(), 'image/')) {
 			throw new \Nette\InvalidArgumentException('Only image file types supported');
 		}
 	}
@@ -33,7 +36,7 @@ class Image extends File implements \Nella\Media\IImage
 	 */
 	public function getImageType()
 	{
-		return \Nella\Media\Helper::mimeTypeToExt($this->getContentType());
+		return Helper::mimeTypeToExt($this->getContentType());
 	}
 }
 

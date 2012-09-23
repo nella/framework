@@ -10,7 +10,8 @@
 
 namespace Nella\Doctrine;
 
-use Nette\ObjectMixin;
+use Nette\ObjectMixin,
+	Nette\Reflection\ClassType;
 
 /**
  * Basic entity repository
@@ -124,7 +125,7 @@ class Repository extends \Doctrine\ORM\EntityRepository
 	 */
 	public static function getReflection()
 	{
-		return new \Nette\Reflection\ClassType(get_called_class());
+		return new ClassType(get_called_class());
 	}
 
 	/**
@@ -171,7 +172,7 @@ class Repository extends \Doctrine\ORM\EntityRepository
 		} else {
 			list($class, $name) = explode('::', $name);
 		}
-		$class = new \Nette\Reflection\ClassType($class);
+		$class = new ClassType($class);
 		if ($callback === NULL) {
 			return $class->getExtensionMethod($name);
 		} else {

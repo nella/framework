@@ -10,7 +10,8 @@
 
 namespace Nella\Diagnostics;
 
-use Nette\Utils\Strings,
+use DateTime,
+	Nette\Utils\Strings,
 	Nette\Diagnostics\Debugger;
 
 /**
@@ -69,8 +70,8 @@ class Logger extends \Nette\Diagnostics\Logger
 	 */
 	private function datetimeToIso($date)
 	{
-		$date = \DateTime::createFromFormat('[Y-m-d H:i:s]', $date);
-		if ($date instanceof \DateTime) {
+		$date = DateTime::createFromFormat('[Y-m-d H:i:s]', $date);
+		if ($date instanceof DateTime) {
 			return $date->format('c');
 		}
 		return date('c');

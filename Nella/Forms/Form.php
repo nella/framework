@@ -25,7 +25,7 @@ class Form extends \Nette\Application\UI\Form
 	 */
 	public function addContainer($name)
 	{
-		$control = new \Nella\Forms\Container;
+		$control = new Container;
 		$control->currentGroup = $this->currentGroup;
 		return $this[$name] = $control;
 	}

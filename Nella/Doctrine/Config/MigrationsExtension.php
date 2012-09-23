@@ -14,7 +14,9 @@ use Nella\Console\Config\Extension as CExtension,
 	Nette\Config\Configurator,
 	Nette\DI\ContainerBuilder,
 	Nette\Config\Compiler,
-	Nette\Utils\Strings;
+	Nette\Utils\Strings,
+	Symfony\Component\Console\Output\ConsoleOutput,
+	Doctrine\DBAL\Migrations\OutputWriter;
 
 /**
  * Doctrine migration Nella Framework services.
@@ -129,8 +131,8 @@ class MigrationsExtension extends \Nette\Config\CompilerExtension
 	 */
 	public static function createConsoleOutput()
 	{
-		$output = new \Symfony\Component\Console\Output\ConsoleOutput;
-		return new \Doctrine\DBAL\Migrations\OutputWriter(function ($message) use ($output) {
+		$output = new ConsoleOutput;
+		return new OutputWriter(function ($message) use ($output) {
 			$output->write($message, TRUE);
 		});
 	}

@@ -10,6 +10,8 @@
 
 namespace Nella\Forms;
 
+use Nette\Forms\Controls\SubmitButton;
+
 /**
  * Multipler item container
  *
@@ -27,7 +29,7 @@ class MultiplerContainer extends Container
 	public function addRemoveContainerButton($caption, $cleanUpGroups = FALSE)
 	{
 		$button = $this->addSubmit(self::REMOVE_CONTAINER_BUTTON_ID, $caption)->setValidationScope(FALSE);
-		$button->onClick[] = function (\Nette\Forms\Controls\SubmitButton $button) use ($cleanUpGroups) {
+		$button->onClick[] = function (SubmitButton $button) use ($cleanUpGroups) {
 			$container = $button->getParent();
 			$container->getParent()->remove($container, $cleanUpGroups);
 		};

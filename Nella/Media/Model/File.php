@@ -10,6 +10,8 @@
 
 namespace Nella\Media\Model;
 
+use Nella\Media\Helper;
+
 /**
  * File media type entity
  *
@@ -40,7 +42,7 @@ class File extends \Nette\Object implements \Nella\Media\IFile
 	 */
 	protected function parseContentType($ext)
 	{
-		$this->contentType = \Nella\Media\Helper::extToMimeType($ext);
+		$this->contentType = Helper::extToMimeType($ext);
 	}
 
 	/**

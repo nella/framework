@@ -10,6 +10,8 @@
 
 namespace Nella\Security;
 
+use Doctrine\ORM\EntityManager;
+
 /**
  * Serializable identity entity interface
  *
@@ -25,6 +27,6 @@ interface ISerializableIdentity extends \Nette\Security\IIdentity, \Serializable
 	/**
 	 * @param \Doctrine\ORM\EntityManager
 	 */
-	public function load(\Doctrine\ORM\EntityManager $em);
+	public function load(EntityManager $em);
 }
 

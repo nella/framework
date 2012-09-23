@@ -15,7 +15,11 @@
 
 namespace Nella\Doctrine\Listeners;
 
-use Nette\Reflection\ClassType;
+use Nette\Reflection\ClassType,
+	Doctrine\Common\Annotations\Reader,
+	Doctrine\ORM\Events,
+	Doctrine\Common\Persistence\Mapping\Driver\MappingDriver,
+	Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 
 /**
  * Discriminator map discovery
@@ -33,7 +37,7 @@ class DiscriminatorMapDiscovery extends \Nette\Object implements \Doctrine\Commo
 	/**
 	 * @param \Doctrine\Common\Annotations\Reader
 	 */
-	public function __construct(\Doctrine\Common\Annotations\Reader $reader)
+	public function __construct(Reader $reader)
 	{
 		$this->reader = $reader;
 	}
@@ -44,14 +48,14 @@ class DiscriminatorMapDiscovery extends \Nette\Object implements \Doctrine\Commo
 	public function getSubscribedEvents()
 	{
 		return array(
-			\Doctrine\ORM\Events::loadClassMetadata,
+			Events::loadClassMetadata,
 		);
 	}
 
 	/**
 	 * @param \Doctrine\ORM\Event\LoadClassMetadataEventArgs
 	 */
-	public function loadClassMetadata(\Doctrine\ORM\Event\LoadClassMetadataEventArgs $args)
+	public function loadClassMetadata(LoadClassMetadataEventArgs $args)
 	{
 		$meta = $args->getClassMetadata();
 		$driver = $args->getEntityManager()->getConfiguration()->getMetadataDriverImpl();
@@ -76,7 +80,7 @@ class DiscriminatorMapDiscovery extends \Nette\Object implements \Doctrine\Commo
 	 * @param string
 	 * @return array
 	 */
-	private function getChildClasses(\Doctrine\Common\Persistence\Mapping\Driver\MappingDriver $driver, $currentClass)
+	private function getChildClasses(MappingDriver $driver, $currentClass)
 	{
 		$classes = array();
 		foreach ($driver->getAllClassNames() as $className) {

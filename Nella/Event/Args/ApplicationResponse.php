@@ -10,6 +10,9 @@
 
 namespace Nella\Event\Args;
 
+use Nette\Application\Application as NApplication,
+	Nette\Application\IResponse;
+
 /**
  * Application response args
  * 
@@ -26,7 +29,7 @@ class ApplicationResponse extends Application
 	 * @param \Nette\Application\Application
 	 * @param \Nette\Application\IResponse
 	 */
-	public function __construct(\Nette\Application\Application $application, \Nette\Application\IResponse $response)
+	public function __construct(NApplication $application, IResponse $response)
 	{
 		parent::__construct($application);
 		$this->response = $response;

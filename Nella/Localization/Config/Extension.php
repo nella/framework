@@ -45,7 +45,7 @@ class Extension extends \Nette\Config\CompilerExtension
 		}
 
 		$storage = $builder->addDefinition($this->prefix('storage'));
-		\Nette\Config\Compiler::parseService($storage, $config['storage']);
+		Compiler::parseService($storage, $config['storage']);
 
 		$translator = $builder->addDefinition($this->prefix('translator'))
 			->setClass('Nella\Localization\Translator', array($storage));

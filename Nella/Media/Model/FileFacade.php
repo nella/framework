@@ -19,7 +19,7 @@ class FileFacade extends \Nette\Object implements IFileDao
 {
 	/**
 	 * @param string
-	 * @return \Nella\Media\File|NULL
+	 * @return File|NULL
 	 */
 	public function findOneByFullSlug($slug)
 	{

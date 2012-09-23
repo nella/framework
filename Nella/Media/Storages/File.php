@@ -10,7 +10,8 @@
 
 namespace Nella\Media\Storages;
 
-use Nella\Media\IFile;
+use Nella\Media\IFile,
+	Nette\Http\FileUpload;
 
 /**
  * File storage
@@ -55,7 +56,7 @@ class File extends \Nette\Object implements \Nella\Media\IStorage
 	public function save(IFile $file, $from, $removeSource = FALSE)
 	{
 		$path = $this->dir . '/' . $file->getPath();
-		if ($from instanceof \Nette\Http\FileUpload) {
+		if ($from instanceof FileUpload) {
 			$from->move($path);
 		} elseif (@copy($from, $path) && $removeSource) {
 			@unlink($from);
