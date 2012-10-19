@@ -1,35 +1,43 @@
 <?php
 /**
+ * Test: Nella\Security\Model\IdentityEntity
+ *
  * This file is part of the Nella Framework (http://nellafw.org).
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
+ *
+ * @testcase Nella\Tests\Security\Model\IdentityEntityTest
  */
 
-namespace NellaTests\Security\Model;
+namespace Nella\Tests\Security\Model;
 
-class IdentityEntityTest extends \Nella\Testing\TestCase
+use Assert;
+
+require_once __DIR__ . '/../../../bootstrap.php';
+
+class IdentityEntityTest extends \TestCase
 {
 	/** @var \Nella\Security\Model\IdentityEntity */
 	private $identity;
 
-	public function setup()
+	public function setUp()
 	{
-		parent::setup();
+		parent::setUp();
 		$this->identity = new \Nella\Security\Model\IdentityEntity;
 	}
 
 	public function testInstance()
 	{
-		$this->assertInstanceOf('Nette\Security\IIdentity', $this->identity);
+		Assert::true($this->identity instanceof \Nette\Security\IIdentity);
 	}
 
 	public function testDefaultValuesSettersAndGetters()
 	{
-		$this->assertNull($this->identity->getId(), "->getId() default value");
-		$this->assertNull($this->identity->getDisplayName(), "->getDisplayName() default value");
-		$this->assertEquals(array(), $this->identity->getRoles(), "->getRoles() default value");
+		Assert::null($this->identity->getId(), "->getId() default value");
+		Assert::null($this->identity->getDisplayName(), "->getDisplayName() default value");
+		Assert::equal(array(), $this->identity->getRoles(), "->getRoles() default value");
 	}
 
 	public function dataSettersAndGetters()
@@ -47,8 +55,8 @@ class IdentityEntityTest extends \Nella\Testing\TestCase
 		$setter = "set" . ucfirst($method);
 		$getter = "get" . ucfirst($method);
 		$this->identity->$setter($value);
-		$this->assertEquals($value, $this->identity->$getter(),
-				"->$getter() equals " . (is_object($value) ? get_class($value) : $value)
+		Assert::equal($value, $this->identity->$getter(),
+			"->$getter() equals " . (is_object($value) ? get_class($value) : $value)
 		);
 	}
 
@@ -58,8 +66,8 @@ class IdentityEntityTest extends \Nella\Testing\TestCase
 	public function testSettersAndGettersProperties($property, $value)
 	{
 		$this->identity->$property = $value;
-		$this->assertEquals($value, $this->identity->$property,
-				"->$property equals " . (is_object($value) ? get_class($value) : $value)
+		Assert::equal($value, $this->identity->$property,
+			"->$property equals " . (is_object($value) ? get_class($value) : $value)
 		);
 	}
 }

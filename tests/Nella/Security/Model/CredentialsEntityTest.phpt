@@ -1,35 +1,43 @@
 <?php
 /**
+ * Test: Nella\Security\Model\CredentialsEntity
+ *
  * This file is part of the Nella Framework (http://nellafw.org).
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
+ *
+ * @testcase Nella\Tests\Security\Model\CredentialsEntityTest
  */
 
-namespace NellaTests\Security\Model;
+namespace Nella\Tests\Security\Model;
 
-class CredentialsEntityTest extends \Nella\Testing\TestCase
+use Assert;
+
+require_once __DIR__ . '/../../../bootstrap.php';
+
+class CredentialsEntityTest extends \TestCase
 {
 	/** @var \Nella\Security\Model\IdentityEntity */
 	private $identity;
 	/** @var \Nella\Security\Model\CredentialsEntity */
 	private $credentials;
 
-	public function setup()
+	public function setUp()
 	{
-		parent::setup();
+		parent::setUp();
 		$this->identity = new \Nella\Security\Model\IdentityEntity;
 		$this->credentials = new \Nella\Security\Model\CredentialsEntity($this->identity);
 	}
 
 	public function testDefaultValuesSettersAndGetters()
 	{
-		$this->assertNull($this->credentials->getId(), "->getId() default value");
-		$this->assertNull($this->credentials->getUsername(), "->getUsername() default value");
-		$this->assertNull($this->credentials->getPassword(), "->getPassword() default value");
-		$this->assertNull($this->credentials->getEmail(), "->getEmail() default value");
-		$this->assertSame($this->identity, $this->credentials->getIdentity(), "->getIdentity() default value");
+		Assert::null($this->credentials->getId(), "->getId() default value");
+		Assert::null($this->credentials->getUsername(), "->getUsername() default value");
+		Assert::null($this->credentials->getPassword(), "->getPassword() default value");
+		Assert::null($this->credentials->getEmail(), "->getEmail() default value");
+		Assert::same($this->identity, $this->credentials->getIdentity(), "->getIdentity() default value");
 	}
 
 	public function dataSettersAndGetters()
@@ -48,8 +56,8 @@ class CredentialsEntityTest extends \Nella\Testing\TestCase
 		$setter = "set" . ucfirst($method);
 		$getter = "get" . ucfirst($method);
 		$this->credentials->$setter($value);
-		$this->assertEquals($value, $this->credentials->$getter(),
-				"->$getter() equals " . (is_object($value) ? get_class($value) : $value)
+		Assert::equal($value, $this->credentials->$getter(),
+			"->$getter() equals " . (is_object($value) ? get_class($value) : $value)
 		);
 	}
 
@@ -59,8 +67,8 @@ class CredentialsEntityTest extends \Nella\Testing\TestCase
 	public function testSettersAndGettersProperties($property, $value)
 	{
 		$this->credentials->$property = $value;
-		$this->assertEquals($value, $this->credentials->$property,
-				"->$property equals " . (is_object($value) ? get_class($value) : $value)
+		Assert::equal($value, $this->credentials->$property,
+			"->$property equals " . (is_object($value) ? get_class($value) : $value)
 		);
 	}
 
@@ -68,15 +76,15 @@ class CredentialsEntityTest extends \Nella\Testing\TestCase
 	{
 		$this->credentials->password = "loremIpsum";
 		$data = $this->credentials->getPassword(FALSE);
-		$this->assertEquals('sha256', $data[0], 'algo');
-		$this->assertEquals(hash($data[0], $data[1]."loremIpsum"), $data[2], 'hash');
+		Assert::equal('sha256', $data[0], 'algo');
+		Assert::equal(hash($data[0], $data[1]."loremIpsum"), $data[2], 'hash');
 
 	}
 
 	public function testVerifyPassword()
 	{
 		$this->credentials->password = "loremIpsum";
-		$this->assertTrue($this->credentials->verifyPassword("loremIpsum"));
-		$this->assertFalse($this->credentials->verifyPassword("fail"));
+		Assert::true($this->credentials->verifyPassword("loremIpsum"));
+		Assert::false($this->credentials->verifyPassword("fail"));
 	}
 }
