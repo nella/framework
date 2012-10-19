@@ -60,7 +60,7 @@
 				<include name="**/*.php" />
 			</fileset>
 
-			<fileset dir="${basedir}/tests-old">
+			<fileset dir="${basedir}/tests">
 				<include name="**/*.php" />
 			</fileset>
 		</apply>
@@ -129,7 +129,15 @@
 	</target>
 
 	<target name="phpunit" description="Run unit tests with PHPUnit">
-		<exec executable="phpunit" failonerror="true"/>
+		<exec executable="sh" failonerror="true">
+			<arg path="${basedir}/tests/run-tests.sh" />
+			<arg path="${basedir}/tests" />
+		</exec>
+		<exec executable="sh" dir="${basedir}/tests">
+			<arg path="${basedir}/tests/convert-coverage.sh" />
+			<arg value="-d" />
+			<arg path="${basedir}/build/coverage/index.html" />
+		</exec>
 	</target>
 
 	<target name="phpcb" description="Aggregate tool output with PHP_CodeBrowser">

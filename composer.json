@@ -28,7 +28,6 @@
 		"nette/nette": ">=2.0.5"
 	},
 	"require-dev": {
-		"nella/testing": "@dev",
 		"nette/tester": "@dev"
 	},
 	"replace": {
