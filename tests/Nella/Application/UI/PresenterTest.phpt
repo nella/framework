@@ -1,44 +1,67 @@
 <?php
 /**
+ * Test: Nella\Application\UI\Presenter
+ *
  * This file is part of the Nella Framework (http://nellafw.org).
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
+ *
+ * @testcase Nella\Tests\Application\UI\PresenterTest
  */
 
-namespace NellaTests\Application\UI;
+namespace Nella\Tests\Application\UI;
 
-class PresenterTest extends \Nella\Testing\TestCase
+use Assert,
+	Nella\Mocks\Application\UI\Presenter;
+
+require_once __DIR__ . '/../../../bootstrap.php';
+require_once MOCKS_DIR . '/Application/UI/Presenter.php';
+
+class PresenterTest extends \TestCase
 {
-	/** @var PresenterMock */
+	/** @var \Nette\DI\Container */
+	private $context;
+	/** @var \Nella\Mocks\Application\UI\Presenter */
 	private $presenter;
 
-	public function setup()
+	public function setUp()
 	{
-		parent::setup();
+		parent::setUp();
 
-		$context = $this->getContext();
+		$this->context = new \Nette\DI\Container;
+
+		$this->context->parameters['appDir'] = TESTS_DIR;
+		$this->context->parameters['productionMode'] = FALSE;
 
 		$formatter = new \Nella\Templating\TemplateFilesFormatter;
 		$formatter->useModuleSuffix = FALSE;
 		$formatter->addDir(__DIR__, 5)
-				->addDir($context->parameters['appDir'], 999)
-				->addDir($context->expand('%appDir%/Nella'), 0);
+			->addDir($this->context->parameters['appDir'], 999)
+			->addDir($this->context->expand('%appDir%/Nella'), 0);
 
-		if (!$context->hasService('nella')) {
-			$context->addService('nella', new \Nette\DI\NestedAccessor($context, 'nella'));
-		}
+		$this->context->addService('nette', new \Nette\DI\NestedAccessor($this->context, 'nette'));
+		$this->context->addService('nette.templateCacheStorage', new \Nette\Caching\Storages\DevNullStorage);
+		$this->context->addService('nette.httpRequest', new \Nette\Http\Request(new \Nette\Http\UrlScript));
+		$this->context->classes['nette\security\user'] = 'nette';
+		$this->context->classes['nette\http\iresponse'] = 'nette';
+		$this->context->classes['nette\caching\istorage'] = 'nette.templateCacheStorage';
+		$this->context->classes['nette\http\irequest'] = 'nette.httpRequest';
 
-		$context->removeService('nella.templateFilesFormatter');
-		$context->addService('nella.templateFilesFormatter', $formatter);
+		$this->context->extensionMethod('createNette__Latte', function() { return new \Nette\Latte\Engine; });
 
-		$this->presenter = new Presenter\PresenterMock($context);
+		$this->context->addService('nella', new \Nette\DI\NestedAccessor($this->context, 'nella'));
+		$this->context->addService('nella.templateFilesFormatter', $formatter);
+
+		$this->presenter = new Presenter($this->context);
 	}
 
 	public function dataFormatLayoutTemplatesFiles()
 	{
-		$context = $this->getContext();
+		$context = new \Nette\DI\Container;
+		$context->parameters['appDir'] = TESTS_DIR;
+
 		return array(
 			array('Foo', 'bar', array(
 				$context->parameters['appDir'] . "/templates/Foo/@bar.latte",
@@ -85,12 +108,14 @@ class PresenterTest extends \Nella\Testing\TestCase
 		$this->presenter->name = $presenter;
 		$this->presenter->layout = $layout;
 
-		$this->assertEquals($eq, $this->presenter->formatLayoutTemplateFiles(), "->formatLayoutTemplateFiles() $presenter:@$layout");
+		Assert::equal($eq, $this->presenter->formatLayoutTemplateFiles(), "->formatLayoutTemplateFiles() $presenter:@$layout");
 	}
 
 	public function dataFormatTemplatesFiles()
 	{
-		$context = $this->getContext();
+		$context = new \Nette\DI\Container;
+		$context->parameters['appDir'] = TESTS_DIR;
+
 		return array(
 			array('Foo', 'bar', array(
 				$context->parameters['appDir'] . "/templates/Foo/bar.latte",
@@ -146,24 +171,6 @@ class PresenterTest extends \Nella\Testing\TestCase
 		$this->presenter->name = $presenter;
 		$this->presenter->view = $view;
 
-		$this->assertEquals($eq, $this->presenter->formatTemplateFiles(), "->formatTemplateFiles() $presenter:$view");
-	}
-}
-
-namespace NellaTests\Application\UI\Presenter;
-
-class PresenterMock extends \Nella\Application\UI\Presenter
-{
-	/**
-	 * @param string
-	 * @return \Nette\Application\UI\Presetner
-	 */
-	public function setName($name)
-	{
-		$ref = new \Nette\Reflection\Property('Nette\ComponentModel\Component', 'name');
-		$ref->setAccessible(TRUE);
-		$ref->setValue($this, $name);
-		$ref->setAccessible(FALSE);
-		return $this;
+		Assert::equal($eq, $this->presenter->formatTemplateFiles(), "->formatTemplateFiles() $presenter:$view");
 	}
 }

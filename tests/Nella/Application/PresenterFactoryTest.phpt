@@ -1,23 +1,32 @@
 <?php
 /**
+ * Test: Nella\Application\PresenterFactory
+ *
  * This file is part of the Nella Framework (http://nellafw.org).
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
+ *
+ * @testcase Nella\Tests\Application\PresenterFactoryTest
  */
 
-namespace NellaTests\Application;
+namespace Nella\Tests\Application;
 
-class PresenterFactoryTest extends \Nella\Testing\TestCase
+use Assert;
+
+require_once __DIR__ . '/../../bootstrap.php';
+
+class PresenterFactoryTest extends \TestCase
 {
 	/** @var \Nella\Application\PresenterFactory */
 	private $loader;
 
-	public function setup()
+	public function setUp()
 	{
-		parent::setup();
-		$this->loader = new \Nella\Application\PresenterFactory($this->getContext());
+		parent::setUp();
+
+		$this->loader = new \Nella\Application\PresenterFactory(new \Nette\DI\Container);
 		$this->loader->addNamespace('App', 2);
 		$this->loader->addNamespace('Nella');
 		$this->loader->useModuleSuffix = FALSE;
@@ -41,7 +50,7 @@ class PresenterFactoryTest extends \Nella\Testing\TestCase
 	 */
 	public function testFormatPresenterClass($presenter, $class, $namespace = 'App')
 	{
-		$this->assertEquals($class, $this->loader->formatPresenterClass($presenter, $namespace), "->formatPresenterClass('$presenter')");
+		Assert::equal($class, $this->loader->formatPresenterClass($presenter, $namespace), "->formatPresenterClass('$presenter')");
 	}
 
 	public function dataFormatPresenterClassModule()
@@ -63,7 +72,7 @@ class PresenterFactoryTest extends \Nella\Testing\TestCase
 	public function testFormatPresenterClassModule($presenter, $class, $namespace = 'App')
 	{
 		$this->loader->useModuleSuffix = TRUE;
-		$this->assertEquals($class, $this->loader->formatPresenterClass($presenter, $namespace), "->formatPresenterClass('$presenter')");
+		Assert::equal($class, $this->loader->formatPresenterClass($presenter, $namespace), "->formatPresenterClass('$presenter')");
 	}
 
 	public function dataUnformatPresenterClass()
@@ -84,7 +93,7 @@ class PresenterFactoryTest extends \Nella\Testing\TestCase
 	 */
 	public function testUnformatPresenterClass($class, $presenter)
 	{
-		$this->assertEquals($presenter, $this->loader->unformatPresenterClass($class), "->unformatPresenterClass('$class')");
+		Assert::equal($presenter, $this->loader->unformatPresenterClass($class), "->unformatPresenterClass('$class')");
 	}
 
 	public function dataUnformatPresenterClassModule()
@@ -106,16 +115,16 @@ class PresenterFactoryTest extends \Nella\Testing\TestCase
 	public function testUnformatPresenterClassModule($class, $presenter)
 	{
 		$this->loader->useModuleSuffix = TRUE;
-		$this->assertEquals($presenter, $this->loader->unformatPresenterClass($class), "->unformatPresenterClass('$class')");
+		Assert::equal($presenter, $this->loader->unformatPresenterClass($class), "->unformatPresenterClass('$class')");
 	}
 
 	public function dataGetPresenterClass()
 	{
 		return array(
-			array('Foo', 'NellaTests\Application\PresenterFactory\FooPresenter'),
-			array('Bar:Foo', 'NellaTests\Application\PresenterFactory\Bar\FooPresenter'),
-			array('My', 'NellaTests\Application\PresenterFactoryTest\MyPresenter'),
-			array('Foo:My', 'NellaTests\Application\PresenterFactoryTest\Foo\MyPresenter'),
+			array('Foo', 'Nella\Tests\Application\PresenterFactory\FooPresenter'),
+			array('Bar:Foo', 'Nella\Tests\Application\PresenterFactory\Bar\FooPresenter'),
+			array('My', 'Nella\Tests\Application\PresenterFactoryTest\MyPresenter'),
+			array('Foo:My', 'Nella\Tests\Application\PresenterFactoryTest\Foo\MyPresenter'),
 		);
 	}
 
@@ -124,60 +133,59 @@ class PresenterFactoryTest extends \Nella\Testing\TestCase
 	 */
 	public function testGetPresenterClass($presenter, $class)
 	{
-		$this->loader->addNamespace('NellaTests\Application\PresenterFactory', 1);
-		$this->loader->addNamespace('NellaTests\Application\PresenterFactoryTest', 1);
-		$this->assertEquals($class, $this->loader->getPresenterClass($presenter), "->getPresenterClass('$presenter')");
+		$this->loader->addNamespace('Nella\Tests\Application\PresenterFactory', 1);
+		$this->loader->addNamespace('Nella\Tests\Application\PresenterFactoryTest', 1);
+		Assert::equal($class, $this->loader->getPresenterClass($presenter), "->getPresenterClass('$presenter')");
 	}
 
-	/**
-	 * @expectedException Nette\Application\InvalidPresenterException
-	 */
 	public function testGetPresenterClassException1()
 	{
-		$name = NULL;
-		$this->loader->getPresenterClass($name);
+		$loader = $this->loader;
+		Assert::throws(function() use($loader) {
+			$name = NULL;
+			$loader->getPresenterClass($name);
+		}, 'Nette\Application\InvalidPresenterException');
 	}
 
-	/**
-	 * @expectedException Nette\Application\InvalidPresenterException
-	 */
 	public function testGetPresenterClassException2()
 	{
-		$name = 'Bar';
-		$this->loader->getPresenterClass($name);
+		$loader = $this->loader;
+		Assert::throws(function() use($loader) {
+			$name = 'Bar';
+			$loader->getPresenterClass($name);
+		}, 'Nette\Application\InvalidPresenterException');
 	}
-
-	/**
-	 * @expectedException Nette\Application\InvalidPresenterException
-	 */
 	public function testGetPresenterClassException3()
 	{
-		$name = 'Baz';
-		$this->loader->getPresenterClass($name);
+		$loader = $this->loader;
+		Assert::throws(function() use($loader) {
+			$name = 'Baz';
+			$loader->getPresenterClass($name);
+		}, 'Nette\Application\InvalidPresenterException');
 	}
 
-	/**
-	 * @expectedException Nette\Application\InvalidPresenterException
-	 */
 	public function testGetPresenterClassException4()
 	{
-		$name = 'Bar';
-		$this->loader->getPresenterClass($name);
+		$loader = $this->loader;
+		Assert::throws(function() use($loader) {
+			$name = 'Bar';
+			$loader->getPresenterClass($name);
+		}, 'Nette\Application\InvalidPresenterException');
 	}
 }
 
-namespace NellaTests\Application\PresenterFactory;
+namespace Nella\Tests\Application\PresenterFactory;
 
 class FooPresenter extends \Nette\Application\UI\Presenter { }
 
-namespace NellaTests\Application\PresenterFactory\Bar;
+namespace Nella\Tests\Application\PresenterFactory\Bar;
 
 class FooPresenter extends \Nette\Application\UI\Presenter { }
 
-namespace NellaTests\Application\PresenterFactoryTest;
+namespace Nella\Tests\Application\PresenterFactoryTest;
 
 class MyPresenter extends \Nette\Application\UI\Presenter { }
 
-namespace NellaTests\Application\PresenterFactoryTest\Foo;
+namespace Nella\Tests\Application\PresenterFactoryTest\Foo;
 
 class MyPresenter extends \Nette\Application\UI\Presenter { }
