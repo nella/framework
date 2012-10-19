@@ -60,7 +60,7 @@
 				<include name="**/*.php" />
 			</fileset>
 
-			<fileset dir="${basedir}/tests">
+			<fileset dir="${basedir}/tests-old">
 				<include name="**/*.php" />
 			</fileset>
 		</apply>

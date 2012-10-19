@@ -8,4 +8,4 @@ before_script:
   - "sh -c 'curl -s http://getcomposer.org/installer | php'"
   - "sh -c 'php composer.phar install --dev'"
 
-script: phpunit --configuration tests/phpunit.xml
+script: phpunit --configuration tests-old/phpunit.xml
