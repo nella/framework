@@ -1,26 +1,32 @@
 <?php
 /**
+ * Test: Nella\Latte\Macros\UIMacros
+ *
  * This file is part of the Nella Framework (http://nellafw.org).
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
- * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.com
+ * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
+ *
+ * @testcase Nella\Tests\Latte\Macros\UIMacrosTest
  */
 
-namespace NellaTests\Latte\Macros;
+namespace Nella\Tests\Latte\Macros;
 
-use Nette\Latte\Compiler,
-	Nette\Latte\Parser,
-	Nette\Latte\MacroNode;
+use Assert,
+	Nette\Latte\Compiler,
+	Nette\Latte\Parser;
 
-class UIMacrosTest extends \Nella\Testing\TestCase
+require_once __DIR__ . '/../../../bootstrap.php';
+
+class UIMacrosTest extends \TestCase
 {
 	/** @var \Nette\Latte\Compiler */
 	private $compiler;
 	/** @var \Nette\Latte\Parser */
 	private $parser;
 
-	protected function setup()
+	protected function setUp()
 	{
 		$this->compiler = new Compiler;
 		$this->compiler->setContext(Compiler::CONTENT_HTML);
@@ -49,6 +55,6 @@ class UIMacrosTest extends \Nella\Testing\TestCase
 
 		$tokens = $this->parser->parse($data);
 		$actual = $this->compiler->compile($tokens);
-		$this->assertEquals($expected, $actual, $input);
+		Assert::equal($expected, $actual, $input);
 	}
 }
