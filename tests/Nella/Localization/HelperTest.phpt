@@ -1,15 +1,23 @@
 <?php
 /**
+ * Test: Nella\Localization\Helper
+ *
  * This file is part of the Nella Framework (http://nellafw.org).
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
- * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.com
+ * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
+ *
+ * @testcase Nella\Tests\Localization\HelperTest
  */
 
-namespace NellaTests\Localization;
+namespace Nella\Tests\Localization;
 
-class HelperTest extends \Nella\Testing\TestCase
+use Assert;
+
+require_once __DIR__ . '/../../bootstrap.php';
+
+class HelperTest extends \TestCase
 {
 	public function dataForms()
 	{
@@ -33,6 +41,6 @@ class HelperTest extends \Nella\Testing\TestCase
 		$forms = 'nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4 ? 1 : 2);';
 		$form = \Nella\Localization\Helper::toForm($forms, $count);
 
-		$this->assertEquals($expected, $form, "from $count to $expected");
+		Assert::equal($expected, $form, "from $count to $expected");
 	}
 }

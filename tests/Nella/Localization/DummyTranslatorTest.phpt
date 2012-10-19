@@ -1,15 +1,23 @@
 <?php
 /**
+ * Test: Nella\Localization\DummyTranslator
+ *
  * This file is part of the Nella Framework (http://nellafw.org).
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
- * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.com
+ * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
+ *
+ * @testcase Nella\Tests\Localization\DummyTranslatorTest
  */
 
-namespace NellaTests\Localization;
+namespace Nella\Tests\Localization;
 
-class DummyTranslatorTest extends \Nella\Testing\TestCase
+use Assert;
+
+require_once __DIR__ . '/../../bootstrap.php';
+
+class DummyTranslatorTest extends \TestCase
 {
 	/** @var \Nella\Localization\DummyTranslator */
 	private $translator;
@@ -35,7 +43,7 @@ class DummyTranslatorTest extends \Nella\Testing\TestCase
 	{
 		$tmp = (array) $message;
 		$tmp = reset($tmp);
-		$this->assertEquals(
+		Assert::equal(
 			$translation,
 			$this->translator->translate($message, $count),
 			"translate('$tmp')" . ($count !== NULL ? (" - " .$count) : "")
