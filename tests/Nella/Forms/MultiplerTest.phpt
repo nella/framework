@@ -1,23 +1,33 @@
 <?php
 /**
+ * Test: Nella\Forms\Multipler
+ *
  * This file is part of the Nella Framework (http://nellafw.org).
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
+ *
+ * @testcase Nella\Tests\Forms\MultiplerTest
  */
 
-namespace NellaTests\Forms;
+namespace Nella\Tests\Forms;
 
-use Nella\Forms\Multipler;
+use Assert,
+	Nella\Forms\Form,
+	Nella\Forms\Multipler;
 
-class MultiplerTest extends \Nella\Testing\FormTestCase
+require_once __DIR__ . '/../../bootstrap.php';
+require_once MOCKS_DIR . '/Application/UI/ControlPresenter.php';
+
+class MultiplerTest extends \TestCase
 {
 	/** @var \Nella\Forms\Multipler */
 	protected $multipler;
 
-	public function setup()
+	public function setUp()
 	{
+		parent::setUp();
 		$form = new \Nella\Forms\Form;
 
 		$form['test'] = $this->multipler = new Multipler(function($container) {
@@ -26,38 +36,61 @@ class MultiplerTest extends \Nella\Testing\FormTestCase
 		});
 	}
 
+	/**
+	 * @param \Nette\Application\UI\Form
+	 * @param array
+	 */
+	protected function runForm(\Nette\Application\UI\Form $form, array $data)
+	{
+		$request = new \Nette\Application\Request('Default', 'POST', array('do' => 'test-submit'), $data);
+
+		$context = new \Nette\DI\Container;
+		$context->parameters['productionMode'] = FALSE;
+
+		$context->addService('nette', new \Nette\DI\NestedAccessor($context, 'nette'));
+		$context->addService('nette.templateCacheStorage', new \Nette\Caching\Storages\DevNullStorage);
+		$context->addService('nette.httpRequest', new \Nette\Http\Request(new \Nette\Http\UrlScript));
+		$context->classes['nette\security\user'] = 'nette';
+		$context->classes['nette\http\iresponse'] = 'nette';
+		$context->classes['nette\caching\istorage'] = 'nette.templateCacheStorage';
+		$context->classes['nette\http\irequest'] = 'nette.httpRequest';
+
+		$presenter = new \Nella\Mocks\Application\UI\ControlPresenter($context, $form);
+
+		$presenter->run($request);
+	}
+
 	public function testInstance()
 	{
-		$this->assertInstanceOf('Nella\Forms\Container', $this->multipler);
+		Assert::true($this->multipler instanceof \Nella\Forms\Container);
 	}
 
 	public function testOneContainer()
 	{
 		$cont = $this->multipler[0];
-		$this->assertInstanceOf('Nella\Forms\MultiplerContainer', $cont, 'is Nella\Forms\MultiplerContainer');
-		$this->assertInstanceOf('Nette\Forms\IControl', $cont['foo'], 'has Nette\Forms\IControl');
+		Assert::true($cont instanceof \Nella\Forms\MultiplerContainer, 'is Nella\Forms\MultiplerContainer');
+		Assert::true($cont['foo'] instanceof \Nette\Forms\IControl, 'has Nette\Forms\IControl');
 	}
 
 	public function testCreateOne()
 	{
 		$components = $this->multipler->getComponents(FALSE, 'Nette\Forms\Container');
-		$this->assertEquals(0, count($components), "test defaults");
+		Assert::equal(0, count($components), "test defaults");
 
 		$this->multipler->createOne();
 
 		$components = $this->multipler->getComponents(FALSE, 'Nette\Forms\Container');
-		$this->assertEquals(1, count($components), "test defaults");
+		Assert::equal(1, count($components), "test defaults");
 	}
 
-	/**
-	 * @expectedException Nette\InvalidStateException
-	 */
 	public function testAttachInvalidForm()
 	{
-		$form = new \Nette\Forms\Form;
-		$form['dyn'] = new \Nella\Forms\Multipler(function($container) {
-			$container->addText('foo', "Foo");
-		});
+		Assert::throws(function() {
+			$form = new \Nette\Forms\Form;
+			$form['dyn'] = new \Nella\Forms\Multipler(function($container) {
+				$container->addText('foo', "Foo");
+			});
+		}, 'Nette\InvalidStateException');
 	}
 
 	public function dataValues()
@@ -86,9 +119,9 @@ class MultiplerTest extends \Nella\Testing\FormTestCase
 
 		$ids = array_keys($data);
 		foreach ($ids as $id) {
-			$this->assertTrue(isset($this->multipler[$id]), "is container '$id' exists");
+			Assert::true(isset($this->multipler[$id]), "is container '$id' exists");
 
-			$this->assertEquals(
+			Assert::equal(
 				$data[$id]['foo'], $this->multipler[$id]['foo']->value,
 				"is foo value '{$data[$id]['foo']}' in container '$id'"
 			);
@@ -102,15 +135,15 @@ class MultiplerTest extends \Nella\Testing\FormTestCase
 	{
 		$this->multipler->setValues($data);
 
-		$this->assertEquals(\Nette\ArrayHash::from($data), $this->multipler->values);
+		Assert::equal($data, $this->multipler->getValues(TRUE));
 	}
 
-	/**
-	 * @expectedException Nette\InvalidArgumentException
-	 */
 	public function testCreateExistingContainer()
 	{
-		$this->multipler->createOne(1);
+		$multipler = $this->multipler;
+		Assert::throws(function() use($multipler) {
+			$multipler->createOne(1);
+		}, 'Nette\InvalidArgumentException');
 	}
 
 	public function testRemoveContainer()
@@ -118,29 +151,32 @@ class MultiplerTest extends \Nella\Testing\FormTestCase
 		$container = $this->multipler[1];
 
 		$containers = $this->multipler->getComponents(FALSE, 'Nella\Forms\MultiplerContainer');
-		$this->assertEquals(1, count($containers), "is container exist");
+		Assert::equal(1, count($containers), "is container exist");
 
 		$this->multipler->remove($container);
 
 		$containers = $this->multipler->getComponents(FALSE, 'Nella\Forms\MultiplerContainer');
-		$this->assertEquals(0, count($containers), "is container removed");
+		Assert::equal(0, count($containers), "is container removed");
 	}
 
 	/**
-	 * @expectedException Nette\InvalidStateException
+	 * @expectedException
 	 */
 	public function testRemoveNonExistContainer()
 	{
-		$container = new \Nella\Forms\MultiplerContainer(NULL, 'test');
-		$this->multipler->remove($container);
+		$multipler = $this->multipler;
+		Assert::throws(function() use($multipler) {
+			$container = new \Nella\Forms\MultiplerContainer(NULL, 'test');
+			$multipler->remove($container);
+		}, 'Nette\InvalidStateException');
 	}
 
 	public function testAddContainerButton()
 	{
 		$this->multipler->addAddContainerButton("Add container");
-		$this->assertTrue(isset($this->multipler[Multipler::ADD_CONTAINER_BUTTON_ID]), "is add button exist");
-		$this->assertInstanceOf(
-			'Nette\Forms\Controls\SubmitButton', $this->multipler[Multipler::ADD_CONTAINER_BUTTON_ID],
+		Assert::true(isset($this->multipler[Multipler::ADD_CONTAINER_BUTTON_ID]), "is add button exist");
+		Assert::true(
+			$this->multipler[Multipler::ADD_CONTAINER_BUTTON_ID] instanceof \Nette\Forms\Controls\SubmitButton,
 			"is add button valid type"
 		);
 	}
@@ -157,7 +193,7 @@ class MultiplerTest extends \Nella\Testing\FormTestCase
 		));
 
 		$containers = $this->multipler->getComponents(FALSE, 'Nella\Forms\MultiplerContainer');
-		$this->assertEquals(2, count($containers), "now is 2 containers");
+		Assert::equal(2, count($containers), "now is 2 containers");
 	}
 
 	public function testRemoveContainerHttp()
@@ -174,6 +210,6 @@ class MultiplerTest extends \Nella\Testing\FormTestCase
 		));
 
 		$containers = $this->multipler->getComponents(FALSE, 'Nella\Forms\MultiplerContainer');
-		$this->assertEquals(0, count($containers), "now is 0 containers");
+		Assert::equal(0, count($containers), "now is 0 containers");
 	}
 }
