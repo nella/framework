@@ -1,17 +1,24 @@
 <?php
 /**
+ * Test: Nella\Media\Helper
+ *
  * This file is part of the Nella Framework (http://nellafw.org).
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
- * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.com
+ * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
+ *
+ * @testcase Nella\Tests\Media\HelperTest
  */
 
-namespace NellaTests\Media;
+namespace Nella\Tests\Media;
 
-use Nella\Media\Helper;
+use Assert,
+	Nella\Media\Helper;
 
-class HelperTest extends \Nella\Testing\TestCase
+require_once __DIR__ . '/../../bootstrap.php';
+
+class HelperTest extends \TestCase
 {
 	public function dataExtToMime()
 	{
@@ -30,7 +37,7 @@ class HelperTest extends \Nella\Testing\TestCase
 	 */
 	public function testExtToMime($ext, $mime)
 	{
-		$this->assertEquals($mime, Helper::extToMimeType($ext), "::extToMimeType('$ext')");
+		Assert::equal($mime, Helper::extToMimeType($ext), "::extToMimeType('$ext')");
 	}
 
 	public function dataMimeToExt()
@@ -50,6 +57,6 @@ class HelperTest extends \Nella\Testing\TestCase
 	 */
 	public function testMimeToExt($mime, $ext)
 	{
-		$this->assertEquals($ext, Helper::mimeTypeToExt($mime), "::mimeTypeToExt('$mime')");
+		Assert::equal($ext, Helper::mimeTypeToExt($mime), "::mimeTypeToExt('$mime')");
 	}
 }

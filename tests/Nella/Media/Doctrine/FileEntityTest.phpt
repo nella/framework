@@ -1,36 +1,44 @@
 <?php
 /**
+ * Test: Nella\Media\Doctrine\FileEntity
+ *
  * This file is part of the Nella Framework (http://nellafw.org).
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
+ *
+ * @testcase Nella\Tests\Media\Doctrine\FileEntityTest
  */
 
-namespace NellaTests\Media\Doctrine;
+namespace Nella\Tests\Media\Doctrine;
 
-class FileEntityTest extends \Nella\Testing\TestCase
+use Assert;
+
+require_once __DIR__ . '/../../../bootstrap.php';
+
+class FileEntityTest extends \TestCase
 {
 	/** @var \Nella\Media\Doctrine\FileEntity */
 	private $file;
 
-	public function setup()
+	public function setUp()
 	{
-		parent::setup();
+		parent::setUp();
 		$this->file = new \Nella\Media\Doctrine\FileEntity('foo.bar', 'application/octet-stream');
 	}
 
 	public function testInstance()
 	{
-		$this->assertInstanceOf('Nella\Media\IFile', $this->file);
+		Assert::true($this->file instanceof \Nella\Media\IFile);
 	}
 
 	public function testDefaultValuesSettersAndGetters()
 	{
-		$this->assertNull($this->file->getId(), "->getId() default value");
-		$this->assertEquals('foo.bar', $this->file->getPath(), "->getPath() default value");
-		$this->assertNull($this->file->getSlug(FALSE), "->getSlug(FALSE) default value");
-		$this->assertEquals('application/octet-stream', $this->file->getContentType(), "->getContentType() default value");
+		Assert::null($this->file->getId(), "->getId() default value");
+		Assert::equal('foo.bar', $this->file->getPath(), "->getPath() default value");
+		Assert::null($this->file->getSlug(FALSE), "->getSlug(FALSE) default value");
+		Assert::equal('application/octet-stream', $this->file->getContentType(), "->getContentType() default value");
 	}
 
 	public function dataSettersAndGetters()
@@ -48,7 +56,7 @@ class FileEntityTest extends \Nella\Testing\TestCase
 		$setter = "set" . ucfirst($method);
 		$getter = "get" . ucfirst($method);
 		$this->file->$setter($value);
-		$this->assertEquals($value, $this->file->$getter(),
+		Assert::equal($value, $this->file->$getter(),
 			"->$getter() equals " . (is_object($value) ? get_class($value) : $value)
 		);
 	}
@@ -59,7 +67,7 @@ class FileEntityTest extends \Nella\Testing\TestCase
 	public function testSettersAndGettersProperties($property, $value)
 	{
 		$this->file->$property = $value;
-		$this->assertEquals($value, $this->file->$property,
+		Assert::equal($value, $this->file->$property,
 			"->$property equals " . (is_object($value) ? get_class($value) : $value)
 		);
 	}

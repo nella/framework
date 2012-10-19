@@ -1,29 +1,34 @@
 <?php
 /**
+ * Test: Nella\Media\Latte\MediaMacros
+ *
  * This file is part of the Nella Framework (http://nellafw.org).
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
- * This source file is subject to the GNU Lesser General Public License. For more information please see http://nella-project.com
+ * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
+ *
+ * @testcase Nella\Tests\Media\Latte\MediaMacrosTest
  */
 
-namespace NellaTests\Media\Latte;
+namespace Nella\Tests\Media\Latte;
 
-use Nette\Latte\Compiler,
-	Nette\Latte\Parser,
-	Nette\Latte\MacroNode;
+use Assert,
+	Nette\Latte\Compiler,
+	Nette\Latte\Parser;
 
-class MediaMacrosTest extends \Nella\Testing\TestCase
+require_once __DIR__ . '/../../../bootstrap.php';
+
+class MediaMacrosTest extends \TestCase
 {
 	/** @var \Nette\Latte\Compiler */
 	private $compiler;
 	/** @var \Nette\Latte\Parser */
 	private $parser;
-	/** @var \Nette\Latte\IMacro */
-	private $macros;
 
-	protected function setup()
+	protected function setUp()
 	{
+		parent::setUp();
 		$this->compiler = new Compiler;
 		$this->compiler->setContext(Compiler::CONTENT_HTML);
 		$this->parser = new Parser;
@@ -50,7 +55,7 @@ class MediaMacrosTest extends \Nella\Testing\TestCase
 
 		$tokens = $this->parser->parse($macro);
 		$actual = $this->compiler->compile($tokens);
-		$this->assertEquals($expected, $actual, $macro);
+		Assert::equal($expected, $actual, $macro);
 	}
 
 	public function dataFhref()
@@ -71,7 +76,7 @@ class MediaMacrosTest extends \Nella\Testing\TestCase
 
 		$tokens = $this->parser->parse($macro);
 		$actual = $this->compiler->compile($tokens);
-		$this->assertEquals($expected, $actual, $macro);
+		Assert::equal($expected, $actual, $macro);
 	}
 
 
@@ -108,7 +113,7 @@ class MediaMacrosTest extends \Nella\Testing\TestCase
 
 		$tokens = $this->parser->parse($macro);
 		$actual = $this->compiler->compile($tokens);
-		$this->assertEquals($expected, $actual, $macro);
+		Assert::equal($expected, $actual, $macro);
 	}
 
 	public function dataSrc()
@@ -133,7 +138,7 @@ class MediaMacrosTest extends \Nella\Testing\TestCase
 
 		$tokens = $this->parser->parse($macro);
 		$actual = $this->compiler->compile($tokens);
-		$this->assertEquals($expected, $actual, $macro);
+		Assert::equal($expected, $actual, $macro);
 	}
 
 	public function dataIhref()
@@ -158,6 +163,6 @@ class MediaMacrosTest extends \Nella\Testing\TestCase
 
 		$tokens = $this->parser->parse($macro);
 		$actual = $this->compiler->compile($tokens);
-		$this->assertEquals($expected, $actual, $macro);
+		Assert::equal($expected, $actual, $macro);
 	}
 }
