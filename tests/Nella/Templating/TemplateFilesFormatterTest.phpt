@@ -1,30 +1,38 @@
 <?php
 /**
+ * Test: Nella\Templating\TemplateFilesFormatter
+ *
  * This file is part of the Nella Framework (http://nellafw.org).
  *
  * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
  *
- * This source file is subject to the GNU Lesser General Public License. For more information please see http://nellacms.com
+ * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
+ *
+ * @testcase Nella\Tests\Templating\TemplateFilesFormatterTest
  */
 
-namespace NellaTests\Templating;
+namespace Nella\Tests\Templating;
 
-class TemplateFilesFormatterTest extends \Nella\Testing\TestCase
+use Assert;
+
+require_once __DIR__ . '/../../bootstrap.php';
+
+class TemplateFilesFormatterTest extends \TestCase
 {
 	/** @var \Nella\Templating\TemplateFilesFormatter */
 	private $formatter;
 
-	public function setup()
+	public function setUp()
 	{
-		parent::setup();
+		parent::setUp();
 		$this->formatter = new \Nella\Templating\TemplateFilesFormatter;
 		$this->formatter->useModuleSuffix = FALSE;
-		$this->formatter->addDir(__DIR__)->addDir(__DIR__ . "/Nella");
+		$this->formatter->addDir(__DIR__)->addDir(__DIR__ . '/Nella');
 	}
 
 	public function testInstance()
 	{
-		$this->assertInstanceOf('Nella\Templating\ITemplateFilesFormatter', $this->formatter, 'is instance "Nella\Templating\ITemplateFilesFormatter"');
+		Assert::true($this->formatter instanceof \Nella\Templating\ITemplateFilesFormatter);
 	}
 
 	public function dataFormatLayoutFiles()
@@ -68,7 +76,7 @@ class TemplateFilesFormatterTest extends \Nella\Testing\TestCase
 	 */
 	public function testFormatLayoutTemplateFiles($name, $layout, $expected)
 	{
-		$this->assertEquals($expected, $this->formatter->formatLayoutTemplateFiles($name, $layout));
+		Assert::equal($expected, $this->formatter->formatLayoutTemplateFiles($name, $layout));
 	}
 
 	public function dataFormatLayoutFilesModule()
@@ -113,7 +121,7 @@ class TemplateFilesFormatterTest extends \Nella\Testing\TestCase
 	public function testFormatLayoutTemplateFilesModule($name, $layout, $expected)
 	{
 		$this->formatter->useModuleSuffix = TRUE;
-		$this->assertEquals($expected, $this->formatter->formatLayoutTemplateFiles($name, $layout));
+		Assert::equal($expected, $this->formatter->formatLayoutTemplateFiles($name, $layout));
 	}
 
 	public function dataFormatFiles()
@@ -163,7 +171,7 @@ class TemplateFilesFormatterTest extends \Nella\Testing\TestCase
 	 */
 	public function testFormatTemplateFiles($name, $layout, $expected)
 	{
-		$this->assertEquals($expected, $this->formatter->formatTemplateFiles($name, $layout));
+		Assert::equal($expected, $this->formatter->formatTemplateFiles($name, $layout));
 	}
 
 	public function dataFormatFilesModule()
@@ -214,7 +222,7 @@ class TemplateFilesFormatterTest extends \Nella\Testing\TestCase
 	public function testFormatTemplateFilesModule($name, $layout, $expected)
 	{
 		$this->formatter->useModuleSuffix = TRUE;
-		$this->assertEquals($expected, $this->formatter->formatTemplateFiles($name, $layout));
+		Assert::equal($expected, $this->formatter->formatTemplateFiles($name, $layout));
 	}
 
 	public function dataComponentFormatTemplateFiles()
@@ -266,6 +274,6 @@ class TemplateFilesFormatterTest extends \Nella\Testing\TestCase
 	 */
 	public function testComponentFormatTemplateFiles($class, $view, $expected)
 	{
-		$this->assertEquals($expected, $this->formatter->formatComponentTemplateFiles($class, $view));
+		Assert::equal($expected, $this->formatter->formatComponentTemplateFiles($class, $view));
 	}
 }
