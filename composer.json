@@ -41,7 +41,7 @@
 	"repositories": [
 		{
 			"type": "vcs",
-			"url": "https://github.com/Vrtak-CZ/tester"
+			"url": "https://github.com/Vrtak-CZ/nette-tester"
 		}
 	]
 }
