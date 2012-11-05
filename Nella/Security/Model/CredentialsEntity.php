@@ -53,7 +53,7 @@ class CredentialsEntity extends \Nella\Doctrine\Entity
 	private $password;
 
 	/**
-	 * @param \Nella\Security\Model\IdentityEntity
+	 * @param IdentityEntity
 	 */
 	public function __construct(IdentityEntity $identity)
 	{
@@ -79,7 +79,7 @@ class CredentialsEntity extends \Nella\Doctrine\Entity
 
 	/**
 	 * @param string
-	 * @return IdentityEntity
+	 * @return CredentialsEntity
 	 */
 	public function setUsername($username)
 	{
@@ -100,7 +100,7 @@ class CredentialsEntity extends \Nella\Doctrine\Entity
 
 	/**
 	 * @param string
-	 * @return IdentityEntity
+	 * @return CredentialsEntity
 	 */
 	public function setEmail($email)
 	{
@@ -124,7 +124,7 @@ class CredentialsEntity extends \Nella\Doctrine\Entity
 	/**
 	 * @param string
 	 * @param string
-	 * @return IdentityEntity
+	 * @return CredentialsEntity
 	 */
 	public function setPassword($password, $algo = 'sha256')
 	{
