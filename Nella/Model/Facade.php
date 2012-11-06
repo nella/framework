@@ -17,7 +17,7 @@ use Doctrine\ORM\EntityManager;
  *
  * @author	Patrik Votoček
  */
-class Facade extends \Nette\Object implements IDao, IObjectFactory
+class Facade extends \Nette\Object implements IDao, IObjectFactory, IQueryable
 {
 	/** @var \Doctrine\ORM\EntityManager */
 	protected $em;
@@ -124,6 +124,15 @@ class Facade extends \Nette\Object implements IDao, IObjectFactory
 	public function findBy(array $criteria, array $orderBy = NULL, $limit = NULL, $offset = NULL)
 	{
 		return $this->repository->findBy($criteria, $orderBy, $limit, $offset);
+	}
+
+	/**
+	 * @param string|NULL
+	 * @return \Doctrine\ORM\QueryBuilder|\Doctrine\CouchDB\View\AbstractQuery
+	 */
+	public function createQueryBuilder($alias)
+	{
+		return $this->repository->createQueryBuilder($alias);
 	}
 }
 
