@@ -61,6 +61,8 @@ class Facade extends \Nette\Object implements IDao, IObjectFactory
 			}
 
 			return $this;
+		} catch(\Doctrine\DBAL\DBALException $e) {
+			Helper::convertException($e);
 		} catch (\PDOException $e) {
 			Helper::convertException($e);
 		}
@@ -79,6 +81,8 @@ class Facade extends \Nette\Object implements IDao, IObjectFactory
 			}
 
 			return $this;
+		} catch(\Doctrine\DBAL\DBALException $e) {
+			Helper::convertException($e);
 		} catch (\PDOException $e) {
 			Helper::convertException($e);
 		}

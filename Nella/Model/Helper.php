@@ -23,14 +23,26 @@ class Helper extends \Nette\Object
 	}
 
 	/**
-	 * @param \PDOException
+	 * @param \PDOException|\Doctrine\DBAL\DBALException
 	 * @throws \Nella\Model\DuplicateEntryException
 	 * @throws \Nella\Model\EmptyValueException
 	 * @throws \Nella\Model\Exception
 	 */
-	public static function convertException(\PDOException $e)
+	public static function convertException(\Exception $e)
 	{
-		$info = $e->errorInfo;
+		if ($e instanceof \Doctrine\DBAL\DBALException) {
+			$pe = $e->getPrevious();
+			if ($pe instanceof \PDOException) {
+				$info = $pe->errorInfo;
+			} else {
+				throw new \Nette\InvalidArgumentException('Not supported DBAL exteption type', 0, $e);
+			}
+		} elseif ($e instanceof \PDOException) {
+			$info = $e->errorInfo;
+		} else {
+			throw new \Nette\InvalidArgumentException('Only PDO and DBAL exteption accepted', 0, $e);
+		}
+
 		if ($info[0] == 23000 && $info[1] == 1062) { // unique fail
 			// @todo how to detect column name ?
 			throw new \Nella\Model\DuplicateEntryException($e->getMessage(), NULL, $e);
