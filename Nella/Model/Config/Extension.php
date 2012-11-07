@@ -85,7 +85,7 @@ class Extension extends \Nette\Config\CompilerExtension
 			}
 
 			$def = $builder->addDefinition($this->prefix($fullname));
-			$def->setClass('Nella\Model\Facade')
+			$def->setClass(isset($data['class']) ? $data['class'] : 'Nella\Model\Facade')
 				->setFactory(get_called_class().'::factory', $params);
 			if (isset($data['setup'])) {
 				foreach ($data['setup'] as $setup) {
