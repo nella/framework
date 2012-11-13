@@ -35,12 +35,12 @@ class Helper extends \Nette\Object
 			if ($pe instanceof \PDOException) {
 				$info = $pe->errorInfo;
 			} else {
-				throw new \Nette\InvalidArgumentException('Not supported DBAL exteption type', 0, $e);
+				throw new \Nette\InvalidArgumentException('Not supported DBAL exception type', 0, $e);
 			}
 		} elseif ($e instanceof \PDOException) {
 			$info = $e->errorInfo;
 		} else {
-			throw new \Nette\InvalidArgumentException('Only PDO and DBAL exteption accepted', 0, $e);
+			throw new \Nette\InvalidArgumentException('Only PDO and DBAL exception accepted', 0, $e);
 		}
 
 		if ($info[0] == 23000 && $info[1] == 1062) { // unique fail
