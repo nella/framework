@@ -5,7 +5,6 @@ php:
   - 5.4
 
 before_script:
-  - "sh -c 'curl -s http://getcomposer.org/installer | php'"
-  - "sh -c 'php composer.phar install --dev --no-interaction'"
+  - "sh -c 'composer install --dev --no-interaction'"
 
 script: "VERBOSE=true ./tests/run-tests.sh -s tests/"
