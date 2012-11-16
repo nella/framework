@@ -8,16 +8,16 @@
  *
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
  *
- * @testcase Nella\Tests\Security\Model\CredentialsEntityTest
+ * @testcase
  */
 
 namespace Nella\Tests\Security\Model;
 
-use Assert;
+use Tester\Assert;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 
-class CredentialsEntityTest extends \TestCase
+class CredentialsEntityTest extends \Tester\TestCase
 {
 	/** @var \Nella\Security\Model\IdentityEntity */
 	private $identity;
@@ -88,3 +88,5 @@ class CredentialsEntityTest extends \TestCase
 		Assert::false($this->credentials->verifyPassword("fail"));
 	}
 }
+
+id(new CredentialsEntityTest)->run(isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : NULL);

@@ -135,7 +135,7 @@
 		</exec>
 		<exec executable="sh" dir="${basedir}/tests">
 			<arg path="${basedir}/tests/convert-coverage.sh" />
-			<arg value="-d" />
+			<arg value="-o" />
 			<arg path="${basedir}/build/coverage/index.html" />
 		</exec>
 	</target>

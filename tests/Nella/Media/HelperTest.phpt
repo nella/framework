@@ -8,17 +8,17 @@
  *
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
  *
- * @testcase Nella\Tests\Media\HelperTest
+ * @testcase
  */
 
 namespace Nella\Tests\Media;
 
-use Assert,
+use Tester\Assert,
 	Nella\Media\Helper;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class HelperTest extends \TestCase
+class HelperTest extends \Tester\TestCase
 {
 	public function dataExtToMime()
 	{
@@ -60,3 +60,5 @@ class HelperTest extends \TestCase
 		Assert::equal($ext, Helper::mimeTypeToExt($mime), "::mimeTypeToExt('$mime')");
 	}
 }
+
+id(new HelperTest)->run(isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : NULL);

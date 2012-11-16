@@ -8,16 +8,16 @@
  *
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
  *
- * @testcase Nella\Tests\Application\PresenterFactoryTest
+ * @testcase
  */
 
 namespace Nella\Tests\Application;
 
-use Assert;
+use Tester\Assert;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class PresenterFactoryTest extends \TestCase
+class PresenterFactoryTest extends \Tester\TestCase
 {
 	/** @var \Nella\Application\PresenterFactory */
 	private $loader;
@@ -189,3 +189,5 @@ class MyPresenter extends \Nette\Application\UI\Presenter { }
 namespace Nella\Tests\Application\PresenterFactoryTest\Foo;
 
 class MyPresenter extends \Nette\Application\UI\Presenter { }
+
+id(new \Nella\Tests\Application\PresenterFactoryTest)->run(isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : NULL);

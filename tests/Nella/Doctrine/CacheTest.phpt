@@ -8,17 +8,17 @@
  *
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
  *
- * @testcase Nella\Tests\Doctrine\CacheTest
+ * @testcase
  */
 
 namespace Nella\Tests\Doctrine;
 
-use Assert,
+use Tester\Assert,
 	Nella\Doctrine\Cache;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class CacheTest extends \TestCase
+class CacheTest extends \Tester\TestCase
 {
 	/** @var \Nella\Doctrine\Cache */
 	private $cache;
@@ -41,3 +41,5 @@ class CacheTest extends \TestCase
 		Assert::false($this->cache->contains('foo'), "->contains('foo') - removed");
 	}
 }
+
+id(new CacheTest)->run(isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : NULL);

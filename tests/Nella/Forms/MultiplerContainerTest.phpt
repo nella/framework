@@ -8,17 +8,17 @@
  *
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
  *
- * @testcase Nella\Tests\Forms\MultiplerContainerTest
+ * @testcase
  */
 
 namespace Nella\Tests\Forms;
 
-use Assert,
+use Tester\Assert,
 	Nella\Forms\MultiplerContainer;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class MultiplerContainerTest extends \TestCase
+class MultiplerContainerTest extends \Tester\TestCase
 {
 	/** @var \Nella\Forms\MultiplerContainer */
 	private $container;
@@ -46,3 +46,5 @@ class MultiplerContainerTest extends \TestCase
 		);
 	}
 }
+
+id(new MultiplerContainerTest)->run(isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : NULL);

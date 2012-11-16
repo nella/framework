@@ -8,18 +8,18 @@
  *
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
  *
- * @testcase Nella\Tests\Latte\Macros\UIMacrosTest
+ * @testcase
  */
 
 namespace Nella\Tests\Latte\Macros;
 
-use Assert,
+use Tester\Assert,
 	Nette\Latte\Compiler,
 	Nette\Latte\Parser;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 
-class UIMacrosTest extends \TestCase
+class UIMacrosTest extends \Tester\TestCase
 {
 	/** @var \Nette\Latte\Compiler */
 	private $compiler;
@@ -58,3 +58,5 @@ class UIMacrosTest extends \TestCase
 		Assert::equal($expected, $actual, $input);
 	}
 }
+
+id(new UIMacrosTest)->run(isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : NULL);

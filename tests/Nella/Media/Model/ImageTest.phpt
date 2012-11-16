@@ -8,17 +8,17 @@
  *
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
  *
- * @testcase Nella\Tests\Media\Model\ImageTest
+ * @testcase
  */
 
 namespace Nella\Tests\Media\Model;
 
-use Assert,
+use Tester\Assert,
 	Nella\Media\Model\Image;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 
-class ImageTest extends \TestCase
+class ImageTest extends \Tester\TestCase
 {
 	const PATH = 'logo.png';
 	/** @var \Nella\Media\Model\Image */
@@ -73,3 +73,5 @@ class ImageTest extends \TestCase
 		}, 'Nette\InvalidArgumentException');
 	}
 }
+
+id(new ImageTest)->run(isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : NULL);

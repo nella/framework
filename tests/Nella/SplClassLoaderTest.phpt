@@ -8,16 +8,16 @@
  *
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
  *
- * @testcase Nella\Tests\SplClassLoaderTest
+ * @testcase
  */
 
 namespace Nella\Tests;
 
-use Assert;
+use Tester\Assert;
 
 require_once __DIR__ . '/../bootstrap.php';
 
-class SplClassLoaderTest extends \TestCase
+class SplClassLoaderTest extends \Tester\TestCase
 {
 	public function setUp()
 	{
@@ -37,3 +37,5 @@ class SplClassLoaderTest extends \TestCase
 		Assert::false(class_exists('NellaTests\SplClassLoader\Bar'));
 	}
 }
+
+id(new SplClassLoaderTest)->run(isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : NULL);

@@ -8,16 +8,16 @@
  *
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
  *
- * @testcase Nella\Tests\Localization\DummyTranslatorTest
+ * @testcase
  */
 
 namespace Nella\Tests\Localization;
 
-use Assert;
+use Tester\Assert;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class DummyTranslatorTest extends \TestCase
+class DummyTranslatorTest extends \Tester\TestCase
 {
 	/** @var \Nella\Localization\DummyTranslator */
 	private $translator;
@@ -50,3 +50,5 @@ class DummyTranslatorTest extends \TestCase
 		);
 	}
 }
+
+id(new DummyTranslatorTest)->run(isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : NULL);

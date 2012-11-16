@@ -8,17 +8,17 @@
  *
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
  *
- * @testcase Nella\Tests\Media\Doctrine\ImageFormatEntityTest
+ * @testcase
  */
 
 namespace Nella\Tests\Media\Doctrine;
 
-use Assert,
+use Tester\Assert,
 	Nella\Media\Doctrine\ImageFormatEntity;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 
-class ImageFormatEntityTest extends \TestCase
+class ImageFormatEntityTest extends \Tester\TestCase
 {
 	/** @var \Nella\Media\Doctrine\ImageFormatEntity */
 	private $format;
@@ -83,3 +83,5 @@ class ImageFormatEntityTest extends \TestCase
 		);
 	}
 }
+
+id(new ImageFormatEntityTest)->run(isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : NULL);

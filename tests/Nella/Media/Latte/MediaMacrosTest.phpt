@@ -8,18 +8,18 @@
  *
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
  *
- * @testcase Nella\Tests\Media\Latte\MediaMacrosTest
+ * @testcase
  */
 
 namespace Nella\Tests\Media\Latte;
 
-use Assert,
+use Tester\Assert,
 	Nette\Latte\Compiler,
 	Nette\Latte\Parser;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 
-class MediaMacrosTest extends \TestCase
+class MediaMacrosTest extends \Tester\TestCase
 {
 	/** @var \Nette\Latte\Compiler */
 	private $compiler;
@@ -166,3 +166,5 @@ class MediaMacrosTest extends \TestCase
 		Assert::equal($expected, $actual, $macro);
 	}
 }
+
+id(new MediaMacrosTest)->run(isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : NULL);

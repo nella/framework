@@ -4,7 +4,7 @@
 dir=$(cd `dirname $0` && pwd)
 
 # Path to test runner script
-runnerScript="$dir/../vendor/nette/tester/Tester/ConvertCoverage.phpc"
+runnerScript="$dir/../vendor/nette/tester/Tester/coverage-report.php"
 if [ ! -f "$runnerScript" ]; then
 	echo "Nette Tester is missing. You can install it using Composer:" >&2
 	echo "php composer.phar update --dev." >&2
@@ -12,4 +12,4 @@ if [ ! -f "$runnerScript" ]; then
 fi
 
 # Runs converter with script's arguments
-php "$runnerScript" -f "coverage.dat" -s "$dir/../Nella" -n "Nella Framework" -e "*.phtml" -e "*.md" -e "*.json" -e "Diagnostics/*" -e "loader.php" "$@"
+php "$runnerScript" -c "coverage.dat" -s "$dir/../Nella" -t "Nella Framework" "$@"

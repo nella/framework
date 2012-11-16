@@ -8,18 +8,18 @@
  *
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
  *
- * @testcase Nella\Tests\Console\LazyRouterTest
+ * @testcase
  */
 
 namespace Nella\Tests\Console;
 
-use Assert,
+use Tester\Assert,
 	Nette\DI\Container,
 	Nella\Console\LazyRouter;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class LazyRouterTest extends \TestCase
+class LazyRouterTest extends \Tester\TestCase
 {
 	public function testMissingServiceByName()
 	{
@@ -56,3 +56,4 @@ class LazyRouterTest extends \TestCase
 	}
 }
 
+id(new LazyRouterTest)->run(isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : NULL);

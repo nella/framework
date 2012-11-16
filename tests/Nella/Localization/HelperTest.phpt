@@ -8,16 +8,16 @@
  *
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
  *
- * @testcase Nella\Tests\Localization\HelperTest
+ * @testcase
  */
 
 namespace Nella\Tests\Localization;
 
-use Assert;
+use Tester\Assert;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class HelperTest extends \TestCase
+class HelperTest extends \Tester\TestCase
 {
 	public function dataForms()
 	{
@@ -44,3 +44,5 @@ class HelperTest extends \TestCase
 		Assert::equal($expected, $form, "from $count to $expected");
 	}
 }
+
+id(new HelperTest)->run(isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : NULL);

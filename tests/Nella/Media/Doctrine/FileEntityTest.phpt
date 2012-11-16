@@ -8,16 +8,16 @@
  *
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
  *
- * @testcase Nella\Tests\Media\Doctrine\FileEntityTest
+ * @testcase
  */
 
 namespace Nella\Tests\Media\Doctrine;
 
-use Assert;
+use Tester\Assert;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 
-class FileEntityTest extends \TestCase
+class FileEntityTest extends \Tester\TestCase
 {
 	/** @var \Nella\Media\Doctrine\FileEntity */
 	private $file;
@@ -72,3 +72,5 @@ class FileEntityTest extends \TestCase
 		);
 	}
 }
+
+id(new FileEntityTest)->run(isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : NULL);

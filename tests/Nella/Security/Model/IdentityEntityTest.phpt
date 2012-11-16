@@ -8,16 +8,16 @@
  *
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
  *
- * @testcase Nella\Tests\Security\Model\IdentityEntityTest
+ * @testcase
  */
 
 namespace Nella\Tests\Security\Model;
 
-use Assert;
+use Tester\Assert;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 
-class IdentityEntityTest extends \TestCase
+class IdentityEntityTest extends \Tester\TestCase
 {
 	/** @var \Nella\Security\Model\IdentityEntity */
 	private $identity;
@@ -71,3 +71,5 @@ class IdentityEntityTest extends \TestCase
 		);
 	}
 }
+
+id(new IdentityEntityTest)->run(isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : NULL);

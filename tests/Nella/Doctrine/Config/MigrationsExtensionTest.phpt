@@ -8,19 +8,19 @@
  *
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
  *
- * @testcase Nella\Tests\Doctrine\Config\MigrationsExtensionTest
+ * @testcase
  */
 
 namespace Nella\Tests\Doctrine\Config;
 
-use Assert,
+use Tester\Assert,
 	Nella\Mocks\Config\Configurator,
 	Nella\Doctrine\Config\MigrationsExtension;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 require_once MOCKS_DIR . '/Config/Configurator.php';
 
-class MigrationsExtensionTest extends \TestCase
+class MigrationsExtensionTest extends \Tester\TestCase
 {
 	public function testRegister()
 	{
@@ -33,3 +33,5 @@ class MigrationsExtensionTest extends \TestCase
 		Assert::true($extension instanceof MigrationsExtension);
 	}
 }
+
+id(new MigrationsExtensionTest)->run(isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : NULL);

@@ -8,17 +8,17 @@
  *
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
  *
- * @testcase Nella\Tests\Model\HelperTest
+ * @testcase
  */
 
 namespace Nella\Tests\Model;
 
-use Assert,
+use Tester\Assert,
 	Nella\Model\Helper;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class HelperTest extends \TestCase
+class HelperTest extends \Tester\TestCase
 {
 	public function dataConvertException()
 	{
@@ -46,9 +46,12 @@ class HelperTest extends \TestCase
 		try {
 			Helper::convertException($exception);
 		} catch (\Nella\Model\Exception $e) {
-			Assert::exception($class, $message, $e);
 			Assert::same($exception, $e->getPrevious());
 		}
+
+		Assert::exception(function() use($exception) {
+			Helper::convertException($exception);
+		}, $class, $message);
 	}
 
 	public function testAdvancedEmptyValueException()
@@ -63,3 +66,5 @@ class HelperTest extends \TestCase
 		}
 	}
 }
+
+id(new HelperTest)->run(isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : NULL);

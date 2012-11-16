@@ -8,18 +8,18 @@
  *
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
  *
- * @testcase Nella\Tests\Media\Model\ImageFormatTest
+ * @testcase
  */
 
 namespace Nella\Tests\Media\Model;
 
-use Assert,
+use Tester\Assert,
 	Nella\Media\IImageFormat;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 require_once MOCKS_DIR . '/Media/Image.php';
 
-class ImageFormatTest extends \TestCase
+class ImageFormatTest extends \Tester\TestCase
 {
 	/** @var \Nella\Media\Model\ImageFormat */
 	private $format;
@@ -98,3 +98,5 @@ class ImageFormatTest extends \TestCase
 		Assert::equal(IImageFormat::POSITION_CENTER, $this->format->watermarkPosition, '->watermarkPosition');
 	}
 }
+
+id(new ImageFormatTest)->run(isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : NULL);

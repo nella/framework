@@ -8,16 +8,16 @@
  *
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
  *
- * @testcase Nella\Tests\Event\Args\VoidTest
+ * @testcase
  */
 
 namespace Nella\Tests\Event\Args;
 
-use Assert;
+use Tester\Assert;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 
-class VoidTest extends \TestCase
+class VoidTest extends \Tester\TestCase
 {
 	/** @var \Nella\Event\Args\Void */
 	private $args;
@@ -34,3 +34,5 @@ class VoidTest extends \TestCase
 		Assert::true($this->args instanceof \Nella\Event\EventArgs);
 	}
 }
+
+id(new VoidTest)->run(isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : NULL);

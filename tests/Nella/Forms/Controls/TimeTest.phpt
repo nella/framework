@@ -8,16 +8,16 @@
  *
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
  *
- * @testcase Nella\Tests\Forms\Controls\TimeTest
+ * @testcase
  */
 
 namespace Nella\Tests\Forms\Controls;
 
-use Assert;
+use Tester\Assert;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 
-class TimeTest extends \TestCase
+class TimeTest extends \Tester\TestCase
 {
 	/** @var \Nella\Forms\Controls\Time */
 	private $item;
@@ -54,3 +54,5 @@ class TimeTest extends \TestCase
 		Assert::false($this->item->isFilled(), "validate invalid value");
 	}
 }
+
+id(new TimeTest)->run(isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : NULL);

@@ -8,16 +8,16 @@
  *
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
  *
- * @testcase Nella\Tests\Media\Model\ImageFormatFacadeTest
+ * @testcase
  */
 
 namespace Nella\Tests\Media\Model;
 
-use Assert;
+use Tester\Assert;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 
-class ImageFormatFacadeTest extends \TestCase
+class ImageFormatFacadeTest extends \Tester\TestCase
 {
 	const SLUG = 'default';
 	/** @var \Nella\Media\Model\ImageFormatFacade */
@@ -51,3 +51,5 @@ class ImageFormatFacadeTest extends \TestCase
 
 	}
 }
+
+id(new ImageFormatFacadeTest)->run(isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : NULL);

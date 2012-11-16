@@ -8,17 +8,17 @@
  *
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
  *
- * @testcase Nella\Tests\Localization\Storages\GettextBinaryTest
+ * @testcase
  */
 
 namespace Nella\Tests\Localization\Storages;
 
-use Assert,
+use Tester\Assert,
 	Nella\Localization\Storages\GettextBinary;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 
-class GettextBinaryTest extends \TestCase
+class GettextBinaryTest extends \Tester\TestCase
 {
 	public function testInstance()
 	{
@@ -86,3 +86,5 @@ class GettextBinaryTest extends \TestCase
 		), iterator_to_array($dictionary), 'dictionary');
 	}
 }
+
+id(new GettextBinaryTest)->run(isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : NULL);

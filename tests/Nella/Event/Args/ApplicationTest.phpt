@@ -8,18 +8,18 @@
  *
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
  *
- * @testcase Nella\Tests\Event\Args\ApplicationTest
+ * @testcase
  */
 
 namespace Nella\Tests\Event\Args;
 
-use Assert,
+use Tester\Assert,
 	Nette\Application\Application;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 require_once MOCKS_DIR . '/Application/Application.php';
 
-class ApplicationTest extends \TestCase
+class ApplicationTest extends \Tester\TestCase
 {
 	/** @var \Nella\Event\Args\Application */
 	private $args;
@@ -43,3 +43,5 @@ class ApplicationTest extends \TestCase
 		Assert::true($this->args->application instanceof Application, "->application");
 	}
 }
+
+id(new ApplicationTest)->run(isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : NULL);

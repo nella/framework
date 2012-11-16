@@ -8,12 +8,12 @@
  *
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
  *
- * @testcase Nella\Tests\Media\ImageCacheStorages\FileTest
+ * @testcase
  */
 
 namespace Nella\Tests\Media\ImageCacheStorages;
 
-use Assert,
+use Tester\Assert,
 	Nette\Caching\Cache,
 	Nella\Media\ImageCacheStorages\File,
 	Nella\Mocks\Media\Image,
@@ -23,7 +23,7 @@ require_once __DIR__ . '/../../../bootstrap.php';
 require_once MOCKS_DIR . '/Media/Image.php';
 require_once MOCKS_DIR . '/Media/Format.php';
 
-class FileTest extends \TestCase
+class FileTest extends \Tester\TestCase
 {
 	/** @var \Nella\Media\ImageCacheStorages\File */
 	private $storage;
@@ -167,3 +167,5 @@ class FileTest extends \TestCase
 		$this->removeImage($src);
 	}
 }
+
+id(new FileTest)->run(isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : NULL);

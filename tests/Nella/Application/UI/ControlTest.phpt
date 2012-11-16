@@ -8,19 +8,19 @@
  *
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
  *
- * @testcase Nella\Tests\Application\UI\ControlTest
+ * @testcase
  */
 
 namespace Nella\Tests\Application\UI;
 
-use Assert,
+use Tester\Assert,
 	Nella\Mocks\Application\UI\Presenter;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 require_once MOCKS_DIR . '/Application/UI/Presenter.php';
 require_once MOCKS_DIR . '/Application/UI/Control.php';
 
-class ControlTest extends \TestCase
+class ControlTest extends \Tester\TestCase
 {
 	/** @var \Nette\DI\Container */
 	private $context;
@@ -150,3 +150,5 @@ class ControlTest extends \TestCase
 }
 
 class ControlMock extends \Nella\Mocks\Application\UI\Control {}
+
+id(new ControlTest)->run(isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : NULL);

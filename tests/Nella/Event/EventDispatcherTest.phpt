@@ -8,17 +8,17 @@
  *
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
  *
- * @testcase Nella\Tests\Event\EventDispatcherTest
+ * @testcase
  */
 
 namespace Nella\Tests\Event;
 
-use Assert;
+use Tester\Assert;
 
 require_once __DIR__ . '/../../bootstrap.php';
 require_once MOCKS_DIR . '/Config/Configurator.php';
 
-class EventDispatcherTest extends \TestCase
+class EventDispatcherTest extends \Tester\TestCase
 {
 	/** @var \Nella\Event\EventDispatcher */
 	private $eventManager;
@@ -151,3 +151,5 @@ class EventSubscriber extends \Nette\Object implements \Nella\Event\IEventSubscr
 		$args->container->addService('bar', function() { return; });
 	}
 }
+
+id(new EventDispatcherTest)->run(isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : NULL);

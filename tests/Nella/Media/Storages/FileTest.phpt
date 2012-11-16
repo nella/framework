@@ -8,18 +8,18 @@
  *
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
  *
- * @testcase Nella\Tests\Media\Storages\FileTest
+ * @testcase
  */
 
 namespace Nella\Tests\Media\Storages;
 
-use Assert,
+use Tester\Assert,
 	Nella\Mocks\Media\File as FileMock;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 require_once MOCKS_DIR . '/Media/File.php';
 
-class FileTest extends \TestCase
+class FileTest extends \Tester\TestCase
 {
 	/** @var \Nella\Media\Storages\File */
 	private $storage;
@@ -108,3 +108,5 @@ class FileTest extends \TestCase
 		Assert::null($this->storage->load($file));
 	}
 }
+
+id(new FileTest)->run(isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : NULL);

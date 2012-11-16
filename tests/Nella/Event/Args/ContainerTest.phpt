@@ -8,17 +8,17 @@
  *
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
  *
- * @testcase Nella\Tests\Event\Args\ContainerTest
+ * @testcase
  */
 
 namespace Nella\Tests\Event\Args;
 
-use Assert,
+use Tester\Assert,
 	Nette\DI\Container;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 
-class ContainerTest extends \TestCase
+class ContainerTest extends \Tester\TestCase
 {
 	/** @var \Nella\Event\Args\Container */
 	private $args;
@@ -40,3 +40,5 @@ class ContainerTest extends \TestCase
 		Assert::true($this->args->container instanceof Container, "->application");
 	}
 }
+
+id(new ContainerTest)->run(isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : NULL);

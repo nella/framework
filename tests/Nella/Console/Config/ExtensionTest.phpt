@@ -8,12 +8,12 @@
  *
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
  *
- * @testcase Nella\Tests\Console\Config\ExtensionTest
+ * @testcase
  */
 
 namespace Nella\Tests\Console\Config;
 
-use Assert,
+use Tester\Assert,
 	Nella\Mocks\Config\Configurator,
 	Nella\Mocks\Config\Compiler,
 	Nella\Console\Config\Extension,
@@ -25,7 +25,7 @@ require_once __DIR__ . '/../../../bootstrap.php';
 require_once MOCKS_DIR . '/Config/Configurator.php';
 require_once MOCKS_DIR . '/Config/Compiler.php';
 
-class ExtensionTest extends \TestCase
+class ExtensionTest extends \Tester\TestCase
 {
 	public function testRegister()
 	{
@@ -111,3 +111,5 @@ class ExtensionTest extends \TestCase
 		Assert::same($cmd, $application->get('foo'), 'foo command same as test service');
 	}
 }
+
+id(new ExtensionTest)->run(isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : NULL);

@@ -8,18 +8,18 @@
  *
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
  *
- * @testcase Nella\Tests\Media\Callbacks\FilePresenterCallbackTest
+ * @testcase
  */
 
 namespace Nella\Tests\Media\Callbacks;
 
-use Assert,
+use Tester\Assert,
 	Nella\Mocks\Media\File;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 require_once MOCKS_DIR . '/Media/File.php';
 
-class FilePresenterCallbackTest extends \TestCase
+class FilePresenterCallbackTest extends \Tester\TestCase
 {
 	/** @var \Nella\Media\Callbacks\FilePresenterCallback */
 	private $callback;
@@ -57,3 +57,5 @@ class FilePresenterCallbackTest extends \TestCase
 		}, 'Nette\Application\BadRequestException');
 	}
 }
+
+id(new FilePresenterCallbackTest)->run(isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : NULL);

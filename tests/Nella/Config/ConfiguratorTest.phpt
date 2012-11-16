@@ -8,16 +8,16 @@
  *
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
  *
- * @testcase Nella\Tests\Config\ConfiguratorTest
+ * @testcase
  */
 
 namespace Nella\Tests\Config;
 
-use Assert;
+use Tester\Assert;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class ConfiguratorTest extends \TestCase
+class ConfiguratorTest extends \Tester\TestCase
 {
 	/** @var \Nella\Config\Configurator */
 	private $configurator;
@@ -79,3 +79,5 @@ class ConfiguratorMock extends \Nella\Config\Configurator
 		return $this->createCompiler();
 	}
 }
+
+id(new ConfiguratorTest)->run(isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : NULL);

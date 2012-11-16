@@ -8,12 +8,12 @@
  *
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
  *
- * @testcase Nella\Tests\Media\Callbacks\ImagePresenterCallbackTest
+ * @testcase
  */
 
 namespace Nella\Tests\Media\Callbacks;
 
-use Assert,
+use Tester\Assert,
 	Nella\Mocks\Media\Image,
 	Nella\Mocks\Media\Format;
 
@@ -21,7 +21,7 @@ require_once __DIR__ . '/../../../bootstrap.php';
 require_once MOCKS_DIR . '/Media/Image.php';
 require_once MOCKS_DIR . '/Media/Format.php';
 
-class ImagePresenterCallbackTest extends \TestCase
+class ImagePresenterCallbackTest extends \Tester\TestCase
 {
 	/** @var \Nella\Media\Callbacks\FilePresenterCallback */
 	private $callback;
@@ -64,3 +64,5 @@ class ImagePresenterCallbackTest extends \TestCase
 		}, 'Nette\Application\BadRequestException');
 	}
 }
+
+id(new ImagePresenterCallbackTest)->run(isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : NULL);

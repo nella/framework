@@ -8,16 +8,16 @@
  *
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
  *
- * @testcase Nella\Tests\Templating\TemplateFilesFormatterTest
+ * @testcase
  */
 
 namespace Nella\Tests\Templating;
 
-use Assert;
+use Tester\Assert;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class TemplateFilesFormatterTest extends \TestCase
+class TemplateFilesFormatterTest extends \Tester\TestCase
 {
 	/** @var \Nella\Templating\TemplateFilesFormatter */
 	private $formatter;
@@ -277,3 +277,5 @@ class TemplateFilesFormatterTest extends \TestCase
 		Assert::equal($expected, $this->formatter->formatComponentTemplateFiles($class, $view));
 	}
 }
+
+id(new TemplateFilesFormatterTest)->run(isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : NULL);

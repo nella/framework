@@ -8,16 +8,16 @@
  *
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
  *
- * @testcase Nella\Tests\Forms\Controls\DateTest
+ * @testcase
  */
 
 namespace Nella\Tests\Forms\Controls;
 
-use Assert;
+use Tester\Assert;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 
-class DateTest extends \TestCase
+class DateTest extends \Tester\TestCase
 {
 	/** @var \Nella\Forms\Controls\Date */
 	private $item;
@@ -54,3 +54,5 @@ class DateTest extends \TestCase
 		Assert::false($this->item->isFilled(), "validate invalid value");
 	}
 }
+
+id(new DateTest)->run(isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : NULL);

@@ -20,12 +20,19 @@ require_once VENDOR_DIR . '/nette/tester/Tester/bootstrap.php';
 
 // configure environment
 date_default_timezone_set('Europe/Prague');
-//TestHelpers::purge(TEMP_DIR);
+
+if (!class_exists('Tester\Assert')) {
+	echo "Install Nette Tester using `composer update --dev`\n";
+	exit(1);
+}
 
 Debugger::$strictMode = TRUE;
 Debugger::enable(Debugger::DEVELOPMENT, TEMP_DIR . '/log');
 
+function id($val) {
+	return $val;
+}
+
 if (extension_loaded('xdebug')) {
-	xdebug_disable();
-	TestHelpers::startCodeCoverage(TESTS_DIR . '/coverage.dat');
+	Tester\CodeCoverage\Collector::start(__DIR__ . '/coverage.dat');
 }

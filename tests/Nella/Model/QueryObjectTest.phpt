@@ -8,17 +8,17 @@
  *
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
  *
- * @testcase Nella\Tests\Model\QueryObjectTest
+ * @testcase
  */
 
 namespace Nella\Tests\Model;
 
-use Assert,
+use Tester\Assert,
 	Nella\Model\QueryObject;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class QueryObjectTest extends \TestCase
+class QueryObjectTest extends \Tester\TestCase
 {
 	/** @var \Nella\Model\IQueryObject */
 	private $query;
@@ -44,3 +44,5 @@ class QueryObjectTest extends \TestCase
 		Assert::same($paginator, $query->getPaginator(), '->getPaginator() same');
 	}
 }
+
+id(new QueryObjectTest)->run(isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : NULL);

@@ -8,19 +8,19 @@
  *
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
  *
- * @testcase Nella\Tests\Forms\MultiplerTest
+ * @testcase
  */
 
 namespace Nella\Tests\Forms;
 
-use Assert,
+use Tester\Assert,
 	Nella\Forms\Form,
 	Nella\Forms\Multipler;
 
 require_once __DIR__ . '/../../bootstrap.php';
 require_once MOCKS_DIR . '/Application/UI/ControlPresenter.php';
 
-class MultiplerTest extends \TestCase
+class MultiplerTest extends \Tester\TestCase
 {
 	/** @var \Nella\Forms\Multipler */
 	protected $multipler;
@@ -213,3 +213,5 @@ class MultiplerTest extends \TestCase
 		Assert::equal(0, count($containers), "now is 0 containers");
 	}
 }
+
+id(new MultiplerTest)->run(isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : NULL);

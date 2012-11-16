@@ -8,16 +8,16 @@
  *
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
  *
- * @testcase Nella\Tests\Doctrine\EntityTest
+ * @testcase
  */
 
 namespace Nella\Tests\Doctrine;
 
-use Assert;
+use Tester\Assert;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class EntityTest extends \TestCase
+class EntityTest extends \Tester\TestCase
 {
 	/** @var Entity\EntityMock */
 	private $entity;
@@ -61,3 +61,5 @@ class EntityMock extends \Nella\Doctrine\Entity
 		$ref->setAccessible(FALSE);
 	}
 }
+
+id(new \Nella\Tests\Doctrine\EntityTest)->run(isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : NULL);

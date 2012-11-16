@@ -8,16 +8,16 @@
  *
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
  *
- * @testcase Nella\Tests\Media\Model\FileTest
+ * @testcase
  */
 
 namespace Nella\Tests\Media\Model;
 
-use Assert;
+use Tester\Assert;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 
-class FileTest extends \TestCase
+class FileTest extends \Tester\TestCase
 {
 	const PATH = 'logo.png';
 	/** @var \Nella\Media\Model\File */
@@ -58,3 +58,5 @@ class FileTest extends \TestCase
 		Assert::equal('logo', $this->file->fullSlug, '->fullSlug');
 	}
 }
+
+id(new FileTest)->run(isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : NULL);

@@ -8,17 +8,17 @@
  *
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
  *
- * @testcase Nella\Tests\Forms\ContainerTest
+ * @testcase
  */
 
 namespace Nella\Tests\Forms;
 
-use Assert,
+use Tester\Assert,
 	Nella\Forms\Form;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class ContainerTest extends \TestCase
+class ContainerTest extends \Tester\TestCase
 {
 	/** @var \Nella\Forms\Container */
 	private $container;
@@ -168,3 +168,5 @@ class ContainerTest extends \TestCase
 		Assert::true($item instanceof \Nella\Forms\Controls\TagsInput, 'is Nella\Forms\Controls\TagsInput');
 	}
 }
+
+id(new ContainerTest)->run(isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : NULL);

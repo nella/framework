@@ -37,11 +37,5 @@
 		"nella/forms": "self.version",
 		"nella/media": "self.version",
 		"nella/localization": "self.version"
-	},
-	"repositories": [
-		{
-			"type": "vcs",
-			"url": "https://github.com/Vrtak-CZ/nette-tester"
-		}
-	]
+	}
 }

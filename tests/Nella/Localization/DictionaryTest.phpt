@@ -8,16 +8,16 @@
  *
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
  *
- * @testcase Nella\Tests\Localization\DictionaryTest
+ * @testcase
  */
 
 namespace Nella\Tests\Localization;
 
-use Assert;
+use Tester\Assert;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class DictionaryTest extends \TestCase
+class DictionaryTest extends \Tester\TestCase
 {
 	/** @var \Nella\Localization\Dictionary */
 	private $dictionary;
@@ -88,3 +88,5 @@ class DictionaryTest extends \TestCase
 		Assert::equal($metadata, $this->dictionary->metadata, '->metadate return metadata');
 	}
 }
+
+id(new DictionaryTest)->run(isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : NULL);

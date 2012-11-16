@@ -8,18 +8,18 @@
  *
  * For the full copyright and license information, please view the file LICENSE.txt that was distributed with this source code.
  *
- * @testcase Nella\Tests\Application\UI\PresenterTest
+ * @testcase
  */
 
 namespace Nella\Tests\Application\UI;
 
-use Assert,
+use Tester\Assert,
 	Nella\Mocks\Application\UI\Presenter;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 require_once MOCKS_DIR . '/Application/UI/Presenter.php';
 
-class PresenterTest extends \TestCase
+class PresenterTest extends \Tester\TestCase
 {
 	/** @var \Nette\DI\Container */
 	private $context;
@@ -174,3 +174,5 @@ class PresenterTest extends \TestCase
 		Assert::equal($eq, $this->presenter->formatTemplateFiles(), "->formatTemplateFiles() $presenter:$view");
 	}
 }
+
+id(new PresenterTest)->run(isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : NULL);
