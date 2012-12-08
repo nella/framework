@@ -45,7 +45,7 @@ class Extension extends \Nette\Config\CompilerExtension
 		),
 		'eventManager' => NULL,
 		'metadataDriver' => NULL,
-		'useSimleAnnotation' => FALSE,
+		'useSimpleAnnotation' => FALSE,
 		'autowired' => TRUE,
 		'entityDirs' => array('%appDir%'),
 		'proxy' => array(
@@ -121,7 +121,7 @@ class Extension extends \Nette\Config\CompilerExtension
 			$reader = $builder->addDefinition($this->prefix('annotationReader'))
 				->setClass('Doctrine\Common\Annotations\Reader')
 				->setFactory(get_called_class().'::createAnnotationReader', array(
-					$config['annotationCacheDriver'], $config['useSimleAnnotation']
+					$config['annotationCacheDriver'], $config['useSimpleAnnotation']
 				));
 
 			$builder->addDefinition('discriminatorDiscovery')
