@@ -92,7 +92,7 @@ class ConnectionPanel extends \Nette\Object implements \Nette\Diagnostics\IBarPa
 
 			$query = $this->queries[$key][self::SQL];
 
-			if (!Strings::startsWith($query, 'SELECT')) { // only SELECTs are supported
+			if (strtoupper(substr(ltrim($query), 0, 6)) !== 'SELECT') { // only SELECTs are supported
 				return;
 			}
 
